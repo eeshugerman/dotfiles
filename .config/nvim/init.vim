@@ -1,1 +1,0 @@
-/home/elliott/dotfiles/vimrc
