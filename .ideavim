@@ -1,6 +1,0 @@
-set visualbell
-set noerrorbells
-set surround
-set iskeyword-=_ 
-set number relativenumber
-
