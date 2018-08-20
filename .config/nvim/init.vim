@@ -46,13 +46,19 @@ filetype indent plugin on
 set splitbelow
 set splitright
 
+" basic sanity
+nnoremap Y y$
+nnoremap vv V
+nnoremap V <C-V>
+map <C-V> <Nop>
+
 " split navigations
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-"alt-0
+" alt-0
 nnoremap º :terminal ++rows=7<CR>
 tnoremap <Esc> <C-W>N
 
