@@ -4,6 +4,7 @@ export PS1="\W $ "
 set -o vi
 
 alias vim="nvim"
+alias vi="nvim"
 
 alias xclip="xclip -selection c"
 
