@@ -46,10 +46,7 @@ filetype indent plugin on
 set splitbelow
 set splitright
 
-" basic sanity
 nnoremap Y y$
-nnoremap vv V
-nnoremap V <C-V>$
 
 " split navigations
 nnoremap <C-J> <C-W><C-J>
