@@ -11,3 +11,5 @@ set hlsearch
 nnoremap <CR> :nohlsearch<CR>
 
 nnoremap Y y$
+nnoremap vv V
+nnoremap V <C-V>$
