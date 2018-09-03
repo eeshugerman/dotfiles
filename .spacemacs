@@ -301,7 +301,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup nil
+   dotspacemacs-fullscreen-at-startup t
 
    ;; If non-nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
@@ -463,6 +463,11 @@ before packages are loaded."
   (define-key evil-insert-state-map (kbd "C-k" ) 'nil)
   (define-key haskell-interactive-mode-map (kbd "C-j") #'haskell-interactive-mode-history-next)
   (define-key haskell-interactive-mode-map (kbd "C-k") #'haskell-interactive-mode-history-previous)
+
+  (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
+  (define-key evil-normal-state-map (kbd "V") (kbd "C-v $"))
+
+  (define-key evil-normal-state-map (kbd "RET") 'evil-ex-nohighlight)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
