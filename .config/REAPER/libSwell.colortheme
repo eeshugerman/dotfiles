@@ -9,13 +9,13 @@ scrollbar_min_thumb_height 4
 combo_height 20
 _3dface #404040
 _3dshadow #202020
-_3dhilight #606060
+_3dhilight #505050
 _3ddkshadow #101010
-; button_bg #c0c0c0 # defaults to _3dface
+button_bg #666666 # defaults to _3dface
 button_text #eeeeee
 button_text_disabled #808080
-; button_shadow #606060 # defaults to _3dshadow
-; button_hilight #e0e0e0 # defaults to _3dhilight
+button_shadow #606060 # defaults to _3dshadow
+button_hilight #e0e0e0 # defaults to _3dhilight
 checkbox_text #eeeeee
 checkbox_text_disabled #808080
 checkbox_fg #eeeeee
