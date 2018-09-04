@@ -1,0 +1,89 @@
+default_font_face Mono
+default_font_size 12
+menubar_height 17
+menubar_font_size 13
+menubar_spacing_width 8
+menubar_margin_width 6
+scrollbar_width 14
+scrollbar_min_thumb_height 4
+combo_height 20
+_3dface #404040
+_3dshadow #202020
+_3dhilight #505050
+_3ddkshadow #101010
+button_bg #666666 # defaults to _3dface
+button_text #eeeeee
+button_text_disabled #808080
+button_shadow #606060 # defaults to _3dshadow
+button_hilight #e0e0e0 # defaults to _3dhilight
+checkbox_text #eeeeee
+checkbox_text_disabled #808080
+checkbox_fg #eeeeee
+checkbox_inter #c0c0c0
+checkbox_bg #606060
+scrollbar #202020
+scrollbar_fg #303030
+scrollbar_bg #606060
+edit_cursor #ffffff
+edit_bg #606060
+edit_bg_disabled #303030
+edit_text #eeeeee
+edit_text_disabled #c0c0c0
+edit_bg_sel #404040
+edit_text_sel #eeeeee
+; edit_hilight #e0e0e0 ; defaults to _3dhilight
+; edit_shadow #606060 ; defaults to _3dshadow
+info_bk #808080
+info_text #ffffff
+; menu_bg #c0c0c0 # defaults to _3dface
+; menu_shadow #606060 # defaults to _3dshadow
+; menu_hilight #e0e0e0 # defaults to _3dhilight
+; menu_text #000000 # defaults to button_text
+; menu_text_disabled #e0e0e0 # defaults to _3dhilight
+; menu_bg_sel #606060 # defaults to menu_text
+; menu_text_sel #eeeeee # defaults to menu_bg
+menu_scroll #404040
+; new menu_scroll_arrow #606060 ; defaults to _3dshadow
+; menu_submenu_arrow #606060 ; defaults to _3dshadow
+; menubar_bg #c0c0c0 # defaults to menu_bg
+; menubar_text #000000 # defaults to menu_text
+; menubar_text_disabled #e0e0e0 # defaults to menu_text_disabled
+; menubar_bg_sel #000000 # defaults to menu_bg_sel
+; menubar_text_sel #e0e0e0 # defaults to menu_text_sel
+trackbar_track #606060
+trackbar_mark #303030
+trackbar_knob #303030
+progress #808080
+; label_text #000000 # defaults to button_text
+; label_text_disabled #808080 # defaults to button_text_disabled
+; combo_text #000000 # defaults to button_text
+; combo_text_disabled #808080 # defaults to button_text_disabled
+; combo_bg #c0c0c0 # defaults to _3dface
+combo_bg2 #404040
+; combo_shadow #606060 # defaults to _3dshadow
+; combo_hilight #e0e0e0 # defaults to _3dhilight
+; combo_arrow #606060 ; defaults to _3dshadow
+; combo_arrow_press #e0e0e0 ; defaults to _3dhilight
+listview_bg #404040
+listview_bg_sel #606060
+listview_text #eeeeee
+; listview_text_sel #000000 ; defaults to listview_text
+; listview_grid #e0e0e0 ; defaults to _3dhilight
+listview_hdr_arrow #dddddd
+; listview_hdr_shadow #606060 # defaults to _3dshadow
+; listview_hdr_hilight #e0e0e0 # defaults to _3dhilight
+; listview_hdr_bg #c0c0c0 # defaults to _3dface
+; listview_hdr_text #000000 # defaults to button_text
+treeview_text #eeeeee
+treeview_bg #404040
+treeview_bg_sel #606060
+treeview_text_sel #eeeeee
+treeview_arrow #404040
+; tab_shadow #606060 # defaults to _3dshadow
+; tab_hilight #e0e0e0 # defaults to _3dhilight
+; tab_text #000000 # defaults to button_text
+focusrect #ffffff
+group_text #eeeeee
+; group_shadow #606060 # defaults to _3dshadow
+; group_hilight #e0e0e0 # defaults to _3dhilight
+focus_hilight #eeeeee
