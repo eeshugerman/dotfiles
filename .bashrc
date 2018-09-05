@@ -15,3 +15,5 @@ csvim () { gzip -d -c $1 | csvtool readable - | vim - ; }
 
 # for guake tab names
 PROMPT_COMMAND='echo -ne "\033]0;${PWD}\007"'
+
+alias open="xdg-open"
