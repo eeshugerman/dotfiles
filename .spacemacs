@@ -33,8 +33,9 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(slack
-     sql
+   '(
+     ;; slack
+     ;; sql
      haskell
      javascript
      python
@@ -459,21 +460,21 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
-  (load "~/.spacemacs-creds.el")
+  ;; (load "~/.spacemacs-creds.el")
 
-  (require 'slack)
-  (slack-register-team
-   :name "emacs-slack"
-   :default t
-   :client-id "eshugerman@medianewsgroup.com"
-   :client-secret slack-password
-   :token slack-token
-   :subscribed-channels '(pd-dw-devs))
+  ;; (require 'slack)
+  ;; (slack-register-team
+  ;;  :name "emacs-slack"
+  ;;  :default t
+  ;;  :client-id "eshugerman@medianewsgroup.com"
+  ;;  :client-secret slack-password
+  ;;  :token slack-token
+  ;;  :subscribed-channels '(pd-dw-devs))
 
-  (require 'sql)
-  (defcustom sql-password redshift-password)
-  (defcustom sql-server redshift-server)
-  (defcustom sql-port redshift-port)
+  ;; (require 'sql)
+  ;; (defcustom sql-password redshift-password)
+  ;; (defcustom sql-server redshift-server)
+  ;; (defcustom sql-port redshift-port)
 
 
   (require 'haskell-interactive-mode)
