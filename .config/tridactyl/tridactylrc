@@ -1,0 +1,59 @@
+" bovine3dom's dogfood
+
+" Provided only as an example.
+" Do not install/run without reading through as you may be surprised by some
+" of the settings.
+ 
+" May require the latest beta builds.
+
+" Move this to $XDG_CONFIG_DIR/tridactyl/tridactylrc (that's
+" ~/.config/tridactyl/tridactylrc to mere mortals) or ~/.tridactylrc and
+" install the native messenger (:installnative in Tridactyl). Run :source to
+" get it in the browser, or just restart.
+
+" NB: If you want "vim-like" behaviour where removing a line from 
+" here makes the setting disappear, uncomment the line below.
+
+sanitise tridactyllocal tridactylsync
+
+"
+" Binds
+"
+
+bind K tabnext
+bind J tabprev
+
+" Comment toggler for Reddit and Hacker News
+" bind ;c hint -c [class*="expand"],[class="togg"]
+
+" GitHub pull request checkout command to clipboard (only works if you're a collaborator or above)
+bind yp composite js document.getElementById("clone-help-step-1").textContent.replace("git checkout -b", "git checkout -B").replace("git pull ", "git fetch ") + "git reset --hard " + document.getElementById("clone-help-step-1").textContent.split(" ")[3].replace("-","/") | yank
+
+"
+" Misc settings
+"
+
+" set editorcmd vim
+
+" Sane hinting mode
+set hintfiltermode vimperator-reflow
+
+" Make Tridactyl work on more sites at the expense of some security
+set csp clobber
+fixamo_quiet
+
+"
+" URL redirects
+" 
+
+" New reddit is bad
+autocmd DocStart www.reddit.com js tri.excmds.urlmodify("-t", "www", "old")
+" Mosquito nets won't make themselves
+autocmd DocStart www.amazon.co.uk js tri.excmds.urlmodify("-t", "www", "smile")
+
+guiset hoverlink top-right
+
+" This will have to do until someone writes us a nice syntax file :)
+" vim: set filetype=vim:
+
+colors shydactyl
