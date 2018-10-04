@@ -8,7 +8,9 @@ alias vi="nvim"
 
 alias xclip="xclip -selection c"
 
-csvim () { gzip -d -c $1 | csvtool readable - | vim - ; }
+gcsvim () { gzip -d -c $1 | csvtool readable - | vim - ; }
+
+csvim () { csvtool readable $1 | vim - ; }
 
 
 # export PATH="/anaconda3/bin:$PATH"
