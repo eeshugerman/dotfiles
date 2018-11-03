@@ -19,3 +19,7 @@ PROMPT_COMMAND='echo -ne "\033]0;${PWD}\007"'
 alias open="xdg-open"
 
 export PATH="$PATH:~/opt/REAPER"
+
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/programming
+source /usr/bin/virtualenvwrapper.sh
