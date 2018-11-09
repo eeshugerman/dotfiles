@@ -119,3 +119,6 @@ csvim () { csvtool readable $1 | vim - ; }
 KEYTIMEOUT=1
 
 export EDITOR=nvim
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/dwp
+source /usr/bin/virtualenvwrapper.sh
