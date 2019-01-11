@@ -2,7 +2,7 @@ set nocompatible              " be iMproved, required
 filetype off                  " required
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.config/nvim/bundle/Vundle.vim
-call vundle#begin()
+" call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 call vundle#begin('~/.config/nvim/bundle')
 
@@ -19,7 +19,6 @@ Plugin 'nvie/vim-flake8'
 Plugin 'tpope/vim-surround'
 Plugin 'itchyny/lightline.vim'
 Plugin 'scrooloose/nerdtree'
-set laststatus=2
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -36,6 +35,7 @@ filetype plugin indent on    " required
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 
+set laststatus=2
 set background=dark
 set nowrap
 nnoremap <CR> :nohlsearch<CR>

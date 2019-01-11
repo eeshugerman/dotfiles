@@ -1,2 +1,3 @@
 spacemacs-creds.el
 .git-credentials
+.aws/credentials
