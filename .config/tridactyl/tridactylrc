@@ -20,8 +20,8 @@ sanitise tridactyllocal tridactylsync
 " Binds
 "
 
-bind K tabnext
-bind J tabprev
+bind <C-k> tabnext
+bind <C-j> tabprev
 bind D tabclosealltoright
 
 " Comment toggler for Reddit and Hacker News
