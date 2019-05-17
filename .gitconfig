@@ -1,5 +1,7 @@
 [user]
-	email = eeshugerman@gmail.com
+	email = eeshugerman@medianewsgroup.com
 	name = Elliott Shugerman
 [credential]
 	helper = store
+[core]
+	editor = neovim
