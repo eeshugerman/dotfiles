@@ -63,3 +63,9 @@ tnoremap <Esc> <C-W>N
 
 " alt-1
 nnoremap ¡ :NERDTreeToggle<CR>
+
+set shiftwidth=4
+set tabstop=4
+set smarttab
+set autoindent
+set smartindent
