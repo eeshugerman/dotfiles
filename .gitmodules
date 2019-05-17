@@ -1,0 +1,9 @@
+[submodule "/home/elliott/.vim/bundle/Vundle.vim"]
+	path = /home/elliott/.vim/bundle/Vundle.vim
+	url = https://github.com/VundleVim/Vundle.vim.git
+[submodule "/home/elliott/.config/.nvim/bundle/Vundle.vim"]
+	path = /home/elliott/.config/.nvim/bundle/Vundle.vim
+	url = https://github.com/VundleVim/Vundle.vim.git
+[submodule "/home/elliott/.config/nvim/bundle/Vundle.vim"]
+	path = /home/elliott/.config/nvim/bundle/Vundle.vim
+	url = https://github.com/VundleVim/Vundle.vim.git
