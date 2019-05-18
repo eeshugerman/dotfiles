@@ -10,8 +10,8 @@
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 # ZSH_THEME="robbyrussell"
 # ZSH_THEME="agnoster"
-# ZSH_THEME="refined"
-ZSH_THEME="spaceship"
+ZSH_THEME="refined"
+# ZSH_THEME="spaceship"
 # ZSH_THEME="powerlevel9k"
 
 # Set list of themes to pick from when loading at random
