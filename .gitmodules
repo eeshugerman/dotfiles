@@ -10,3 +10,6 @@
 [submodule "/home/elliott/.emacs.d"]
 	path = /home/elliott/.emacs.d
 	url = https://github.com/syl20bnr/spacemacs
+[submodule "/home/elliott/.themes/Nordic"]
+	path = /home/elliott/.themes/Nordic
+	url = https://github.com/EliverLara/Nordic
