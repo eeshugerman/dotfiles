@@ -1,0 +1,28 @@
+#TabsToolbar,
+#nav-bar {
+  height: 32px !important;
+}
+
+#TabsToolbar {
+  margin-left: 40vw !important;
+  margin-right: 33px;
+}
+
+#nav-bar {
+  margin-top: -32px !important;
+  margin-right: 60vw !important;
+}
+
+#PanelUI-button {
+  position: fixed;
+  top: 2px;
+  right: 1px;
+}
+
+statuspanel[type="overLink"],
+#statuspanel[type="overLink"] {
+  top: 2em;
+  z-index: 2;
+  right: 0;
+  display: inline;
+}
