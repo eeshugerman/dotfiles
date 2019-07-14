@@ -10,8 +10,8 @@
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 # ZSH_THEME="robbyrussell"
 # ZSH_THEME="agnoster"
-ZSH_THEME="refined"
-# ZSH_THEME="spaceship"
+# ZSH_THEME="refined"
+ZSH_THEME="spaceship"
 # ZSH_THEME="powerlevel9k"
 
 # Set list of themes to pick from when loading at random
@@ -121,6 +121,7 @@ KEYTIMEOUT=1
 export EDITOR=nvim
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/dwp
+export VIRTUALENV_PYTHON=python3
 source /usr/bin/virtualenvwrapper.sh
 
 alias log="vim ~/dwp/log.txt"
