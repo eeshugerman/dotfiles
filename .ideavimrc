@@ -7,6 +7,16 @@ set incsearch
 set showmode
 set gdefault=off
 set hlsearch
+set ignorecase
+set smartcase
+
+
+" :command doesn't seem to be supported
+" command qo :action CloseAllEditorsButActive<CR>
+
+let mapleader = " "
+
+nmap <leader>qo :action CloseAllEditorsButActive<CR>
 
 nnoremap <CR> :nohlsearch<CR>
 
