@@ -86,6 +86,9 @@ This function should only modify configuration layer settings."
 This function is called at the very beginning of Spacemacs startup,
 before layer configuration.
 It should only modify the values of Spacemacs settings."
+  ;; https://www.reddit.com/r/emacs/comments/cdf48c/failed_to_download_gnu_archive/
+  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
@@ -192,8 +195,8 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(doom-city-lights
-                         doom-vibrant
+   dotspacemacs-themes '(doom-vibrant
+                         doom-city-lights
                          doom-molokai
                          lush
                          spacegray
