@@ -1,7 +1,0 @@
-# MIDI note/CC name map
-46 ride
-42 hat
-39 snare 2
-38 snare 1
-37 tom
-36 kick
