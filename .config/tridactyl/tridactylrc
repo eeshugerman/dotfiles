@@ -6,14 +6,8 @@ bind <C-k> tabnext
 bind <C-j> tabprev
 bind D tabclosealltoright
 
-unbind <C-i>
+unbind <C-i> " not working :(
 
-
-" url redirects
-" -------------- 
-" New reddit is bad
-" autocmd DocStart www.reddit.com js tri.excmds.urlmodify("-t", "www", "old")
-autocmd DocStart www.amazon.com js tri.excmds.urlmodify("-t", "www", "smile")
 
 
 " misc
@@ -25,8 +19,6 @@ colors shydactyl
 set hintchars wertyuioasdfjkl;zxcnm
 
 set csp clobber
-
-fixamo_quiet
 
 
 " vim: set filetype=vim:
