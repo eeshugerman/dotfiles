@@ -507,6 +507,7 @@ before packages are loaded."
 
   (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
   (define-key evil-normal-state-map (kbd "V") (kbd "C-v $"))
+  (define-key evil-normal-state-map (kbd "Y") (kbd "y $"))
 
   (define-key evil-normal-state-map (kbd "RET") 'evil-ex-nohighlight)
 
