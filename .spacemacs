@@ -466,6 +466,8 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  (setq python-fill-column 100)
+  (add-hook 'python-mode-hook 'turn-on-fci-mode)
   )
 
 (defun dotspacemacs/user-load ()
