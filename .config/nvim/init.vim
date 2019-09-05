@@ -17,6 +17,7 @@ Plugin 'nvie/vim-flake8'
 
 " GENERAL
 Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-commentary'
 Plugin 'itchyny/lightline.vim'
 Plugin 'scrooloose/nerdtree'
 
