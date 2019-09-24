@@ -25,7 +25,6 @@ This function should only modify configuration layer settings."
    ;; If non-nil then Spacemacs will ask for confirmation before installing
    ;; a layer lazily. (default t)
    dotspacemacs-ask-for-lazy-installation t
-
    ;; If non-nil layers with lazy install support are lazy installed.
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
@@ -34,6 +33,8 @@ This function should only modify configuration layer settings."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(sql
+     nginx
+     ansible
      yaml
      html
      haskell
@@ -60,7 +61,8 @@ This function should only modify configuration layer settings."
             shell-default-height 30
             shell-default-position 'bottom
             shell-default-shell 'shell)
-     spell-checking
+     (spell-checking :variables
+                     spell-checking-enable-by-default nil)
      syntax-checking
      version-control
      themes-megapack
@@ -517,6 +519,7 @@ before packages are loaded."
   ;;         (port :default ,redshift-port)))
 
   (setq x-select-enable-clipboard nil)
+  (setq truncate-lines t)
 
   (require 'haskell-interactive-mode)
   (define-key evil-insert-state-map (kbd "C-k" ) 'nil)
