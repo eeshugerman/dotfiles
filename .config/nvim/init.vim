@@ -73,3 +73,5 @@ set smartindent
 
 set ignorecase
 set smartcase
+
+set number relativenumber
