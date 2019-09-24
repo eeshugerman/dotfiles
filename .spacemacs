@@ -546,6 +546,8 @@ before packages are loaded."
   ;; (defun clang-format-bindings ()
   ;;   (define-key c++-mode-map [tab] 'clang-format-buffer))
 
+  (setq projectile-indexing-method 'hybrid)
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
