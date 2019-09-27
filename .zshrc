@@ -126,3 +126,5 @@ source /usr/bin/virtualenvwrapper.sh
 
 alias log="vim ~/dwp/log.txt"
 alias ep="sudo eopkg"
+
+workon dwp
