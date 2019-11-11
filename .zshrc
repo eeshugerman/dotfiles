@@ -122,6 +122,7 @@ export EDITOR=nvim
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/dwp
 export VIRTUALENV_PYTHON=python3
+export VIRTUALENVWRAPPER_PYTHON=python3
 source /usr/bin/virtualenvwrapper.sh
 
 alias log="vim ~/dwp/log.txt"

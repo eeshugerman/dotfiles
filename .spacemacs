@@ -32,29 +32,32 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(sql
+   '(javascript
+     sql
      nginx
      ansible
      yaml
-     html
-     haskell
-     scheme
-     javascript
-     lsp
+;;    html
+;;    haskell
+;;    scheme
+;;    javascript
      dap ;; new debugger for python layer
      (python :variables
-             python-backend 'lsp
+             ;; python-backend 'lsp
              python-tab-width 4
-             ;; python-fill-column 100
+             python-fill-column 100
              python-formatter 'yapf
              python-format-on-save nil
              python-sort-imports-on-save nil
-             python-pipenv-activate t)
+             python-pipenv-activate t
+             python-fill-docstring-style 'django
+             )
      helm
      auto-completion
      better-defaults
      emacs-lisp
      git
+	   github
      markdown
      org
      (shell :variables
@@ -64,9 +67,8 @@ This function should only modify configuration layer settings."
      (spell-checking :variables
                      spell-checking-enable-by-default nil)
      syntax-checking
-     version-control
      themes-megapack
-     c-c++
+;;     c-c++
      )
 
    ;; List of additional packages that will be installed without being
@@ -232,7 +234,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-colorize-cursor-according-to-state t
 
    ;; Default font or prioritized list of fonts.
-   dotspacemacs-default-font '("Source Code Pro"
+   dotspacemacs-default-font '("Hack"
                                :size 13
                                :weight normal
                                :width normal)
@@ -276,7 +278,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil then the last auto saved layouts are resumed automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts nil
+   dotspacemacs-auto-resume-layouts t
 
    ;; If non-nil, auto-generate layout name when creating new layouts. Only has
    ;; effect when using the "jump to layout by number" commands. (default nil)
@@ -501,6 +503,7 @@ before packages are loaded."
 
 
   ;; (load "~/.spacemacs-creds.el")
+  ;; TODO: use .spacemacs.env instead
 
   ;; (require 'slack)
   ;; (slack-register-team
@@ -520,11 +523,13 @@ before packages are loaded."
 
   (setq x-select-enable-clipboard nil)
   (setq truncate-lines t)
+  (setq flycheck-python-pycompile-executable "python3")
+  (setq create-lockfiles nil)
 
-  (require 'haskell-interactive-mode)
-  (define-key evil-insert-state-map (kbd "C-k" ) 'nil)
-  (define-key haskell-interactive-mode-map (kbd "C-j") #'haskell-interactive-mode-history-next)
-  (define-key haskell-interactive-mode-map (kbd "C-k") #'haskell-interactive-mode-history-previous)
+  ;; (require 'haskell-interactive-mode)
+  ;; (define-key evil-insert-state-map (kbd "C-k" ) 'nil)
+  ;; (define-key haskell-interactive-mode-map (kbd "C-j") #'haskell-interactive-mode-history-next)
+  ;; (define-key haskell-interactive-mode-map (kbd "C-k") #'haskell-interactive-mode-history-previous)
 
   (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
   (define-key evil-normal-state-map (kbd "V") (kbd "C-v $"))
