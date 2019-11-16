@@ -18,7 +18,7 @@ colors shydactyl
 
 set hintchars wertyuioasdfjkl;zxcnm
 
-set csp clobber
+" csp clobber
 
 
 " vim: set filetype=vim:
