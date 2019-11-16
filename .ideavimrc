@@ -9,6 +9,7 @@ set hlsearch
 set ignorecase
 set smartcase
 set commentary
+set gdefault
 
 
 let mapleader = " "

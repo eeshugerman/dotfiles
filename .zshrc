@@ -120,9 +120,10 @@ KEYTIMEOUT=1
 
 export EDITOR=nvim
 export WORKON_HOME=$HOME/.virtualenvs
-export PROJECT_HOME=$HOME/dwp
+export PROJECT_HOME=$HOME/programming
+
 export VIRTUALENV_PYTHON=python3
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
 source /usr/bin/virtualenvwrapper.sh
 
-alias log="vim ~/dwp/log.txt"
 alias ep="sudo eopkg"

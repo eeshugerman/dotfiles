@@ -33,24 +33,26 @@ This function should only modify configuration layer settings."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(csv
+     javascript
      sql
      nginx
      ansible
      yaml
-     html
-     haskell
-     scheme
-     javascript
-     lsp
+;;    html
+;;    haskell
+;;    scheme
+;;    javascript
      dap ;; new debugger for python layer
      (python :variables
-             python-backend 'lsp
+             ;; python-backend 'lsp
              python-tab-width 4
              python-fill-column 100
              python-formatter 'yapf
              python-format-on-save nil
              python-sort-imports-on-save nil
-             python-pipenv-activate t)
+             python-pipenv-activate t
+             python-fill-docstring-style 'django
+             )
      helm
      auto-completion
      better-defaults
@@ -58,6 +60,7 @@ This function should only modify configuration layer settings."
      git
      (markdown :variables
                markdown-live-preview-engine 'vmd)
+	 github
      org
      (shell :variables
             shell-default-height 30
@@ -66,9 +69,8 @@ This function should only modify configuration layer settings."
      (spell-checking :variables
                      spell-checking-enable-by-default nil)
      syntax-checking
-     version-control
      themes-megapack
-     c-c++
+;;     c-c++
      )
 
    ;; List of additional packages that will be installed without being
@@ -237,7 +239,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-colorize-cursor-according-to-state t
 
    ;; Default font or prioritized list of fonts.
-   dotspacemacs-default-font '("Source Code Pro"
+   dotspacemacs-default-font '("Hack"
                                :size 13
                                :weight normal
                                :width normal)
@@ -281,7 +283,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil then the last auto saved layouts are resumed automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts nil
+   dotspacemacs-auto-resume-layouts t
 
    ;; If non-nil, auto-generate layout name when creating new layouts. Only has
    ;; effect when using the "jump to layout by number" commands. (default nil)
@@ -506,6 +508,7 @@ before packages are loaded."
 
 
   ;; (load "~/.spacemacs-creds.el")
+  ;; TODO: use .spacemacs.env instead
 
   ;; (require 'slack)
   ;; (slack-register-team
@@ -525,11 +528,13 @@ before packages are loaded."
 
   (setq x-select-enable-clipboard nil)
   (setq truncate-lines t)
+  (setq flycheck-python-pycompile-executable "python3")
+  (setq create-lockfiles nil)
 
-  (require 'haskell-interactive-mode)
-  (define-key evil-insert-state-map (kbd "C-k" ) 'nil)
-  (define-key haskell-interactive-mode-map (kbd "C-j") #'haskell-interactive-mode-history-next)
-  (define-key haskell-interactive-mode-map (kbd "C-k") #'haskell-interactive-mode-history-previous)
+  ;; (require 'haskell-interactive-mode)
+  ;; (define-key evil-insert-state-map (kbd "C-k" ) 'nil)
+  ;; (define-key haskell-interactive-mode-map (kbd "C-j") #'haskell-interactive-mode-history-next)
+  ;; (define-key haskell-interactive-mode-map (kbd "C-k") #'haskell-interactive-mode-history-previous)
 
   (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
   (define-key evil-normal-state-map (kbd "V") (kbd "C-v $"))
@@ -562,23 +567,3 @@ before packages are loaded."
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
-(defun dotspacemacs/emacs-custom-settings ()
-  "Emacs custom settings.
-This is an auto-generated function, do not modify its content directly, use
-Emacs customize menu instead.
-This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (vmd-mode super-save csv-mode ws-butler writeroom-mode visual-fill-column winum volatile-highlights vi-tilde-fringe uuidgen treemacs-projectile treemacs-magit treemacs-evil symon symbol-overlay string-inflection spaceline-all-the-icons spaceline powerline restart-emacs rainbow-delimiters popwin persp-mode password-generator paradox org-projectile org-category-capture open-junk-file move-text lsp-treemacs treemacs pfuture lorem-ipsum link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-purpose window-purpose imenu-list google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state iedit evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens smartparens paredit evil-args evil-anzu anzu eval-sexp-fu editorconfig dumb-jump doom-modeline shrink-path all-the-icons memoize devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol aggressive-indent ace-window ace-link font-lock+ zenburn-theme zen-and-art-theme yasnippet-snippets yapfify yaml-mode xterm-color white-sand-theme which-key web-mode web-beautify vterm use-package unfill underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme toc-org tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme sql-indent spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle slim-mode shell-pop seti-theme scss-mode sass-mode reverse-theme rebecca-theme railscasts-theme pytest pyenv-mode py-isort purple-haze-theme pug-mode professional-theme prettier-js planet-theme pippel pipenv pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme pcre2el overseer orgit organic-green-theme org-present org-pomodoro org-mime org-download org-cliplink org-bullets org-brain omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme nodejs-repl noctilux-theme nginx-mode naquadah-theme nameless mwim mustang-theme multi-term monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme material-theme markdown-toc majapahit-theme magit-svn magit-gitflow madhat2r-theme macrostep lush-theme lsp-ui lsp-python-ms lsp-haskell livid-mode live-py-mode light-soap-theme kaolin-themes json-navigator json-mode js2-refactor js-doc jinja2-mode jbeans-theme jazz-theme ir-black-theme intero inkpot-theme importmagic impatient-mode hydra hybrid-mode hlint-refactor hindent heroku-theme hemisu-theme helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-projectile helm-org-rifle helm-org helm-mode-manager helm-make helm-lsp helm-hoogle helm-gitignore helm-git-grep helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag hc-zenburn-theme haskell-snippets gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme google-c-style gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md geiser gandalf-theme fuzzy flyspell-correct-helm flycheck-rtags flycheck-pos-tip flycheck-package flycheck-haskell flatui-theme flatland-theme farmhouse-theme eziam-theme exotica-theme evil-org evil-magit espresso-theme eshell-z eshell-prompt-extras esh-help emmet-mode elisp-slime-nav dracula-theme dotenv-mode doom-themes django-theme disaster diminish diff-hl darktooth-theme darkokai-theme darkmine-theme darkburn-theme dap-mode dante dakrone-theme cython-mode cyberpunk-theme cquery cpp-auto-include company-web company-tern company-statistics company-rtags company-lsp company-ghci company-ghc company-cabal company-c-headers company-ansible company-anaconda color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized cmm-mode clues-theme clang-format chocolate-theme cherry-blossom-theme ccls busybee-theme bubbleberry-theme browse-at-remote blacken birds-of-paradise-plus-theme bind-map badwolf-theme auto-yasnippet auto-dictionary auto-compile attrap apropospriate-theme anti-zenburn-theme ansible-doc ansible ample-zen-theme ample-theme alect-themes afternoon-theme ace-jump-helm-line ac-ispell))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-)

@@ -12,13 +12,11 @@ unbind <C-i> " not working :(
 
 " misc
 " ----
-guiset hoverlink none
+" guiset hoverlink none
 
 colors shydactyl
 
 set hintchars wertyuioasdfjkl;zxcnm
-
-" csp clobber
 
 
 " vim: set filetype=vim:
