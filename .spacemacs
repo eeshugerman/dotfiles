@@ -500,36 +500,10 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
-
-
-  ;; (load "~/.spacemacs-creds.el")
-  ;; TODO: use .spacemacs.env instead
-
-  ;; (require 'slack)
-  ;; (slack-register-team
-  ;;  :name "emacs-slack"
-  ;;  :default t
-  ;;  :client-id "eshugerman@medianewsgroup.com"
-  ;;  :client-secret slack-password
-  ;;  :token slack-token
-  ;;  :subscribed-channels '(pd-dw-devs))
-
-
-  ;; (setq sql-postgres-login-params
-  ;;       `((user :default ,redshift-user)
-  ;;         (database :default "ltbd")
-  ;;         (server :default ,redshift-server)
-  ;;         (port :default ,redshift-port)))
-
   (setq x-select-enable-clipboard nil)
   (setq truncate-lines t)
   (setq flycheck-python-pycompile-executable "python3")
   (setq create-lockfiles nil)
-
-  ;; (require 'haskell-interactive-mode)
-  ;; (define-key evil-insert-state-map (kbd "C-k" ) 'nil)
-  ;; (define-key haskell-interactive-mode-map (kbd "C-j") #'haskell-interactive-mode-history-next)
-  ;; (define-key haskell-interactive-mode-map (kbd "C-k") #'haskell-interactive-mode-history-previous)
 
   (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
   (define-key evil-normal-state-map (kbd "V") (kbd "C-v $"))
@@ -537,19 +511,11 @@ before packages are loaded."
 
   (define-key evil-normal-state-map (kbd "RET") 'evil-ex-nohighlight)
 
-  (setq neo-theme 'icons)
-
   (add-hook 'focus-out-hook
             (defun save-current-buffer-if-needed ()
               (interactive)
               (when (and (buffer-file-name) (buffer-modified-p))
                 (save-buffer))))
-
-  (setq-default dotspacemacs-configuration-layers
-                '((c-c++ :variables c-c++-enable-clang-support t)))
-  ;; (add-hook 'c++-mode-hook 'clang-format-bindings)
-  ;; (defun clang-format-bindings ()
-  ;;   (define-key c++-mode-map [tab] 'clang-format-buffer))
 
   (setq projectile-indexing-method 'hybrid)
 
