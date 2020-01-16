@@ -519,6 +519,10 @@ before packages are loaded."
 
   (setq projectile-indexing-method 'hybrid)
 
+  (doom-themes-visual-bell-config)
+  (doom-themes-treemacs-config)
+
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
