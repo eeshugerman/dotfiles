@@ -43,7 +43,10 @@ This function should only modify configuration layer settings."
 ;;    javascript
      dap ;; new debugger for python layer
      (python :variables
-             ;; python-backend 'lsp
+             python-backend 'lsp
+             python-lsp-server 'mspyls
+             python-lsp-git-root "~/sources/python-language-server"
+
              python-tab-width 4
              python-fill-column 100
              python-formatter 'yapf
