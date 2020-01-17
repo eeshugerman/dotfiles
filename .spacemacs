@@ -52,7 +52,6 @@ This function should only modify configuration layer settings."
              python-formatter 'yapf
              python-format-on-save nil
              python-sort-imports-on-save nil
-             python-pipenv-activate t
              python-fill-docstring-style 'django
              )
      helm
