@@ -127,3 +127,11 @@ export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
 source /usr/bin/virtualenvwrapper.sh
 
 alias ep="sudo eopkg"
+
+# let emacs track current directory for tab-completion
+# https://superuser.com/a/409508
+if [ -n "$INSIDE_EMACS" ]; then
+  chpwd() { print -P "\033AnSiTc %d" }
+  print -P "\033AnSiTu %n"
+  print -P "\033AnSiTc %d"
+fi
