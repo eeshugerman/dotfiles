@@ -4,4 +4,4 @@
 [credential]
 	helper = store
 [core]
-	editor = neovim
+	editor = nvim
