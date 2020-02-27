@@ -129,6 +129,7 @@ alias log="vim ~/dwp/log.txt"
 alias ep="sudo eopkg"
 
 workon dwp
+
 # let emacs track current directory for tab-completion
 # https://superuser.com/a/409508
 if [ -n "$INSIDE_EMACS" ]; then

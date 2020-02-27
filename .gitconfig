@@ -5,3 +5,8 @@
 	helper = store
 [core]
 	editor = neovim
+[diff "ansible-vault"]
+	textconv = ansible-vault view --vault-password-file=ansible/.vault_pass
+
+[alias]
+cherry-log = "!git --no-pager log --oneline"
