@@ -4,7 +4,7 @@
 [credential]
 	helper = store
 [core]
-	editor = neovim
+	editor = $EDITOR
 [diff "ansible-vault"]
 	textconv = ansible-vault view --vault-password-file=ansible/.vault_pass
 
