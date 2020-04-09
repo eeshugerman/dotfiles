@@ -503,7 +503,6 @@ before packages are loaded."
 
   (setq x-select-enable-clipboard nil)
   (setq truncate-lines t)
-  (setq flycheck-python-pycompile-executable "python3")
   (setq create-lockfiles nil)
 
   (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
@@ -523,7 +522,8 @@ before packages are loaded."
   (doom-themes-visual-bell-config)
   (doom-themes-treemacs-config)
 
-
+  (setq lsp-ui-doc-enable nil)
+  (setq lsp-enable-symbol-highlighting t)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
