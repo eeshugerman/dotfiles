@@ -9,4 +9,5 @@
 	textconv = ansible-vault view --vault-password-file=ansible/.vault_pass
 
 [alias]
-cherry-log = "!git --no-pager log --oneline"
+	cplog = "!git --no-pager log --oneline"
+	cp = cherry-pick
