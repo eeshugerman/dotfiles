@@ -1,22 +1,13 @@
 sanitise tridactyllocal tridactylsync
 
-" binds
-" -----
 bind <C-k> tabnext
 bind <C-j> tabprev
 bind D tabclosealltoright
 
 unbind <C-i> " not working :(
 
-
-
-" misc
-" ----
-" guiset hoverlink none
-
 colors shydactyl
 
 set hintchars wertyuioasdfjkl;zxcnm
-
 
 " vim: set filetype=vim:
