@@ -137,7 +137,3 @@ if [ -n "$INSIDE_EMACS" ]; then
 fi
 
 export PATH="$PATH:/home/elliott/.local/bin"
-
-export PATH="/home/elliott/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
