@@ -4,4 +4,10 @@
 [credential]
 	helper = store
 [core]
-	editor = nvim
+	editor = $EDITOR
+[diff "ansible-vault"]
+	textconv = ansible-vault view --vault-password-file=ansible/.vault_pass
+
+[alias]
+	cplog = "!git --no-pager log --oneline"
+	cp = cherry-pick
