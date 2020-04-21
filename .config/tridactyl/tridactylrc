@@ -2,9 +2,17 @@ sanitise tridactyllocal tridactylsync
 
 bind <C-k> tabnext
 bind <C-j> tabprev
-bind D tabclosealltoright
 
-unbind <C-i> " not working :(
+bind D tabclosealltoright
+bind gd tabdetach
+bind gD composite tabduplicate; tabdetach;
+
+
+" doesn't work at all
+unbind <C-i>
+
+" doesn't work properly
+set editorcmd gnome-terminal -e "nvim %f"
 
 colors shydactyl
 
@@ -21,5 +29,11 @@ jsb browser.webRequest.onHeadersReceived.addListener(tri.request.clobberCSP,{url
 set smoothscroll true
 bind j scrollline 8
 bind k scrollline -8
+
+bind ZZ !s killall firefox
+
+
+" disable all searchurls
+jsb Object.keys(tri.config.get("searchurls")).reduce((prev, u) => prev.then(_ => tri.config.set("searchurls", u, null)), Promise.resolve())
 
 " vim: set filetype=vim:
