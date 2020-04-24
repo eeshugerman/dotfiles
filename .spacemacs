@@ -42,7 +42,7 @@ This function should only modify configuration layer settings."
 ;;    haskell
 ;;    scheme
 ;;    javascript
-     dap ;; new debugger for python layer
+     dap
      (python :variables
              python-backend 'lsp
              python-lsp-server 'mspyls
@@ -541,6 +541,7 @@ before packages are loaded."
   (setq lsp-enable-symbol-highlighting t)
   (setq lsp-signature-auto-activate nil)
 
+  (setq helm-xref-candidate-formatting-function 'helm-xref-format-candidate-full-path)
 
   ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
   (setq undo-tree-auto-save-history t
