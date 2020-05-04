@@ -64,7 +64,7 @@ This function should only modify configuration layer settings."
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom
-            shell-default-shell 'shell)
+            shell-default-shell 'eshell)
      (spell-checking :variables
                      spell-checking-enable-by-default nil)
      syntax-checking
@@ -553,6 +553,8 @@ before packages are loaded."
   ;; TODO: try https://github.com/emacs-evil/evil-collection
   (evil-define-key 'normal 'eshell-mode-map (kbd "C-k") 'eshell-previous-input)
   (evil-define-key 'normal 'eshell-mode-map (kbd "C-j") 'eshell-next-input)
+  (evil-define-key 'insert 'eshell-mode-map (kbd "C-k") 'eshell-previous-input)
+  (evil-define-key 'insert 'eshell-mode-map (kbd "C-j") 'eshell-next-input)
   )
 
 
