@@ -553,7 +553,7 @@ before packages are loaded."
   ;; ------------  vi ------------------
   (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
   (define-key evil-normal-state-map (kbd "V") (kbd "C-v $"))
-  (define-key evil-normal-state-map (kbd "Y") (kbd "y $"))  ;; TODO: make this work with system clipboard
+  (define-key evil-normal-state-map (kbd "Y") (kbd "y $"))  ; TODO: make this work with system clipboard
   (define-key evil-normal-state-map (kbd "RET") 'evil-ex-nohighlight)
 
 
@@ -563,11 +563,13 @@ before packages are loaded."
   (setq lsp-signature-auto-activate nil)
 
 
-  ;; ----------- eshell -------------------
+  ;; ----------- (e)shell -------------------
   (evil-define-key 'normal 'eshell-mode-map (kbd "C-k") 'eshell-previous-input)
   (evil-define-key 'normal 'eshell-mode-map (kbd "C-j") 'eshell-next-input)
   (evil-define-key 'insert 'eshell-mode-map (kbd "C-k") 'eshell-previous-input)
   (evil-define-key 'insert 'eshell-mode-map (kbd "C-j") 'eshell-next-input)
+
+  (spacemacs/set-leader-keys "'" 'spacemacs/projectile-shell-pop) ; open shell at project root
   )
 
 
