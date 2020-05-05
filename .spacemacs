@@ -516,17 +516,15 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
+  ;; ----------- misc/general ------------
   (setq x-select-enable-clipboard nil)
   (setq truncate-lines t)
   (setq create-lockfiles nil)
+  (setq projectile-indexing-method 'hybrid)
+  (setq helm-xref-candidate-formatting-function 'helm-xref-format-candidate-full-path)
 
-  (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
-  (define-key evil-normal-state-map (kbd "V") (kbd "C-v $"))
-  (define-key evil-normal-state-map (kbd "Y") (kbd "y $"))
-  ;; TODO: make Y work with system clipboard register
 
-  (define-key evil-normal-state-map (kbd "RET") 'evil-ex-nohighlight)
-
+  ;; ----------- auto save ----------------
   (defun save-buffer-if-needed ()
     (when (and (buffer-file-name) (buffer-modified-p))
       (save-buffer)))
@@ -537,17 +535,8 @@ before packages are loaded."
   (defadvice other-window (before other-window-now activate)
     (save-buffer-if-needed))
 
-  (setq projectile-indexing-method 'hybrid)
 
-  (doom-themes-visual-bell-config)
-  (doom-themes-treemacs-config)
-
-  (setq lsp-ui-doc-enable nil)
-  (setq lsp-enable-symbol-highlighting t)
-  (setq lsp-signature-auto-activate nil)
-
-  (setq helm-xref-candidate-formatting-function 'helm-xref-format-candidate-full-path)
-
+  ;; ------------- persistent undo -------------
   ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
   (setq undo-tree-auto-save-history t
         undo-tree-history-directory-alist
@@ -555,7 +544,26 @@ before packages are loaded."
   (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
     (make-directory (concat spacemacs-cache-directory "undo")))
 
-  ;; TODO: try https://github.com/emacs-evil/evil-collection
+
+  ;; ------------ themeing --------------
+  (doom-themes-visual-bell-config)
+  (doom-themes-treemacs-config)
+
+
+  ;; ------------  vi ------------------
+  (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
+  (define-key evil-normal-state-map (kbd "V") (kbd "C-v $"))
+  (define-key evil-normal-state-map (kbd "Y") (kbd "y $"))  ;; TODO: make this work with system clipboard
+  (define-key evil-normal-state-map (kbd "RET") 'evil-ex-nohighlight)
+
+
+  ;; ----------- LSP -------------------------
+  (setq lsp-ui-doc-enable nil)
+  (setq lsp-enable-symbol-highlighting t)
+  (setq lsp-signature-auto-activate nil)
+
+
+  ;; ----------- eshell -------------------
   (evil-define-key 'normal 'eshell-mode-map (kbd "C-k") 'eshell-previous-input)
   (evil-define-key 'normal 'eshell-mode-map (kbd "C-j") 'eshell-next-input)
   (evil-define-key 'insert 'eshell-mode-map (kbd "C-k") 'eshell-previous-input)
