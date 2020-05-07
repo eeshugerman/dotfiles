@@ -498,7 +498,7 @@ It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   (setq python-fill-column 100)
-  (add-hook 'python-mode-hook 'turn-on-fci-mode)
+  (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
 
   )
 
@@ -555,7 +555,7 @@ before packages are loaded."
   (define-key evil-normal-state-map (kbd "V") (kbd "C-v $"))
   (define-key evil-normal-state-map (kbd "Y") (kbd "y $"))  ; TODO: make this work with system clipboard
   (define-key evil-normal-state-map (kbd "RET") 'evil-ex-nohighlight)
-
+  (define-key evil-normal-state-map (kbd "gr") 'xref-find-references)
 
   ;; ----------- LSP -------------------------
   (setq lsp-ui-doc-enable nil)
@@ -569,12 +569,12 @@ before packages are loaded."
   ;; (evil-define-key 'insert 'eshell-mode-map (kbd "C-k") 'eshell-previous-input)
   ;; (evil-define-key 'insert 'eshell-mode-map (kbd "C-j") 'eshell-next-input)
 
-  (evil-define-key 'normal 'eshell-mode-map (kbd "k") 'eshell-previous-input)
-  (evil-define-key 'normal 'eshell-mode-map (kbd "j") 'eshell-next-input)
-  (evil-define-key 'normal 'eshell-mode-map (kbd "C-k") 'evil-previous-line)
-  (evil-define-key 'normal 'eshell-mode-map (kbd "C-j") 'evil-next-line)
+  (evil-define-key 'normal eshell-mode-map (kbd "k") 'eshell-previous-input)
+  (evil-define-key 'normal eshell-mode-map (kbd "j") 'eshell-next-input)
+  (evil-define-key 'normal eshell-mode-map (kbd "C-k") 'evil-previous-line)
+  (evil-define-key 'normal eshell-mode-map (kbd "C-j") 'evil-next-line)
 
-  (evil-define-key 'normal 'eshell-mode-map (kbd "<return>") 'eshell-send-input)
+  (evil-define-key 'normal eshell-mode-map (kbd "<return>") 'eshell-send-input)
 
   (spacemacs/set-leader-keys "'" 'spacemacs/projectile-shell-pop) ; open shell at project root
   )
