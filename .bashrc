@@ -1,5 +1,3 @@
-source /usr/share/defaults/etc/profile
-
 export PS1="\W $ "
 set -o vi
 
