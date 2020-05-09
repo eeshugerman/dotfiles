@@ -41,11 +41,10 @@ This function should only modify configuration layer settings."
      scheme
      html
 ;;    javascript
-     dap ;; new debugger for python layer
+     dap
      (python :variables
              python-backend 'lsp
              python-lsp-server 'mspyls
-             python-lsp-git-root "~/sources/python-language-server"
 
              python-tab-width 4
              python-fill-column 100
@@ -64,7 +63,7 @@ This function should only modify configuration layer settings."
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom
-            shell-default-shell 'shell)
+            shell-default-shell 'eshell)
      (spell-checking :variables
                      spell-checking-enable-by-default nil)
      syntax-checking
@@ -79,7 +78,7 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(evil-collection)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -104,6 +103,7 @@ It should only modify the values of Spacemacs settings."
   ;; https://www.reddit.com/r/emacs/comments/cdf48c/failed_to_download_gnu_archive/
   ;; (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
+  ;; TODO: try dotspacemacs-verify-spacelpa-archives instead?
   ;; https://www.reddit.com/r/emacs/comments/aug9in/failed_to_verify_signature_archivecontentssig/eh81iuz/?st=k11em1xw&sh=f2ba31d8
   (setq package-check-signature nil)
 
@@ -175,6 +175,11 @@ It should only modify the values of Spacemacs settings."
    ;; (default 'vim)
    dotspacemacs-editing-style 'vim
 
+   ;; If non-nil show the version string in the Spacemacs buffer. It will
+   ;; appear as (spacemacs version)@(emacs version)
+   ;; (default t)
+   dotspacemacs-startup-buffer-show-version nil
+
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
    ;; banner, `random' chooses a random text banner in `core/banners'
@@ -235,8 +240,8 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-colorize-cursor-according-to-state t
 
    ;; Default font or prioritized list of fonts.
-   dotspacemacs-default-font '("Hack"
-                               :size 13
+   dotspacemacs-default-font '("Source Code Pro"
+                               :size 10.0
                                :weight normal
                                :width normal)
 
@@ -259,8 +264,10 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-major-mode-leader-key ","
 
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
-   ;; (default "C-M-m")
-   dotspacemacs-major-mode-emacs-leader-key "C-M-m"
+   ;; (default "C-M-m" for terminal mode, "<M-return>" for GUI mode).
+   ;; Thus M-RET should work as leader key in both GUI and terminal modes.
+   ;; C-M-m also should work in terminal mode, but not in GUI mode.
+   dotspacemacs-major-mode-emacs-leader-key (if window-system "<M-return>" "C-M-m")
 
    ;; These variables control whether separate commands are bound in the GUI to
    ;; the key pairs `C-i', `TAB' and `C-m', `RET'.
@@ -458,6 +465,13 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil)
    dotspacemacs-whitespace-cleanup nil
 
+   ;; If non nil activate `clean-aindent-mode' which tries to correct
+   ;; virtual indentation of simple modes. This can interfer with mode specific
+   ;; indent handling like has been reported for `go-mode'.
+   ;; If it does deactivate it here.
+   ;; (default t)
+   dotspacemacs-use-clean-aindent-mode t
+
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
    dotspacemacs-zone-out-when-idle nil
@@ -483,7 +497,7 @@ It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   (setq python-fill-column 100)
-  (add-hook 'python-mode-hook 'turn-on-fci-mode)
+  (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
 
   )
 
@@ -501,36 +515,67 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
+  ;; misc/general ----------------------------------------------------------------------------------
   (setq x-select-enable-clipboard nil)
   (setq truncate-lines t)
   (setq create-lockfiles nil)
-
-  (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
-  (define-key evil-normal-state-map (kbd "V") (kbd "C-v $"))
-  (define-key evil-normal-state-map (kbd "Y") (kbd "y $"))
-
-  (define-key evil-normal-state-map (kbd "RET") 'evil-ex-nohighlight)
-
-  (add-hook 'focus-out-hook
-            (defun save-current-buffer-if-needed ()
-              (interactive)
-              (when (and (buffer-file-name) (buffer-modified-p))
-                (save-buffer))))
-
   (setq projectile-indexing-method 'hybrid)
+  (setq helm-xref-candidate-formatting-function 'helm-xref-format-candidate-full-path)
 
+
+  ;; autosave --------------------------------------------------------------------------------------
+  (defun save-buffer-if-needed ()
+    (when (and (buffer-file-name) (buffer-modified-p))
+      (save-buffer)))
+  (add-hook 'focus-out-hook 'save-buffer-if-needed)
+  ;; the following don't seem to work :(
+  (defadvice switch-to-buffer (before set-buffer activate)
+    (save-buffer-if-needed))
+  (defadvice other-window (before other-window-now activate)
+    (save-buffer-if-needed))
+
+
+  ;; persistent undo -------------------------------------------------------------------------------
+  ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
+  (setq undo-tree-auto-save-history t
+        undo-tree-history-directory-alist
+        `(("." . ,(concat spacemacs-cache-directory "undo"))))
+  (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
+    (make-directory (concat spacemacs-cache-directory "undo")))
+
+  ;; themeing --------------------------------------------------------------------------------------
   (doom-themes-visual-bell-config)
   (doom-themes-treemacs-config)
 
+  ;; vi --------------------------------------------------------------------------------------------
+  (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
+  (define-key evil-normal-state-map (kbd "V") (kbd "C-v $"))
+  ; TODO: make this work with system clipboard
+  (define-key evil-normal-state-map (kbd "Y") (kbd "y $"))
+  (define-key evil-normal-state-map (kbd "RET") 'evil-ex-nohighlight)
+  (define-key evil-normal-state-map (kbd "gr") 'xref-find-references)
+
+  ;; LSP -------------------------------------------------------------------------------------------
   (setq lsp-ui-doc-enable nil)
   (setq lsp-enable-symbol-highlighting t)
+  (setq lsp-signature-auto-activate nil)
 
-
-  (evil-define-key 'normal haskell-interactive-mode-map
-    (kbd "C-j") 'haskell-interactive-mode-history-next
-    (kbd "C-k") 'haskell-interactive-mode-history-previous
-    (kbd "C-l") 'haskell-interactive-mode-clear)
+  ;; eshell ----------------------------------------------------------------------------------------
+  (evil-define-key 'normal eshell-mode-map (kbd "k") 'eshell-previous-input)
+  (evil-define-key 'normal eshell-mode-map (kbd "j") 'eshell-next-input)
+  (evil-define-key 'normal eshell-mode-map (kbd "C-k") 'evil-previous-line)
+  (evil-define-key 'normal eshell-mode-map (kbd "C-j") 'evil-next-line)
+  (evil-define-key 'normal eshell-mode-map (kbd "<return>") 'eshell-send-input)
+  ;; open shell at project root
+  (spacemacs/set-leader-keys "'" 'spacemacs/projectile-shell-pop)
   )
+
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+)

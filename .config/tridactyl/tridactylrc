@@ -14,7 +14,7 @@ unbind <C-i>
 " doesn't work properly
 set editorcmd gnome-terminal -e "nvim %f"
 
-colors shydactyl
+colors mydactyl
 
 set hintchars wertyuioasdfjkl;zxcnm
 
