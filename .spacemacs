@@ -516,7 +516,7 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
-  ;; ----------- misc/general ------------
+  ;; misc/general ----------------------------------------------------------------------------------
   (setq x-select-enable-clipboard nil)
   (setq truncate-lines t)
   (setq create-lockfiles nil)
@@ -524,7 +524,7 @@ before packages are loaded."
   (setq helm-xref-candidate-formatting-function 'helm-xref-format-candidate-full-path)
 
 
-  ;; ----------- auto save ----------------
+  ;; autosave --------------------------------------------------------------------------------------
   (defun save-buffer-if-needed ()
     (when (and (buffer-file-name) (buffer-modified-p))
       (save-buffer)))
@@ -536,7 +536,7 @@ before packages are loaded."
     (save-buffer-if-needed))
 
 
-  ;; ------------- persistent undo -------------
+  ;; persistent undo -------------------------------------------------------------------------------
   ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
   (setq undo-tree-auto-save-history t
         undo-tree-history-directory-alist
@@ -544,39 +544,31 @@ before packages are loaded."
   (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
     (make-directory (concat spacemacs-cache-directory "undo")))
 
-
-  ;; ------------ themeing --------------
+  ;; themeing --------------------------------------------------------------------------------------
   (doom-themes-visual-bell-config)
   (doom-themes-treemacs-config)
 
-
-  ;; ------------  vi ------------------
+  ;; vi --------------------------------------------------------------------------------------------
   (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
   (define-key evil-normal-state-map (kbd "V") (kbd "C-v $"))
-  (define-key evil-normal-state-map (kbd "Y") (kbd "y $"))  ; TODO: make this work with system clipboard
+  ; TODO: make this work with system clipboard
+  (define-key evil-normal-state-map (kbd "Y") (kbd "y $"))
   (define-key evil-normal-state-map (kbd "RET") 'evil-ex-nohighlight)
   (define-key evil-normal-state-map (kbd "gr") 'xref-find-references)
 
-  ;; ----------- LSP -------------------------
+  ;; LSP -------------------------------------------------------------------------------------------
   (setq lsp-ui-doc-enable nil)
   (setq lsp-enable-symbol-highlighting t)
   (setq lsp-signature-auto-activate nil)
 
-
-  ;; ----------- (e)shell -------------------
-  ;; (evil-define-key 'normal 'eshell-mode-map (kbd "C-k") 'eshell-previous-input)
-  ;; (evil-define-key 'normal 'eshell-mode-map (kbd "C-j") 'eshell-next-input)
-  ;; (evil-define-key 'insert 'eshell-mode-map (kbd "C-k") 'eshell-previous-input)
-  ;; (evil-define-key 'insert 'eshell-mode-map (kbd "C-j") 'eshell-next-input)
-
+  ;; eshell ----------------------------------------------------------------------------------------
   (evil-define-key 'normal eshell-mode-map (kbd "k") 'eshell-previous-input)
   (evil-define-key 'normal eshell-mode-map (kbd "j") 'eshell-next-input)
   (evil-define-key 'normal eshell-mode-map (kbd "C-k") 'evil-previous-line)
   (evil-define-key 'normal eshell-mode-map (kbd "C-j") 'evil-next-line)
-
   (evil-define-key 'normal eshell-mode-map (kbd "<return>") 'eshell-send-input)
-
-  (spacemacs/set-leader-keys "'" 'spacemacs/projectile-shell-pop) ; open shell at project root
+  ;; open shell at project root
+  (spacemacs/set-leader-keys "'" 'spacemacs/projectile-shell-pop)
   )
 
 
@@ -587,18 +579,4 @@ before packages are loaded."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (evil-collection annalist focus-autosave-mode dockerfile-mode docker tablist docker-tramp zenburn-theme zen-and-art-theme yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum white-sand-theme which-key web-beautify vterm volatile-highlights vi-tilde-fringe uuidgen use-package unfill underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme treemacs-projectile treemacs-persp treemacs-magit treemacs-evil toxi-theme toc-org terminal-here tao-theme tangotango-theme tango-plus-theme tango-2-theme symon symbol-overlay sunny-day-theme sublime-themes subatomic256-theme subatomic-theme string-inflection sql-indent spaceline-all-the-icons spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle shell-pop seti-theme reverse-theme restart-emacs rebecca-theme rainbow-delimiters railscasts-theme pytest pyenv-mode py-isort purple-haze-theme professional-theme prettier-js popwin planet-theme pippel pipenv pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme pcre2el password-generator paradox overseer orgit organic-green-theme org-projectile org-present org-pomodoro org-mime org-download org-cliplink org-bullets org-brain open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme nodejs-repl noctilux-theme nginx-mode naquadah-theme nameless mwim mustang-theme multi-term move-text monokai-theme monochrome-theme molokai-theme moe-theme modus-vivendi-theme modus-operandi-theme mmm-mode minimal-theme material-theme markdown-toc majapahit-theme magit-svn magit-section magit-gitflow madhat2r-theme macrostep lush-theme lsp-ui lsp-python-ms lorem-ipsum livid-mode live-py-mode link-hint light-soap-theme kaolin-themes json-navigator json-mode js2-refactor js-doc jinja2-mode jbeans-theme jazz-theme ir-black-theme inkpot-theme indent-guide importmagic hybrid-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation heroku-theme hemisu-theme helm-xref helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mode-manager helm-make helm-lsp helm-ls-git helm-gitignore helm-git-grep helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme google-translate golden-ratio gnuplot gitignore-templates github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ gist gh-md gandalf-theme fuzzy forge font-lock+ flyspell-correct-helm flycheck-pos-tip flycheck-package flycheck-elsa flx-ido flatui-theme flatland-theme farmhouse-theme fancy-battery eziam-theme eyebrowse expand-region exotica-theme evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu espresso-theme eshell-z eshell-prompt-extras esh-help elisp-slime-nav editorconfig dumb-jump dracula-theme dotenv-mode doom-themes doom-modeline django-theme diminish devdocs define-word darktooth-theme darkokai-theme darkmine-theme darkburn-theme dap-mode dakrone-theme cython-mode cyberpunk-theme company-tern company-ansible company-anaconda column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme clean-aindent-mode chocolate-theme cherry-blossom-theme centered-cursor-mode busybee-theme bubbleberry-theme browse-at-remote blacken birds-of-paradise-plus-theme badwolf-theme auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile apropospriate-theme anti-zenburn-theme ansible-doc ansible ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme ace-link ace-jump-helm-line ac-ispell))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
 )
