@@ -32,14 +32,14 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(javascript
+   '(haskell
+     javascript
      sql
      nginx
      ansible
      yaml
-;;    html
-;;    haskell
-;;    scheme
+     scheme
+     html
 ;;    javascript
      dap ;; new debugger for python layer
      (python :variables
@@ -524,6 +524,12 @@ before packages are loaded."
 
   (setq lsp-ui-doc-enable nil)
   (setq lsp-enable-symbol-highlighting t)
+
+
+  (evil-define-key 'normal haskell-interactive-mode-map
+    (kbd "C-j") 'haskell-interactive-mode-history-next
+    (kbd "C-k") 'haskell-interactive-mode-history-previous
+    (kbd "C-l") 'haskell-interactive-mode-clear)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

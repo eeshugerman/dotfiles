@@ -120,7 +120,7 @@ KEYTIMEOUT=1
 
 export EDITOR=nvim
 export WORKON_HOME=$HOME/.virtualenvs
-export PROJECT_HOME=$HOME/programming
+export PROJECT_HOME=$HOME/devel
 
 export VIRTUALENV_PYTHON=python3
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
@@ -137,3 +137,5 @@ if [ -n "$INSIDE_EMACS" ]; then
 fi
 
 export PATH="$PATH:/home/elliott/.local/bin"
+
+alias restart-wifi="nmcli r wifi off && nmcli r wifi on"

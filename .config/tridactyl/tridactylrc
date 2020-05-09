@@ -4,8 +4,8 @@ bind <C-k> tabnext
 bind <C-j> tabprev
 
 bind D tabclosealltoright
-bind gd tabdetach
-bind gD composite tabduplicate; tabdetach;
+bind gd tabduplicate
+bind gD tabdetach
 
 
 " doesn't work at all
