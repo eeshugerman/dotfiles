@@ -7,3 +7,6 @@
 [submodule "/home/elliott/.themes/Nordic"]
 	path = .themes/Nordic
 	url = https://github.com/EliverLara/Nordic
+[submodule ".themes/Juno"]
+	path = .themes/Juno
+	url = https://github.com/EliverLara/Juno
