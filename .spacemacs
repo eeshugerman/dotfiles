@@ -40,7 +40,7 @@ This function should only modify configuration layer settings."
      yaml
      scheme
      html
-;;    javascript
+     javascript
      dap
      (python :variables
              python-backend 'lsp
@@ -570,9 +570,9 @@ before packages are loaded."
   (spacemacs/set-leader-keys "'" 'spacemacs/projectile-shell-pop)
 
   ;; haskell ---------------------------------------------------------------------------------------
--  (evil-define-key 'normal haskell-interactive-mode-map
--    (kbd "C-j") 'haskell-interactive-mode-history-next
--    (kbd "C-k") 'haskell-interactive-mode-history-previous)
+  (evil-define-key 'normal haskell-interactive-mode-map
+    (kbd "C-j") 'haskell-interactive-mode-history-next
+    (kbd "C-k") 'haskell-interactive-mode-history-previous)
 
   )
 
