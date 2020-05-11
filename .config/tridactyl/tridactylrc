@@ -7,13 +7,16 @@ bind D tabclosealltoright
 bind gd tabduplicate
 bind gD tabdetach
 
-
 " doesn't work at all
 unbind <C-i>
 
+" doesn't really work
 set editorcmd gnome-terminal -e "nvim %f"
 
 colors base16-tridactyl/base16-ashes
+
+" doesn't work :(
+jsb tri.config.set("theme", document.getElementsByClassName('darkreader').length ? "base16-tridactyl/base16-ashes" : "shydactyl")
 
 set hintchars wertyuioasdfjkl;zxcnm
 
