@@ -1,6 +1,7 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
+" TODO: switch to vim-plug
 " vundle stuff -- :h vundle
 " ------------------------------------------
 set rtp+=~/.config/nvim/bundle/Vundle.vim

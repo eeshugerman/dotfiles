@@ -11,10 +11,9 @@ bind gD tabdetach
 " doesn't work at all
 unbind <C-i>
 
-" doesn't work properly
 set editorcmd gnome-terminal -e "nvim %f"
 
-colors mydactyl
+colors base16-tridactyl/base16-ashes
 
 set hintchars wertyuioasdfjkl;zxcnm
 
