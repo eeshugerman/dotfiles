@@ -37,6 +37,7 @@ alias vim="nvim"
 alias xclip="xclip -selection c"
 alias open="xdg-open"
 alias ep="sudo eopkg"
+alias dconf-load="dconf load / < $HOME/.config/dconf.ini"
 
 export WORKON_HOME="$HOME/.virtualenvs"
 export PROJECT_HOME="$HOME/devel"
