@@ -53,6 +53,7 @@ This function should only modify configuration layer settings."
              python-format-on-save nil
              python-sort-imports-on-save nil
              python-fill-docstring-style 'django)
+     ipython-notebook
      helm
      auto-completion
      better-defaults
@@ -60,7 +61,9 @@ This function should only modify configuration layer settings."
      git
 	   github
      markdown
-     org
+     (org :variables
+          org-enable-jira-support t
+          jiralib-url "https://digital1stmedia.atlassian.net:443")
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom
@@ -522,7 +525,11 @@ before packages are loaded."
   (setq create-lockfiles nil)
   (setq projectile-indexing-method 'hybrid)
   (setq helm-xref-candidate-formatting-function 'helm-xref-format-candidate-full-path)
+  (setq treemacs-sorting 'alphabetic-asc)
 
+  (customize-set-variable
+   'custom-file (file-truename (concat dotspacemacs-directory ".emacs-custom.el")))
+  (load custom-file)
 
   ;; autosave --------------------------------------------------------------------------------------
   (defun save-buffer-if-needed ()
@@ -535,8 +542,8 @@ before packages are loaded."
   (defadvice other-window (before other-window-now activate)
     (save-buffer-if-needed))
 
-
-  ;; persistent undo -------------------------------------------------------------------------------
+  ;; undo tree -------------------------------------------------------------------------------
+  ;; --- persistent undo
   ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
   (setq undo-tree-auto-save-history t
         undo-tree-history-directory-alist
@@ -570,13 +577,3 @@ before packages are loaded."
   ;; open shell at project root
   (spacemacs/set-leader-keys "'" 'spacemacs/projectile-shell-pop)
   )
-
-
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
-(defun dotspacemacs/emacs-custom-settings ()
-  "Emacs custom settings.
-This is an auto-generated function, do not modify its content directly, use
-Emacs customize menu instead.
-This function is called at the very end of Spacemacs initialization."
-)
