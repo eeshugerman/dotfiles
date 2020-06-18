@@ -51,6 +51,6 @@ source /usr/bin/virtualenvwrapper.sh
 export PATH="$PATH:$HOME/.local/bin"
 
 if [ -n "$INSIDE_EMACS" ]; then
-  bindkey -e
+  # nothing presently, but could come in handy
 fi
 

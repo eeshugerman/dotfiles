@@ -64,7 +64,7 @@ This function should only modify configuration layer settings."
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom
-            shell-default-shell 'eshell)
+            shell-default-shell 'vterm)
      (spell-checking :variables
                      spell-checking-enable-by-default nil)
      syntax-checking
@@ -565,14 +565,16 @@ before packages are loaded."
   (setq lsp-enable-symbol-highlighting t)
   (setq lsp-signature-auto-activate nil)
 
-  ;; eshell ----------------------------------------------------------------------------------------
-  (evil-define-key 'normal eshell-mode-map (kbd "k") 'eshell-previous-input)
-  (evil-define-key 'normal eshell-mode-map (kbd "j") 'eshell-next-input)
-  (evil-define-key 'normal eshell-mode-map (kbd "C-k") 'evil-previous-line)
-  (evil-define-key 'normal eshell-mode-map (kbd "C-j") 'evil-next-line)
-  (evil-define-key 'normal eshell-mode-map (kbd "<return>") 'eshell-send-input)
+  ;; vterm ----------------------------------------------------------------------------------------
   ;; open shell at project root
+  ;; TODO: fix this for when no project is active
   (spacemacs/set-leader-keys "'" 'spacemacs/projectile-shell-pop)
+
+  (evil-set-initial-state 'vterm-mode 'emacs)
+  (evil-define-key 'emacs vterm-mode-map (kbd "C-k") 'evil-previous-line)
+  (evil-define-key 'emacs vterm-mode-map (kbd "C-j") 'evil-next-line)
+  (evil-define-key 'emacs vterm-mode-map (kbd "S-<escape>") 'other-window)
+
 
   ;; haskell ---------------------------------------------------------------------------------------
   (evil-define-key 'normal haskell-interactive-mode-map
