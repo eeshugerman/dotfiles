@@ -551,6 +551,10 @@ before packages are loaded."
   ;; themeing --------------------------------------------------------------------------------------
   (doom-themes-visual-bell-config)
   (doom-themes-treemacs-config)
+  (spacemacs/toggle-vi-tilde-fringe-off)
+
+  ;; hide arrows at window border for truncated lines
+  (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b00000000))
 
   ;; vi --------------------------------------------------------------------------------------------
   (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
@@ -574,6 +578,7 @@ before packages are loaded."
   (evil-define-key 'emacs vterm-mode-map (kbd "C-k") 'evil-previous-line)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-j") 'evil-next-line)
   (evil-define-key 'emacs vterm-mode-map (kbd "S-<escape>") 'other-window)
+  (setq term-buffer-maximum-size 0)  ; infinite history
 
 
   ;; haskell ---------------------------------------------------------------------------------------
