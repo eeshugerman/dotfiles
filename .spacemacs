@@ -533,19 +533,21 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
-  ;; misc/general ----------------------------------------------------------------------------------
+  ;; misc/general --------------------------------------------------------------
   (setq x-select-enable-clipboard nil)
   (setq truncate-lines t)
   (setq create-lockfiles nil)
   (setq projectile-indexing-method 'hybrid)
-  (setq helm-xref-candidate-formatting-function 'helm-xref-format-candidate-full-path)
+  (setq helm-xref-candidate-formatting-function
+        'helm-xref-format-candidate-full-path)
   (setq treemacs-sorting 'alphabetic-asc)
 
   (customize-set-variable
-   'custom-file (file-truename (concat dotspacemacs-directory ".emacs-custom.el")))
+   'custom-file
+   (file-truename (concat dotspacemacs-directory ".emacs-custom.el")))
   (load custom-file)
 
-  ;; autosave --------------------------------------------------------------------------------------
+  ;; autosave ------------------------------------------------------------------
   (defun save-buffer-if-needed ()
     (when (and (buffer-file-name) (buffer-modified-p))
       (save-buffer)))
@@ -556,7 +558,7 @@ before packages are loaded."
   (defadvice other-window (before other-window-now activate)
     (save-buffer-if-needed))
 
-  ;; undo tree -------------------------------------------------------------------------------
+  ;; undo tree -----------------------------------------------------------------
   ;; --- persistent undo
   ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
   (setq undo-tree-auto-save-history t
@@ -565,14 +567,14 @@ before packages are loaded."
   (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
     (make-directory (concat spacemacs-cache-directory "undo")))
 
-  ;; themeing --------------------------------------------------------------------------------------
+  ;; themeing -----------------------------------------------------------------
   (doom-themes-visual-bell-config)
   (doom-themes-treemacs-config)
   (spacemacs/toggle-vi-tilde-fringe-off)
   ;; hide arrows at window border for truncated lines
   (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b00000000))
 
-  ;; vi --------------------------------------------------------------------------------------------
+  ;; vi ------------------------------------------------------------------------
   (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
   (define-key evil-normal-state-map (kbd "V") (kbd "C-v $"))
   ; TODO: make this work with system clipboard
@@ -580,12 +582,12 @@ before packages are loaded."
   (define-key evil-normal-state-map (kbd "RET") 'evil-ex-nohighlight)
   (define-key evil-normal-state-map (kbd "gr") 'xref-find-references)
 
-  ;; LSP -------------------------------------------------------------------------------------------
+  ;; LSP -----------------------------------------------------------------------
   (setq lsp-ui-doc-enable nil)
   (setq lsp-enable-symbol-highlighting t)
   (setq lsp-signature-auto-activate nil)
 
-  ;; vterm ----------------------------------------------------------------------------------------
+  ;; vterm ---------------------------------------------------------------------
   ;; open shell at project root (unless there is none, in which case at $HOME)
   (spacemacs/set-leader-keys "'" (lambda ()
                                    (interactive)
@@ -600,7 +602,7 @@ before packages are loaded."
   (setq term-buffer-maximum-size 0)  ; infinite history
 
 
-  ;; haskell ---------------------------------------------------------------------------------------
+  ;; haskell -------------------------------------------------------------------
   (evil-define-key 'normal haskell-interactive-mode-map
     (kbd "C-j") 'haskell-interactive-mode-history-next)
   (evil-define-key 'normal haskell-interactive-mode-map
