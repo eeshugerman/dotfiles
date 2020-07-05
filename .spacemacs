@@ -586,9 +586,12 @@ before packages are loaded."
   (setq lsp-signature-auto-activate nil)
 
   ;; vterm ----------------------------------------------------------------------------------------
-  ;; open shell at project root
-  ;; TODO: fix this for when no project is active
-  (spacemacs/set-leader-keys "'" 'spacemacs/projectile-shell-pop)
+  ;; open shell at project root (unless there is none, in which case at $HOME)
+  (spacemacs/set-leader-keys "'" (lambda ()
+                                   (interactive)
+                                   (if (projectile-project-p)
+                                       (spacemacs/projectile-shell-pop)
+                                     (spacemacs/default-pop-shell))))
 
   (evil-set-initial-state 'vterm-mode 'emacs)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-k") 'evil-previous-line)
