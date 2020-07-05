@@ -45,7 +45,6 @@ This function should only modify configuration layer settings."
      (python :variables
              python-backend 'lsp
              python-lsp-server 'mspyls
-
              python-tab-width 4
              python-fill-column 100
              python-formatter 'yapf
@@ -53,7 +52,7 @@ This function should only modify configuration layer settings."
              python-sort-imports-on-save nil
              python-fill-docstring-style 'django)
      ipython-notebook
-     helm
+     ivy
      auto-completion
      better-defaults
      emacs-lisp
@@ -79,7 +78,9 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(evil-collection)
+   dotspacemacs-additional-packages
+   '(evil-collection
+     writeroom-mode)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -106,7 +107,7 @@ It should only modify the values of Spacemacs settings."
 
   ;; TODO: try dotspacemacs-verify-spacelpa-archives instead?
   ;; https://www.reddit.com/r/emacs/comments/aug9in/failed_to_verify_signature_archivecontentssig/eh81iuz/?st=k11em1xw&sh=f2ba31d8
-  (setq package-check-signature nil)
+  ;; (setq package-check-signature nil)
 
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
@@ -216,11 +217,11 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(doom-vibrant
+   dotspacemacs-themes '(spacegray
+                         doom-vibrant
                          doom-city-lights
                          doom-molokai
                          lush
-                         spacegray
                          gruvbox-light-hard
                          flatui
                          gandalf
@@ -242,7 +243,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 10.0
+                               :size 11.0
                                :weight normal
                                :width normal)
 
@@ -287,7 +288,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil then the last auto saved layouts are resumed automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts t
+   dotspacemacs-auto-resume-layouts nil
 
    ;; If non-nil, auto-generate layout name when creating new layouts. Only has
    ;; effect when using the "jump to layout by number" commands. (default nil)
@@ -327,7 +328,7 @@ It should only modify the values of Spacemacs settings."
    ;; another same-purpose window is available. If non-nil, `switch-to-buffer'
    ;; displays the buffer in a same-purpose window even if the buffer can be
    ;; displayed in the current window. (default nil)
-   dotspacemacs-switch-to-buffer-prefers-purpose nil
+   dotspacemacs-switch-to-buffer-prefers-purpose t
 
    ;; If non-nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
@@ -552,7 +553,6 @@ before packages are loaded."
   (doom-themes-visual-bell-config)
   (doom-themes-treemacs-config)
   (spacemacs/toggle-vi-tilde-fringe-off)
-
   ;; hide arrows at window border for truncated lines
   (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b00000000))
 
@@ -583,7 +583,7 @@ before packages are loaded."
 
   ;; haskell ---------------------------------------------------------------------------------------
   (evil-define-key 'normal haskell-interactive-mode-map
-    (kbd "C-j") 'haskell-interactive-mode-history-next
+    (kbd "C-j") 'haskell-interactive-mode-history-next)
+  (evil-define-key 'normal haskell-interactive-mode-map
     (kbd "C-k") 'haskell-interactive-mode-history-previous)
-
-  )
+)
