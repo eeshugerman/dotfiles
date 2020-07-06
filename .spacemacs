@@ -57,7 +57,7 @@ This function should only modify configuration layer settings."
              python-sort-imports-on-save nil
              python-fill-docstring-style 'django)
      ipython-notebook
-     helm
+     ivy
      auto-completion
      better-defaults
      emacs-lisp
@@ -85,7 +85,9 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(evil-collection)
+   dotspacemacs-additional-packages
+   '(evil-collection
+     writeroom-mode)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -112,7 +114,7 @@ It should only modify the values of Spacemacs settings."
 
   ;; TODO: try dotspacemacs-verify-spacelpa-archives instead?
   ;; https://www.reddit.com/r/emacs/comments/aug9in/failed_to_verify_signature_archivecontentssig/eh81iuz/?st=k11em1xw&sh=f2ba31d8
-  (setq package-check-signature nil)
+  ;; (setq package-check-signature nil)
 
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
@@ -229,15 +231,20 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(doom-vibrant
-                         doom-city-lights
-                         doom-molokai
-                         lush
-                         spacegray
-                         gruvbox-light-hard
-                         flatui
-                         gandalf
-                         material-light)
+   dotspacemacs-themes '(doom-palenight
+                         doom-one
+                         doom-vibrant
+                         doom-horizon
+                         doom-snazzy
+                         doom-spacegray
+
+                         doom-nova
+
+                         doom-one-light
+                         doom-nord-light
+                         doom-opera-light
+                         doom-solarized-light
+                         )
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -255,7 +262,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 10.0
+                               :size 11.0
                                :weight normal
                                :width normal)
 
@@ -300,7 +307,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil then the last auto saved layouts are resumed automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts t
+   dotspacemacs-auto-resume-layouts nil
 
    ;; If non-nil, auto-generate layout name when creating new layouts. Only has
    ;; effect when using the "jump to layout by number" commands. (default nil)
@@ -340,7 +347,7 @@ It should only modify the values of Spacemacs settings."
    ;; another same-purpose window is available. If non-nil, `switch-to-buffer'
    ;; displays the buffer in a same-purpose window even if the buffer can be
    ;; displayed in the current window. (default nil)
-   dotspacemacs-switch-to-buffer-prefers-purpose nil
+   dotspacemacs-switch-to-buffer-prefers-purpose t
 
    ;; If non-nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
@@ -493,7 +500,11 @@ It should only modify the values of Spacemacs settings."
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs nil))
+   dotspacemacs-pretty-docs nil
+
+   ;; If nil the home buffer shows the full path of agenda items
+   ;; and todos. If non nil only the file name is shown.
+   dotspacemacs-home-shorten-agenda-source nil))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -529,19 +540,21 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
-  ;; misc/general ----------------------------------------------------------------------------------
+  ;; misc/general --------------------------------------------------------------
   (setq x-select-enable-clipboard nil)
   (setq truncate-lines t)
   (setq create-lockfiles nil)
   (setq projectile-indexing-method 'hybrid)
-  (setq helm-xref-candidate-formatting-function 'helm-xref-format-candidate-full-path)
+  (setq helm-xref-candidate-formatting-function
+        'helm-xref-format-candidate-full-path)
   (setq treemacs-sorting 'alphabetic-asc)
 
   (customize-set-variable
-   'custom-file (file-truename (concat dotspacemacs-directory ".emacs-custom.el")))
+   'custom-file
+   (file-truename (concat dotspacemacs-directory ".emacs-custom.el")))
   (load custom-file)
 
-  ;; autosave --------------------------------------------------------------------------------------
+  ;; autosave ------------------------------------------------------------------
   (defun save-buffer-if-needed ()
     (when (and (buffer-file-name) (buffer-modified-p))
       (save-buffer)))
@@ -552,7 +565,7 @@ before packages are loaded."
   (defadvice other-window (before other-window-now activate)
     (save-buffer-if-needed))
 
-  ;; undo tree -------------------------------------------------------------------------------
+  ;; undo tree -----------------------------------------------------------------
   ;; --- persistent undo
   ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
   (setq undo-tree-auto-save-history t
@@ -561,11 +574,14 @@ before packages are loaded."
   (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
     (make-directory (concat spacemacs-cache-directory "undo")))
 
-  ;; themeing --------------------------------------------------------------------------------------
+  ;; themeing -----------------------------------------------------------------
   (doom-themes-visual-bell-config)
   (doom-themes-treemacs-config)
+  (spacemacs/toggle-vi-tilde-fringe-off)
+  ;; hide arrows at window border for truncated lines
+  (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b00000000))
 
-  ;; vi --------------------------------------------------------------------------------------------
+  ;; vi ------------------------------------------------------------------------
   (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
   (define-key evil-normal-state-map (kbd "V") (kbd "C-v $"))
   ; TODO: make this work with system clipboard
@@ -573,25 +589,29 @@ before packages are loaded."
   (define-key evil-normal-state-map (kbd "RET") 'evil-ex-nohighlight)
   (define-key evil-normal-state-map (kbd "gr") 'xref-find-references)
 
-  ;; LSP -------------------------------------------------------------------------------------------
+  ;; LSP -----------------------------------------------------------------------
   (setq lsp-ui-doc-enable nil)
   (setq lsp-enable-symbol-highlighting t)
   (setq lsp-signature-auto-activate nil)
 
-  ;; vterm ----------------------------------------------------------------------------------------
-  ;; open shell at project root
-  ;; TODO: fix this for when no project is active
-  (spacemacs/set-leader-keys "'" 'spacemacs/projectile-shell-pop)
+  ;; vterm ---------------------------------------------------------------------
+  ;; open shell at project root (unless there is none, in which case at $HOME)
+  (spacemacs/set-leader-keys "'" (lambda ()
+                                   (interactive)
+                                   (if (projectile-project-p)
+                                       (spacemacs/projectile-shell-pop)
+                                     (spacemacs/default-pop-shell))))
 
   (evil-set-initial-state 'vterm-mode 'emacs)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-k") 'evil-previous-line)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-j") 'evil-next-line)
   (evil-define-key 'emacs vterm-mode-map (kbd "S-<escape>") 'other-window)
+  (setq term-buffer-maximum-size 0)  ; infinite history
 
 
-  ;; haskell ---------------------------------------------------------------------------------------
+  ;; haskell -------------------------------------------------------------------
   (evil-define-key 'normal haskell-interactive-mode-map
-    (kbd "C-j") 'haskell-interactive-mode-history-next
+    (kbd "C-j") 'haskell-interactive-mode-history-next)
+  (evil-define-key 'normal haskell-interactive-mode-map
     (kbd "C-k") 'haskell-interactive-mode-history-previous)
-
-  )
+)
