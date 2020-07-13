@@ -49,7 +49,6 @@ This function should only modify configuration layer settings."
      (python :variables
              python-backend 'lsp
              python-lsp-server 'mspyls
-
              python-tab-width 4
              python-fill-column 100
              python-formatter 'yapf
@@ -236,7 +235,7 @@ It should only modify the values of Spacemacs settings."
                          doom-vibrant
                          doom-horizon
                          doom-snazzy
-                         doom-spacegray
+                         doom-spacegrey
 
                          doom-nova
 
@@ -545,14 +544,19 @@ before packages are loaded."
   (setq truncate-lines t)
   (setq create-lockfiles nil)
   (setq projectile-indexing-method 'hybrid)
+  (customize-set-variable 'custom-file
+   (file-truename (concat dotspacemacs-directory ".emacs-custom.el")))
+  (load custom-file)
+
+  (setq counsel-rg-base-command
+        (append
+         (butlast counsel-rg-base-command)
+         '("--no-ignore-vcs" "--hidden" "%s")))
+
+  ;; helm (unused currently)
   (setq helm-xref-candidate-formatting-function
         'helm-xref-format-candidate-full-path)
   (setq treemacs-sorting 'alphabetic-asc)
-
-  (customize-set-variable
-   'custom-file
-   (file-truename (concat dotspacemacs-directory ".emacs-custom.el")))
-  (load custom-file)
 
   ;; autosave ------------------------------------------------------------------
   (defun save-buffer-if-needed ()
@@ -577,6 +581,7 @@ before packages are loaded."
   ;; themeing -----------------------------------------------------------------
   (doom-themes-visual-bell-config)
   (doom-themes-treemacs-config)
+  (doom-themes-org-config)
   (spacemacs/toggle-vi-tilde-fringe-off)
   ;; hide arrows at window border for truncated lines
   (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b00000000))
