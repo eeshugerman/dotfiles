@@ -549,6 +549,8 @@ before packages are loaded."
   (load custom-file)
   (evil-define-key 'normal 'global (kbd "zz") 'origami-toggle-node)
 
+  ;; ivy
+  (setq ivy-initial-inputs-alist nil)
   (setq counsel-rg-base-command
         (append
          (butlast counsel-rg-base-command)
