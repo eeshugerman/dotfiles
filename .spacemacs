@@ -187,7 +187,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil show the version string in the Spacemacs buffer. It will
    ;; appear as (spacemacs version)@(emacs version)
    ;; (default t)
-   dotspacemacs-startup-buffer-show-version t
+   dotspacemacs-startup-buffer-show-version nil
 
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
@@ -413,7 +413,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
-   dotspacemacs-folding-method 'evil
+   dotspacemacs-folding-method 'origami
 
    ;; If non-nil `smartparens-strict-mode' will be enabled in programming modes.
    ;; (default nil)
@@ -538,14 +538,22 @@ before packages are loaded."
   (setq truncate-lines t)
   (setq create-lockfiles nil)
   (setq projectile-indexing-method 'hybrid)
+  (customize-set-variable 'custom-file
+   (file-truename (concat dotspacemacs-directory ".emacs-custom.el")))
+  (load custom-file)
+  (evil-define-key 'normal 'global (kbd "zz") 'origami-toggle-node)
+
+  ;; ivy
+  (setq ivy-initial-inputs-alist nil)
+  (setq counsel-rg-base-command
+        (append
+         (butlast counsel-rg-base-command)
+         '("--no-ignore-vcs" "--hidden" "%s")))
+
+  ;; helm (unused currently)
   (setq helm-xref-candidate-formatting-function
         'helm-xref-format-candidate-full-path)
   (setq treemacs-sorting 'alphabetic-asc)
-
-  (customize-set-variable
-   'custom-file
-   (file-truename (concat dotspacemacs-directory ".emacs-custom.el")))
-  (load custom-file)
 
   ;; autosave ------------------------------------------------------------------
   (defun save-buffer-if-needed ()
@@ -570,6 +578,7 @@ before packages are loaded."
   ;; themeing -----------------------------------------------------------------
   (doom-themes-visual-bell-config)
   (doom-themes-treemacs-config)
+  (doom-themes-org-config)
   (spacemacs/toggle-vi-tilde-fringe-off)
   ;; hide arrows at window border for truncated lines
   (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b00000000))
