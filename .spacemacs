@@ -80,7 +80,9 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(evil-collection
-     writeroom-mode)
+     writeroom-mode
+     ivy-posframe
+     which-key-posframe)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -340,7 +342,7 @@ It should only modify the values of Spacemacs settings."
    ;; another same-purpose window is available. If non-nil, `switch-to-buffer'
    ;; displays the buffer in a same-purpose window even if the buffer can be
    ;; displayed in the current window. (default nil)
-   dotspacemacs-switch-to-buffer-prefers-purpose t
+   dotspacemacs-switch-to-buffer-prefers-purpose nil
 
    ;; If non-nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
@@ -534,16 +536,22 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
   ;; misc/general --------------------------------------------------------------
+  ; doesn't work with text-mode-hook?
+  (add-hook 'python-mode-hook 'spacemacs/toggle-truncate-lines-on)
   (setq x-select-enable-clipboard nil)
-  (setq truncate-lines t)
   (setq create-lockfiles nil)
   (setq projectile-indexing-method 'hybrid)
   (customize-set-variable 'custom-file
    (file-truename (concat dotspacemacs-directory ".emacs-custom.el")))
   (load custom-file)
   (evil-define-key 'normal 'global (kbd "zz") 'origami-toggle-node)
+  (which-key-posframe-mode 1)
+
 
   ;; ivy
+  (ivy-posframe-mode 1)
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+  (setq ivy-virtual-abbreviate 'full)  ; does this actually do anything?
   (setq ivy-initial-inputs-alist nil)
   (setq counsel-rg-base-command
         (append
@@ -566,7 +574,7 @@ before packages are loaded."
   (defadvice other-window (before other-window-now activate)
     (save-buffer-if-needed))
 
-  ;; undo tree -----------------------------------------------------------------
+  ;; undo --------------------------------------------------------------------
   ;; --- persistent undo
   ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
   (setq undo-tree-auto-save-history t
@@ -574,6 +582,10 @@ before packages are loaded."
         `(("." . ,(concat spacemacs-cache-directory "undo"))))
   (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
     (make-directory (concat spacemacs-cache-directory "undo")))
+
+  ;; --- granular history
+  ;; https://stackoverflow.com/a/41560712/2112489
+  (advice-add 'undo-auto--last-boundary-amalgamating-number :override #'ignore)
 
   ;; themeing -----------------------------------------------------------------
   (doom-themes-visual-bell-config)
@@ -607,8 +619,11 @@ before packages are loaded."
   (evil-set-initial-state 'vterm-mode 'emacs)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-k") 'evil-previous-line)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-j") 'evil-next-line)
-  (evil-define-key 'emacs vterm-mode-map (kbd "S-<escape>") 'other-window)
-  (setq term-buffer-maximum-size 0)  ; infinite history
+  (evil-define-key 'emacs vterm-mode-map (kbd "S-<escape>") 'evil-normal-state)
+  (evil-define-key 'normal vterm-mode-map (kbd "S-<escape>") 'evil-emacs-state)
+  (evil-define-key 'insert vterm-mode-map (kbd "S-<escape>") 'evil-emacs-state)
+  (setq vterm-max-scrollback 100000)  ; maximum size supported
+
 
 
   ;; haskell -------------------------------------------------------------------
