@@ -7,16 +7,14 @@ bind D tabclosealltoright
 bind gd tabduplicate
 bind gD tabdetach
 
-" doesn't work at all
-unbind <C-i>
+" can't get native editor to work correctly, use wasavi instead (plus it's nicer anyway in some ways)
+unbind --mode=input <C-i>
 
-" doesn't really work
-set editorcmd gnome-terminal -e "nvim %f"
+" almost works, but doesn't
+" js tri.config.set("theme", document.getElementsByClassName('darkreader').length ? "base16-tridactyl/base16-ashes" : "shydactyl")
 
+" colors shydactyl
 colors base16-tridactyl/base16-ashes
-
-" doesn't work :(
-jsb tri.config.set("theme", document.getElementsByClassName('darkreader').length ? "base16-tridactyl/base16-ashes" : "shydactyl")
 
 set hintchars wertyuioasdfjkl;zxcnm
 
@@ -28,13 +26,29 @@ jsb tri.excmds.setpref("privacy.resistFingerprinting.block_mozAddonManager", "tr
 jsb browser.webRequest.onHeadersReceived.addListener(tri.request.clobberCSP,{urls:["<all_urls>"],types:["main_frame"]},["blocking","responseHeaders"])
 
 set smoothscroll true
-bind j scrollline 8
-bind k scrollline -8
+set scrollduration 100
+bind j scrollline 10
+bind k scrollline -10
 
 bind ZZ !s killall firefox
 
 
-" disable all searchurls
-jsb Object.keys(tri.config.get("searchurls")).reduce((prev, u) => prev.then(_ => tri.config.set("searchurls", u, null)), Promise.resolve())
+bind ;v hint -F e => e.dispatchEvent(new MouseEvent('mouseeneter', {}))
+" trying to make ;v work on gitlab...
+" bind ;v hint -F e => { e.dispatchEvent(new MouseEvent('mouseover', {})); e.dispatchEvent(new MouseEvent('mouseenter', {})); }
 
+
+" disable searchurls
+setnull searchurls.amazon
+setnull searchurls.github
+setnull searchurls.google
+
+" testing find
+" bind / fillcmdline find
+" bind ? fillcmdline find -?
+" bind n findnext 1
+" bind N findnext -1
+" bind <Return> nohlsearch
+
+js console.log('config source complete!')
 " vim: set filetype=vim:

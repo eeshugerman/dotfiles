@@ -1,14 +1,27 @@
-#!/bin/sh
+#!/bin/zsh
+
+set -eu
 
 cd "$HOME"
 
-echo "Initializing submodules..."
+# --- GENERAL -----------------------------------------------------------------
 yadm submodule update --recursive --init
 
-echo "Intstalling oh-my-zsh..."
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+if [ $(uname) = "Darwin" ]; then
+    brew install mackup gpg
+    mackup restore
+else
+    dconf load / < "$HOME/.config/dconf.ini"
+fi
 
-git clone https://github.com/denysdovhan/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt"
+GPG_TTY=$(tty) yadm decrypt
+
+# --- EMACS -------------------------------------------------------------------
+touch "$HOME/.emacs-custom.el"
+
+# --- ZSH ---------------------------------------------------------------------
+sh -c "KEEP_ZSHRC=yes RUNZSH=no $(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+ZSH_CUSTOM="$ZSH/custom"  # not defined yet because oh-my-zsh hasn't run
+git clone https://github.com/denysdovhan/spaceship-prompt.git "$ZSH/CUSTOM/themes/spaceship-prompt"
 ln -s "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme"
-
-dconf load / < "$HOME/.config/dconf.ini"
+exec zsh -l

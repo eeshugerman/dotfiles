@@ -32,20 +32,41 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(csv
-     javascript
+   '((haskell :variables
+              haskell-completion-backend 'lsp)
+     scheme
+     rust
+     (html :variables
+           css-enable-lsp t
+           scss-enable-lsp t
+           html-enable-lsp t)
+     import-js
+     (javascript :variables javascript-import-tool 'import-js)
+     typescript
+     (java :variables java-backend 'lsp)
+     (unicode-fonts :variables
+                    unicode-fonts-enable-ligatures t
+                    unicode-fonts-ligature-modes '(typescript-mode  ;; breaks in python files
+                                                   javascript-mode
+                                                   web-mode
+                                                   html-mode
+                                                   scss-mode
+                                                   css-mode))
+     csv
      sql
+     terraform
      nginx
      ansible
      yaml
      docker
-;;    html
-;;    haskell
-;;    scheme
-;;    javascript
      dap
      multiple-cursors
-     treemacs
+
+     (treemacs :variables
+               treemacs-sorting 'alphabetic-asc
+               treemacs-use-filewatch-mode t
+               treemacs-use-git-mode 'deferred)
+
      (python :variables
              python-backend 'lsp
              python-lsp-server 'mspyls
@@ -58,14 +79,12 @@ This function should only modify configuration layer settings."
      ipython-notebook
      ivy
      auto-completion
-     better-defaults
      emacs-lisp
      git
 	   github
      markdown
-     (org :variables
-          org-enable-jira-support t
-          jiralib-url "https://digital1stmedia.atlassian.net:443")
+     org
+     epub
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom
@@ -73,28 +92,32 @@ This function should only modify configuration layer settings."
      (spell-checking :variables
                      spell-checking-enable-by-default nil)
      syntax-checking
-     themes-megapack
-;;     c-c++
      )
 
-   ;; List of additional packages that will be installed without being
-   ;; wrapped in a layer. If you need some configuration for these
-   ;; packages, then consider creating a layer. You can also put the
-   ;; configuration in `dotspacemacs/user-config'.
-   ;; To use a local version of a package, use the `:location' property:
-   ;; '(your-package :location "~/path/to/your-package/")
+   ;; List of additional packages that will be installed without being wrapped
+   ;; in a layer (generally the packages are installed only and should still be
+   ;; loaded using load/require/use-package in the user-config section below in
+   ;; this file). If you need some configuration for these packages, then
+   ;; consider creating a layer. You can also put the configuration in
+   ;; `dotspacemacs/user-config'. To use a local version of a package, use the
+   ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
-   '(evil-collection
+   '(doom-themes
      writeroom-mode
+     which-key-posframe
+     editorconfig
      ivy-posframe
-     which-key-posframe)
+     ivy-rich
+     all-the-icons-ivy-rich)
+
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(doom-flatwhite-theme  ;; if these arent't listed here spacemacs
+                                    doom-henna-theme)     ;; prints a harmless error on startup. why??
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -110,12 +133,9 @@ This function should only modify configuration layer settings."
 This function is called at the very beginning of Spacemacs startup,
 before layer configuration.
 It should only modify the values of Spacemacs settings."
+
   ;; https://www.reddit.com/r/emacs/comments/cdf48c/failed_to_download_gnu_archive/
   ;; (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-
-  ;; TODO: try dotspacemacs-verify-spacelpa-archives instead?
-  ;; https://www.reddit.com/r/emacs/comments/aug9in/failed_to_verify_signature_archivecontentssig/eh81iuz/?st=k11em1xw&sh=f2ba31d8
-  ;; (setq package-check-signature nil)
 
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
@@ -136,7 +156,7 @@ It should only modify the values of Spacemacs settings."
    ;; To load it when starting Emacs add the parameter `--dump-file'
    ;; when invoking Emacs 27.1 executable on the command line, for instance:
    ;;   ./emacs --dump-file=$HOME/.emacs.d/.cache/dumps/spacemacs-27.1.pdmp
-   ;; (default spacemacs-27.1.pdmp)
+   ;; (default (format "spacemacs-%s.pdmp" emacs-version))
    dotspacemacs-emacs-dumper-dump-file (format "spacemacs-%s.pdmp" emacs-version)
 
    ;; If non-nil ELPA repositories are contacted via HTTPS whenever it's
@@ -149,7 +169,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Maximum allowed time in seconds to contact an ELPA repository.
    ;; (default 5)
-   dotspacemacs-elpa-timeout 5
+   dotspacemacs-elpa-timeout 10
 
    ;; Set `gc-cons-threshold' and `gc-cons-percentage' when startup finishes.
    ;; This is an advanced option and should not be changed unless you suspect
@@ -166,7 +186,9 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil then Spacelpa repository is the primary source to install
    ;; a locked version of packages. If nil then Spacemacs will install the
-   ;; latest version of packages from MELPA. (default nil)
+   ;; latest version of packages from MELPA. Spacelpa is currently in
+   ;; experimental state please use only for testing purposes.
+   ;; (default nil)
    dotspacemacs-use-spacelpa nil
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
@@ -190,7 +212,11 @@ It should only modify the values of Spacemacs settings."
    ;; with `:variables' keyword (similar to layers). Check the editing styles
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
-   dotspacemacs-editing-style 'vim
+   dotspacemacs-editing-style '(vim :variables
+                                    vim-style-remap-Y-to-y$ t
+                                    vim-style-visual-feedback t
+                                    vim-style-visual-line-move-text t
+                                    vim-style-ex-substitute-global t)
 
    ;; If non-nil show the version string in the Spacemacs buffer. It will
    ;; appear as (spacemacs version)@(emacs version)
@@ -208,11 +234,15 @@ It should only modify the values of Spacemacs settings."
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
-   ;; `recents' `bookmarks' `projects' `agenda' `todos'.
+   ;; `recents' `recents-by-project' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '((projects . 7)
-                                (recents . 5))
+   ;; The exceptional case is `recents-by-project', where list-type must be a
+   ;; pair of numbers, e.g. `(recents-by-project . (7 .  5))', where the first
+   ;; number is the project limit and the second the limit on the recent files
+   ;; within a project.
+   dotspacemacs-startup-lists '((recents . 5)
+                                (projects . 7))
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
@@ -223,7 +253,15 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-new-empty-buffer-major-mode 'text-mode
 
    ;; Default major mode of the scratch buffer (default `text-mode')
-   dotspacemacs-scratch-mode 'text-mode
+   dotspacemacs-scratch-mode 'lisp-mode
+
+   ;; If non-nil, *scratch* buffer will be persistent. Things you write down in
+   ;; *scratch* buffer will be saved and restored automatically.
+   dotspacemacs-scratch-buffer-persistent t
+
+   ;; If non-nil, `kill-buffer' on *scratch* buffer
+   ;; will bury it instead of killing.
+   dotspacemacs-scratch-buffer-unkillable t
 
    ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
    ;; (default nil)
@@ -232,20 +270,30 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(doom-palenight
+   dotspacemacs-themes '(; the gotos
+                         doom-nord-light
+                         doom-nord
+
+                         ; extra lights
+                         doom-one-light
+                         doom-opera-light
+                         doom-tomorrow-day
+                         doom-flatwhite
+
+                         ; extra medium
+                         doom-nova
+
+                         ; extra darks
+                         doom-henna
+                         doom-city-lights
+                         doom-ephemeral
+                         doom-material
+                         doom-palenight
                          doom-one
                          doom-vibrant
                          doom-horizon
                          doom-snazzy
-                         doom-spacegrey
-
-                         doom-nova
-
-                         doom-one-light
-                         doom-nord-light
-                         doom-opera-light
-                         doom-solarized-light
-                         )
+                         doom-spacegrey)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -254,16 +302,17 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   ; dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
    dotspacemacs-mode-line-theme 'doom
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
    dotspacemacs-colorize-cursor-according-to-state t
 
-   ;; Default font or prioritized list of fonts.
-   dotspacemacs-default-font '("Source Code Pro"
-                               :size 11.0
+   ;; Default font or prioritized list of fonts. The `:size' can be specified as
+   ;; a non-negative integer (pixel size), or a floating-point (point size).
+   ;; Point size is recommended, because it's device independent. (default 10.0)
+   dotspacemacs-default-font '("Fira Code"
+                               :size 12.0
                                :weight normal
                                :width normal)
 
@@ -419,9 +468,9 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil)
    dotspacemacs-line-numbers 'relative
 
-   ;; Code folding method. Possible values are `evil' and `origami'.
+   ;; Code folding method. Possible values are `evil', `origami' and `vimish'.
    ;; (default 'evil)
-   dotspacemacs-folding-method 'origami
+   dotspacemacs-folding-method 'evil
 
    ;; If non-nil `smartparens-strict-mode' will be enabled in programming modes.
    ;; (default nil)
@@ -474,7 +523,7 @@ It should only modify the values of Spacemacs settings."
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
    ;; (default "%I@%S")
-   dotspacemacs-frame-title-format "%I@%S"
+   dotspacemacs-frame-title-format "Emacs"
 
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
@@ -493,6 +542,13 @@ It should only modify the values of Spacemacs settings."
    ;; If it does deactivate it here.
    ;; (default t)
    dotspacemacs-use-clean-aindent-mode t
+
+   ;; If non-nil shift your number row to match the entered keyboard layout
+   ;; (only in insert state). Currently supported keyboard layouts are:
+   ;; `qwerty-us', `qwertz-de' and `querty-ca-fr'.
+   ;; New layouts can be added in `spacemacs-editing' layer.
+   ;; (default nil)
+   dotspacemacs-swap-number-row nil
 
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
@@ -521,11 +577,9 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-
-  (setq python-fill-column 100)
-  (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
-
-  )
+  (setq byte-compile-warnings '(cl-functions))
+  (if (eq system-type 'darwin)
+      (setq insert-directory-program "/usr/local/bin/gls")))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -541,33 +595,72 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
+  ;; init standalone modes ----------------------------------------------------
+  (use-package all-the-icons-ivy-rich
+    :ensure t
+    :init (all-the-icons-ivy-rich-mode 1))
+  (use-package ivy-rich
+    :ensure t
+    :init (ivy-rich-mode 1))
+  (ivy-posframe-mode 1)
+  (which-key-posframe-mode 1)
+  (editorconfig-mode 1)
+
+
   ;; misc/general --------------------------------------------------------------
-  ; doesn't work with text-mode-hook?
-  (add-hook 'python-mode-hook 'spacemacs/toggle-truncate-lines-on)
-  (setq x-select-enable-clipboard nil)
+  (add-hook 'hack-local-variables-hook 'spacemacs/toggle-truncate-lines-on)
+  (setq select-enable-clipboard nil)
   (setq create-lockfiles nil)
   (setq projectile-indexing-method 'hybrid)
-  (customize-set-variable 'custom-file
-   (file-truename (concat dotspacemacs-directory ".emacs-custom.el")))
+  (customize-set-variable 'custom-file (file-truename "~/.emacs-custom.el"))
   (load custom-file)
-  (evil-define-key 'normal 'global (kbd "zz") 'origami-toggle-node)
-  (which-key-posframe-mode 1)
+  (evil-define-key 'normal 'global (kbd "zz") 'evil-toggle-fold)
+  (setq bidi-inhibit-bpa t)
+  (setq bidi-paragraph-direction 'left-to-right)
+  (setq byte-compile-warnings '(cl-functions))
+  (spacemacs/set-leader-keys "fE" 'custom/echo-file-path)  ;; TODO: how to make which-key reflect this?
+  ;; (setq ansible-vault-password-file "foo")              ;; TODO: set this to 'projectile-project-root / .vault_pass
 
 
-  ;; ivy
-  (ivy-posframe-mode 1)
-  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+  ;; python ------------------------------------------------------------------------
+  ;; --- tweaks
+  (setq dap-python-debugger 'debugpy) ; this should be the default at some point
+  (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
+  ;; --- dependencies
+  ;; pip install importmagic epc ipython debugpy flake8
+  (setq python-shell-interpreter (if (eq system-type 'darwin) "python3.8" "python3"))
+
+  (setq flycheck-python-flake8-executable python-shell-interpreter)
+  ;; (setq lsp-python-ms-python-executable-cmd python-shell-interpreter)  ;; overrides activated venv, no bueno
+  ;; (setq poetry-tracking-strategy 'switch-buffer)
+  ;; (poetry-tracking-mode)
+  (add-hook 'ein:notebook-mode-hook 'spacemacs/toggle-fill-column-indicator-off)
+  (setq ein:output-area-inlined-images t)
+
+
+  ;; git ----------------------------------------------------------------------
+  (setq browse-at-remote-remote-type-domains '(("git.loc.gov" . "gitlab")
+                                               ("github.com" .  "github")))
+  (setq magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
+  ;; (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-topleft-v1)
+
+
+  ;; writeroom -------------------------------------------------------------------------
+  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-visual-line-navigation-on)
+  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-line-numbers-off)
+  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-spelling-checking-on)
+  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-fullscreen-frame-off)
+
+
+  ;; ivy ---------------------------------------------------------------------
+  (setq ivy-posframe-display-functions-alist
+        '((t . ivy-posframe-display-at-frame-center)))
   (setq ivy-virtual-abbreviate 'full)  ; does this actually do anything?
   (setq ivy-initial-inputs-alist nil)
+  (setq ivy-wrap t)
   (setq counsel-rg-base-command
-        (append
-         (butlast counsel-rg-base-command)
-         '("--no-ignore-vcs" "--hidden" "%s")))
+        (append (butlast counsel-rg-base-command) '("--hidden" "%s")))
 
-  ;; helm (unused currently)
-  (setq helm-xref-candidate-formatting-function
-        'helm-xref-format-candidate-full-path)
-  (setq treemacs-sorting 'alphabetic-asc)
 
   ;; autosave ------------------------------------------------------------------
   (defun save-buffer-if-needed ()
@@ -580,6 +673,7 @@ before packages are loaded."
   (defadvice other-window (before other-window-now activate)
     (save-buffer-if-needed))
 
+
   ;; undo --------------------------------------------------------------------
   ;; --- persistent undo
   ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
@@ -590,46 +684,91 @@ before packages are loaded."
     (make-directory (concat spacemacs-cache-directory "undo")))
 
   ;; --- granular history
-  ;; https://stackoverflow.com/a/41560712/2112489
-  (advice-add 'undo-auto--last-boundary-amalgamating-number :override #'ignore)
+  (setq evil-want-fine-undo t)
+
 
   ;; themeing -----------------------------------------------------------------
-  (doom-themes-visual-bell-config)
-  (doom-themes-treemacs-config)
-  (doom-themes-org-config)
   (spacemacs/toggle-vi-tilde-fringe-off)
+  (fringe-mode '(0 . nil))  ; disable right "fringe"
   ;; hide arrows at window border for truncated lines
-  (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b00000000))
+  (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b0))
+  (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
+  (define-fringe-bitmap 'right-arrow (make-vector 8 #b0))
+
+  (package-install-file "~/devel/misc/lsp-treemacs")  ;; why does this fix icons?
+  (setq doom-themes-treemacs-theme "doom-colors")
+  (doom-themes-treemacs-config)
+
+  (doom-themes-org-config)
+  (doom-themes-visual-bell-config)
+
+  (setq window-divider-default-right-width 10)
+
+  (setq ivy-posframe-border-width 10)
+  (setq which-key-posframe-border-width 10)
+
+  (defun do-theme-tweaks ()
+    "misc tweaks that for some reason need a nudge after theme change"
+    ;; posframe color stuff
+    (let ((face-color (face-background 'ivy-posframe)))
+      (set-face-background 'which-key-posframe face-color)
+      (set-face-background 'which-key-posframe-border face-color)
+      (set-face-background 'ivy-posframe-border face-color))
+    ;; lighter window divider
+    (set-face-foreground 'window-divider (face-background 'mode-line-inactive))
+    (window-divider-mode))
+
+  (add-hook 'spacemacs-post-theme-change-hook 'do-theme-tweaks)
+  (do-theme-tweaks)
+
+  (set-face-foreground 'terraform--resource-name-face "hot pink")
+
+
+  ;; doom-modeline -------------------------------------------------------------
+  (setq doom-modeline-window-width-limit 90)
+  (setq doom-modeline-buffer-file-name-style 'truncate-with-project)
+  (setq doom-modeline-buffer-encoding nil)
+  ; default: https://github.com/seagle0128/doom-modeline/blob/master/doom-modeline.el#L92-L94
+  (doom-modeline-def-modeline 'main
+    '(bar workspace-name window-number modals matches buffer-info remote-host buffer-position word-count parrot selection-info)
+    '(objed-state misc-info persp-name battery grip irc mu4e gnus github debug repl lsp minor-modes input-method indent-info buffer-encoding process vcs checker))
+
 
   ;; vi ------------------------------------------------------------------------
   (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
   (define-key evil-normal-state-map (kbd "V") (kbd "C-v $"))
-  ; TODO: make this work with system clipboard
-  (define-key evil-normal-state-map (kbd "Y") (kbd "y $"))
   (define-key evil-normal-state-map (kbd "RET") 'evil-ex-nohighlight)
-  (define-key evil-normal-state-map (kbd "gr") 'xref-find-references)
+
 
   ;; LSP -----------------------------------------------------------------------
   (setq lsp-ui-doc-enable nil)
+  (setq lsp-eldoc-enable-hover nil)
   (setq lsp-enable-symbol-highlighting t)
-  (setq lsp-signature-auto-activate nil)
+  (setq lsp-signature-auto-activate t)
+  (setq lsp-headerline-breadcrumb-enable t)
+  (setq lsp-headerline-breadcrumb-segments '(symbols))
+  (setq lsp-ui-sideline-enable t)
+
 
   ;; vterm ---------------------------------------------------------------------
-  ;; open shell at project root (unless there is none, in which case at $HOME)
-  (spacemacs/set-leader-keys "'" (lambda ()
-                                   (interactive)
-                                   (if (projectile-project-p)
-                                       (spacemacs/projectile-shell-pop)
-                                     (spacemacs/default-pop-shell))))
+  (defun pop-shell-at-project-root-or-home ()
+    (interactive)
+    (if (projectile-project-p)
+        (spacemacs/projectile-shell-pop)
+      (spacemacs/default-pop-shell)))
+  (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
 
-  (evil-set-initial-state 'vterm-mode 'emacs)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-k") 'evil-previous-line)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-j") 'evil-next-line)
-  (evil-define-key 'emacs vterm-mode-map (kbd "S-<escape>") 'evil-normal-state)
-  (evil-define-key 'normal vterm-mode-map (kbd "S-<escape>") 'evil-emacs-state)
-  (evil-define-key 'insert vterm-mode-map (kbd "S-<escape>") 'evil-emacs-state)
-  (setq vterm-max-scrollback 100000)  ; maximum size supported
+  (evil-define-key 'normal vterm-mode-map (kbd "C-k") 'vterm-previous-prompt)
+  (evil-define-key 'normal vterm-mode-map (kbd "C-j") 'vterm-next-prompt)
+  (evil-define-key 'emacs vterm-mode-map (kbd "C-,") 'evil-normal-state)
+  (evil-define-key 'normal vterm-mode-map (kbd "C-,") 'evil-emacs-state)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-,") 'evil-emacs-state)
 
+  (setq vterm-max-scrollback 100000)  ; maximum size supported
+  (setq vterm-always-compile-module t)
+  ;; (setq term-suppress-hard-newline t) ;; vterm equivalent?
 
 
   ;; haskell -------------------------------------------------------------------
@@ -637,4 +776,69 @@ before packages are loaded."
     (kbd "C-j") 'haskell-interactive-mode-history-next)
   (evil-define-key 'normal haskell-interactive-mode-map
     (kbd "C-k") 'haskell-interactive-mode-history-previous)
+
+
+  ;; angular/web ---------------------------------------------------------------
+  (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
+  (setenv "TSC_NONPOLLING_WATCHER" "true")
+
+  ;; what does this do?
+  (setq lsp-clients-angular-language-server-command
+        (let ((node-modules "/usr/local/lib/node_modules"))
+          `("node"
+            ,(concat node-modules "/@angular/language-server")
+            "--ngProbeLocations" ,node-modules
+            "--tsProbeLocations" ,node-modules
+            "--stdio")))
+
+  ;; (setq-default js-indent-level 2
+  ;;               javascript-indent-level 2
+  ;;               typescript-indent-level 2
+  ;;               web-mode-markup-indent-offset 2
+  ;;               web-mode-css-indent-offset 2
+  ;;               web-mode-code-indent-offset 2
+  ;;               css-indent-offset 2)
+
+
+  ;; org --------------------------------------------------------------------------
+  (with-eval-after-load 'org
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((scheme . t)))
+    (setq org-confirm-babel-evaluate nil))
+
+  (setq org-adapt-indentation nil)
+  (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") 'org-babel-execute-src-block)
 )
+
+
+;; functions for adhoc use ----------------------------------------------------
+(defun custom/hide-dos-eol ()
+  "Do not show ^M in files containing mixed UNIX and DOS line endings."
+  (interactive)
+  (setq buffer-display-table (make-display-table))
+  (aset buffer-display-table ?\^M []))
+
+(defun custom/macos-paste ()
+  (interactive)
+  (ignore-error 'end-of-buffer (forward-char))
+  (insert (shell-command-to-string "pbpaste")))
+
+(defun custom/kill-buffers (regexp)
+  "Kill buffers matching REGEXP without asking for confirmation."
+  (interactive "Kill buffers matching this regular expression: ")
+  (cl-letf (((symbol-function 'kill-buffer-ask)
+         (lambda (buffer) (kill-buffer buffer))))
+    (kill-matching-buffers regexp)))
+
+(defun custom/echo-file-path ()
+  (interactive)
+  (spacemacs/echo (spacemacs--projectile-file-path)))
+
+(defun custom/magit-kill-all ()
+     (interactive)
+     (custom/kill-buffers "^magit"))
+
+(defun custom/browse-info ()
+  (interactive)
+  (info (buffer-file-name)))
