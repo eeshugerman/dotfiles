@@ -544,6 +544,11 @@ before packages are loaded."
   (which-key-posframe-mode 1)
 
 
+  ;; writeroom
+  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-visual-line-navigation-on)
+  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-line-numbers-off)
+  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-spelling-checking-on)
+
   ;; ivy
   (ivy-posframe-mode 1)
   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
