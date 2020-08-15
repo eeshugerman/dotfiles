@@ -7,11 +7,8 @@ bind D tabclosealltoright
 bind gd tabduplicate
 bind gD tabdetach
 
-" doesn't work at all
-unbind <C-i>
-
-" doesn't really work
-set editorcmd gnome-terminal -e "nvim %f"
+" can't get native editor to work correctly, use wasavi instead (plus it's nicer anyway in some ways)
+unbind --mode=input <C-i>
 
 colors base16-tridactyl/base16-ashes
 
@@ -35,6 +32,7 @@ bind ZZ !s killall firefox
 
 
 " disable all searchurls
+" doesn't work anymore :(
 jsb Object.keys(tri.config.get("searchurls")).reduce((prev, u) => prev.then(_ => tri.config.set("searchurls", u, null)), Promise.resolve())
 
 " vim: set filetype=vim:

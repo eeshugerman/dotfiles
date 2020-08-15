@@ -82,7 +82,8 @@ This function should only modify configuration layer settings."
    '(evil-collection
      writeroom-mode
      ivy-posframe
-     which-key-posframe)
+     which-key-posframe
+     poetry)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -104,12 +105,9 @@ This function should only modify configuration layer settings."
 This function is called at the very beginning of Spacemacs startup,
 before layer configuration.
 It should only modify the values of Spacemacs settings."
+
   ;; https://www.reddit.com/r/emacs/comments/cdf48c/failed_to_download_gnu_archive/
   ;; (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-
-  ;; TODO: try dotspacemacs-verify-spacelpa-archives instead?
-  ;; https://www.reddit.com/r/emacs/comments/aug9in/failed_to_verify_signature_archivecontentssig/eh81iuz/?st=k11em1xw&sh=f2ba31d8
-  ;; (setq package-check-signature nil)
 
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
@@ -231,15 +229,14 @@ It should only modify the values of Spacemacs settings."
                          doom-vibrant
                          doom-horizon
                          doom-snazzy
-                         doom-spacegray
+                         doom-spacegrey
 
                          doom-nova
 
                          doom-one-light
                          doom-nord-light
                          doom-opera-light
-                         doom-solarized-light
-                         )
+                         doom-solarized-light)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -257,7 +254,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 11.0
+                               :size 12.0
                                :weight normal
                                :width normal)
 
@@ -536,8 +533,7 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
   ;; misc/general --------------------------------------------------------------
-  ; doesn't work with text-mode-hook?
-  (add-hook 'python-mode-hook 'spacemacs/toggle-truncate-lines-on)
+  (add-hook 'hack-local-variables-hook 'spacemacs/toggle-truncate-lines-on)
   (setq x-select-enable-clipboard nil)
   (setq create-lockfiles nil)
   (setq projectile-indexing-method 'hybrid)
@@ -593,7 +589,9 @@ before packages are loaded."
   (doom-themes-org-config)
   (spacemacs/toggle-vi-tilde-fringe-off)
   ;; hide arrows at window border for truncated lines
-  (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b00000000))
+  (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b0))
+  (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
+  (define-fringe-bitmap 'right-arrow (make-vector 8 #b0))
 
   ;; vi ------------------------------------------------------------------------
   (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
@@ -601,12 +599,15 @@ before packages are loaded."
   ; TODO: make this work with system clipboard
   (define-key evil-normal-state-map (kbd "Y") (kbd "y $"))
   (define-key evil-normal-state-map (kbd "RET") 'evil-ex-nohighlight)
-  (define-key evil-normal-state-map (kbd "gr") 'xref-find-references)
+  (define-key evil-normal-state-map (kbd "gr") 'lsp-find-references)
 
   ;; LSP -----------------------------------------------------------------------
   (setq lsp-ui-doc-enable nil)
+  (setq lsp-eldoc-enable-hover nil)
   (setq lsp-enable-symbol-highlighting t)
-  (setq lsp-signature-auto-activate nil)
+  (setq lsp-signature-auto-activate t)
+  (setq lsp-headerline-breadcrumb-enable t)
+  (setq lsp-headerline-breadcrumb-segments '(symbols))
 
   ;; vterm ---------------------------------------------------------------------
   ;; open shell at project root (unless there is none, in which case at $HOME)

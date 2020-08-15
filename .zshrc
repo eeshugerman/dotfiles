@@ -34,7 +34,7 @@ unsetopt beep
 KEYTIMEOUT=1  # 10ms
 
 alias vim="nvim"
-alias xclip="xclip -selection c"
+alias xclip="xclip -selection clipboard"
 alias open="xdg-open"
 alias ep="sudo eopkg"
 
