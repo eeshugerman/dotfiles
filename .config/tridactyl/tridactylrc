@@ -25,8 +25,9 @@ jsb tri.excmds.setpref("privacy.resistFingerprinting.block_mozAddonManager", "tr
 jsb browser.webRequest.onHeadersReceived.addListener(tri.request.clobberCSP,{urls:["<all_urls>"],types:["main_frame"]},["blocking","responseHeaders"])
 
 set smoothscroll true
-bind j scrollline 8
-bind k scrollline -8
+set scrollduration 100
+bind j scrollline 10
+bind k scrollline -10
 
 bind ZZ !s killall firefox
 
@@ -34,5 +35,12 @@ bind ZZ !s killall firefox
 " disable all searchurls
 " doesn't work anymore :(
 jsb Object.keys(tri.config.get("searchurls")).reduce((prev, u) => prev.then(_ => tri.config.set("searchurls", u, null)), Promise.resolve())
+
+" testing find
+bind / fillcmdline find
+bind ? fillcmdline find -?
+bind n findnext 1
+bind N findnext -1
+bind <Return> nohlsearch
 
 " vim: set filetype=vim:
