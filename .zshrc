@@ -10,14 +10,18 @@ COMPLETION_WAITING_DOTS="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  git
-  themes
-  python
-  vi-mode
-  virtualenv
+  aws
   colored-man-pages
+  colorize
   docker
   docker-compose
+  git
+  python
+  themes
+  vi-mode
+  virtualenv
+  virtualenvwrapper
+  zsh_reload
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -38,7 +42,7 @@ alias xclip="xclip -selection clipboard"
 alias open="xdg-open"
 alias ep="sudo eopkg"
 
-alias dconf-dump="dconf dump / | vim"
+alias dconf-dump="dconf dump / | vim -R -c 'set ft=dosini'"
 alias dconf-edit="vim $HOME/.config/dconf.ini"
 alias dconf-load="dconf load / < $HOME/.config/dconf.ini"
 

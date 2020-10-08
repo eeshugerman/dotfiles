@@ -32,17 +32,31 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(haskell
-     docker
-     javascript
+   '(rust
+     (html :variables
+           css-enable-lsp t
+           scss-enable-lsp t
+           html-enable-lsp t)
+     import-js
+     (javascript :variables javascript-import-tool 'import-js)
+     typescript
+     (unicode-fonts :variables
+                    unicode-fonts-enable-ligatures t
+                    unicode-fonts-ligature-modes '(typescript-mode  ;; breaks in python files
+                                                   javascript-mode
+                                                   web-mode
+                                                   html-mode
+                                                   scss-mode
+                                                   css-mode))
+     csv
      sql
      nginx
      ansible
      yaml
-     scheme
-     html
-     javascript
+     docker
      dap
+     multiple-cursors
+     treemacs
      (python :variables
              python-backend 'lsp
              python-lsp-server 'mspyls
@@ -82,9 +96,11 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages
    '(evil-collection
      writeroom-mode
+     poetry
      ivy-posframe
      which-key-posframe
-     poetry)
+     editorconfig)
+
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -142,7 +158,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Maximum allowed time in seconds to contact an ELPA repository.
    ;; (default 5)
-   dotspacemacs-elpa-timeout 5
+   dotspacemacs-elpa-timeout 10
 
    ;; Set `gc-cons-threshold' and `gc-cons-percentage' when startup finishes.
    ;; This is an advanced option and should not be changed unless you suspect
@@ -206,8 +222,8 @@ It should only modify the values of Spacemacs settings."
    ;; `recents' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '((projects . 7)
-                                (recents . 5))
+   dotspacemacs-startup-lists '((recents . 7)
+                                (projects . 5))
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
@@ -218,7 +234,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-new-empty-buffer-major-mode 'text-mode
 
    ;; Default major mode of the scratch buffer (default `text-mode')
-   dotspacemacs-scratch-mode 'text-mode
+   dotspacemacs-scratch-mode 'lisp-mode
 
    ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
    ;; (default nil)
@@ -256,8 +272,8 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-colorize-cursor-according-to-state t
 
    ;; Default font or prioritized list of fonts.
-   dotspacemacs-default-font '("Source Code Pro"
-                               :size 12.0
+   dotspacemacs-default-font '("Fira Code"
+                               :size 10.0
                                :weight normal
                                :width normal)
 
@@ -522,9 +538,7 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-
-  (setq python-fill-column 100)
-  (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on))
+  )
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -540,6 +554,11 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
+  ;; init standalone modes ----------------------------------------------------
+  (ivy-posframe-mode 1)
+  (which-key-posframe-mode 1)
+  (editorconfig-mode 1)
+
   ;; misc/general --------------------------------------------------------------
   (add-hook 'hack-local-variables-hook 'spacemacs/toggle-truncate-lines-on)
   (setq x-select-enable-clipboard nil)
@@ -548,9 +567,14 @@ before packages are loaded."
   (customize-set-variable 'custom-file
    (file-truename (concat dotspacemacs-directory ".emacs-custom.el")))
   (load custom-file)
-  (evil-define-key 'normal 'global (kbd "zz") 'origami-toggle-node)
-  (which-key-posframe-mode 1)
+  (evil-define-key 'normal 'global (kbd "zz") 'evil-toggle-fold)
+  (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
 
+  ;; git ----------------------------------------------------------------------
+  (setq browse-at-remote-remote-type-domains '(("git.loc.gov" . "gitlab")
+                                               ("github.com" . "github")))
+  (setq magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
+  ;; (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-topleft-v1)
 
   ;; writeroom
   (add-hook 'writeroom-mode-hook 'spacemacs/toggle-visual-line-navigation-on)
@@ -558,17 +582,17 @@ before packages are loaded."
   (add-hook 'writeroom-mode-hook 'spacemacs/toggle-spelling-checking-on)
   (add-hook 'writeroom-mode-hook 'spacemacs/toggle-fullscreen-frame-off)
 
-  ;; ivy
-  (ivy-posframe-mode 1)
+  ;; posframe -----------------------------------------------------------------
   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+  (set-face-background 'which-key-posframe "#1c202c")
+
+  ;; ivy ---------------------------------------------------------------------
   (setq ivy-virtual-abbreviate 'full)  ; does this actually do anything?
   (setq ivy-initial-inputs-alist nil)
   (setq counsel-rg-base-command
-        (append
-         (butlast counsel-rg-base-command)
-         '("--no-ignore-vcs" "--hidden" "%s")))
+        (append (butlast counsel-rg-base-command) '("--hidden" "%s")))
 
-  ;; helm (unused currently)
+  ;; helm (unused currently) ---------------------------------------------------
   (setq helm-xref-candidate-formatting-function
         'helm-xref-format-candidate-full-path)
   (setq treemacs-sorting 'alphabetic-asc)
@@ -577,7 +601,7 @@ before packages are loaded."
   (defun save-buffer-if-needed ()
     (when (and (buffer-file-name) (buffer-modified-p))
       (save-buffer)))
-  (add-hook 'focus-out-hook 'save-buffer-if-needed)
+  ;; (add-hook 'focus-out-hook 'save-buffer-if-needed)
   ;; the following don't seem to work :(
   (defadvice switch-to-buffer (before set-buffer activate)
     (save-buffer-if-needed))
@@ -598,14 +622,31 @@ before packages are loaded."
   (advice-add 'undo-auto--last-boundary-amalgamating-number :override #'ignore)
 
   ;; themeing -----------------------------------------------------------------
-  (doom-themes-visual-bell-config)
-  (doom-themes-treemacs-config)
-  (doom-themes-org-config)
   (spacemacs/toggle-vi-tilde-fringe-off)
+  (fringe-mode '(0 . nil))  ; disable right "fringe" (i'd call it a border)
   ;; hide arrows at window border for truncated lines
   (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b0))
   (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
   (define-fringe-bitmap 'right-arrow (make-vector 8 #b0))
+
+  (doom-themes-visual-bell-config)
+  (setq doom-themes-treemacs-theme "doom-colors")
+  (doom-themes-treemacs-config)
+  (doom-themes-org-config)
+
+  ;; doom-modeline -------------------------------------------------------------
+  ; TODO: calculate width limit based on current chars of modeline? can we render 'mode-line-format to a string?
+  (setq doom-modeline-window-width-limit 90)
+
+  (setq doom-modeline-buffer-file-name-style 'truncate-all)
+
+  ; default: https://github.com/seagle0128/doom-modeline/blob/master/doom-modeline.el#L92-L94
+  (doom-modeline-def-modeline 'main
+    '(bar workspace-name window-number modals matches buffer-info remote-host buffer-position word-count parrot selection-info)
+    '(objed-state misc-info persp-name battery grip irc mu4e gnus github debug repl lsp minor-modes input-method indent-info buffer-encoding process vcs checker))
+
+  (setq doom-modeline-buffer-encoding nil)
+
 
   ;; vi ------------------------------------------------------------------------
   (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
@@ -613,6 +654,7 @@ before packages are loaded."
   ; TODO: make this work with system clipboard
   (define-key evil-normal-state-map (kbd "Y") (kbd "y $"))
   (define-key evil-normal-state-map (kbd "RET") 'evil-ex-nohighlight)
+  ; doesn't work anymore :( key binding conflict
   (define-key evil-normal-state-map (kbd "gr") 'lsp-find-references)
 
   ;; LSP -----------------------------------------------------------------------
@@ -621,7 +663,10 @@ before packages are loaded."
   (setq lsp-enable-symbol-highlighting t)
   (setq lsp-signature-auto-activate t)
   (setq lsp-headerline-breadcrumb-enable t)
-  (setq lsp-headerline-breadcrumb-segments '(symbols))
+  (setq lsp-headerline-breadcrumb-segments '(project symbols))
+  (setq lsp-ui-sideline-enable t)
+  (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
+
 
   ;; vterm ---------------------------------------------------------------------
   ;; open shell at project root (unless there is none, in which case at $HOME)
@@ -631,7 +676,6 @@ before packages are loaded."
                                        (spacemacs/projectile-shell-pop)
                                      (spacemacs/default-pop-shell))))
 
-  (evil-set-initial-state 'vterm-mode 'emacs)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-k") 'evil-previous-line)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-j") 'evil-next-line)
   (evil-define-key 'emacs vterm-mode-map (kbd "S-<escape>") 'evil-normal-state)
@@ -647,3 +691,11 @@ before packages are loaded."
   (evil-define-key 'normal haskell-interactive-mode-map
     (kbd "C-k") 'haskell-interactive-mode-history-previous)
 )
+
+;; functions for adhoc use ----------------------------------------------------
+(defun remove-dos-eol ()
+  "Do not show ^M in files containing mixed UNIX and DOS line endings."
+  (interactive)
+  (setq buffer-display-table (make-display-table))
+  (aset buffer-display-table ?\^M []))
+

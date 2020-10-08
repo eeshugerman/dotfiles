@@ -32,15 +32,21 @@ bind k scrollline -10
 bind ZZ !s killall firefox
 
 
+bind ;v hint -F e => e.dispatchEvent(new MouseEvent('mouseeneter', {}))
+" trying to make ;v work on gitlab...
+" bind ;v hint -F e => { e.dispatchEvent(new MouseEvent('mouseover', {})); e.dispatchEvent(new MouseEvent('mouseenter', {})); }
+
+
 " disable all searchurls
 " doesn't work anymore :(
 jsb Object.keys(tri.config.get("searchurls")).reduce((prev, u) => prev.then(_ => tri.config.set("searchurls", u, null)), Promise.resolve())
 
 " testing find
-bind / fillcmdline find
-bind ? fillcmdline find -?
-bind n findnext 1
-bind N findnext -1
-bind <Return> nohlsearch
+" bind / fillcmdline find
+" bind ? fillcmdline find -?
+" bind n findnext 1
+" bind N findnext -1
+" bind <Return> nohlsearch
 
+js console.log('config source complete!')
 " vim: set filetype=vim:
