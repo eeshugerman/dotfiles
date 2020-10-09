@@ -678,9 +678,9 @@ before packages are loaded."
 
   (evil-define-key 'emacs vterm-mode-map (kbd "C-k") 'evil-previous-line)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-j") 'evil-next-line)
-  (evil-define-key 'emacs vterm-mode-map (kbd "S-<escape>") 'evil-normal-state)
-  (evil-define-key 'normal vterm-mode-map (kbd "S-<escape>") 'evil-emacs-state)
-  (evil-define-key 'insert vterm-mode-map (kbd "S-<escape>") 'evil-emacs-state)
+  (evil-define-key 'emacs vterm-mode-map (kbd "C-,") 'evil-normal-state)
+  (evil-define-key 'normal vterm-mode-map (kbd "C-,") 'evil-emacs-state)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-,") 'evil-emacs-state)
   (setq vterm-max-scrollback 100000)  ; maximum size supported
 
 

@@ -1,3 +1,5 @@
+export ZSH_DISABLE_COMPFIX=1   # ignore nonsense permission issue
+
 export ZSH="$HOME/.oh-my-zsh"
 
 ZSH_THEME="spaceship"
