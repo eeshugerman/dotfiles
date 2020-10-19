@@ -584,7 +584,7 @@ before packages are loaded."
 
   ;; posframe -----------------------------------------------------------------
   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-  (set-face-background 'which-key-posframe "#1c202c")
+  (set-face-background 'which-key-posframe (car (alist-get 'base1 doom-themes--colors)))
 
   ;; ivy ---------------------------------------------------------------------
   (setq ivy-virtual-abbreviate 'full)  ; does this actually do anything?
