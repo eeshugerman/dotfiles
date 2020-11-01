@@ -83,7 +83,7 @@ This function should only modify configuration layer settings."
                      spell-checking-enable-by-default nil)
      syntax-checking
      themes-megapack
-;;     c-c++
+     ;; c-c++
      )
 
    ;; List of additional packages that will be installed without being wrapped
@@ -93,7 +93,7 @@ This function should only modify configuration layer settings."
    ;; consider creating a layer. You can also put the configuration in
    ;; `dotspacemacs/user-config'. To use a local version of a package, use the
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
-
+   ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(evil-collection
      writeroom-mode
@@ -244,19 +244,26 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(doom-palenight
+   dotspacemacs-themes '(; the gotos
+                         doom-nord-light
+                         doom-nord
+
+                         ; extra lights
+                         doom-one-light
+                         doom-opera-light
+                         doom-tomorrow-day
+
+                         ; extra medium
+                         doom-nova
+
+                         ; extra darks
+                         doom-ephemeral
+                         doom-palenight
                          doom-one
                          doom-vibrant
                          doom-horizon
                          doom-snazzy
-                         doom-spacegrey
-
-                         doom-nova
-
-                         doom-one-light
-                         doom-nord-light
-                         doom-opera-light
-                         doom-solarized-light)
+                         doom-spacegrey)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -560,6 +567,7 @@ before packages are loaded."
   (which-key-posframe-mode 1)
   (editorconfig-mode 1)
 
+
   ;; misc/general --------------------------------------------------------------
   (add-hook 'hack-local-variables-hook 'spacemacs/toggle-truncate-lines-on)
   (setq select-enable-clipboard nil)
@@ -569,7 +577,20 @@ before packages are loaded."
    (file-truename (concat dotspacemacs-directory ".emacs-custom.el")))
   (load custom-file)
   (evil-define-key 'normal 'global (kbd "zz") 'evil-toggle-fold)
+  (setq bidi-inhibit-bpa t)
+  (setq bidi-paragraph-direction 'left-to-right)
+
+
+  ;; python ------------------------------------------------------------------------
+  ;; --- tweaks
+  (setq dap-python-debugger 'debugpy) ; this should be the default at some point
   (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
+  ;; --- dependencies
+  ;; pip install importmagic epc ipython debugpy flake8
+  (setq python-shell-interpreter "python3")
+  ;; (if (eq system-type 'darwin)
+  ;;     (setq python-shell-interpreter "/Users/elliottshugerman/Library/Python/3.8/bin/ipython"))
+
 
   ;; git ----------------------------------------------------------------------
   (setq browse-at-remote-remote-type-domains '(("git.loc.gov" . "gitlab")
@@ -577,15 +598,22 @@ before packages are loaded."
   (setq magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
   ;; (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-topleft-v1)
 
-  ;; writeroom
+
+  ;; writeroom -------------------------------------------------------------------------
   (add-hook 'writeroom-mode-hook 'spacemacs/toggle-visual-line-navigation-on)
   (add-hook 'writeroom-mode-hook 'spacemacs/toggle-line-numbers-off)
   (add-hook 'writeroom-mode-hook 'spacemacs/toggle-spelling-checking-on)
   (add-hook 'writeroom-mode-hook 'spacemacs/toggle-fullscreen-frame-off)
 
+
   ;; posframe -----------------------------------------------------------------
   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-  (set-face-background 'which-key-posframe (car (alist-get 'base3 doom-themes--colors)))
+  (defun fix-which-key-posframe-background-color ()
+    (set-face-background
+     'which-key-posframe
+     (car (alist-get 'base2 doom-themes--colors))))
+  (add-hook 'spacemacs-post-theme-change-hook 'fix-which-key-posframe-background-color)
+
 
   ;; ivy ---------------------------------------------------------------------
   (setq ivy-virtual-abbreviate 'full)  ; does this actually do anything?
@@ -593,21 +621,24 @@ before packages are loaded."
   (setq counsel-rg-base-command
         (append (butlast counsel-rg-base-command) '("--hidden" "%s")))
 
+
   ;; helm (unused currently) ---------------------------------------------------
   (setq helm-xref-candidate-formatting-function
         'helm-xref-format-candidate-full-path)
   (setq treemacs-sorting 'alphabetic-asc)
 
+
   ;; autosave ------------------------------------------------------------------
   (defun save-buffer-if-needed ()
     (when (and (buffer-file-name) (buffer-modified-p))
       (save-buffer)))
-  ;; (add-hook 'focus-out-hook 'save-buffer-if-needed)
+  (add-hook 'focus-out-hook 'save-buffer-if-needed)
   ;; the following don't seem to work :(
   (defadvice switch-to-buffer (before set-buffer activate)
     (save-buffer-if-needed))
   (defadvice other-window (before other-window-now activate)
     (save-buffer-if-needed))
+
 
   ;; undo --------------------------------------------------------------------
   ;; --- persistent undo
@@ -618,9 +649,11 @@ before packages are loaded."
   (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
     (make-directory (concat spacemacs-cache-directory "undo")))
 
+
   ;; --- granular history
   ;; https://stackoverflow.com/a/41560712/2112489
   (advice-add 'undo-auto--last-boundary-amalgamating-number :override #'ignore)
+
 
   ;; themeing -----------------------------------------------------------------
   (spacemacs/toggle-vi-tilde-fringe-off)
@@ -635,18 +668,16 @@ before packages are loaded."
   (doom-themes-treemacs-config)
   (doom-themes-org-config)
 
+
   ;; doom-modeline -------------------------------------------------------------
   ; TODO: calculate width limit based on current chars of modeline? can we render 'mode-line-format to a string?
   (setq doom-modeline-window-width-limit 90)
-
-  (setq doom-modeline-buffer-file-name-style 'truncate-all)
-
+  (setq doom-modeline-buffer-file-name-style 'auto)
+  (setq doom-modeline-buffer-encoding nil)
   ; default: https://github.com/seagle0128/doom-modeline/blob/master/doom-modeline.el#L92-L94
   (doom-modeline-def-modeline 'main
     '(bar workspace-name window-number modals matches buffer-info remote-host buffer-position word-count parrot selection-info)
     '(objed-state misc-info persp-name battery grip irc mu4e gnus github debug repl lsp minor-modes input-method indent-info buffer-encoding process vcs checker))
-
-  (setq doom-modeline-buffer-encoding nil)
 
 
   ;; vi ------------------------------------------------------------------------
@@ -658,6 +689,7 @@ before packages are loaded."
   ; doesn't work anymore :( key binding conflict
   (define-key evil-normal-state-map (kbd "gr") 'lsp-find-references)
 
+
   ;; LSP -----------------------------------------------------------------------
   (setq lsp-ui-doc-enable nil)
   (setq lsp-eldoc-enable-hover nil)
@@ -666,18 +698,6 @@ before packages are loaded."
   (setq lsp-headerline-breadcrumb-enable t)
   (setq lsp-headerline-breadcrumb-segments '(project symbols))
   (setq lsp-ui-sideline-enable t)
-
-  ;; -- angular/ts stuff
-  (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
-  (setq lsp-clients-angular-language-server-command
-        (let ((curr-proj-root "/usr/local/lib/"))
-          `("node"
-            ,(concat curr-proj-root "node_modules/@angular/language-server")
-            "--ngProbeLocations"
-            ,(concat curr-proj-root "node_modules")
-            "--tsProbeLocations"
-            ,(concat curr-proj-root "node_modules")
-            "--stdio")))
 
 
   ;; vterm ---------------------------------------------------------------------
@@ -696,13 +716,33 @@ before packages are loaded."
   (setq vterm-max-scrollback 100000)  ; maximum size supported
 
 
-
   ;; haskell -------------------------------------------------------------------
   (evil-define-key 'normal haskell-interactive-mode-map
     (kbd "C-j") 'haskell-interactive-mode-history-next)
   (evil-define-key 'normal haskell-interactive-mode-map
     (kbd "C-k") 'haskell-interactive-mode-history-previous)
+
+  ;; angular/web ---------------------------------------------------------------
+  (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
+  (setq lsp-clients-angular-language-server-command
+        (let ((curr-proj-root "/usr/local/lib/"))
+          `("node"
+            ,(concat curr-proj-root "node_modules/@angular/language-server")
+            "--ngProbeLocations"
+            ,(concat curr-proj-root "node_modules")
+            "--tsProbeLocations"
+            ,(concat curr-proj-root "node_modules")
+            "--stdio")))
+
+  ;; (setq-default js-indent-level 2
+  ;;               javascript-indent-level 2
+  ;;               typescript-indent-level 2
+  ;;               web-mode-markup-indent-offset 2
+  ;;               web-mode-css-indent-offset 2
+  ;;               web-mode-code-indent-offset 2
+  ;;               css-indent-offset 2)
 )
+
 
 ;; functions for adhoc use ----------------------------------------------------
 (defun remove-dos-eol ()

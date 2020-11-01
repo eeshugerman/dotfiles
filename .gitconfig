@@ -5,6 +5,7 @@
 	helper = store
 [core]
 	editor = $EDITOR
+	pager =  $PAGER
 [diff "ansible-vault"]
 	textconv = ansible-vault view --vault-password-file=ansible/.vault_pass
 [alias]
