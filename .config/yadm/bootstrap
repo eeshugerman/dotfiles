@@ -5,9 +5,12 @@ set -eu
 cd "$HOME"
 
 # --- GENERAL -----------------------------------------------------------------
-echo "Initializing submodules..."
 yadm submodule update --recursive --init
-if [ $(uname) = "Linux" ]; then
+
+if [ $(uname) = "Darwin" ]; then
+    brew install mackup
+    mackup restore
+else
     dconf load / < "$HOME/.config/dconf.ini"
 fi
 

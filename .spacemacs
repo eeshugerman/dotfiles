@@ -429,9 +429,9 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil)
    dotspacemacs-line-numbers 'relative
 
-   ;; Code folding method. Possible values are `evil' and `origami'.
+   ;; Code folding method. Possible values are `evil', `origami' and `vimish'.
    ;; (default 'evil)
-   dotspacemacs-folding-method 'origami
+   dotspacemacs-folding-method 'evil
 
    ;; If non-nil `smartparens-strict-mode' will be enabled in programming modes.
    ;; (default nil)
@@ -561,7 +561,7 @@ before packages are loaded."
 
   ;; misc/general --------------------------------------------------------------
   (add-hook 'hack-local-variables-hook 'spacemacs/toggle-truncate-lines-on)
-  (setq x-select-enable-clipboard nil)
+  (setq select-enable-clipboard nil)
   (setq create-lockfiles nil)
   (setq projectile-indexing-method 'hybrid)
   (customize-set-variable 'custom-file
@@ -584,7 +584,7 @@ before packages are loaded."
 
   ;; posframe -----------------------------------------------------------------
   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-  (set-face-background 'which-key-posframe (car (alist-get 'base1 doom-themes--colors)))
+  (set-face-background 'which-key-posframe (car (alist-get 'base3 doom-themes--colors)))
 
   ;; ivy ---------------------------------------------------------------------
   (setq ivy-virtual-abbreviate 'full)  ; does this actually do anything?
@@ -665,7 +665,18 @@ before packages are loaded."
   (setq lsp-headerline-breadcrumb-enable t)
   (setq lsp-headerline-breadcrumb-segments '(project symbols))
   (setq lsp-ui-sideline-enable t)
+
+  ;; -- angular/ts stuff
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
+  (setq lsp-clients-angular-language-server-command
+        (let ((curr-proj-root "/usr/local/lib/"))
+          `("node"
+            ,(concat curr-proj-root "node_modules/@angular/language-server")
+            "--ngProbeLocations"
+            ,(concat curr-proj-root "node_modules")
+            "--tsProbeLocations"
+            ,(concat curr-proj-root "node_modules")
+            "--stdio")))
 
 
   ;; vterm ---------------------------------------------------------------------
@@ -699,3 +710,8 @@ before packages are loaded."
   (setq buffer-display-table (make-display-table))
   (aset buffer-display-table ?\^M []))
 
+
+(defun macos-paste ()
+  (interactive)
+  (ignore-error 'end-of-buffer (forward-char))
+  (insert (shell-command-to-string "pbpaste")))

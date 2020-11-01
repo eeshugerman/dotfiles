@@ -22,7 +22,6 @@ plugins=(
   themes
   vi-mode
   virtualenv
-  virtualenvwrapper
   zsh_reload
 )
 
@@ -40,23 +39,23 @@ unsetopt beep
 KEYTIMEOUT=1  # 10ms
 
 alias vim="nvim"
-alias xclip="xclip -selection clipboard"
-alias open="xdg-open"
 alias ep="sudo eopkg"
+
+if [ "$(uname)" = "Darwin" ]; then
+	alias cbcopy="pbcopy"
+	alias cbpaste="pbpaste"
+else
+    alias open="xdg-open"
+    alias cbcopy="xclip -in -selection clipboard"
+    alias cbpaste="xclip -out -selection clipboard"
+fi
 
 alias dconf-dump="dconf dump / | vim -R -c 'set ft=dosini'"
 alias dconf-edit="vim $HOME/.config/dconf.ini"
 alias dconf-load="dconf load / < $HOME/.config/dconf.ini"
-
-export WORKON_HOME="$HOME/.virtualenvs"
-export PROJECT_HOME="$HOME/devel"
-export VIRTUALENV_PYTHON="python3"
-export VIRTUALENVWRAPPER_PYTHON="/usr/bin/python3"
-source /usr/bin/virtualenvwrapper.sh
 
 export PATH="$PATH:$HOME/.local/bin"
 
 if [ -n "$INSIDE_EMACS" ]; then
   # nothing presently, but could come in handy
 fi
-
