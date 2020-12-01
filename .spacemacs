@@ -608,12 +608,16 @@ before packages are loaded."
 
   ;; posframe -----------------------------------------------------------------
   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-  (defun fix-which-key-posframe-background-color ()
-    (set-face-background
-     'which-key-posframe
-     (car (alist-get 'base2 doom-themes--colors))))
-  (add-hook 'spacemacs-post-theme-change-hook 'fix-which-key-posframe-background-color)
+  (setq ivy-posframe-border-width 10)
 
+  (setq which-key-posframe-border-width 10)
+  (defun fix-which-key-posframe-background-color ()
+    "Copy ivy-posframe's face"
+    (let ((face-color (face-background 'ivy-posframe)))
+      (set-face-background 'which-key-posframe face-color)
+      (set-face-background 'which-key-posframe-border face-color)))
+  (add-hook 'spacemacs-post-theme-change-hook 'fix-which-key-posframe-background-color)
+  (fix-which-key-posframe-background-color)
 
   ;; ivy ---------------------------------------------------------------------
   (setq ivy-virtual-abbreviate 'full)  ; does this actually do anything?
@@ -667,6 +671,12 @@ before packages are loaded."
   (setq doom-themes-treemacs-theme "doom-colors")
   (doom-themes-treemacs-config)
   (doom-themes-org-config)
+
+  (setq window-divider-default-right-width 10)
+  ;; (set-face-foreground 'window-divider (face-background 'mode-line-inactive))
+  (set-face-foreground 'window-divider (face-background 'default))
+  (set-face-foreground 'window-divider-last-pixel (face-background 'mode-line))
+  (window-divider-mode)
 
 
   ;; doom-modeline -------------------------------------------------------------
