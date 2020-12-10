@@ -239,6 +239,14 @@ It should only modify the values of Spacemacs settings."
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'lisp-mode
 
+   ;; If non-nil, *scratch* buffer will be persistent. Things you write down in
+   ;; *scratch* buffer will be saved and restored automatically.
+   dotspacemacs-scratch-buffer-persistent t
+
+   ;; If non-nil, `kill-buffer' on *scratch* buffer
+   ;; will bury it instead of killing.
+   dotspacemacs-scratch-buffer-unkillable t
+
    ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
    ;; (default nil)
    dotspacemacs-initial-scratch-message nil
@@ -254,11 +262,13 @@ It should only modify the values of Spacemacs settings."
                          doom-one-light
                          doom-opera-light
                          doom-tomorrow-day
+                         doom-flatwhite
 
                          ; extra medium
                          doom-nova
 
                          ; extra darks
+                         doom-henna
                          doom-ephemeral
                          doom-palenight
                          doom-one
@@ -274,7 +284,6 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   ; dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
    dotspacemacs-mode-line-theme 'doom
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
@@ -589,9 +598,14 @@ before packages are loaded."
   (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
   ;; --- dependencies
   ;; pip install importmagic epc ipython debugpy flake8
-  (setq python-shell-interpreter "python3")
-  ;; (if (eq system-type 'darwin)
-  ;;     (setq python-shell-interpreter "/Users/elliottshugerman/Library/Python/3.8/bin/ipython"))
+  (setq python-shell-interpreter (if (eq system-type 'darwin) "python3.8" "python3"))
+
+  (setq flycheck-python-flake8-executable python-shell-interpreter)
+  ;; (setq lsp-python-ms-python-executable-cmd python-shell-interpreter)  ;; overrides activated venv, no bueno
+  (setq poetry-tracking-strategy 'switch-buffer)
+  (poetry-tracking-mode)
+  (add-hook 'ein:notebook-mode-hook 'spacemacs/toggle-fill-column-indicator-off)
+  (setq ein:output-area-inlined-images t)
 
 
   ;; git ----------------------------------------------------------------------
@@ -608,20 +622,8 @@ before packages are loaded."
   (add-hook 'writeroom-mode-hook 'spacemacs/toggle-fullscreen-frame-off)
 
 
-  ;; posframe -----------------------------------------------------------------
-  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-  (setq ivy-posframe-border-width 10)
-
-  (setq which-key-posframe-border-width 10)
-  (defun fix-which-key-posframe-background-color ()
-    "Copy ivy-posframe's face"
-    (let ((face-color (face-background 'ivy-posframe)))
-      (set-face-background 'which-key-posframe face-color)
-      (set-face-background 'which-key-posframe-border face-color)))
-  (add-hook 'spacemacs-post-theme-change-hook 'fix-which-key-posframe-background-color)
-  (fix-which-key-posframe-background-color)
-
   ;; ivy ---------------------------------------------------------------------
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
   (setq ivy-virtual-abbreviate 'full)  ; does this actually do anything?
   (setq ivy-initial-inputs-alist nil)
   (setq counsel-rg-base-command
@@ -663,7 +665,7 @@ before packages are loaded."
 
   ;; themeing -----------------------------------------------------------------
   (spacemacs/toggle-vi-tilde-fringe-off)
-  (fringe-mode '(0 . nil))  ; disable right "fringe" (i'd call it a border)
+  (fringe-mode '(0 . nil))  ; disable right "fringe"
   ;; hide arrows at window border for truncated lines
   (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b0))
   (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
@@ -675,14 +677,26 @@ before packages are loaded."
   (doom-themes-org-config)
 
   (setq window-divider-default-right-width 10)
-  ;; (set-face-foreground 'window-divider (face-background 'mode-line-inactive))
-  (set-face-foreground 'window-divider (face-background 'default))
-  (set-face-foreground 'window-divider-last-pixel (face-background 'mode-line))
-  (window-divider-mode)
+
+  (setq ivy-posframe-border-width 10)
+  (setq which-key-posframe-border-width 10)
+
+  (defun do-theme-tweaks ()
+    "misc tweaks that for some reason need a nudge after theme change"
+    ;; posframe color stuff
+    (let ((face-color (face-background 'ivy-posframe)))
+      (set-face-background 'which-key-posframe face-color)
+      (set-face-background 'which-key-posframe-border face-color)
+      (set-face-background 'ivy-posframe-border face-color))
+    ;; lighter window divider
+    (set-face-foreground 'window-divider (face-background 'mode-line-inactive))
+    (window-divider-mode))
+
+  (add-hook 'spacemacs-post-theme-change-hook 'do-theme-tweaks)
+  (do-theme-tweaks)
 
 
   ;; doom-modeline -------------------------------------------------------------
-  ; TODO: calculate width limit based on current chars of modeline? can we render 'mode-line-format to a string?
   (setq doom-modeline-window-width-limit 90)
   (setq doom-modeline-buffer-file-name-style 'auto)
   (setq doom-modeline-buffer-encoding nil)
@@ -713,12 +727,12 @@ before packages are loaded."
 
 
   ;; vterm ---------------------------------------------------------------------
-  ;; open shell at project root (unless there is none, in which case at $HOME)
-  (spacemacs/set-leader-keys "'" (lambda ()
-                                   (interactive)
-                                   (if (projectile-project-p)
-                                       (spacemacs/projectile-shell-pop)
-                                     (spacemacs/default-pop-shell))))
+  (defun pop-shell-at-project-root-or-home ()
+    (interactive)
+    (if (projectile-project-p)
+        (spacemacs/projectile-shell-pop)
+      (spacemacs/default-pop-shell)))
+  (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
 
   (evil-define-key 'emacs vterm-mode-map (kbd "C-k") 'evil-previous-line)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-j") 'evil-next-line)
@@ -726,6 +740,7 @@ before packages are loaded."
   (evil-define-key 'normal vterm-mode-map (kbd "C-,") 'evil-emacs-state)
   (evil-define-key 'insert vterm-mode-map (kbd "C-,") 'evil-emacs-state)
   (setq vterm-max-scrollback 100000)  ; maximum size supported
+  (setq vterm-always-compile-module t)
 
 
   ;; haskell -------------------------------------------------------------------
@@ -734,16 +749,18 @@ before packages are loaded."
   (evil-define-key 'normal haskell-interactive-mode-map
     (kbd "C-k") 'haskell-interactive-mode-history-previous)
 
+
   ;; angular/web ---------------------------------------------------------------
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
+
   (setq lsp-clients-angular-language-server-command
-        (let ((curr-proj-root "/usr/local/lib/"))
+        (let ((usr-local-lib "/usr/local/lib/"))
           `("node"
-            ,(concat curr-proj-root "node_modules/@angular/language-server")
+            ,(concat usr-local-lib "node_modules/@angular/language-server")
             "--ngProbeLocations"
-            ,(concat curr-proj-root "node_modules")
+            ,(concat usr-local-lib "node_modules")
             "--tsProbeLocations"
-            ,(concat curr-proj-root "node_modules")
+            ,(concat usr-local-lib "node_modules")
             "--stdio")))
 
   ;; (setq-default js-indent-level 2
@@ -757,14 +774,26 @@ before packages are loaded."
 
 
 ;; functions for adhoc use ----------------------------------------------------
-(defun remove-dos-eol ()
+(defun custom/hide-dos-eol ()
   "Do not show ^M in files containing mixed UNIX and DOS line endings."
   (interactive)
   (setq buffer-display-table (make-display-table))
   (aset buffer-display-table ?\^M []))
 
-
-(defun macos-paste ()
+(defun custom/macos-paste ()
   (interactive)
   (ignore-error 'end-of-buffer (forward-char))
   (insert (shell-command-to-string "pbpaste")))
+
+(defun custom/kill-buffers (regexp)
+  "Kill buffers matching REGEXP without asking for confirmation."
+  (interactive "Kill buffers matching this regular expression: ")
+  (cl-letf (((symbol-function 'kill-buffer-ask)
+         (lambda (buffer) (kill-buffer buffer))))
+    (kill-matching-buffers regexp)))
+
+(defun custom/magit-kill-all ()
+     (interactive)
+     (custom/kill-buffers "^magit"))
+
+
