@@ -32,7 +32,9 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(rust
+   '((haskell :variables
+              haskell-completion-backend 'lsp)
+     rust
      (html :variables
            css-enable-lsp t
            scss-enable-lsp t
@@ -546,7 +548,7 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  )
+  (setq byte-compile-warnings '(cl-functions)))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
