@@ -603,6 +603,8 @@ before packages are loaded."
   (evil-define-key 'normal 'global (kbd "zz") 'evil-toggle-fold)
   (setq bidi-inhibit-bpa t)
   (setq bidi-paragraph-direction 'left-to-right)
+  (setq byte-compile-warnings '(cl-functions))
+  ;; (setq ansible-vault-password-file "foo") ;; TODO: set this to 'projectile-project-root / .vault_pass
 
 
   ;; python ------------------------------------------------------------------------
@@ -749,6 +751,8 @@ before packages are loaded."
 
   (evil-define-key 'emacs vterm-mode-map (kbd "C-k") 'evil-previous-line)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-j") 'evil-next-line)
+  (evil-define-key 'normal vterm-mode-map (kbd "C-k") 'vterm-previous-prompt)
+  (evil-define-key 'normal vterm-mode-map (kbd "C-j") 'vterm-next-prompt)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-,") 'evil-normal-state)
   (evil-define-key 'normal vterm-mode-map (kbd "C-,") 'evil-emacs-state)
   (evil-define-key 'insert vterm-mode-map (kbd "C-,") 'evil-emacs-state)

@@ -10,10 +10,11 @@ bind gD tabdetach
 " can't get native editor to work correctly, use wasavi instead (plus it's nicer anyway in some ways)
 unbind --mode=input <C-i>
 
-colors base16-tridactyl/base16-ashes
+" almost works, but doesn't
+" js tri.config.set("theme", document.getElementsByClassName('darkreader').length ? "base16-tridactyl/base16-ashes" : "shydactyl")
 
-" doesn't work :(
-jsb tri.config.set("theme", document.getElementsByClassName('darkreader').length ? "base16-tridactyl/base16-ashes" : "shydactyl")
+" colors shydactyl
+colors base16-tridactyl/base16-ashes
 
 set hintchars wertyuioasdfjkl;zxcnm
 
@@ -37,9 +38,10 @@ bind ;v hint -F e => e.dispatchEvent(new MouseEvent('mouseeneter', {}))
 " bind ;v hint -F e => { e.dispatchEvent(new MouseEvent('mouseover', {})); e.dispatchEvent(new MouseEvent('mouseenter', {})); }
 
 
-" disable all searchurls
-" doesn't work anymore :(
-jsb Object.keys(tri.config.get("searchurls")).reduce((prev, u) => prev.then(_ => tri.config.set("searchurls", u, null)), Promise.resolve())
+" disable searchurls
+setnull searchurls.amazon
+setnull searchurls.github
+setnull searchurls.google
 
 " testing find
 " bind / fillcmdline find

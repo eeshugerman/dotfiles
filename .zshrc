@@ -22,7 +22,6 @@ plugins=(
   themes
   vi-mode
   virtualenv
-  zsh_reload
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -55,6 +54,10 @@ alias dconf-edit="vim $HOME/.config/dconf.ini"
 alias dconf-load="dconf load / < $HOME/.config/dconf.ini"
 
 export PATH="$PATH:$HOME/.local/bin"
+if [ "$(uname)" = "Darwin" ]; then
+  export PATH="$PATH:/usr/local/sbin"
+  export SPACESHIP_DOCKER_SHOW="false"
+fi
 
 if [ -n "$INSIDE_EMACS" ]; then
   # nothing presently, but could come in handy
