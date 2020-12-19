@@ -604,7 +604,8 @@ before packages are loaded."
   (setq bidi-inhibit-bpa t)
   (setq bidi-paragraph-direction 'left-to-right)
   (setq byte-compile-warnings '(cl-functions))
-  ;; (setq ansible-vault-password-file "foo") ;; TODO: set this to 'projectile-project-root / .vault_pass
+  (spacemacs/set-leader-keys "fE" 'custom/echo-file-path)  ;; TODO: how to make which-key reflect this?
+  ;; (setq ansible-vault-password-file "foo")              ;; TODO: set this to 'projectile-project-root / .vault_pass
 
 
   ;; python ------------------------------------------------------------------------
@@ -638,9 +639,11 @@ before packages are loaded."
 
 
   ;; ivy ---------------------------------------------------------------------
-  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+  (setq ivy-posframe-display-functions-alist
+        '((t . ivy-posframe-display-at-frame-center)))
   (setq ivy-virtual-abbreviate 'full)  ; does this actually do anything?
   (setq ivy-initial-inputs-alist nil)
+  (setq ivy-wrap t)
   (setq counsel-rg-base-command
         (append (butlast counsel-rg-base-command) '("--hidden" "%s")))
 
@@ -713,7 +716,7 @@ before packages are loaded."
 
   ;; doom-modeline -------------------------------------------------------------
   (setq doom-modeline-window-width-limit 90)
-  (setq doom-modeline-buffer-file-name-style 'auto)
+  (setq doom-modeline-buffer-file-name-style 'truncate-with-project)
   (setq doom-modeline-buffer-encoding nil)
   ; default: https://github.com/seagle0128/doom-modeline/blob/master/doom-modeline.el#L92-L94
   (doom-modeline-def-modeline 'main
@@ -737,7 +740,7 @@ before packages are loaded."
   (setq lsp-enable-symbol-highlighting t)
   (setq lsp-signature-auto-activate t)
   (setq lsp-headerline-breadcrumb-enable t)
-  (setq lsp-headerline-breadcrumb-segments '(project symbols))
+  (setq lsp-headerline-breadcrumb-segments '(symbols))
   (setq lsp-ui-sideline-enable t)
 
 
@@ -809,6 +812,12 @@ before packages are loaded."
          (lambda (buffer) (kill-buffer buffer))))
     (kill-matching-buffers regexp)))
 
+(defun custom/echo-file-path ()
+  (interactive)
+  (spacemacs/echo (spacemacs--projectile-file-path)))
+
 (defun custom/magit-kill-all ()
      (interactive)
      (custom/kill-buffers "^magit"))
+
+
