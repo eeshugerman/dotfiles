@@ -1,17 +1,19 @@
 [user]
 	email = eeshugerman@gmail.com
 	name = Elliott Shugerman
+
 [credential]
 	helper = store
+
 [core]
 	editor = $EDITOR
 	pager =  $PAGER
-[diff "ansible-vault"]
-	textconv = ansible-vault view --vault-password-file=ansible/.vault_pass
+
 [alias]
 	slog = "!git --no-pager log --oneline"
 	cp = cherry-pick
 	cu = "!git fetch --all && git slog @..@{upstream}"
 	mr = !sh -c 'git fetch $1 merge-requests/$2/head:mr-$1-$2 && git checkout mr-$1-$2' -
+
 [pull]
 	ff = only
