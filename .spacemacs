@@ -100,9 +100,11 @@ This function should only modify configuration layer settings."
    '(evil-collection
      writeroom-mode
      poetry
-     ivy-posframe
      which-key-posframe
-     editorconfig)
+     editorconfig
+     ivy-posframe
+     ivy-rich
+     all-the-icons-ivy-rich)
 
 
    ;; A list of packages that cannot be updated.
@@ -269,6 +271,7 @@ It should only modify the values of Spacemacs settings."
 
                          ; extra darks
                          doom-henna
+                         doom-city-lights
                          doom-ephemeral
                          doom-palenight
                          doom-one
@@ -290,7 +293,9 @@ It should only modify the values of Spacemacs settings."
    ;; (default t)
    dotspacemacs-colorize-cursor-according-to-state t
 
-   ;; Default font or prioritized list of fonts.
+   ;; Default font or prioritized list of fonts. The `:size' can be specified as
+   ;; a non-negative integer (pixel size), or a floating-point (point size).
+   ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("Fira Code"
                                :size 10.0
                                :weight normal
@@ -557,7 +562,9 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (setq byte-compile-warnings '(cl-functions)))
+  (setq byte-compile-warnings '(cl-functions))
+  (if (eq system-type 'darwin)
+      (setq insert-directory-program "/usr/local/bin/gls")))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -574,6 +581,12 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
   ;; init standalone modes ----------------------------------------------------
+  (use-package all-the-icons-ivy-rich
+    :ensure t
+    :init (all-the-icons-ivy-rich-mode 1))
+  (use-package ivy-rich
+    :ensure t
+    :init (ivy-rich-mode 1))
   (ivy-posframe-mode 1)
   (which-key-posframe-mode 1)
   (editorconfig-mode 1)
@@ -795,5 +808,3 @@ before packages are loaded."
 (defun custom/magit-kill-all ()
      (interactive)
      (custom/kill-buffers "^magit"))
-
-
