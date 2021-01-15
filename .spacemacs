@@ -34,6 +34,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layers
    '((haskell :variables
               haskell-completion-backend 'lsp)
+     scheme
      rust
      (html :variables
            css-enable-lsp t
@@ -77,6 +78,7 @@ This function should only modify configuration layer settings."
 	   github
      markdown
      org
+     epub
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom
@@ -606,6 +608,7 @@ before packages are loaded."
   (setq byte-compile-warnings '(cl-functions))
   (spacemacs/set-leader-keys "fE" 'custom/echo-file-path)  ;; TODO: how to make which-key reflect this?
   ;; (setq ansible-vault-password-file "foo")              ;; TODO: set this to 'projectile-project-root / .vault_pass
+  (setq geiser-default-implementation 'guile)
 
 
   ;; python ------------------------------------------------------------------------
@@ -790,6 +793,17 @@ before packages are loaded."
   ;;               web-mode-css-indent-offset 2
   ;;               web-mode-code-indent-offset 2
   ;;               css-indent-offset 2)
+
+
+  ;; org --------------------------------------------------------------------------
+  (with-eval-after-load 'org
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((scheme . t)))
+    (setq org-confirm-babel-evaluate nil))
+
+  (setq org-adapt-indentation nil)
+  (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") 'org-babel-execute-src-block)
 )
 
 
@@ -820,4 +834,6 @@ before packages are loaded."
      (interactive)
      (custom/kill-buffers "^magit"))
 
-
+(defun custom/browse-info ()
+  (interactive)
+  (info (buffer-file-name)))
