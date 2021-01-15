@@ -72,7 +72,6 @@ This function should only modify configuration layer settings."
      ipython-notebook
      ivy
      auto-completion
-     better-defaults
      emacs-lisp
      git
 	   github
@@ -101,7 +100,6 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages
    '(evil-collection
      writeroom-mode
-     poetry
      which-key-posframe
      editorconfig
      ivy-posframe
@@ -226,11 +224,15 @@ It should only modify the values of Spacemacs settings."
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
-   ;; `recents' `bookmarks' `projects' `agenda' `todos'.
+   ;; `recents' `recents-by-project' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '((recents . 7)
-                                (projects . 5))
+   ;; The exceptional case is `recents-by-project', where list-type must be a
+   ;; pair of numbers, e.g. `(recents-by-project . (7 .  5))', where the first
+   ;; number is the project limit and the second the limit on the recent files
+   ;; within a project.
+   dotspacemacs-startup-lists '((recents . 5)
+                                (projects . 7))
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
@@ -510,7 +512,7 @@ It should only modify the values of Spacemacs settings."
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
    ;; (default "%I@%S")
-   dotspacemacs-frame-title-format "%I@%S"
+   dotspacemacs-frame-title-format "Emacs"
 
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
@@ -585,10 +587,16 @@ before packages are loaded."
   ;; init standalone modes ----------------------------------------------------
   (use-package all-the-icons-ivy-rich
     :ensure t
-    :init (all-the-icons-ivy-rich-mode 1))
+    :init (all-the-icons-ivy-rich-mode 1)
+    :config
+    ;; (ivy-rich-modify-column 'counsel-M-x
+    ;;                         'counsel-M-x-transformer
+    ;;                         '(:width 60))
+    )
   (use-package ivy-rich
     :ensure t
     :init (ivy-rich-mode 1))
+
   (ivy-posframe-mode 1)
   (which-key-posframe-mode 1)
   (editorconfig-mode 1)
@@ -599,8 +607,7 @@ before packages are loaded."
   (setq select-enable-clipboard nil)
   (setq create-lockfiles nil)
   (setq projectile-indexing-method 'hybrid)
-  (customize-set-variable 'custom-file
-   (file-truename (concat dotspacemacs-directory ".emacs-custom.el")))
+  (customize-set-variable 'custom-file (file-truename "~/.emacs-custom.el"))
   (load custom-file)
   (evil-define-key 'normal 'global (kbd "zz") 'evil-toggle-fold)
   (setq bidi-inhibit-bpa t)
@@ -613,7 +620,7 @@ before packages are loaded."
 
   ;; python ------------------------------------------------------------------------
   ;; --- tweaks
-  (setq dap-python-debugger 'debugpy) ; this should be the default at some point
+  (setq dap-python-debugger 'debugpy) ;; this should be the default at some point
   (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
   ;; --- dependencies
   ;; pip install importmagic epc ipython debugpy flake8
@@ -621,15 +628,15 @@ before packages are loaded."
 
   (setq flycheck-python-flake8-executable python-shell-interpreter)
   ;; (setq lsp-python-ms-python-executable-cmd python-shell-interpreter)  ;; overrides activated venv, no bueno
-  (setq poetry-tracking-strategy 'switch-buffer)
-  (poetry-tracking-mode)
+  ;; (setq poetry-tracking-strategy 'switch-buffer)
+  ;; (poetry-tracking-mode)
   (add-hook 'ein:notebook-mode-hook 'spacemacs/toggle-fill-column-indicator-off)
   (setq ein:output-area-inlined-images t)
 
 
   ;; git ----------------------------------------------------------------------
   (setq browse-at-remote-remote-type-domains '(("git.loc.gov" . "gitlab")
-                                               ("github.com" . "github")))
+                                               ("github.com" .  "github")))
   (setq magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
   ;; (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-topleft-v1)
 
@@ -652,8 +659,7 @@ before packages are loaded."
 
 
   ;; helm (unused currently) ---------------------------------------------------
-  (setq helm-xref-candidate-formatting-function
-        'helm-xref-format-candidate-full-path)
+  (setq helm-xref-candidate-formatting-function 'helm-xref-format-candidate-full-path)
   (setq treemacs-sorting 'alphabetic-asc)
 
 
@@ -736,6 +742,11 @@ before packages are loaded."
   ; doesn't work anymore :( key binding conflict
   (define-key evil-normal-state-map (kbd "gr") 'lsp-find-references)
 
+  ;; evil-collection
+  ;; (setq evil-want-integration t)
+  ;; (setq evil-want-keybinding nil)
+  ;; (evil-collection-init '(proced))
+
 
   ;; LSP -----------------------------------------------------------------------
   (setq lsp-ui-doc-enable nil)
@@ -762,8 +773,10 @@ before packages are loaded."
   (evil-define-key 'emacs vterm-mode-map (kbd "C-,") 'evil-normal-state)
   (evil-define-key 'normal vterm-mode-map (kbd "C-,") 'evil-emacs-state)
   (evil-define-key 'insert vterm-mode-map (kbd "C-,") 'evil-emacs-state)
+
   (setq vterm-max-scrollback 100000)  ; maximum size supported
   (setq vterm-always-compile-module t)
+  ;; (setq term-suppress-hard-newline t) ;; vterm equivalent?
 
 
   ;; haskell -------------------------------------------------------------------
@@ -775,15 +788,15 @@ before packages are loaded."
 
   ;; angular/web ---------------------------------------------------------------
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
+  (setenv "TSC_NONPOLLING_WATCHER" "true")
 
+  ;; what does this do?
   (setq lsp-clients-angular-language-server-command
         (let ((usr-local-lib "/usr/local/lib/"))
           `("node"
             ,(concat usr-local-lib "node_modules/@angular/language-server")
-            "--ngProbeLocations"
-            ,(concat usr-local-lib "node_modules")
-            "--tsProbeLocations"
-            ,(concat usr-local-lib "node_modules")
+            "--ngProbeLocations" ,(concat usr-local-lib "node_modules")
+            "--tsProbeLocations" ,(concat usr-local-lib "node_modules")
             "--stdio")))
 
   ;; (setq-default js-indent-level 2
