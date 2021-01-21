@@ -43,6 +43,7 @@ This function should only modify configuration layer settings."
      import-js
      (javascript :variables javascript-import-tool 'import-js)
      typescript
+     (java :variables java-backend 'lsp)
      (unicode-fonts :variables
                     unicode-fonts-enable-ligatures t
                     unicode-fonts-ligature-modes '(typescript-mode  ;; breaks in python files
@@ -53,13 +54,19 @@ This function should only modify configuration layer settings."
                                                    css-mode))
      csv
      sql
+     terraform
      nginx
      ansible
      yaml
      docker
      dap
      multiple-cursors
-     treemacs
+
+     (treemacs :variables
+               treemacs-sorting 'alphabetic-asc
+               treemacs-use-filewatch-mode t
+               treemacs-use-git-mode 'deferred)
+
      (python :variables
              python-backend 'lsp
              python-lsp-server 'mspyls
@@ -85,8 +92,6 @@ This function should only modify configuration layer settings."
      (spell-checking :variables
                      spell-checking-enable-by-default nil)
      syntax-checking
-     themes-megapack
-     ;; c-c++
      )
 
    ;; List of additional packages that will be installed without being wrapped
@@ -98,7 +103,7 @@ This function should only modify configuration layer settings."
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
-   '(evil-collection
+   '(doom-themes
      writeroom-mode
      which-key-posframe
      editorconfig
@@ -111,7 +116,8 @@ This function should only modify configuration layer settings."
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(doom-flatwhite-theme  ;; if these arent't listed here spacemacs
+                                    doom-henna-theme)     ;; prints a harmless error on startup. why??
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -206,7 +212,11 @@ It should only modify the values of Spacemacs settings."
    ;; with `:variables' keyword (similar to layers). Check the editing styles
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
-   dotspacemacs-editing-style 'vim
+   dotspacemacs-editing-style '(vim :variables
+                                    vim-style-remap-Y-to-y$ t
+                                    vim-style-visual-feedback t
+                                    vim-style-visual-line-move-text t
+                                    vim-style-ex-substitute-global t)
 
    ;; If non-nil show the version string in the Spacemacs buffer. It will
    ;; appear as (spacemacs version)@(emacs version)
@@ -277,6 +287,7 @@ It should only modify the values of Spacemacs settings."
                          doom-henna
                          doom-city-lights
                          doom-ephemeral
+                         doom-material
                          doom-palenight
                          doom-one
                          doom-vibrant
@@ -587,16 +598,10 @@ before packages are loaded."
   ;; init standalone modes ----------------------------------------------------
   (use-package all-the-icons-ivy-rich
     :ensure t
-    :init (all-the-icons-ivy-rich-mode 1)
-    :config
-    ;; (ivy-rich-modify-column 'counsel-M-x
-    ;;                         'counsel-M-x-transformer
-    ;;                         '(:width 60))
-    )
+    :init (all-the-icons-ivy-rich-mode 1))
   (use-package ivy-rich
     :ensure t
     :init (ivy-rich-mode 1))
-
   (ivy-posframe-mode 1)
   (which-key-posframe-mode 1)
   (editorconfig-mode 1)
@@ -615,12 +620,11 @@ before packages are loaded."
   (setq byte-compile-warnings '(cl-functions))
   (spacemacs/set-leader-keys "fE" 'custom/echo-file-path)  ;; TODO: how to make which-key reflect this?
   ;; (setq ansible-vault-password-file "foo")              ;; TODO: set this to 'projectile-project-root / .vault_pass
-  (setenv "GDK_BACKEND" "wayland") ;; for opening firefox processes
 
 
   ;; python ------------------------------------------------------------------------
   ;; --- tweaks
-  (setq dap-python-debugger 'debugpy) ;; this should be the default at some point
+  (setq dap-python-debugger 'debugpy) ; this should be the default at some point
   (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
   ;; --- dependencies
   ;; pip install importmagic epc ipython debugpy flake8
@@ -658,11 +662,6 @@ before packages are loaded."
         (append (butlast counsel-rg-base-command) '("--hidden" "%s")))
 
 
-  ;; helm (unused currently) ---------------------------------------------------
-  (setq helm-xref-candidate-formatting-function 'helm-xref-format-candidate-full-path)
-  (setq treemacs-sorting 'alphabetic-asc)
-
-
   ;; autosave ------------------------------------------------------------------
   (defun save-buffer-if-needed ()
     (when (and (buffer-file-name) (buffer-modified-p))
@@ -684,10 +683,8 @@ before packages are loaded."
   (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
     (make-directory (concat spacemacs-cache-directory "undo")))
 
-
   ;; --- granular history
-  ;; https://stackoverflow.com/a/41560712/2112489
-  (advice-add 'undo-auto--last-boundary-amalgamating-number :override #'ignore)
+  (setq evil-want-fine-undo t)
 
 
   ;; themeing -----------------------------------------------------------------
@@ -698,10 +695,12 @@ before packages are loaded."
   (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
   (define-fringe-bitmap 'right-arrow (make-vector 8 #b0))
 
-  (doom-themes-visual-bell-config)
+  (package-install-file "~/devel/misc/lsp-treemacs")  ;; why does this fix icons?
   (setq doom-themes-treemacs-theme "doom-colors")
   (doom-themes-treemacs-config)
+
   (doom-themes-org-config)
+  (doom-themes-visual-bell-config)
 
   (setq window-divider-default-right-width 10)
 
@@ -722,6 +721,8 @@ before packages are loaded."
   (add-hook 'spacemacs-post-theme-change-hook 'do-theme-tweaks)
   (do-theme-tweaks)
 
+  (set-face-foreground 'terraform--resource-name-face "hot pink")
+
 
   ;; doom-modeline -------------------------------------------------------------
   (setq doom-modeline-window-width-limit 90)
@@ -736,16 +737,7 @@ before packages are loaded."
   ;; vi ------------------------------------------------------------------------
   (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
   (define-key evil-normal-state-map (kbd "V") (kbd "C-v $"))
-  ; TODO: make this work with system clipboard
-  (define-key evil-normal-state-map (kbd "Y") (kbd "y $"))
   (define-key evil-normal-state-map (kbd "RET") 'evil-ex-nohighlight)
-  ; doesn't work anymore :( key binding conflict
-  (define-key evil-normal-state-map (kbd "gr") 'lsp-find-references)
-
-  ;; evil-collection
-  ;; (setq evil-want-integration t)
-  ;; (setq evil-want-keybinding nil)
-  ;; (evil-collection-init '(proced))
 
 
   ;; LSP -----------------------------------------------------------------------
@@ -792,11 +784,11 @@ before packages are loaded."
 
   ;; what does this do?
   (setq lsp-clients-angular-language-server-command
-        (let ((usr-local-lib "/usr/local/lib/"))
+        (let ((node-modules "/usr/local/lib/node_modules"))
           `("node"
-            ,(concat usr-local-lib "node_modules/@angular/language-server")
-            "--ngProbeLocations" ,(concat usr-local-lib "node_modules")
-            "--tsProbeLocations" ,(concat usr-local-lib "node_modules")
+            ,(concat node-modules "/@angular/language-server")
+            "--ngProbeLocations" ,node-modules
+            "--tsProbeLocations" ,node-modules
             "--stdio")))
 
   ;; (setq-default js-indent-level 2
