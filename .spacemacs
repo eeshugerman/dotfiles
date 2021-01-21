@@ -615,7 +615,7 @@ before packages are loaded."
   (setq byte-compile-warnings '(cl-functions))
   (spacemacs/set-leader-keys "fE" 'custom/echo-file-path)  ;; TODO: how to make which-key reflect this?
   ;; (setq ansible-vault-password-file "foo")              ;; TODO: set this to 'projectile-project-root / .vault_pass
-  (setq geiser-default-implementation 'guile)
+  (setenv "GDK_BACKEND" "wayland") ;; for opening firefox processes
 
 
   ;; python ------------------------------------------------------------------------
