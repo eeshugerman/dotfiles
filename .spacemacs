@@ -65,7 +65,7 @@ This function should only modify configuration layer settings."
      (treemacs :variables
                treemacs-sorting 'alphabetic-asc
                treemacs-use-filewatch-mode t
-               treemacs-use-git-mode 'deferred)
+               treemacs-use-git-mode 'extended)
 
      (python :variables
              python-backend 'lsp
@@ -628,7 +628,8 @@ before packages are loaded."
   (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
   ;; --- dependencies
   ;; pip install importmagic epc ipython debugpy flake8
-  (setq python-shell-interpreter (if (eq system-type 'darwin) "python3.8" "python3"))
+  ;; (setq python-shell-interpreter (if (eq system-type 'darwin) "python3.8" "python3"))
+  (setq python-shell-interpreter "python3")
 
   (setq flycheck-python-flake8-executable python-shell-interpreter)
   ;; (setq lsp-python-ms-python-executable-cmd python-shell-interpreter)  ;; overrides activated venv, no bueno
@@ -721,7 +722,9 @@ before packages are loaded."
   (add-hook 'spacemacs-post-theme-change-hook 'do-theme-tweaks)
   (do-theme-tweaks)
 
-  (set-face-foreground 'terraform--resource-name-face "hot pink")
+  (add-hook
+   'terraform-mode-hook
+   (lambda () (set-face-foreground 'terraform--resource-name-face "hot pink")))
 
 
   ;; doom-modeline -------------------------------------------------------------
