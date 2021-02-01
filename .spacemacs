@@ -696,7 +696,7 @@ before packages are loaded."
   (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
   (define-fringe-bitmap 'right-arrow (make-vector 8 #b0))
 
-  (package-install-file "~/devel/misc/lsp-treemacs")  ;; why does this fix icons?
+  (load-library "lsp-treemacs-themes")   ;; why does this fix icons?
   (setq doom-themes-treemacs-theme "doom-colors")
   (doom-themes-treemacs-config)
 
