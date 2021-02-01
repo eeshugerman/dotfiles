@@ -721,7 +721,9 @@ before packages are loaded."
   (add-hook 'spacemacs-post-theme-change-hook 'do-theme-tweaks)
   (do-theme-tweaks)
 
-  (set-face-foreground 'terraform--resource-name-face "hot pink")
+  (add-hook
+   'terraform-mode-hook
+   (lambda () (set-face-foreground 'terraform--resource-name-face "hot pink")))
 
 
   ;; doom-modeline -------------------------------------------------------------
