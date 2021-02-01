@@ -8,11 +8,13 @@ cd "$HOME"
 yadm submodule update --recursive --init
 
 if [ $(uname) = "Darwin" ]; then
-    brew install mackup
+    brew install mackup gpg
     mackup restore
 else
     dconf load / < "$HOME/.config/dconf.ini"
 fi
+
+GPG_TTY=$(tty) yadm decrypt
 
 # --- EMACS -------------------------------------------------------------------
 touch "$HOME/.emacs-custom.el"

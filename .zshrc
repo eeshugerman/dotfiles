@@ -41,8 +41,8 @@ alias vim="nvim"
 alias ep="sudo eopkg"
 
 if [ "$(uname)" = "Darwin" ]; then
-	alias cbcopy="pbcopy"
-	alias cbpaste="pbpaste"
+	  alias cbcopy="pbcopy"
+	  alias cbpaste="pbpaste"
 else
     alias open="xdg-open"
     alias cbcopy="xclip -in -selection clipboard"
@@ -54,11 +54,11 @@ alias dconf-edit="vim $HOME/.config/dconf.ini"
 alias dconf-load="dconf load / < $HOME/.config/dconf.ini"
 
 export PATH="$PATH:$HOME/.local/bin"
+
 if [ "$(uname)" = "Darwin" ]; then
   export PATH="$PATH:/usr/local/sbin"
   export SPACESHIP_DOCKER_SHOW="false"
 fi
 
-if [ -n "$INSIDE_EMACS" ]; then
-  # nothing presently, but could come in handy
-fi
+# https://github.com/TheLocehiliosan/yadm/issues/33
+export GPG_TTY=$(tty)
