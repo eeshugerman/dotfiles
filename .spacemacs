@@ -529,6 +529,9 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil - same as frame-title-format)
    dotspacemacs-icon-title-format nil
 
+   ;; Show trailing whitespace (default t)
+   dotspacemacs-show-trailing-whitespace t
+
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
    ;; `trailing' to delete only the whitespace at end of lines, `changed' to
@@ -561,7 +564,10 @@ It should only modify the values of Spacemacs settings."
 
    ;; If nil the home buffer shows the full path of agenda items
    ;; and todos. If non nil only the file name is shown.
-   dotspacemacs-home-shorten-agenda-source nil))
+   dotspacemacs-home-shorten-agenda-source nil
+
+   ;; If non-nil then byte-compile some of Spacemacs files.
+   dotspacemacs-byte-compile nil))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -761,10 +767,10 @@ before packages are loaded."
       (spacemacs/default-pop-shell)))
   (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
 
-  (evil-define-key 'emacs vterm-mode-map (kbd "C-k") 'evil-previous-line)
-  (evil-define-key 'emacs vterm-mode-map (kbd "C-j") 'evil-next-line)
-  (evil-define-key 'normal vterm-mode-map (kbd "C-k") 'vterm-previous-prompt)
-  (evil-define-key 'normal vterm-mode-map (kbd "C-j") 'vterm-next-prompt)
+  ;; (evil-define-key 'emacs vterm-mode-map (kbd "C-k") 'evil-previous-line)
+  ;; (evil-define-key 'emacs vterm-mode-map (kbd "C-j") 'evil-next-line)
+  ;; (evil-define-key 'normal vterm-mode-map (kbd "C-k") 'vterm-previous-prompt)
+  ;; (evil-define-key 'normal vterm-mode-map (kbd "C-j") 'vterm-next-prompt)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-,") 'evil-normal-state)
   (evil-define-key 'normal vterm-mode-map (kbd "C-,") 'evil-emacs-state)
   (evil-define-key 'insert vterm-mode-map (kbd "C-,") 'evil-emacs-state)
