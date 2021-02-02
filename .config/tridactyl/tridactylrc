@@ -9,6 +9,9 @@ bind D tabclosealltoright
 bind gd tabduplicate
 bind gD tabdetach
 
+bind --mode=ex <C-j> ex.next_completion
+bind --mode=ex <C-k> ex.prev_completion
+
 " can't get native editor to work correctly, use wasavi instead (plus it's nicer anyway in some ways)
 unbind --mode=input <C-i>
 
