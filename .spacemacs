@@ -81,7 +81,7 @@ This function should only modify configuration layer settings."
      auto-completion
      emacs-lisp
      git
-	   github
+     github
      markdown
      org
      epub
@@ -104,7 +104,6 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(doom-themes
-     writeroom-mode
      which-key-posframe
      editorconfig
      ivy-posframe
@@ -253,7 +252,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-new-empty-buffer-major-mode 'text-mode
 
    ;; Default major mode of the scratch buffer (default `text-mode')
-   dotspacemacs-scratch-mode 'lisp-mode
+   dotspacemacs-scratch-mode 'emacs-lisp-mode
 
    ;; If non-nil, *scratch* buffer will be persistent. Things you write down in
    ;; *scratch* buffer will be saved and restored automatically.
@@ -420,7 +419,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
    ;; variable with `dotspacemacs-maximized-at-startup' in OSX to obtain
    ;; borderless fullscreen. (default nil)
-   dotspacemacs-undecorated-at-startup nil
+   dotspacemacs-undecorated-at-startup t
 
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
@@ -479,7 +478,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc...
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
-   dotspacemacs-smart-closing-parenthesis nil
+   dotspacemacs-smart-closing-parenthesis t
 
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
@@ -529,12 +528,15 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil - same as frame-title-format)
    dotspacemacs-icon-title-format nil
 
+   ;; Show trailing whitespace (default t)
+   dotspacemacs-show-trailing-whitespace t
+
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
    ;; `trailing' to delete only the whitespace at end of lines, `changed' to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup nil
+   dotspacemacs-whitespace-cleanup 'all
 
    ;; If non nil activate `clean-aindent-mode' which tries to correct
    ;; virtual indentation of simple modes. This can interfer with mode specific
@@ -557,11 +559,14 @@ It should only modify the values of Spacemacs settings."
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs nil
+   dotspacemacs-pretty-docs t
 
    ;; If nil the home buffer shows the full path of agenda items
    ;; and todos. If non nil only the file name is shown.
-   dotspacemacs-home-shorten-agenda-source nil))
+   dotspacemacs-home-shorten-agenda-source nil
+
+   ;; If non-nil then byte-compile some of Spacemacs files.
+   dotspacemacs-byte-compile t))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -620,6 +625,7 @@ before packages are loaded."
   (setq byte-compile-warnings '(cl-functions))
   (spacemacs/set-leader-keys "fE" 'custom/echo-file-path)  ;; TODO: how to make which-key reflect this?
   ;; (setq ansible-vault-password-file "foo")              ;; TODO: set this to 'projectile-project-root / .vault_pass
+  ;; (evil-define-key nil 'global (kbd "<leader>-:") 'eval-expression)
 
 
   ;; python ------------------------------------------------------------------------
@@ -739,8 +745,18 @@ before packages are loaded."
 
   ;; vi ------------------------------------------------------------------------
   (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
-  (define-key evil-normal-state-map (kbd "V") (kbd "C-v $"))
-  (define-key evil-normal-state-map (kbd "RET") 'evil-ex-nohighlight)
+  (define-key evil-motion-state-map (kbd "V") (kbd "C-v $"))
+  (define-key evil-motion-state-map (kbd "RET") 'evil-ex-nohighlight)
+
+  (delete 'special-mode evil-evilified-state-modes)
+  (evil-define-key 'normal special-mode-map "q" 'quit-window)
+
+  ;; (setq goodified-state-modes '(special-mode))
+  ;; (dolist (mode goodified-state-modes)
+  ;;   (let ((mode-map (make-symbol (concat (symbol-name mode) "-map"))))
+  ;;     (delete mode evil-evilified-state-modes)
+  ;;     ; how to pass in value of mode-map??
+  ;;     (evil-define-key 'normal mode-map "q" 'quit-window)))
 
 
   ;; LSP -----------------------------------------------------------------------
@@ -761,10 +777,10 @@ before packages are loaded."
       (spacemacs/default-pop-shell)))
   (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
 
-  (evil-define-key 'emacs vterm-mode-map (kbd "C-k") 'evil-previous-line)
-  (evil-define-key 'emacs vterm-mode-map (kbd "C-j") 'evil-next-line)
-  (evil-define-key 'normal vterm-mode-map (kbd "C-k") 'vterm-previous-prompt)
-  (evil-define-key 'normal vterm-mode-map (kbd "C-j") 'vterm-next-prompt)
+  ;; (evil-define-key 'emacs vterm-mode-map (kbd "C-k") 'evil-previous-line)
+  ;; (evil-define-key 'emacs vterm-mode-map (kbd "C-j") 'evil-next-line)
+  ;; (evil-define-key 'normal vterm-mode-map (kbd "C-k") 'vterm-previous-prompt)
+  ;; (evil-define-key 'normal vterm-mode-map (kbd "C-j") 'vterm-next-prompt)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-,") 'evil-normal-state)
   (evil-define-key 'normal vterm-mode-map (kbd "C-,") 'evil-emacs-state)
   (evil-define-key 'insert vterm-mode-map (kbd "C-,") 'evil-emacs-state)
@@ -785,13 +801,13 @@ before packages are loaded."
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
   (setenv "TSC_NONPOLLING_WATCHER" "true")
 
-  ;; what does this do?
   (setq lsp-clients-angular-language-server-command
         (let ((node-modules "/usr/local/lib/node_modules"))
           `("node"
             ,(concat node-modules "/@angular/language-server")
             "--ngProbeLocations" ,node-modules
             "--tsProbeLocations" ,node-modules
+            "--experimental-ivy"
             "--stdio")))
 
   ;; (setq-default js-indent-level 2
