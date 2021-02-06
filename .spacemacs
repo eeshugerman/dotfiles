@@ -743,20 +743,27 @@ before packages are loaded."
     '(objed-state misc-info persp-name battery grip irc mu4e gnus github debug repl lsp minor-modes input-method indent-info buffer-encoding process vcs checker))
 
 
-  ;; vi ------------------------------------------------------------------------
+  ;; evil ------------------------------------------------------------------------
+  ;; --- vi
   (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
   (define-key evil-motion-state-map (kbd "V") (kbd "C-v $"))
   (define-key evil-motion-state-map (kbd "RET") 'evil-ex-nohighlight)
 
+  ;; --- ivy/minibuffer
+  (setq evil-want-minibuffer t)
+  (define-key evil-insert-state-map "\C-k" nil) ;; make C-k work in ivy/insert
+  (evil-define-key 'normal minibuffer-local-map [return]    'exit-minibuffer)
+  (evil-define-key 'normal minibuffer-local-map [escape]    'minibuffer-keyboard-quit)
+  (evil-define-key 'normal ivy-minibuffer-map   [return]    'exit-minibuffer)
+  (evil-define-key 'normal ivy-minibuffer-map   [escape]    'minibuffer-keyboard-quit)
+
+  ;; only works in normal mode :/
+  (evil-define-key '(normal insert) minibuffer-local-map (kbd "C-j") 'next-history-element)
+  (evil-define-key '(normal insert) minibuffer-local-map (kbd "C-k") 'previous-history-element)
+
+  ;; --- misc
   (delete 'special-mode evil-evilified-state-modes)
   (evil-define-key 'normal special-mode-map "q" 'quit-window)
-
-  ;; (setq goodified-state-modes '(special-mode))
-  ;; (dolist (mode goodified-state-modes)
-  ;;   (let ((mode-map (make-symbol (concat (symbol-name mode) "-map"))))
-  ;;     (delete mode evil-evilified-state-modes)
-  ;;     ; how to pass in value of mode-map??
-  ;;     (evil-define-key 'normal mode-map "q" 'quit-window)))
 
 
   ;; LSP -----------------------------------------------------------------------
