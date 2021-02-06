@@ -56,6 +56,7 @@ This function should only modify configuration layer settings."
      sql
      terraform
      nginx
+     epub
      ansible
      yaml
      docker
@@ -419,7 +420,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
    ;; variable with `dotspacemacs-maximized-at-startup' in OSX to obtain
    ;; borderless fullscreen. (default nil)
-   dotspacemacs-undecorated-at-startup t
+   dotspacemacs-undecorated-at-startup (eq system-type 'darwin)
 
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
@@ -835,6 +836,7 @@ before packages are loaded."
 
   (setq org-adapt-indentation nil)
   (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") 'org-babel-execute-src-block)
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.2))
 )
 
 
