@@ -829,14 +829,12 @@ before packages are loaded."
 
   ;; org --------------------------------------------------------------------------
   (with-eval-after-load 'org
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((scheme . t)))
-    (setq org-confirm-babel-evaluate nil))
+    (org-babel-do-load-languages 'org-babel-load-languages '((scheme . t)))
+    (setq org-confirm-babel-evaluate nil)
+    (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.2)))
 
   (setq org-adapt-indentation nil)
   (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") 'org-babel-execute-src-block)
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.2))
 )
 
 
