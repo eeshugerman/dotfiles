@@ -653,10 +653,14 @@ before packages are loaded."
 
   ;; --- flycheck
   ;; (setq flycheck-python-flake8-executable python-shell-interpreter)
-  (add-hook 'buffer-list-update-hook
-            (lambda ()
-              (when (eq major-mode 'python-mode)
-                (flycheck-add-next-checker 'lsp 'python-flake8))))
+
+  (defun add-flake8-checker ()
+    (when (and (boundp 'flycheck-may-enable-checker)
+               (flycheck-may-enable-checker 'python-flake8))
+     (flycheck-add-next-checker 'lsp 'python-flake8)))
+
+  (add-hook 'lsp-after-initialize-hook 'add-flake8-checker)
+  (add-hook 'buffer-list-update-hook 'add-flake8-checker)
 
   (add-hook 'buffer-list-update-hook
             (lambda ()
