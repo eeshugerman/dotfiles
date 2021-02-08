@@ -777,11 +777,11 @@ before packages are loaded."
   ;; --- ivy/minibuffer
   (setq evil-want-minibuffer t)
   (define-key evil-insert-state-map "\C-k" nil) ;; make C-k work in ivy/insert
-  (evil-define-key 'normal minibuffer-local-map [return]    'exit-minibuffer)
-  (evil-define-key 'normal minibuffer-local-map [escape]    'minibuffer-keyboard-quit)
-  (evil-define-key 'normal ivy-minibuffer-map   [return]    'exit-minibuffer)
-  (evil-define-key 'normal ivy-minibuffer-map   [escape]    'minibuffer-keyboard-quit)
-  ;; (evil-define-key 'normal evil-ex-map          [escape]    'exit-minibuffer) ; doesn't work
+  (evil-define-key 'normal minibuffer-local-map     [return]    'exit-minibuffer)
+  (evil-define-key 'normal minibuffer-local-map     [escape]    'minibuffer-keyboard-quit)
+  (evil-define-key 'normal ivy-minibuffer-map       [return]    'exit-minibuffer)
+  (evil-define-key 'normal ivy-minibuffer-map       [escape]    'minibuffer-keyboard-quit)
+  (evil-define-key 'normal evil-ex-completion-map   [escape]    'minibuffer-keyboard-quit)
 
   ;; only works in normal mode :/
   (evil-define-key '(normal insert) minibuffer-local-map (kbd "C-j") 'next-history-element)
