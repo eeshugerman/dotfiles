@@ -774,6 +774,7 @@ before packages are loaded."
   (evil-define-key 'normal minibuffer-local-map [escape]    'minibuffer-keyboard-quit)
   (evil-define-key 'normal ivy-minibuffer-map   [return]    'exit-minibuffer)
   (evil-define-key 'normal ivy-minibuffer-map   [escape]    'minibuffer-keyboard-quit)
+  ;; (evil-define-key 'normal evil-ex-map          [escape]    'exit-minibuffer) ; doesn't work
 
   ;; only works in normal mode :/
   (evil-define-key '(normal insert) minibuffer-local-map (kbd "C-j") 'next-history-element)
@@ -812,7 +813,9 @@ before packages are loaded."
 
   (setq vterm-max-scrollback 100000)  ; maximum size supported
   (setq vterm-always-compile-module t)
+
   ;; (setq term-suppress-hard-newline t) ;; vterm equivalent?
+  (setq vterm-min-window-width 1000)     ;; vterm
 
 
   ;; haskell -------------------------------------------------------------------
@@ -846,10 +849,9 @@ before packages are loaded."
 
   ;; org --------------------------------------------------------------------------
   (with-eval-after-load 'org
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((scheme . t)))
-    (setq org-confirm-babel-evaluate nil))
+    (org-babel-do-load-languages 'org-babel-load-languages '((scheme . t)))
+    (setq org-confirm-babel-evaluate nil)
+    (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.2)))
 
   (setq org-adapt-indentation nil)
   (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") 'org-babel-execute-src-block)
