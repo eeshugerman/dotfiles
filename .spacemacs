@@ -776,11 +776,18 @@ before packages are loaded."
 
   ;; --- ivy/minibuffer
   (setq evil-want-minibuffer t)
-  (define-key evil-insert-state-map "\C-k" nil) ;; make C-k work in ivy/insert
+
+  ;; eval
   (evil-define-key 'normal minibuffer-local-map     [return]    'exit-minibuffer)
   (evil-define-key 'normal minibuffer-local-map     [escape]    'minibuffer-keyboard-quit)
+
+  ;; ivy
+  (define-key evil-insert-state-map "\C-k" nil) ;; make C-k work in ivy/insert
   (evil-define-key 'normal ivy-minibuffer-map       [return]    'exit-minibuffer)
   (evil-define-key 'normal ivy-minibuffer-map       [escape]    'minibuffer-keyboard-quit)
+  ;; TODO: backspace only works in 'emacs state
+
+  ;; ex
   (evil-define-key 'normal evil-ex-completion-map   [escape]    'minibuffer-keyboard-quit)
 
   ;; only works in normal mode :/
@@ -788,6 +795,10 @@ before packages are loaded."
   (evil-define-key '(normal insert) minibuffer-local-map (kbd "C-k") 'previous-history-element)
 
   ;; --- misc
+  (evil-define-key 'normal 'global (kbd "C-,") 'evil-emacs-state)
+  (evil-define-key 'insert 'global (kbd "C-,") 'evil-emacs-state)
+  (evil-define-key 'emacs  'global (kbd "C-,")  'evil-normal-state)
+
   (delete 'special-mode evil-evilified-state-modes)
   (evil-define-key 'normal special-mode-map "q" 'quit-window)
 
@@ -815,8 +826,6 @@ before packages are loaded."
   (evil-define-key 'normal vterm-mode-map (kbd "C-k") 'vterm-send-up)
   (evil-define-key 'normal vterm-mode-map (kbd "C-j") 'vterm-send-down)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-,") 'evil-normal-state)
-  (evil-define-key 'normal vterm-mode-map (kbd "C-,") 'evil-emacs-state)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-,") 'evil-emacs-state)
 
   (setq vterm-max-scrollback 100000)  ; maximum size supported
   (setq vterm-always-compile-module t)
@@ -862,6 +871,21 @@ before packages are loaded."
 
   (setq org-adapt-indentation nil)
   (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") 'org-babel-execute-src-block)
+
+
+  ;; yadm ------------------------------------------------------------------------
+  ;; doesn't work
+  (add-to-list 'tramp-methods
+               '("yadm"
+                 (tramp-login-program "yadm")
+                 (tramp-login-args (("enter")))
+                 (tramp-login-env (("SHELL") ("/bin/sh")))
+                 (tramp-remote-shell "/bin/sh")
+                 (tramp-remote-shell-args ("-c"))))
+  (defun custom/magit-yadm ()
+    (interactive)
+    (magit-status "/yadm::~"))
+  (spacemacs/set-leader-keys "gy" 'custom/magit-yadm)
 )
 
 
