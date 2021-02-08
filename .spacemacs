@@ -626,10 +626,13 @@ before packages are loaded."
   (setq bidi-inhibit-bpa t)
   (setq bidi-paragraph-direction 'left-to-right)
   (setq byte-compile-warnings '(cl-functions))
-  (spacemacs/set-leader-keys "fE" 'custom/echo-file-path)  ;; TODO: how to make which-key reflect this?
-  ;; (setq ansible-vault-password-file "foo")              ;; TODO: set this to 'projectile-project-root / .vault_pass
-  ;; (evil-define-key nil 'global (kbd "<leader>-:") 'eval-expression)
+  (spacemacs/set-leader-keys      ;; TODO: make which-key reflect these
+    ":"  'eval-expression
+    "fE" 'custom/echo-file-path
+    "aw" 'eww
+    )
 
+  ;; (setq ansible-vault-password-file "foo"))     ;; TODO: set this to 'projectile-project-root / .vault_pass
 
   ;; python ------------------------------------------------------------------------
   (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
