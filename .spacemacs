@@ -645,6 +645,19 @@ before packages are loaded."
   (setq ein:output-area-inlined-images t)
 
 
+  ;; --- flycheck
+  ;; (setq flycheck-python-flake8-executable python-shell-interpreter)
+  (add-hook 'buffer-list-update-hook
+            (lambda ()
+              (when (eq major-mode 'python-mode)
+                (flycheck-add-next-checker 'lsp 'python-flake8))))
+
+  (add-hook 'buffer-list-update-hook
+            (lambda ()
+              (when (and (bound-and-true-p flycheck-mode)
+                         (not (eq major-mode 'python-mode)))
+                (flycheck-remove-next-checker 'lsp 'python-flake8))))
+
   ;; git ----------------------------------------------------------------------
   (setq browse-at-remote-remote-type-domains '(("git.loc.gov" . "gitlab")
                                                ("github.com" .  "github")))
