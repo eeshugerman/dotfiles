@@ -624,9 +624,14 @@ before packages are loaded."
   (setq bidi-inhibit-bpa t)
   (setq bidi-paragraph-direction 'left-to-right)
   (setq byte-compile-warnings '(cl-functions))
-  (spacemacs/set-leader-keys "fE" 'custom/echo-file-path)  ;; TODO: how to make which-key reflect this?
-  ;; (setq ansible-vault-password-file "foo")              ;; TODO: set this to 'projectile-project-root / .vault_pass
-  ;; (evil-define-key nil 'global (kbd "<leader>-:") 'eval-expression)
+  (spacemacs/set-leader-keys      ;; TODO: make which-key reflect these?
+    ":"  'eval-expression
+    "fE" 'custom/echo-file-path
+    "aw" 'eww
+    )
+
+  ;; (setq ansible-vault-password-file "foo"))              ;; TODO: set this to 'projectile-project-root / .vault_pass
+
 
 
   ;; python ------------------------------------------------------------------------
@@ -757,6 +762,7 @@ before packages are loaded."
   (evil-define-key 'normal minibuffer-local-map [escape]    'minibuffer-keyboard-quit)
   (evil-define-key 'normal ivy-minibuffer-map   [return]    'exit-minibuffer)
   (evil-define-key 'normal ivy-minibuffer-map   [escape]    'minibuffer-keyboard-quit)
+  ;; (evil-define-key 'normal evil-ex-map          [escape]    'exit-minibuffer) ; doesn't work
 
   ;; only works in normal mode :/
   (evil-define-key '(normal insert) minibuffer-local-map (kbd "C-j") 'next-history-element)
@@ -787,15 +793,17 @@ before packages are loaded."
 
   ;; (evil-define-key 'emacs vterm-mode-map (kbd "C-k") 'evil-previous-line)
   ;; (evil-define-key 'emacs vterm-mode-map (kbd "C-j") 'evil-next-line)
-  ;; (evil-define-key 'normal vterm-mode-map (kbd "C-k") 'vterm-previous-prompt)
-  ;; (evil-define-key 'normal vterm-mode-map (kbd "C-j") 'vterm-next-prompt)
+  (evil-define-key 'normal vterm-mode-map (kbd "C-k") 'vterm-send-up)
+  (evil-define-key 'normal vterm-mode-map (kbd "C-j") 'vterm-send-down)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-,") 'evil-normal-state)
   (evil-define-key 'normal vterm-mode-map (kbd "C-,") 'evil-emacs-state)
   (evil-define-key 'insert vterm-mode-map (kbd "C-,") 'evil-emacs-state)
 
   (setq vterm-max-scrollback 100000)  ; maximum size supported
   (setq vterm-always-compile-module t)
+
   ;; (setq term-suppress-hard-newline t) ;; vterm equivalent?
+  (setq vterm-min-window-width 1000)     ;; vterm
 
 
   ;; haskell -------------------------------------------------------------------
