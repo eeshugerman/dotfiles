@@ -41,8 +41,8 @@ alias vim="nvim"
 alias ep="sudo eopkg"
 
 if [ "$(uname)" = "Darwin" ]; then
-	  alias cbcopy="pbcopy"
-	  alias cbpaste="pbpaste"
+    alias cbcopy="pbcopy"
+    alias cbpaste="pbpaste"
 else
     alias open="xdg-open"
     alias cbcopy="xclip -in -selection clipboard"

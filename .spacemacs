@@ -71,12 +71,14 @@ This function should only modify configuration layer settings."
      (python :variables
              python-backend 'lsp
              python-lsp-server 'mspyls
+             python-lsp-git-root "~/util/python-language-server"
              python-tab-width 4
              python-fill-column 100
              python-formatter 'yapf
              python-format-on-save nil
              python-sort-imports-on-save nil
-             python-fill-docstring-style 'django)
+             python-fill-docstring-style 'django
+             python-poetry-activate t)
      ipython-notebook
      ivy
      auto-completion
@@ -241,8 +243,8 @@ It should only modify the values of Spacemacs settings."
    ;; pair of numbers, e.g. `(recents-by-project . (7 .  5))', where the first
    ;; number is the project limit and the second the limit on the recent files
    ;; within a project.
-   dotspacemacs-startup-lists '((recents . 5)
-                                (projects . 7))
+   dotspacemacs-startup-lists '((recents . 10)
+                                (projects . 10))
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
@@ -624,32 +626,43 @@ before packages are loaded."
   (setq bidi-inhibit-bpa t)
   (setq bidi-paragraph-direction 'left-to-right)
   (setq byte-compile-warnings '(cl-functions))
-  (spacemacs/set-leader-keys      ;; TODO: make which-key reflect these?
-    ":"  'eval-expression
-    "fE" 'custom/echo-file-path
-    "aw" 'eww
-    )
-
-  ;; (setq ansible-vault-password-file "foo"))              ;; TODO: set this to 'projectile-project-root / .vault_pass
-
+  (spacemacs/set-leader-keys "fE" 'custom/echo-file-path)  ;; TODO: how to make which-key reflect this?
+  ;; (setq ansible-vault-password-file "foo")              ;; TODO: set this to 'projectile-project-root / .vault_pass
+  ;; (evil-define-key nil 'global (kbd "<leader>-:") 'eval-expression)
 
 
   ;; python ------------------------------------------------------------------------
-  ;; --- tweaks
-  (setq dap-python-debugger 'debugpy) ; this should be the default at some point
   (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
-  ;; --- dependencies
-  ;; pip install importmagic epc ipython debugpy flake8
-  ;; (setq python-shell-interpreter (if (eq system-type 'darwin) "python3.8" "python3"))
-  (setq python-shell-interpreter "python3")
-
-  (setq flycheck-python-flake8-executable python-shell-interpreter)
-  ;; (setq lsp-python-ms-python-executable-cmd python-shell-interpreter)  ;; overrides activated venv, no bueno
-  ;; (setq poetry-tracking-strategy 'switch-buffer)
-  ;; (poetry-tracking-mode)
   (add-hook 'ein:notebook-mode-hook 'spacemacs/toggle-fill-column-indicator-off)
   (setq ein:output-area-inlined-images t)
 
+  (setq dap-python-debugger 'debugpy) ; this should be the default at some point
+
+  ;; --- i don't even know
+  ;; pip install importmagic epc ipython debugpy flake8
+  (setq python-shell-interpreter "python3")
+  (if (eq system-type 'darwin)
+      (add-to-list 'exec-path "~/Library/Python/3.9/bin"))
+  ;; (setq lsp-python-ms-python-executable-cmd python-shell-interpreter)  ;; overrides activated venv, no bueno
+
+
+  ;; --- poetry
+  ;; (setq poetry-tracking-strategy 'post-command)
+  ;; (poetry-tracking-mode)
+
+
+  ;; --- flycheck
+  ;; (setq flycheck-python-flake8-executable python-shell-interpreter)
+  (add-hook 'buffer-list-update-hook
+            (lambda ()
+              (when (eq major-mode 'python-mode)
+                (flycheck-add-next-checker 'lsp 'python-flake8))))
+
+  (add-hook 'buffer-list-update-hook
+            (lambda ()
+              (when (and (bound-and-true-p flycheck-mode)
+                         (not (eq major-mode 'python-mode)))
+                (flycheck-remove-next-checker 'lsp 'python-flake8))))
 
   ;; git ----------------------------------------------------------------------
   (setq browse-at-remote-remote-type-domains '(("git.loc.gov" . "gitlab")
@@ -708,12 +721,11 @@ before packages are loaded."
   (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
   (define-fringe-bitmap 'right-arrow (make-vector 8 #b0))
 
-  (load-library "lsp-treemacs-themes")   ;; why does this fix icons?
-  (setq doom-themes-treemacs-theme "doom-colors")
-  (doom-themes-treemacs-config)
-
   (doom-themes-org-config)
   (doom-themes-visual-bell-config)
+  (setq doom-themes-treemacs-theme "doom-colors")
+  (with-eval-after-load 'lsp-treemacs  ;; https://github.com/emacs-lsp/lsp-treemacs/issues/89
+    (doom-themes-treemacs-config))
 
   (setq window-divider-default-right-width 10)
 
@@ -791,8 +803,8 @@ before packages are loaded."
       (spacemacs/default-pop-shell)))
   (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
 
-  ;; (evil-define-key 'emacs vterm-mode-map (kbd "C-k") 'evil-previous-line)
-  ;; (evil-define-key 'emacs vterm-mode-map (kbd "C-j") 'evil-next-line)
+  (evil-define-key 'emacs vterm-mode-map (kbd "C-k") 'evil-previous-line)
+  (evil-define-key 'emacs vterm-mode-map (kbd "C-j") 'evil-next-line)
   (evil-define-key 'normal vterm-mode-map (kbd "C-k") 'vterm-send-up)
   (evil-define-key 'normal vterm-mode-map (kbd "C-j") 'vterm-send-down)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-,") 'evil-normal-state)
