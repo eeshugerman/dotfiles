@@ -44,7 +44,7 @@ bind ;v hint -F e => e.dispatchEvent(new MouseEvent('mouseeneter', {}))
 
 
 command dark colors base16-tridactyl/base16-ashes
-command light colors shydactyl
+command light colors base16-tridactyl/base16-harmonic16-light
 
 
 " disable searchurls
