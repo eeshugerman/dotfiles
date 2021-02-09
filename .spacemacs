@@ -32,70 +32,38 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '((haskell :variables
-              haskell-completion-backend 'lsp)
-     scheme
-     rust
-     (html :variables
-           css-enable-lsp t
-           scss-enable-lsp t
-           html-enable-lsp t)
-     import-js
-     (javascript :variables javascript-import-tool 'import-js)
-     typescript
-     (java :variables java-backend 'lsp)
-     (unicode-fonts :variables
-                    unicode-fonts-enable-ligatures t
-                    unicode-fonts-ligature-modes '(typescript-mode  ;; breaks in python files
-                                                   javascript-mode
-                                                   web-mode
-                                                   html-mode
-                                                   scss-mode
-                                                   css-mode))
-     csv
-     sql
-     terraform
-     nginx
-     epub
-     ansible
-     yaml
-     docker
-     dap
-     multiple-cursors
-
-     (treemacs :variables
-               treemacs-sorting 'alphabetic-asc
-               treemacs-use-filewatch-mode t
-               treemacs-use-git-mode 'extended)
-
-     (python :variables
-             python-backend 'lsp
-             python-lsp-server 'mspyls
-             python-lsp-git-root "~/util/python-language-server"
-             python-tab-width 4
-             python-fill-column 100
-             python-formatter 'yapf
-             python-format-on-save nil
-             python-sort-imports-on-save nil
-             python-fill-docstring-style 'django
-             python-poetry-activate t)
-     ipython-notebook
-     ivy
+   '(ansible
      auto-completion
+     csv
+     dap
+     docker
      emacs-lisp
+     epub
+     epub
      git
      github
+     haskell
+     html
+     import-js
+     ipython-notebook
+     ivy
+     java
+     javascript
      markdown
+     multiple-cursors
+     nginx
      org
-     epub
-     (shell :variables
-            shell-default-height 30
-            shell-default-position 'bottom
-            shell-default-shell 'vterm)
-     (spell-checking :variables
-                     spell-checking-enable-by-default nil)
+     python
+     rust
+     scheme
+     shell
+     sql
      syntax-checking
-     )
+     terraform
+     treemacs
+     typescript
+     unicode-fonts
+     yaml)
 
    ;; List of additional packages that will be installed without being wrapped
    ;; in a layer (generally the packages are installed only and should still be
@@ -106,13 +74,11 @@ This function should only modify configuration layer settings."
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
-   '(doom-themes
-     which-key-posframe
-     editorconfig
-     ivy-posframe
+   '(all-the-icons-ivy-rich
      ivy-rich
-     all-the-icons-ivy-rich)
-
+     doom-themes
+     ivy-posframe
+     which-key-posframe)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -585,9 +551,63 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+
   (setq byte-compile-warnings '(cl-functions))
   (if (eq system-type 'darwin)
-      (setq insert-directory-program "/usr/local/bin/gls")))
+      (setq insert-directory-program "/usr/local/bin/gls"))
+
+  (setq
+   haskell-completion-backend 'lsp
+
+   html-enable-lsp t
+   css-enable-lsp t
+   scss-enable-lsp t
+
+   ivy-enable-advanced-buffer-information t
+   ivy-extra-directories nil
+   ivy-initial-inputs-alist nil
+   ivy-virtual-abbreviate 'full
+   ivy-wrap t
+
+   java-backend 'lsp
+
+   javascript-import-tool 'import-js
+
+   lsp-ui-doc-enable nil
+   lsp-eldoc-enable-hover nil
+   lsp-enable-symbol-highlighting t
+   lsp-signature-auto-activate t
+   lsp-headerline-breadcrumb-enable t
+   lsp-headerline-breadcrumb-segments '(symbols)
+   lsp-ui-sideline-enable t
+
+   python-backend 'lsp
+   python-fill-column 100
+   python-fill-docstring-style 'django
+   python-format-on-save nil
+   python-formatter 'black
+   python-lsp-server 'pyright
+   python-poetry-activate t
+   python-sort-imports-on-save nil
+   python-tab-width 4
+
+   shell-default-height 30
+   shell-default-position 'bottom
+   shell-default-shell 'vterm
+
+   spell-checking-enable-by-default nil
+
+   treemacs-sorting 'alphabetic-asc
+   treemacs-use-filewatch-mode t
+   treemacs-use-git-mode 'extended
+
+   unicode-fonts-enable-ligatures t
+   unicode-fonts-ligature-modes '(typescript-mode
+                                  javascript-mode
+                                  web-mode
+                                  html-mode
+                                  scss-mode
+                                  css-mode)))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -605,71 +625,52 @@ before packages are loaded."
 
   ;; init standalone modes ----------------------------------------------------
   (use-package all-the-icons-ivy-rich
-    :ensure t
-    :init (all-the-icons-ivy-rich-mode 1))
+    :config (all-the-icons-ivy-rich-mode 1))
   (use-package ivy-rich
-    :ensure t
-    :init (ivy-rich-mode 1))
-  (ivy-posframe-mode 1)
-  (which-key-posframe-mode 1)
-  (editorconfig-mode 1)
+    :config (ivy-rich-mode 1))
+  (use-package ivy-posframe
+    :init (setq ivy-posframe-display-functions-alist
+                '((t . ivy-posframe-display-at-frame-center)))
+    :config (ivy-posframe-mode 1))
+  (use-package which-key-posframe
+    :config (which-key-posframe-mode 1))
 
 
   ;; misc/general --------------------------------------------------------------
-  (add-hook 'hack-local-variables-hook 'spacemacs/toggle-truncate-lines-on)
-  (setq select-enable-clipboard nil)
-  (setq create-lockfiles nil)
-  (setq projectile-indexing-method 'hybrid)
-  (customize-set-variable 'custom-file (file-truename "~/.emacs-custom.el"))
-  (load custom-file)
-  (evil-define-key 'normal 'global (kbd "zz") 'evil-toggle-fold)
-  (setq bidi-inhibit-bpa t)
-  (setq bidi-paragraph-direction 'left-to-right)
-  (setq byte-compile-warnings '(cl-functions))
   (spacemacs/set-leader-keys      ;; TODO: make which-key reflect these
     ":"  'eval-expression
     "fE" 'custom/echo-file-path
-    "aw" 'eww
-    )
+    "aw" 'eww)
 
-  ;; (setq ansible-vault-password-file "foo"))     ;; TODO: set this to 'projectile-project-root / .vault_pass
+  (add-hook 'hack-local-variables-hook 'spacemacs/toggle-truncate-lines-on)
+
+  (setq select-enable-clipboard nil
+        create-lockfiles nil
+        projectile-indexing-method 'hybrid
+        bidi-inhibit-bpa t
+        bidi-paragraph-direction 'left-to-right
+        byte-compile-warnings '(cl-functions))
+
+  (customize-set-variable 'custom-file (file-truename "~/.emacs-custom.el"))
+  (load custom-file)
+
 
   ;; python ------------------------------------------------------------------------
   (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
+
+  ;; ein ---
   (add-hook 'ein:notebook-mode-hook 'spacemacs/toggle-fill-column-indicator-off)
   (setq ein:output-area-inlined-images t)
 
-  (setq dap-python-debugger 'debugpy) ; this should be the default at some point
 
-  ;; --- i don't even know
-  ;; pip install importmagic epc ipython debugpy flake8
+  ;; interpreter and tooling ---
   (setq python-shell-interpreter "python3")
   (if (eq system-type 'darwin)
+      ;; TODO: experiment with a portable (Linux/MacOS) venv + exec-path
+      ;; solution for python dependencies (flake8, importmagic, etc)
       (add-to-list 'exec-path "~/Library/Python/3.9/bin"))
-  ;; (setq lsp-python-ms-python-executable-cmd python-shell-interpreter)  ;; overrides activated venv, no bueno
+  (setq dap-python-debugger 'debugpy) ; this should be the default at some point
 
-
-  ;; --- poetry
-  ;; (setq poetry-tracking-strategy 'post-command)
-  ;; (poetry-tracking-mode)
-
-
-  ;; --- flycheck
-  ;; (setq flycheck-python-flake8-executable python-shell-interpreter)
-
-  (defun add-flake8-checker ()
-    (when (and (boundp 'flycheck-may-enable-checker)
-               (flycheck-may-enable-checker 'python-flake8))
-     (flycheck-add-next-checker 'lsp 'python-flake8)))
-
-  (add-hook 'lsp-after-initialize-hook 'add-flake8-checker)
-  (add-hook 'buffer-list-update-hook 'add-flake8-checker)
-
-  (add-hook 'buffer-list-update-hook
-            (lambda ()
-              (when (and (bound-and-true-p flycheck-mode)
-                         (not (eq major-mode 'python-mode)))
-                (flycheck-remove-next-checker 'lsp 'python-flake8))))
 
   ;; git ----------------------------------------------------------------------
   (setq browse-at-remote-remote-type-domains '(("git.loc.gov" . "gitlab")
@@ -685,12 +686,7 @@ before packages are loaded."
   (add-hook 'writeroom-mode-hook 'spacemacs/toggle-fullscreen-frame-off)
 
 
-  ;; ivy ---------------------------------------------------------------------
-  (setq ivy-posframe-display-functions-alist
-        '((t . ivy-posframe-display-at-frame-center)))
-  (setq ivy-virtual-abbreviate 'full)  ; does this actually do anything?
-  (setq ivy-initial-inputs-alist nil)
-  (setq ivy-wrap t)
+  ;; counsel -------------------------------------------------------------------
   (setq counsel-rg-base-command
         (append (butlast counsel-rg-base-command) '("--hidden" "%s")))
 
@@ -708,7 +704,7 @@ before packages are loaded."
 
 
   ;; undo --------------------------------------------------------------------
-  ;; --- persistent undo
+  ;; persistent undo
   ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
   (setq undo-tree-auto-save-history t
         undo-tree-history-directory-alist
@@ -716,11 +712,12 @@ before packages are loaded."
   (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
     (make-directory (concat spacemacs-cache-directory "undo")))
 
-  ;; --- granular history
+  ;; granular history
   (setq evil-want-fine-undo t)
 
 
   ;; themeing -----------------------------------------------------------------
+  ;; fringe ---
   (spacemacs/toggle-vi-tilde-fringe-off)
   (fringe-mode '(0 . nil))  ; disable right "fringe"
   ;; hide arrows at window border for truncated lines
@@ -728,14 +725,15 @@ before packages are loaded."
   (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
   (define-fringe-bitmap 'right-arrow (make-vector 8 #b0))
 
+  ;; doom ---
   (doom-themes-org-config)
   (doom-themes-visual-bell-config)
   (setq doom-themes-treemacs-theme "doom-colors")
   (with-eval-after-load 'lsp-treemacs  ;; https://github.com/emacs-lsp/lsp-treemacs/issues/89
     (doom-themes-treemacs-config))
 
+  ;; misc ---
   (setq window-divider-default-right-width 10)
-
   (setq ivy-posframe-border-width 10)
   (setq which-key-posframe-border-width 10)
 
@@ -759,47 +757,54 @@ before packages are loaded."
 
 
   ;; doom-modeline -------------------------------------------------------------
-  (setq doom-modeline-window-width-limit 90)
-  (setq doom-modeline-buffer-file-name-style 'truncate-with-project)
-  (setq doom-modeline-buffer-encoding nil)
-  ; default: https://github.com/seagle0128/doom-modeline/blob/master/doom-modeline.el#L92-L94
+  (setq doom-modeline-window-width-limit 90
+        doom-modeline-buffer-file-name-style 'truncate-with-project
+        doom-modeline-buffer-encoding nil)
   (doom-modeline-def-modeline 'main
+    ; default: https://github.com/seagle0128/doom-modeline/blob/master/doom-modeline.el#L92-L94
     '(bar workspace-name window-number modals matches buffer-info remote-host buffer-position word-count parrot selection-info)
     '(objed-state misc-info persp-name battery grip irc mu4e gnus github debug repl lsp minor-modes input-method indent-info buffer-encoding process vcs checker))
 
 
   ;; evil ------------------------------------------------------------------------
-  ;; --- vi
-  (define-key evil-visual-state-map (kbd "v") 'evil-visual-line)
-  (define-key evil-motion-state-map (kbd "V") (kbd "C-v $"))
-  (define-key evil-motion-state-map (kbd "RET") 'evil-ex-nohighlight)
+  ;; vi ---
+  (setq evil-want-Y-yank-to-eol t)
+  (evil-define-key 'visual 'global (kbd "v") 'evil-visual-line)
+  (evil-define-key 'motion 'global
+    (kbd "V")   (kbd "C-v $")
+    (kbd "RET") 'evil-ex-nohighlight)
 
-  ;; --- ivy/minibuffer
+  ;; ivy/minibuffer ---
   (setq evil-want-minibuffer t)
-  (define-key evil-insert-state-map "\C-k" nil) ;; make C-k work in ivy/insert
-  (evil-define-key 'normal minibuffer-local-map [return]    'exit-minibuffer)
-  (evil-define-key 'normal minibuffer-local-map [escape]    'minibuffer-keyboard-quit)
-  (evil-define-key 'normal ivy-minibuffer-map   [return]    'exit-minibuffer)
-  (evil-define-key 'normal ivy-minibuffer-map   [escape]    'minibuffer-keyboard-quit)
-  ;; (evil-define-key 'normal evil-ex-map          [escape]    'exit-minibuffer) ; doesn't work
+
+  ;; eval ---
+  (evil-define-key 'normal minibuffer-local-map [return] 'exit-minibuffer)
+  (evil-define-key 'normal minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+
+  ;; ivy ---
+  ;; TODO: backspace only works in 'emacs state
+  (evil-define-key 'insert ivy-minibuffer-map (kbd "C-k") nil) ;; make C-k work in ivy/insert
+  (evil-define-key 'normal ivy-minibuffer-map
+    [return] 'exit-minibuffer
+    [escape] 'minibuffer-keyboard-quit)
+
+  ;; ex ---
+  (evil-define-key 'normal evil-ex-completion-map [escape] 'minibuffer-keyboard-quit)
 
   ;; only works in normal mode :/
-  (evil-define-key '(normal insert) minibuffer-local-map (kbd "C-j") 'next-history-element)
-  (evil-define-key '(normal insert) minibuffer-local-map (kbd "C-k") 'previous-history-element)
+  (evil-define-key '(normal insert) minibuffer-local-map
+    (kbd "C-j") 'next-history-element
+    (kbd "C-k") 'previous-history-element)
 
-  ;; --- misc
+  ;; misc ---
+  (evil-define-key 'normal 'global (kbd "zz")  'evil-toggle-fold)
+  (evil-define-key 'normal 'global (kbd "C-,") 'evil-emacs-state)
+  (evil-define-key 'insert 'global (kbd "C-,") 'evil-emacs-state)
+  (evil-define-key 'emacs  'global (kbd "C-,") 'evil-normal-state)
+
+  ;; normal mode in help, warning, etc buffers
   (delete 'special-mode evil-evilified-state-modes)
   (evil-define-key 'normal special-mode-map "q" 'quit-window)
-
-
-  ;; LSP -----------------------------------------------------------------------
-  (setq lsp-ui-doc-enable nil)
-  (setq lsp-eldoc-enable-hover nil)
-  (setq lsp-enable-symbol-highlighting t)
-  (setq lsp-signature-auto-activate t)
-  (setq lsp-headerline-breadcrumb-enable t)
-  (setq lsp-headerline-breadcrumb-segments '(symbols))
-  (setq lsp-ui-sideline-enable t)
 
 
   ;; vterm ---------------------------------------------------------------------
@@ -810,25 +815,22 @@ before packages are loaded."
       (spacemacs/default-pop-shell)))
   (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
 
-  (evil-define-key 'emacs vterm-mode-map (kbd "C-k") 'evil-previous-line)
-  (evil-define-key 'emacs vterm-mode-map (kbd "C-j") 'evil-next-line)
-  (evil-define-key 'normal vterm-mode-map (kbd "C-k") 'vterm-send-up)
-  (evil-define-key 'normal vterm-mode-map (kbd "C-j") 'vterm-send-down)
+  (evil-define-key 'emacs vterm-mode-map
+    (kbd "C-k") 'evil-previous-line
+    (kbd "C-j") 'evil-next-line)
+  (evil-define-key 'normal vterm-mode-map
+    (kbd "C-k") 'vterm-send-up
+    (kbd "C-j") 'vterm-send-down)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-,") 'evil-normal-state)
-  (evil-define-key 'normal vterm-mode-map (kbd "C-,") 'evil-emacs-state)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-,") 'evil-emacs-state)
 
-  (setq vterm-max-scrollback 100000)  ; maximum size supported
-  (setq vterm-always-compile-module t)
-
-  ;; (setq term-suppress-hard-newline t) ;; vterm equivalent?
-  (setq vterm-min-window-width 1000)     ;; vterm
+  (setq vterm-max-scrollback 100000 ; maximum size supported
+        vterm-min-window-width 1000 ; no suppress-hard-newline :(
+        vterm-always-compile-module t)
 
 
   ;; haskell -------------------------------------------------------------------
   (evil-define-key 'normal haskell-interactive-mode-map
-    (kbd "C-j") 'haskell-interactive-mode-history-next)
-  (evil-define-key 'normal haskell-interactive-mode-map
+    (kbd "C-j") 'haskell-interactive-mode-history-next
     (kbd "C-k") 'haskell-interactive-mode-history-previous)
 
 
@@ -857,11 +859,26 @@ before packages are loaded."
   ;; org --------------------------------------------------------------------------
   (with-eval-after-load 'org
     (org-babel-do-load-languages 'org-babel-load-languages '((scheme . t)))
-    (setq org-confirm-babel-evaluate nil)
-    (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.2)))
+    (setq org-confirm-babel-evaluate nil
+          org-format-latex-options (plist-put org-format-latex-options :scale 1.2)))
 
   (setq org-adapt-indentation nil)
   (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") 'org-babel-execute-src-block)
+
+
+  ;; yadm ------------------------------------------------------------------------
+  ;; doesn't work
+  ;; (add-to-list 'tramp-methods
+  ;;              '("yadm"
+  ;;                (tramp-login-program "yadm")
+  ;;                (tramp-login-args (("enter")))
+  ;;                (tramp-login-env (("SHELL") ("/bin/sh")))
+  ;;                (tramp-remote-shell "/bin/sh")
+  ;;                (tramp-remote-shell-args ("-c"))))
+  ;; (defun custom/magit-yadm ()
+  ;;   (interactive)
+  ;;   (magit-status "/yadm::~"))
+  ;; (spacemacs/set-leader-keys "gy" 'custom/magit-yadm)
 )
 
 
@@ -871,11 +888,6 @@ before packages are loaded."
   (interactive)
   (setq buffer-display-table (make-display-table))
   (aset buffer-display-table ?\^M []))
-
-(defun custom/macos-paste ()
-  (interactive)
-  (ignore-error 'end-of-buffer (forward-char))
-  (insert (shell-command-to-string "pbpaste")))
 
 (defun custom/kill-buffers (regexp)
   "Kill buffers matching REGEXP without asking for confirmation."
