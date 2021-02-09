@@ -70,11 +70,10 @@ This function should only modify configuration layer settings."
 
      (python :variables
              python-backend 'lsp
-             python-lsp-server 'mspyls
-             python-lsp-git-root "~/util/python-language-server"
+             python-lsp-server 'pyright
              python-tab-width 4
              python-fill-column 100
-             python-formatter 'yapf
+             python-formatter 'black
              python-format-on-save nil
              python-sort-imports-on-save nil
              python-fill-docstring-style 'django
@@ -641,35 +640,13 @@ before packages are loaded."
 
   (setq dap-python-debugger 'debugpy) ; this should be the default at some point
 
-  ;; --- i don't even know
-  ;; pip install importmagic epc ipython debugpy flake8
+  ;; --- interpreter and tooling
   (setq python-shell-interpreter "python3")
   (if (eq system-type 'darwin)
+      ;; TODO: experiment with a portable (Linux/MacOS) venv + exec-path
+      ;; solution for python dependencies (flake8, importmagic, etc)
       (add-to-list 'exec-path "~/Library/Python/3.9/bin"))
-  ;; (setq lsp-python-ms-python-executable-cmd python-shell-interpreter)  ;; overrides activated venv, no bueno
 
-
-  ;; --- poetry
-  ;; (setq poetry-tracking-strategy 'post-command)
-  ;; (poetry-tracking-mode)
-
-
-  ;; --- flycheck
-  ;; (setq flycheck-python-flake8-executable python-shell-interpreter)
-
-  (defun add-flake8-checker ()
-    (when (and (boundp 'flycheck-may-enable-checker)
-               (flycheck-may-enable-checker 'python-flake8))
-     (flycheck-add-next-checker 'lsp 'python-flake8)))
-
-  (add-hook 'lsp-after-initialize-hook 'add-flake8-checker)
-  (add-hook 'buffer-list-update-hook 'add-flake8-checker)
-
-  (add-hook 'buffer-list-update-hook
-            (lambda ()
-              (when (and (bound-and-true-p flycheck-mode)
-                         (not (eq major-mode 'python-mode)))
-                (flycheck-remove-next-checker 'lsp 'python-flake8))))
 
   ;; git ----------------------------------------------------------------------
   (setq browse-at-remote-remote-type-domains '(("git.loc.gov" . "gitlab")
