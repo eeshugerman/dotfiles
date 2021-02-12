@@ -627,7 +627,8 @@ before packages are loaded."
   (use-package all-the-icons-ivy-rich
     :config (all-the-icons-ivy-rich-mode))
   (use-package ivy-rich
-    :config (ivy-rich-mode))
+    :config (progn (ivy-rich-mode)
+                   (ivy-rich-project-root-cache-mode)))
   (use-package ivy-posframe
     :init (setq ivy-posframe-display-functions-alist
                 '((t . ivy-posframe-display-at-frame-center)))
