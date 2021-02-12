@@ -625,15 +625,15 @@ before packages are loaded."
 
   ;; init standalone modes ----------------------------------------------------
   (use-package all-the-icons-ivy-rich
-    :config (all-the-icons-ivy-rich-mode 1))
+    :config (all-the-icons-ivy-rich-mode))
   (use-package ivy-rich
-    :config (ivy-rich-mode 1))
+    :config (ivy-rich-mode))
   (use-package ivy-posframe
     :init (setq ivy-posframe-display-functions-alist
                 '((t . ivy-posframe-display-at-frame-center)))
-    :config (ivy-posframe-mode 1))
+    :config (ivy-posframe-mode))
   (use-package which-key-posframe
-    :config (which-key-posframe-mode 1))
+    :config (which-key-posframe-mode))
 
 
   ;; misc/general --------------------------------------------------------------
@@ -783,7 +783,6 @@ before packages are loaded."
 
   ;; ivy ---
   ;; TODO: backspace only works in 'emacs state
-  (evil-define-key 'insert ivy-minibuffer-map (kbd "C-k") nil) ;; make C-k work in ivy/insert
   (evil-define-key 'normal ivy-minibuffer-map
     [return] 'exit-minibuffer
     [escape] 'minibuffer-keyboard-quit)
@@ -805,6 +804,9 @@ before packages are loaded."
   ;; normal mode in help, warning, etc buffers
   (delete 'special-mode evil-evilified-state-modes)
   (evil-define-key 'normal special-mode-map "q" 'quit-window)
+
+  ;; make C-k work in ivy/insert (and elsewhere, probably)
+  (evil-define-key 'insert 'global (kbd "C-k") nil)
 
 
   ;; vterm ---------------------------------------------------------------------
