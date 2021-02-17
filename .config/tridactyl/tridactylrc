@@ -6,6 +6,7 @@ bind <C-k> tabnext
 bind <C-j> tabprev
 
 bind D tabclosealltoright
+bind C composite tabclosealltoright ; fillcmdline open
 bind gd tabduplicate
 bind gD tabdetach
 
