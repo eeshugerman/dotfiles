@@ -32,7 +32,8 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(ansible
+   '(shell-scripts
+     ansible
      auto-completion
      c-c++
      csv
@@ -281,7 +282,7 @@ It should only modify the values of Spacemacs settings."
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("Fira Code"
-                               :size 10.0
+                               :size (if (eq system-type 'darwin) 10.0 12.0)
                                :weight normal
                                :width normal)
 
@@ -553,10 +554,14 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
+  ;; misc
+  (setq ivy-posframe-display-functions-alist
+        '((t . ivy-posframe-display-at-frame-center)))
   (setq byte-compile-warnings '(cl-functions))
   (if (eq system-type 'darwin)
       (setq insert-directory-program "/usr/local/bin/gls"))
 
+  ;; spacemacs layer vars
   (setq
    haskell-completion-backend 'lsp
 
@@ -564,7 +569,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    css-enable-lsp t
    scss-enable-lsp t
 
-   ivy-enable-advanced-buffer-information t
+   ivy-enable-advanced-buffer-information nil
    ivy-extra-directories nil
    ivy-initial-inputs-alist nil
    ivy-virtual-abbreviate 'full
@@ -625,17 +630,10 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
   ;; init standalone modes ----------------------------------------------------
-  (use-package all-the-icons-ivy-rich
-    :config (all-the-icons-ivy-rich-mode))
-  (use-package ivy-rich
-    :config (progn (ivy-rich-mode)
-                   (ivy-rich-project-root-cache-mode)))
-  (use-package ivy-posframe
-    :init (setq ivy-posframe-display-functions-alist
-                '((t . ivy-posframe-display-at-frame-center)))
-    :config (ivy-posframe-mode))
-  (use-package which-key-posframe
-    :config (which-key-posframe-mode))
+  (use-package all-the-icons-ivy-rich :config (all-the-icons-ivy-rich-mode))
+  (use-package ivy-rich               :config (ivy-rich-mode))
+  (use-package ivy-posframe           :config (ivy-posframe-mode))
+  (use-package which-key-posframe     :config (which-key-posframe-mode))
 
 
   ;; misc/general --------------------------------------------------------------
@@ -670,6 +668,7 @@ before packages are loaded."
   (if (eq system-type 'darwin)
       ;; TODO: experiment with a portable (Linux/MacOS) venv + exec-path
       ;; solution for python dependencies (flake8, importmagic, etc)
+      (add-to-list 'exec-path "~/Library/Python/3.8/bin")
       (add-to-list 'exec-path "~/Library/Python/3.9/bin"))
   (setq dap-python-debugger 'debugpy) ; this should be the default at some point
 
@@ -681,11 +680,41 @@ before packages are loaded."
   ;; (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-topleft-v1)
 
 
-  ;; writeroom -------------------------------------------------------------------------
+  ;; writeroom -----------------------------------------------------------------
   (add-hook 'writeroom-mode-hook 'spacemacs/toggle-visual-line-navigation-on)
   (add-hook 'writeroom-mode-hook 'spacemacs/toggle-line-numbers-off)
   (add-hook 'writeroom-mode-hook 'spacemacs/toggle-spelling-checking-on)
   (add-hook 'writeroom-mode-hook 'spacemacs/toggle-fullscreen-frame-off)
+
+
+  ;; ivy/ivy-rich --------------------------------------------------------------
+  (ivy-rich-project-root-cache-mode)
+
+  ;; idk, recommended in the readme
+  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+
+  (let* ((switch-buffer-configs
+          (mapcar (lambda (func) (plist-get ivy-rich-display-transformers-list func))
+                  '(ivy-switch-buffer
+                    ivy-switch-buffer-other-window
+                    counsel-switch-buffer
+                    counsel-switch-buffer-other-window
+                    persp-switch-to-buffer)))
+         (my-columns-config
+          '((all-the-icons-ivy-rich-buffer-icon)
+            (ivy-rich-candidate (:width 45))
+            (ivy-rich-switch-buffer-indicators
+             (:width 4 :face error :align right))
+            (ivy-rich-switch-buffer-major-mode
+             (:width 20 :face warning))
+            (ivy-rich-switch-buffer-project
+             (:width 40 :face success))
+            (ivy-rich-switch-buffer-path
+             (:width (lambda (x)
+                       (ivy-rich-switch-buffer-shorten-path
+                        x (ivy-rich-minibuffer-width 0.3))))))))
+    (dolist (config switch-buffer-configs)
+      (plist-put config :columns my-columns-config)))
 
 
   ;; counsel -------------------------------------------------------------------
@@ -822,7 +851,7 @@ before packages are loaded."
   (evil-define-key 'emacs vterm-mode-map
     (kbd "C-k") 'evil-previous-line
     (kbd "C-j") 'evil-next-line)
-  (evil-define-key 'normal vterm-mode-map
+  (evil-define-key '(normal insert) vterm-mode-map
     (kbd "C-k") 'vterm-send-up
     (kbd "C-j") 'vterm-send-down)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-,") 'evil-normal-state)
@@ -883,6 +912,9 @@ before packages are loaded."
   ;;   (interactive)
   ;;   (magit-status "/yadm::~"))
   ;; (spacemacs/set-leader-keys "gy" 'custom/magit-yadm)
+
+  ;; c/c++ ----------------------------------------------------------------------
+  (setq c-basic-offset 4)
 )
 
 
