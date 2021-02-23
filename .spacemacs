@@ -32,7 +32,8 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(ansible
+   '(shell-scripts
+     ansible
      auto-completion
      c-c++
      csv
@@ -280,8 +281,8 @@ It should only modify the values of Spacemacs settings."
    ;; Default font or prioritized list of fonts. The `:size' can be specified as
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
-   dotspacemacs-default-font '("Fira Code"
-                               :size (if (eq system-type 'darwin) 10.0 12.0)
+   dotspacemacs-default-font `("Fira Code"
+                               :size ,(if (eq system-type 'darwin) 12.0 10.0)
                                :weight normal
                                :width normal)
 
@@ -911,6 +912,9 @@ before packages are loaded."
   ;;   (interactive)
   ;;   (magit-status "/yadm::~"))
   ;; (spacemacs/set-leader-keys "gy" 'custom/magit-yadm)
+
+  ;; c/c++ ----------------------------------------------------------------------
+  (setq c-basic-offset 4)
 )
 
 
