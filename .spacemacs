@@ -863,7 +863,8 @@ before packages are loaded."
 
   (setq vterm-max-scrollback 100000 ; maximum size supported
         vterm-min-window-width 1000 ; no suppress-hard-newline :(
-        vterm-always-compile-module t)
+        vterm-always-compile-module t
+        vterm-buffer-name-string "vterm: %s")
 
 
   ;; haskell -------------------------------------------------------------------
