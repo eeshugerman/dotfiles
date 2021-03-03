@@ -272,6 +272,9 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
+   ;; dotspacemacs-mode-line-theme (if (eq system-type 'darwin)
+   ;;                                  'spacemacs
+   ;;                                  'doom)
    dotspacemacs-mode-line-theme 'doom
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
@@ -449,7 +452,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc...
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
-   dotspacemacs-smart-closing-parenthesis t
+   dotspacemacs-smart-closing-parenthesis nil
 
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
@@ -507,7 +510,7 @@ It should only modify the values of Spacemacs settings."
    ;; `trailing' to delete only the whitespace at end of lines, `changed' to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup 'all
+   dotspacemacs-whitespace-cleanup 'trailing
 
    ;; If non nil activate `clean-aindent-mode' which tries to correct
    ;; virtual indentation of simple modes. This can interfer with mode specific
@@ -788,14 +791,16 @@ before packages are loaded."
 
 
   ;; doom-modeline -------------------------------------------------------------
-  (setq doom-modeline-window-width-limit 90
-        doom-modeline-buffer-file-name-style 'truncate-with-project
-        doom-modeline-buffer-encoding nil)
-  (doom-modeline-def-modeline 'main
-    ; default: https://github.com/seagle0128/doom-modeline/blob/master/doom-modeline.el#L92-L94
-    '(bar workspace-name window-number modals matches buffer-info remote-host buffer-position word-count parrot selection-info)
-    '(objed-state misc-info persp-name battery grip irc mu4e gnus github debug repl lsp minor-modes input-method indent-info buffer-encoding process vcs checker))
-
+  (unless
+      ;; (eq system-type 'darwin)
+      nil
+    (setq doom-modeline-window-width-limit 90
+          doom-modeline-buffer-file-name-style 'truncate-with-project
+          doom-modeline-buffer-encoding nil)
+    (doom-modeline-def-modeline  ; default: https://github.com/seagle0128/doom-modeline/blob/master/doom-modeline.el#L92-L94
+      'main
+      '(bar workspace-name window-number modals matches buffer-info remote-host buffer-position word-count parrot selection-info)
+      '(objed-state misc-info persp-name battery grip irc mu4e gnus github debug repl lsp minor-modes input-method indent-info buffer-encoding process vcs checker)))
 
   ;; evil ------------------------------------------------------------------------
   ;; vi ---
