@@ -60,6 +60,7 @@ This function should only modify configuration layer settings."
      scheme
      shell
      sql
+     spell-checking
      syntax-checking
      terraform
      treemacs
@@ -507,7 +508,7 @@ It should only modify the values of Spacemacs settings."
    ;; `trailing' to delete only the whitespace at end of lines, `changed' to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup 'all
+   dotspacemacs-whitespace-cleanup 'trailing
 
    ;; If non nil activate `clean-aindent-mode' which tries to correct
    ;; virtual indentation of simple modes. This can interfer with mode specific
@@ -664,7 +665,7 @@ before packages are loaded."
 
 
   ;; interpreter and tooling ---
-  (setq python-shell-interpreter "python3")
+  (setq python-shell-interpreter "ipython3")
   (if (eq system-type 'darwin)
       ;; TODO: experiment with a portable (Linux/MacOS) venv + exec-path
       ;; solution for python dependencies (flake8, importmagic, etc)
@@ -681,10 +682,14 @@ before packages are loaded."
 
 
   ;; writeroom -----------------------------------------------------------------
-  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-visual-line-navigation-on)
-  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-line-numbers-off)
-  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-spelling-checking-on)
-  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-fullscreen-frame-off)
+  (writeroom-mode -1) ;; for some vars aren't bound without this
+  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-visual-line-navigation)
+  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-spelling-checking)
+  (add-hook 'writeroom-mode-enable-hook 'spacemacs/toggle-visual-line-numbers-off)
+  (add-hook 'writeroom-mode-disable-hook 'spacemacs/toggle-visual-line-numbers-on)
+  (setq writeroom-maximize-window nil
+        writeroom-mode-line t
+        writeroom-global-effects (delq 'writeroom-set-fullscreen writeroom-global-effects))
 
 
   ;; ivy/ivy-rich --------------------------------------------------------------
