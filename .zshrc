@@ -62,3 +62,25 @@ fi
 
 # https://github.com/TheLocehiliosan/yadm/issues/33
 export GPG_TTY=$(tty)
+
+
+# emacs vterm stuff
+vterm_printf () {
+    printf "\e]%s\e\\" "$1"
+}
+vterm_prompt_end() {
+    vterm_printf "51;A$(whoami)@$(hostname):$(pwd)";
+}
+
+if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
+    alias clear='vterm_printf "51;Evterm-clear-scrollback";tput clear'
+
+    # supposed to set make `vterm-buffer-name-string` work, but doesn't
+    autoload -U add-zsh-hook
+    add-zsh-hook -Uz chpwd (){ print -Pn "\e]2;%m:%2~\a" }
+
+    setopt PROMPT_SUBST
+    PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
+fi
+
+# ends emacs vterm stuff
