@@ -242,8 +242,8 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(; the gotos
-                         doom-nord-light
                          doom-nord
+                         doom-nord-light
 
                          ; extra lights
                          doom-one-light
@@ -864,6 +864,24 @@ before packages are loaded."
   (setq vterm-max-scrollback 100000 ; maximum size supported
         vterm-min-window-width 1000 ; no suppress-hard-newline :(
         vterm-always-compile-module t)
+
+
+  ;; https://github.com/emacs-evil/evil-collection/pull/461
+  ;; temp: remove once pr is merged
+  (evil-define-operator evil-collection-vterm-change (beg end type register yank-handler)
+    (evil-collection-vterm-delete beg end type register yank-handler)
+    (evil-collection-vterm-insert))
+
+  (evil-define-operator evil-collection-vterm-change-line (beg end type register yank-handler)
+    :motion evil-end-of-line-or-visual-line
+    (evil-collection-vterm-delete-line beg end type register yank-handler)
+    (evil-collection-vterm-insert))
+
+  (evil-collection-define-key 'normal 'vterm-mode-map
+    "c" 'evil-collection-vterm-change
+    "C" 'evil-collection-vterm-change-line)
+  ;; end temp
+
 
 
   ;; haskell -------------------------------------------------------------------
