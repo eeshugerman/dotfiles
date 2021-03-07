@@ -863,7 +863,9 @@ before packages are loaded."
 
   (setq vterm-max-scrollback 100000 ; maximum size supported
         vterm-min-window-width 1000 ; no suppress-hard-newline :(
-        vterm-always-compile-module t)
+        vterm-always-compile-module t
+        ;; vterm-buffer-name-string "vterm: %s"  ;; breaks SPC-' functionality
+        )
 
 
   ;; https://github.com/emacs-evil/evil-collection/pull/461
@@ -881,7 +883,6 @@ before packages are loaded."
     "c" 'evil-collection-vterm-change
     "C" 'evil-collection-vterm-change-line)
   ;; end temp
-
 
 
   ;; haskell -------------------------------------------------------------------
