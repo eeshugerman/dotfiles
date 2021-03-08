@@ -69,16 +69,22 @@ vterm_printf () {
     printf "\e]%s\e\\" "$1"
 }
 vterm_prompt_end() {
-    vterm_printf "51;A$(whoami)@$(hostname):$(pwd)";
+    vterm_printf "51;A$(pwd)";
 }
 
 if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
+    # use evil instead of zsh's vi emulation
+    bindkey -e
+
+    # https://github.com/akermu/emacs-libvterm#vterm-clear-scrollback
     alias clear='vterm_printf "51;Evterm-clear-scrollback";tput clear'
 
-    # supposed to set make `vterm-buffer-name-string` work, but doesn't
+    # https://github.com/akermu/emacs-libvterm#vterm-buffer-name-string
+    # (currently disabled)
     autoload -U add-zsh-hook
-    add-zsh-hook -Uz chpwd (){ print -Pn "\e]2;%m:%2~\a" }
+    add-zsh-hook -Uz chpwd (){ print -Pn "\e]2;%2~\a" }
 
+    # https://github.com/akermu/emacs-libvterm#directory-tracking-and-prompt-tracking
     setopt PROMPT_SUBST
     PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
 fi

@@ -32,7 +32,8 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(shell-scripts
+   '(ruby
+     shell-scripts
      ansible
      auto-completion
      c-c++
@@ -60,6 +61,7 @@ This function should only modify configuration layer settings."
      scheme
      shell
      sql
+     spell-checking
      syntax-checking
      terraform
      treemacs
@@ -241,8 +243,8 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(; the gotos
-                         doom-nord-light
                          doom-nord
+                         doom-nord-light
 
                          ; extra lights
                          doom-one-light
@@ -667,7 +669,7 @@ before packages are loaded."
 
 
   ;; interpreter and tooling ---
-  (setq python-shell-interpreter "python3")
+  (setq python-shell-interpreter "ipython3")
   (if (eq system-type 'darwin)
       ;; TODO: experiment with a portable (Linux/MacOS) venv + exec-path
       ;; solution for python dependencies (flake8, importmagic, etc)
@@ -684,10 +686,14 @@ before packages are loaded."
 
 
   ;; writeroom -----------------------------------------------------------------
-  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-visual-line-navigation-on)
-  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-line-numbers-off)
-  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-spelling-checking-on)
-  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-fullscreen-frame-off)
+  (writeroom-mode -1) ;; for some vars aren't bound without this
+  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-visual-line-navigation)
+  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-spelling-checking)
+  (add-hook 'writeroom-mode-enable-hook 'spacemacs/toggle-visual-line-numbers-off)
+  (add-hook 'writeroom-mode-disable-hook 'spacemacs/toggle-visual-line-numbers-on)
+  (setq writeroom-maximize-window nil
+        writeroom-mode-line t
+        writeroom-global-effects (delq 'writeroom-set-fullscreen writeroom-global-effects))
 
 
   ;; ivy/ivy-rich --------------------------------------------------------------
@@ -864,7 +870,25 @@ before packages are loaded."
   (setq vterm-max-scrollback 100000 ; maximum size supported
         vterm-min-window-width 1000 ; no suppress-hard-newline :(
         vterm-always-compile-module t
-        vterm-buffer-name-string "vterm: %s")
+        ;; vterm-buffer-name-string "vterm: %s"  ;; breaks SPC-' functionality
+        )
+
+
+  ;; https://github.com/emacs-evil/evil-collection/pull/461
+  ;; temp: remove once pr is merged
+  (evil-define-operator evil-collection-vterm-change (beg end type register yank-handler)
+    (evil-collection-vterm-delete beg end type register yank-handler)
+    (evil-collection-vterm-insert))
+
+  (evil-define-operator evil-collection-vterm-change-line (beg end type register yank-handler)
+    :motion evil-end-of-line-or-visual-line
+    (evil-collection-vterm-delete-line beg end type register yank-handler)
+    (evil-collection-vterm-insert))
+
+  (evil-collection-define-key 'normal 'vterm-mode-map
+    "c" 'evil-collection-vterm-change
+    "C" 'evil-collection-vterm-change-line)
+  ;; end temp
 
 
   ;; haskell -------------------------------------------------------------------
