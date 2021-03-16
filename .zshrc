@@ -26,6 +26,12 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
+if [[ "$INSIDE_EMACS" ]]; then
+    export PAGER="cat"
+else
+    export PAGER="less"
+fi
+
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR="vim"
 else
