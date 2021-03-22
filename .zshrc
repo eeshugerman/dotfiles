@@ -1,4 +1,4 @@
-export ZSH_DISABLE_COMPFIX=1   # ignore nonsense permission issue
+export ZSH_DISABLE_COMPFIX=true   # ignore nonsense permission issue
 
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -96,5 +96,3 @@ if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
 fi
 
 # ends emacs vterm stuff
-
-source "$HOME/.zshrc-loc.sh"
