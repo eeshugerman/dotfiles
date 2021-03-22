@@ -274,9 +274,6 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   ;; dotspacemacs-mode-line-theme (if (eq system-type 'darwin)
-   ;;                                  'spacemacs
-   ;;                                  'doom)
    dotspacemacs-mode-line-theme 'doom
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
@@ -797,16 +794,14 @@ before packages are loaded."
 
 
   ;; doom-modeline -------------------------------------------------------------
-  (unless
-      ;; (eq system-type 'darwin)
-      nil
-    (setq doom-modeline-window-width-limit 90
-          doom-modeline-buffer-file-name-style 'truncate-with-project
-          doom-modeline-buffer-encoding nil)
-    (doom-modeline-def-modeline  ; default: https://github.com/seagle0128/doom-modeline/blob/master/doom-modeline.el#L92-L94
-      'main
-      '(bar workspace-name window-number modals matches buffer-info remote-host buffer-position word-count parrot selection-info)
-      '(objed-state misc-info persp-name battery grip irc mu4e gnus github debug repl lsp minor-modes input-method indent-info buffer-encoding process vcs checker)))
+  (setq doom-modeline-window-width-limit 90
+        doom-modeline-buffer-file-name-style 'truncate-with-project
+        doom-modeline-buffer-encoding nil)
+  (doom-modeline-def-modeline 'main
+    ; default: https://github.com/seagle0128/doom-modeline/blob/master/doom-modeline.el#L92-L94
+    '(bar workspace-name window-number modals matches buffer-info remote-host buffer-position word-count parrot selection-info)
+    '(objed-state misc-info persp-name battery grip irc mu4e gnus github debug repl lsp minor-modes input-method indent-info buffer-encoding process vcs checker))
+
 
   ;; evil ------------------------------------------------------------------------
   ;; vi ---
