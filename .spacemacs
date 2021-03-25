@@ -565,6 +565,10 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   ;; spacemacs layer vars
   (setq
+
+   c-c++-lsp-enable-semantic-highlight t
+   ;; c-c++-lsp-enable-semantic-highlight 'overlay
+
    haskell-completion-backend 'lsp
 
    html-enable-lsp t
@@ -581,13 +585,14 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    javascript-import-tool 'import-js
 
-   lsp-ui-doc-enable nil
+   lsp-ui-doc-enable t
+   ;; todo: checkout lsp-ui-doc options
    lsp-eldoc-enable-hover nil
    lsp-enable-symbol-highlighting t
    lsp-signature-auto-activate t
    lsp-headerline-breadcrumb-enable t
    lsp-headerline-breadcrumb-segments '(symbols)
-   lsp-ui-sideline-enable t
+   lsp-ui-sideline-enable nil ;; spacing issues, flycheck-pos-tip-mode works ok
 
    python-backend 'lsp
    python-fill-column 100
@@ -766,8 +771,8 @@ before packages are loaded."
   (doom-themes-org-config)
   (doom-themes-visual-bell-config)
   (setq doom-themes-treemacs-theme "doom-colors")
-  (with-eval-after-load 'lsp-treemacs  ;; https://github.com/emacs-lsp/lsp-treemacs/issues/89
-    (doom-themes-treemacs-config))
+  (load-library "lsp-treemacs-themes")  ;; https://github.com/emacs-lsp/lsp-treemacs/issues/89
+  (doom-themes-treemacs-config)
 
   ;; misc ---
   (setq window-divider-default-right-width 10)
@@ -867,23 +872,6 @@ before packages are loaded."
         vterm-always-compile-module t
         ;; vterm-buffer-name-string "vterm: %s"  ;; breaks SPC-' functionality
         )
-
-
-  ;; https://github.com/emacs-evil/evil-collection/pull/461
-  ;; temp: remove once pr is merged
-  (evil-define-operator evil-collection-vterm-change (beg end type register yank-handler)
-    (evil-collection-vterm-delete beg end type register yank-handler)
-    (evil-collection-vterm-insert))
-
-  (evil-define-operator evil-collection-vterm-change-line (beg end type register yank-handler)
-    :motion evil-end-of-line-or-visual-line
-    (evil-collection-vterm-delete-line beg end type register yank-handler)
-    (evil-collection-vterm-insert))
-
-  (evil-collection-define-key 'normal 'vterm-mode-map
-    "c" 'evil-collection-vterm-change
-    "C" 'evil-collection-vterm-change-line)
-  ;; end temp
 
 
   ;; haskell -------------------------------------------------------------------
