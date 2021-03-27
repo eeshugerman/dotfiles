@@ -886,7 +886,7 @@ before packages are loaded."
 
 
   ;; haskell -------------------------------------------------------------------
-  (evil-define-key 'normal haskell-interactive-mode-map
+  (evil-define-key '(insert normal) haskell-interactive-mode-map
     (kbd "C-j") 'haskell-interactive-mode-history-next
     (kbd "C-k") 'haskell-interactive-mode-history-previous)
 
