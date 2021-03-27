@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-set -eu    # -e not working?
+set -eux
 
 cd "$HOME"
 
@@ -8,7 +8,7 @@ cd "$HOME"
 yadm submodule update --recursive --init
 
 if [ $(uname) = "Darwin" ]; then
-    brew install mackup gpg
+    brew install mackup gpg	karabiner-elements rectangle
     mackup restore
 else
     dconf load / < "$HOME/.config/dconf.ini"
