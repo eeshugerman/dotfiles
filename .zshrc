@@ -1,4 +1,4 @@
-export ZSH_DISABLE_COMPFIX=1   # ignore nonsense permission issue
+export ZSH_DISABLE_COMPFIX=true   # ignore nonsense permission issue
 
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -25,6 +25,12 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
+
+if [[ "$INSIDE_EMACS" ]]; then
+    export PAGER="cat"
+else
+    export PAGER="less"
+fi
 
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR="vim"
