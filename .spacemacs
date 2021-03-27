@@ -32,9 +32,7 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(ruby
-     shell-scripts
-     ansible
+   '(ansible
      auto-completion
      c-c++
      csv
@@ -42,9 +40,9 @@ This function should only modify configuration layer settings."
      docker
      emacs-lisp
      epub
-     epub
      git
      github
+     groovy
      haskell
      html
      import-js
@@ -57,11 +55,13 @@ This function should only modify configuration layer settings."
      nginx
      org
      python
+     ruby
      rust
      scheme
      shell
-     sql
+     shell-scripts
      spell-checking
+     sql
      syntax-checking
      terraform
      treemacs
@@ -585,11 +585,18 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    javascript-import-tool 'import-js
 
-   lsp-ui-doc-enable t
-   ;; todo: checkout lsp-ui-doc options
+   lsp-ui-doc-enable nil
+   ;; lsp-ui-doc-include-signature t
+   ;; lsp-ui-doc-header t
+   ;; lsp-ui-doc-delay 1 ; seconds
+   ;; lsp-ui-doc-alignment 'window
+
+   lsp-ui-peek-enable t
+   lsp-ui-peek-always-show t
+
+
    lsp-eldoc-enable-hover nil
    lsp-enable-symbol-highlighting t
-   lsp-signature-auto-activate t
    lsp-headerline-breadcrumb-enable t
    lsp-headerline-breadcrumb-segments '(symbols)
    lsp-ui-sideline-enable nil ;; spacing issues, flycheck-pos-tip-mode works ok
@@ -800,7 +807,8 @@ before packages are loaded."
 
   ;; doom-modeline -------------------------------------------------------------
   (setq doom-modeline-window-width-limit 90
-        doom-modeline-buffer-file-name-style 'truncate-with-project
+        ;; doom-modeline-buffer-file-name-style 'truncate-with-project
+        doom-modeline-buffer-file-name-style 'auto
         doom-modeline-buffer-encoding nil)
   (doom-modeline-def-modeline 'main
     ; default: https://github.com/seagle0128/doom-modeline/blob/master/doom-modeline.el#L92-L94
