@@ -593,13 +593,16 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    lsp-ui-peek-enable t
    lsp-ui-peek-always-show t
-
+   lsp-ui-sideline-enable nil ;; spacing issues, flycheck-pos-tip-mode works ok
 
    lsp-eldoc-enable-hover nil
    lsp-enable-symbol-highlighting t
    lsp-headerline-breadcrumb-enable t
    lsp-headerline-breadcrumb-segments '(symbols)
-   lsp-ui-sideline-enable nil ;; spacing issues, flycheck-pos-tip-mode works ok
+
+   lsp-enable-on-type-formatting nil
+   lsp-enable-indentation nil
+
 
    python-backend 'lsp
    python-fill-column 100
@@ -620,6 +623,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    treemacs-sorting 'alphabetic-asc
    treemacs-use-filewatch-mode t
    treemacs-use-git-mode 'extended
+   treemacs-use-follow-mode nil
 
    unicode-fonts-enable-ligatures t
    unicode-fonts-ligature-modes '(typescript-mode
@@ -846,7 +850,6 @@ before packages are loaded."
     (kbd "C-k") 'previous-history-element)
 
   ;; misc ---
-  (evil-define-key 'normal 'global (kbd "zz")  'evil-toggle-fold)
   (evil-define-key 'normal 'global (kbd "C-,") 'evil-emacs-state)
   (evil-define-key 'insert 'global (kbd "C-,") 'evil-emacs-state)
   (evil-define-key 'emacs  'global (kbd "C-,") 'evil-normal-state)
