@@ -60,6 +60,7 @@ This function should only modify configuration layer settings."
      scheme
      shell
      shell-scripts
+     slack
      spell-checking
      sql
      syntax-checking
@@ -82,7 +83,8 @@ This function should only modify configuration layer settings."
      ivy-rich
      doom-themes
      ivy-posframe
-     which-key-posframe)
+     which-key-posframe
+     solaire-mode)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -213,8 +215,10 @@ It should only modify the values of Spacemacs settings."
    ;; pair of numbers, e.g. `(recents-by-project . (7 .  5))', where the first
    ;; number is the project limit and the second the limit on the recent files
    ;; within a project.
-   dotspacemacs-startup-lists '((recents . 10)
-                                (projects . 10))
+   dotspacemacs-startup-lists '((todos . 5)
+                                (agenda . 5)
+                                (recents . 5)
+                                (projects . 5))
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
@@ -667,7 +671,8 @@ before packages are loaded."
   (use-package ivy-rich               :config (ivy-rich-mode))
   (use-package ivy-posframe           :config (ivy-posframe-mode))
   (use-package which-key-posframe     :config (which-key-posframe-mode))
-
+  (use-package solaire-mode           :config (solaire-global-mode)
+                                              (spacemacs/load-default-theme))
 
   ;; misc/general --------------------------------------------------------------
   (spacemacs/set-leader-keys      ;; TODO: make which-key reflect these
@@ -787,7 +792,7 @@ before packages are loaded."
   ;; themeing -----------------------------------------------------------------
   ;; fringe ---
   (spacemacs/toggle-vi-tilde-fringe-off)
-  (fringe-mode '(0 . nil))  ; disable right "fringe"
+  (fringe-mode '(0 . nil))  ; disable left fringe, leave right default width
   ;; hide arrows at window border for truncated lines
   (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b0))
   (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
@@ -801,9 +806,10 @@ before packages are loaded."
   (doom-themes-treemacs-config)
 
   ;; misc ---
-  (setq window-divider-default-right-width 10)
-  (setq ivy-posframe-border-width 10)
-  (setq which-key-posframe-border-width 10)
+  (let ((border-width 10))
+    (setq window-divider-default-right-width border-width
+          ivy-posframe-border-width border-width
+          which-key-posframe-border-width border-width))
 
   (defun do-theme-tweaks ()
     "misc tweaks that for some reason need a nudge after theme change"
@@ -813,7 +819,7 @@ before packages are loaded."
       (set-face-background 'which-key-posframe-border face-color)
       (set-face-background 'ivy-posframe-border face-color))
     ;; lighter window divider
-    (set-face-foreground 'window-divider (face-background 'mode-line-inactive))
+    (set-face-foreground 'window-divider (face-background 'default))
     (window-divider-mode))
 
   (add-hook 'spacemacs-post-theme-change-hook 'do-theme-tweaks)
@@ -910,22 +916,15 @@ before packages are loaded."
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
   (setenv "TSC_NONPOLLING_WATCHER" "true")
 
-  (setq lsp-clients-angular-language-server-command
-        (let ((node-modules "/usr/local/lib/node_modules"))
-          `("node"
-            ,(concat node-modules "/@angular/language-server")
-            "--ngProbeLocations" ,node-modules
-            "--tsProbeLocations" ,node-modules
-            "--experimental-ivy"
-            "--stdio")))
-
-  ;; (setq-default js-indent-level 2
-  ;;               javascript-indent-level 2
-  ;;               typescript-indent-level 2
-  ;;               web-mode-markup-indent-offset 2
-  ;;               web-mode-css-indent-offset 2
-  ;;               web-mode-code-indent-offset 2
-  ;;               css-indent-offset 2)
+  ;; should no longer be necessary https://github.com/emacs-lsp/lsp-mode/commit/d2b90afdc947e411b8ce971bf0f6a01e2283d5d4
+  ;; (setq lsp-clients-angular-language-server-command
+  ;;       (let ((node-modules "/usr/local/lib/node_modules"))
+  ;;         `("node"
+  ;;           ,(concat node-modules "/@angular/language-server")
+  ;;           "--ngProbeLocations" ,node-modules
+  ;;           "--tsProbeLocations" ,node-modules
+  ;;           "--experimental-ivy"
+  ;;           "--stdio")))
 
 
   ;; org --------------------------------------------------------------------------
@@ -954,6 +953,16 @@ before packages are loaded."
 
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
+
+
+
+  ;; slack ----------------------------------------------------------------------
+  (slack-register-team
+   :name "immuta"
+   :default t
+   :token (getenv "SLACK_TOKEN"))
+
+
 )
 
 
