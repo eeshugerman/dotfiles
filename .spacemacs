@@ -60,6 +60,7 @@ This function should only modify configuration layer settings."
      scheme
      shell
      shell-scripts
+     slack
      spell-checking
      sql
      syntax-checking
@@ -215,11 +216,16 @@ It should only modify the values of Spacemacs settings."
    ;; pair of numbers, e.g. `(recents-by-project . (7 .  5))', where the first
    ;; number is the project limit and the second the limit on the recent files
    ;; within a project.
-   dotspacemacs-startup-lists '((recents . 10)
-                                (projects . 10))
+   dotspacemacs-startup-lists '((todos . 5)
+                                (agenda . 5)
+                                (recents . 5)
+                                (projects . 5))
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
+
+   ;; The minimum delay in seconds between number key presses. (default 0.4)
+   dotspacemacs-startup-buffer-multi-digit-delay 0.4
 
    ;; Default major mode for a new empty buffer. Possible values are mode
    ;; names such as `text-mode'; and `nil' to use Fundamental mode.
@@ -422,6 +428,10 @@ It should only modify the values of Spacemacs settings."
    ;; when it reaches the top or bottom of the screen. (default t)
    dotspacemacs-smooth-scrolling t
 
+   ;; Show the scroll bar while scrolling. The auto hide time can be configured
+   ;; by setting this variable to a number. (default t)
+   dotspacemacs-scroll-bar-while-scrolling t
+
    ;; Control line numbers activation.
    ;; If set to `t', `relative' or `visual' then line numbers are enabled in all
    ;; `prog-mode' and `text-mode' derivatives. If set to `relative', line
@@ -596,10 +606,12 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    javascript-import-tool 'import-js
 
    lsp-ui-doc-enable nil
-   ;; lsp-ui-doc-include-signature t
-   ;; lsp-ui-doc-header t
-   ;; lsp-ui-doc-delay 1 ; seconds
-   ;; lsp-ui-doc-alignment 'window
+   lsp-ui-doc-include-signature t
+   lsp-ui-doc-header t
+   lsp-ui-doc-delay 1 ; seconds
+   lsp-ui-doc-alignment 'window
+
+   lsp-ui-sideline-enable t
 
    lsp-ui-peek-enable t
    lsp-ui-peek-always-show t
@@ -609,7 +621,10 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-enable-symbol-highlighting t
    lsp-headerline-breadcrumb-enable t
    lsp-headerline-breadcrumb-segments '(symbols)
-   lsp-ui-sideline-enable t
+
+   lsp-enable-on-type-formatting nil
+   lsp-enable-indentation nil
+
 
    python-backend 'lsp
    python-fill-column 100
@@ -630,6 +645,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    treemacs-sorting 'alphabetic-asc
    treemacs-use-filewatch-mode t
    treemacs-use-git-mode 'extended
+   treemacs-use-follow-mode nil
 
    unicode-fonts-enable-ligatures t
    unicode-fonts-ligature-modes '(typescript-mode
@@ -643,8 +659,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   "Library to load while dumping.
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
-dump.")
-
+dump."
+  )
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -658,8 +674,8 @@ before packages are loaded."
   (use-package ivy-rich               :config (ivy-rich-mode))
   (use-package ivy-posframe           :config (ivy-posframe-mode))
   (use-package which-key-posframe     :config (which-key-posframe-mode))
-  (use-package which-key-posframe     :config (solaire-global-mode))
-
+  (use-package solaire-mode           :config (solaire-global-mode)
+                                              (spacemacs/load-default-theme))
 
   ;; misc/general --------------------------------------------------------------
   (spacemacs/set-leader-keys      ;; TODO: make which-key reflect these
@@ -778,7 +794,7 @@ before packages are loaded."
   ;; themeing -----------------------------------------------------------------
   ;; fringe ---
   (spacemacs/toggle-vi-tilde-fringe-off)
-  (fringe-mode '(0 . nil))  ; disable right "fringe"
+  (fringe-mode '(0 . nil))  ; disable left fringe, leave right default width
   ;; hide arrows at window border for truncated lines
   (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b0))
   (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
@@ -792,9 +808,10 @@ before packages are loaded."
   (doom-themes-treemacs-config)
 
   ;; misc ---
-  (setq window-divider-default-right-width 10)
-  (setq ivy-posframe-border-width 10)
-  (setq which-key-posframe-border-width 10)
+  (let ((border-width 10))
+    (setq window-divider-default-right-width border-width
+          ivy-posframe-border-width border-width
+          which-key-posframe-border-width border-width))
 
   (defun do-theme-tweaks ()
     "misc tweaks that for some reason need a nudge after theme change"
@@ -804,7 +821,7 @@ before packages are loaded."
       (set-face-background 'which-key-posframe-border face-color)
       (set-face-background 'ivy-posframe-border face-color))
     ;; lighter window divider
-    (set-face-foreground 'window-divider (face-background 'mode-line-inactive))
+    (set-face-foreground 'window-divider (face-background 'default))
     (window-divider-mode))
 
   (add-hook 'spacemacs-post-theme-change-hook 'do-theme-tweaks)
@@ -856,7 +873,6 @@ before packages are loaded."
     (kbd "C-k") 'previous-history-element)
 
   ;; misc ---
-  (evil-define-key 'normal 'global (kbd "zz")  'evil-toggle-fold)
   (evil-define-key 'normal 'global (kbd "C-,") 'evil-emacs-state)
   (evil-define-key 'insert 'global (kbd "C-,") 'evil-emacs-state)
   (evil-define-key 'emacs  'global (kbd "C-,") 'evil-normal-state)
@@ -902,22 +918,15 @@ before packages are loaded."
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
   (setenv "TSC_NONPOLLING_WATCHER" "true")
 
-  (setq lsp-clients-angular-language-server-command
-        (let ((node-modules "/usr/local/lib/node_modules"))
-          `("node"
-            ,(concat node-modules "/@angular/language-server")
-            "--ngProbeLocations" ,node-modules
-            "--tsProbeLocations" ,node-modules
-            "--experimental-ivy"
-            "--stdio")))
-
-  ;; (setq-default js-indent-level 2
-  ;;               javascript-indent-level 2
-  ;;               typescript-indent-level 2
-  ;;               web-mode-markup-indent-offset 2
-  ;;               web-mode-css-indent-offset 2
-  ;;               web-mode-code-indent-offset 2
-  ;;               css-indent-offset 2)
+  ;; should no longer be necessary https://github.com/emacs-lsp/lsp-mode/commit/d2b90afdc947e411b8ce971bf0f6a01e2283d5d4
+  ;; (setq lsp-clients-angular-language-server-command
+  ;;       (let ((node-modules "/usr/local/lib/node_modules"))
+  ;;         `("node"
+  ;;           ,(concat node-modules "/@angular/language-server")
+  ;;           "--ngProbeLocations" ,node-modules
+  ;;           "--tsProbeLocations" ,node-modules
+  ;;           "--experimental-ivy"
+  ;;           "--stdio")))
 
 
   ;; org --------------------------------------------------------------------------
@@ -946,6 +955,15 @@ before packages are loaded."
 
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
+
+
+  ;; slack ----------------------------------------------------------------------
+  (let ((immuta-slack-token (getenv "IMMUTA_SLACK_TOKEN")))
+    (if immuta-slack-token
+        (slack-register-team
+         :name "immuta"
+         :default t
+         :token (getenv "SLACK_TOKEN"))))
 )
 
 
