@@ -84,6 +84,7 @@ This function should only modify configuration layer settings."
      doom-themes
      ivy-posframe
      which-key-posframe
+     pacfiles-mode
      solaire-mode)
 
    ;; A list of packages that cannot be updated.
@@ -605,14 +606,16 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    javascript-import-tool 'import-js
 
    lsp-ui-doc-enable nil
-   ;; lsp-ui-doc-include-signature t
-   ;; lsp-ui-doc-header t
-   ;; lsp-ui-doc-delay 1 ; seconds
-   ;; lsp-ui-doc-alignment 'window
+   lsp-ui-doc-include-signature t
+   lsp-ui-doc-header t
+   lsp-ui-doc-delay 1 ; seconds
+   lsp-ui-doc-alignment 'window
+
+   lsp-ui-sideline-enable t
 
    lsp-ui-peek-enable t
    lsp-ui-peek-always-show t
-   lsp-ui-sideline-enable nil ;; spacing issues, flycheck-pos-tip-mode works ok
+
 
    lsp-eldoc-enable-hover nil
    lsp-enable-symbol-highlighting t
@@ -712,8 +715,7 @@ before packages are loaded."
 
 
   ;; git ----------------------------------------------------------------------
-  (setq browse-at-remote-remote-type-domains '(("git.loc.gov" . "gitlab")
-                                               ("github.com" .  "github")))
+  (setq browse-at-remote-remote-type-domains '(("github.com" .  "github")))
   (setq magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
   ;; (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-topleft-v1)
 
@@ -955,14 +957,13 @@ before packages are loaded."
   (setq c-basic-offset 4)
 
 
-
   ;; slack ----------------------------------------------------------------------
-  (slack-register-team
-   :name "immuta"
-   :default t
-   :token (getenv "SLACK_TOKEN"))
-
-
+  (let ((immuta-slack-token (getenv "IMMUTA_SLACK_TOKEN")))
+    (if immuta-slack-token
+        (slack-register-team
+         :name "immuta"
+         :default t
+         :token (getenv "SLACK_TOKEN"))))
 )
 
 
