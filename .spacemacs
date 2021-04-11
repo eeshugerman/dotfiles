@@ -659,8 +659,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   "Library to load while dumping.
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
-dump."
-  )
+dump.")
+
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -794,7 +794,6 @@ before packages are loaded."
   ;; themeing -----------------------------------------------------------------
   ;; fringe ---
   (spacemacs/toggle-vi-tilde-fringe-off)
-  (fringe-mode '(0 . nil))  ; disable left fringe, leave right default width
   ;; hide arrows at window border for truncated lines
   (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b0))
   (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
@@ -807,22 +806,27 @@ before packages are loaded."
   (load-library "lsp-treemacs-themes")  ;; https://github.com/emacs-lsp/lsp-treemacs/issues/89
   (doom-themes-treemacs-config)
 
-  ;; misc ---
+  ;; border/fringe ---
+  ; don't actually want right divider but it overlaps a line
+  ; that i can't figure out how to remove or change the face of
+  (setq window-divider-default-right-width 1
+        window-divider-default-bottom-width 1)
+  (menu-bar-bottom-and-right-window-divider)
+
   (let ((border-width 10))
-    (setq window-divider-default-right-width border-width
-          ivy-posframe-border-width border-width
+    (fringe-mode (cons 0 border-width))  ; disable left fringe
+    (setq ivy-posframe-border-width border-width
           which-key-posframe-border-width border-width))
 
   (defun do-theme-tweaks ()
     "misc tweaks that for some reason need a nudge after theme change"
-    ;; posframe color stuff
-    (let ((face-color (face-background 'ivy-posframe)))
-      (set-face-background 'which-key-posframe face-color)
-      (set-face-background 'which-key-posframe-border face-color)
-      (set-face-background 'ivy-posframe-border face-color))
-    ;; lighter window divider
-    (set-face-foreground 'window-divider (face-background 'default))
-    (window-divider-mode))
+    (let ((posframe-face (face-background 'ivy-posframe)))
+      (set-face-background 'which-key-posframe        posframe-face)
+      (set-face-background 'which-key-posframe-border posframe-face)
+      (set-face-background 'ivy-posframe-border       posframe-face)
+      (set-face-background 'solaire-fringe-face       (face-background 'solaire-mode-line-face))
+      (set-face-foreground 'window-divider            (face-background 'solaire-default-face)))
+    (window-divider-mode 1))
 
   (add-hook 'spacemacs-post-theme-change-hook 'do-theme-tweaks)
   (do-theme-tweaks)
