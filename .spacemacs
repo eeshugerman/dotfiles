@@ -82,7 +82,9 @@ This function should only modify configuration layer settings."
      ivy-rich
      doom-themes
      ivy-posframe
-     which-key-posframe)
+     which-key-posframe
+     pacfiles-mode
+     solaire-mode)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -607,7 +609,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-enable-symbol-highlighting t
    lsp-headerline-breadcrumb-enable t
    lsp-headerline-breadcrumb-segments '(symbols)
-   lsp-ui-sideline-enable nil ;; spacing issues, flycheck-pos-tip-mode works ok
+   lsp-ui-sideline-enable t
 
    python-backend 'lsp
    python-fill-column 100
@@ -656,6 +658,7 @@ before packages are loaded."
   (use-package ivy-rich               :config (ivy-rich-mode))
   (use-package ivy-posframe           :config (ivy-posframe-mode))
   (use-package which-key-posframe     :config (which-key-posframe-mode))
+  (use-package which-key-posframe     :config (solaire-global-mode))
 
 
   ;; misc/general --------------------------------------------------------------
@@ -696,8 +699,7 @@ before packages are loaded."
 
 
   ;; git ----------------------------------------------------------------------
-  (setq browse-at-remote-remote-type-domains '(("git.loc.gov" . "gitlab")
-                                               ("github.com" .  "github")))
+  (setq browse-at-remote-remote-type-domains '(("github.com" .  "github")))
   (setq magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
   ;; (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-topleft-v1)
 
