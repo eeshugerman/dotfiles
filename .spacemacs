@@ -638,6 +638,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    python-sort-imports-on-save nil
    python-tab-width 4
 
+   scheme-implementations '(guile)
+
    shell-default-height 30
    shell-default-position 'bottom
    shell-default-shell 'vterm
