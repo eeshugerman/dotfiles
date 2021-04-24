@@ -938,22 +938,24 @@ before packages are loaded."
   ;; org --------------------------------------------------------------------------
   (with-eval-after-load 'org
     (org-babel-do-load-languages 'org-babel-load-languages '((scheme . t)))
-    (setq org-confirm-babel-evaluate nil
+    (setq org-adapt-indentation nil
+          org-confirm-babel-evaluate nil
           org-format-latex-options (plist-put org-format-latex-options :scale 1.2)))
 
-  (setq org-adapt-indentation nil)
   (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") 'org-babel-execute-src-block)
 
 
   ;; yadm ------------------------------------------------------------------------
   ;; half works on linux, doesn't at all on mac
-  (add-to-list 'tramp-methods
-               '("yadm"
-                 (tramp-login-program "yadm")
-                 (tramp-login-args (("enter")))
-                 (tramp-login-env (("SHELL") ("/bin/sh")))
-                 (tramp-remote-shell "/bin/sh")
-                 (tramp-remote-shell-args ("-c"))))
+  (with-eval-after-load 'tramp
+    (add-to-list 'tramp-methods
+                 '("yadm"
+                   (tramp-login-program "yadm")
+                   (tramp-login-args (("enter")))
+                   (tramp-login-env (("SHELL") ("/bin/sh")))
+                   (tramp-remote-shell "/bin/sh")
+                   (tramp-remote-shell-args ("-c")))))
+
   (defun custom/magit-yadm ()
     (interactive)
     (magit-status "/yadm::"))
