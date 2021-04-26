@@ -52,6 +52,7 @@ This function should only modify configuration layer settings."
      javascript
      markdown
      multiple-cursors
+     nav-flash
      nginx
      org
      python
@@ -81,11 +82,13 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages
    '(all-the-icons-ivy-rich
      ivy-rich
-     doom-themes
      ivy-posframe
      which-key-posframe
      pacfiles-mode
-     solaire-mode)
+     solaire-mode
+     journalctl-mode
+     diredfl
+     dired-git-info)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -430,7 +433,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Show the scroll bar while scrolling. The auto hide time can be configured
    ;; by setting this variable to a number. (default t)
-   dotspacemacs-scroll-bar-while-scrolling t
+   dotspacemacs-scroll-bar-while-scrolling nil
 
    ;; Control line numbers activation.
    ;; If set to `t', `relative' or `visual' then line numbers are enabled in all
@@ -529,7 +532,7 @@ It should only modify the values of Spacemacs settings."
    ;; `trailing' to delete only the whitespace at end of lines, `changed' to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup 'trailing
+   dotspacemacs-whitespace-cleanup nil
 
    ;; If non nil activate `clean-aindent-mode' which tries to correct
    ;; virtual indentation of simple modes. This can interfer with mode specific
@@ -595,6 +598,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    css-enable-lsp t
    scss-enable-lsp t
 
+   groovy-backend 'lsp
+   groovy-lsp-jar-path "~/util/groovy-language-server/build/libs/groovy-language-server-all.jar"
+
    ivy-enable-advanced-buffer-information nil
    ivy-extra-directories nil
    ivy-initial-inputs-alist nil
@@ -612,6 +618,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-doc-alignment 'window
 
    lsp-ui-sideline-enable t
+
+   lsp-ui-imenu-enable nil
 
    lsp-ui-peek-enable t
    lsp-ui-peek-always-show t
@@ -636,6 +644,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    python-sort-imports-on-save nil
    python-tab-width 4
 
+   scheme-implementations '(guile)
+
    shell-default-height 30
    shell-default-position 'bottom
    shell-default-shell 'vterm
@@ -646,6 +656,10 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    treemacs-use-filewatch-mode t
    treemacs-use-git-mode 'extended
    treemacs-use-follow-mode nil
+   treemacs-read-string-input
+   (if (eq system-type 'gnu/linux)
+       'from-minibuffer ;; https://github.com/Alexander-Miller/cfrs/issues/4
+     'from-child-frame)
 
    unicode-fonts-enable-ligatures t
    unicode-fonts-ligature-modes '(typescript-mode
@@ -670,12 +684,16 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
   ;; init standalone modes ----------------------------------------------------
-  (use-package all-the-icons-ivy-rich :config (all-the-icons-ivy-rich-mode))
-  (use-package ivy-rich               :config (ivy-rich-mode))
-  (use-package ivy-posframe           :config (ivy-posframe-mode))
-  (use-package which-key-posframe     :config (which-key-posframe-mode))
-  (use-package solaire-mode           :config (solaire-global-mode)
-                                              (spacemacs/load-default-theme))
+  (use-package all-the-icons-ivy-rich :config (all-the-icons-ivy-rich-mode 1))
+  (use-package ivy-rich               :config (ivy-rich-mode 1))
+  (use-package ivy-posframe           :config (ivy-posframe-mode 1))
+  (use-package which-key-posframe     :config (which-key-posframe-mode 1))
+  (use-package solaire-mode           :config (unless solaire-global-mode
+                                                (solaire-global-mode +1)
+                                                (spacemacs/load-default-theme)))
+  (use-package diredfl                :hook (dired-mode . diredfl-global-mode))
+  ;; (use-package dired-git-info
+  ;;   :hook (dired-after-readin . dired-git-info-auto-enable)) ;; spacing issues
 
   ;; misc/general --------------------------------------------------------------
   (spacemacs/set-leader-keys      ;; TODO: make which-key reflect these
@@ -692,7 +710,10 @@ before packages are loaded."
         bidi-paragraph-direction 'left-to-right
         byte-compile-warnings '(cl-functions))
 
-  (customize-set-variable 'custom-file (file-truename "~/.emacs-custom.el"))
+  (let ((custom-file-path (file-truename "~/.emacs-custom.el")))
+    (unless (file-exists-p custom-file-path)
+      (with-temp-buffer (write-file custom-file-path)))
+    (customize-set-variable 'custom-file custom-file-path))
   (load custom-file)
 
 
@@ -905,8 +926,8 @@ before packages are loaded."
     (kbd "C-j") 'vterm-send-down)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-,") 'evil-normal-state)
 
-  (setq vterm-max-scrollback 100000 ; maximum size supported
-        vterm-min-window-width 1000 ; no suppress-hard-newline :(
+  (setq vterm-max-scrollback 100000  ; maximum size supported
+        vterm-min-window-width 65535 ; no suppress-hard-newline :(
         vterm-always-compile-module t
         ;; vterm-buffer-name-string "vterm: %s"  ;; breaks SPC-' functionality
         )
@@ -962,12 +983,11 @@ before packages are loaded."
 
 
   ;; slack ----------------------------------------------------------------------
-  (let ((immuta-slack-token (getenv "IMMUTA_SLACK_TOKEN")))
-    (if immuta-slack-token
-        (slack-register-team
-         :name "immuta"
-         :default t
-         :token (getenv "SLACK_TOKEN"))))
+  (if-let ((immuta-slack-token (getenv "IMMUTA_SLACK_TOKEN")))
+      (slack-register-team
+       :name "immuta"
+       :default t
+       :token immuta-slack-token))
 )
 
 
@@ -996,3 +1016,7 @@ before packages are loaded."
 (defun custom/browse-info ()
   (interactive)
   (info (buffer-file-name)))
+
+(defun custom/monitor-half-width ()
+  (interactive)
+  (set-frame-size (selected-frame) 945 1055 t))
