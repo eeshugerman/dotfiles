@@ -717,6 +717,11 @@ before packages are loaded."
   (load custom-file)
 
 
+  ;; xml ---------------------------------------------------------------------------
+  (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
+  (add-hook 'nxml-mode-hook 'origami-mode)
+
+
   ;; python ------------------------------------------------------------------------
   (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
 
