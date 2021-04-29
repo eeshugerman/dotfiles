@@ -622,7 +622,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-imenu-enable nil
 
    lsp-ui-peek-enable t
-   lsp-ui-peek-always-show t
+   lsp-ui-peek-always-show nil
 
 
    lsp-eldoc-enable-hover nil
@@ -787,9 +787,9 @@ before packages are loaded."
       (plist-put config :columns my-columns-config)))
 
 
-  ;; counsel -------------------------------------------------------------------
-  (setq counsel-rg-base-command
-        (append (butlast counsel-rg-base-command) '("--hidden" "%s")))
+  ;; ;; counsel -------------------------------------------------------------------
+  ;; (setq counsel-rg-base-command
+  ;;       (append (butlast counsel-rg-base-command) '("--hidden" "%s")))
 
 
   ;; autosave ------------------------------------------------------------------
@@ -944,20 +944,13 @@ before packages are loaded."
     (kbd "C-k") 'haskell-interactive-mode-history-previous)
 
 
-  ;; angular/web ---------------------------------------------------------------
+  ;; ts/js ---------------------------------------------------------------
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
   (setenv "TSC_NONPOLLING_WATCHER" "true")
 
-  ;; should no longer be necessary https://github.com/emacs-lsp/lsp-mode/commit/d2b90afdc947e411b8ce971bf0f6a01e2283d5d4
-  ;; (setq lsp-clients-angular-language-server-command
-  ;;       (let ((node-modules "/usr/local/lib/node_modules"))
-  ;;         `("node"
-  ;;           ,(concat node-modules "/@angular/language-server")
-  ;;           "--ngProbeLocations" ,node-modules
-  ;;           "--tsProbeLocations" ,node-modules
-  ;;           "--experimental-ivy"
-  ;;           "--stdio")))
-
+  (let ((nvm-bin  (file-truename "~/.nvm/versions/node/v15.14.0/bin")))
+    (add-to-list 'exec-path nvm-bin)
+    (setenv "PATH" (concat (getenv "PATH") ":" nvm-bin)))
 
   ;; org --------------------------------------------------------------------------
   (with-eval-after-load 'org
