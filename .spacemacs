@@ -52,6 +52,7 @@ This function should only modify configuration layer settings."
      javascript
      markdown
      multiple-cursors
+     nav-flash
      nginx
      org
      python
@@ -597,6 +598,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    css-enable-lsp t
    scss-enable-lsp t
 
+   groovy-backend 'lsp
+   groovy-lsp-jar-path "~/util/groovy-language-server/build/libs/groovy-language-server-all.jar"
+
    ivy-enable-advanced-buffer-information nil
    ivy-extra-directories nil
    ivy-initial-inputs-alist nil
@@ -615,8 +619,10 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    lsp-ui-sideline-enable t
 
+   lsp-ui-imenu-enable nil
+
    lsp-ui-peek-enable t
-   lsp-ui-peek-always-show t
+   lsp-ui-peek-always-show nil
 
 
    lsp-eldoc-enable-hover nil
@@ -711,6 +717,11 @@ before packages are loaded."
   (load custom-file)
 
 
+  ;; xml ---------------------------------------------------------------------------
+  (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
+  (add-hook 'nxml-mode-hook 'origami-mode)
+
+
   ;; python ------------------------------------------------------------------------
   (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
 
@@ -776,9 +787,9 @@ before packages are loaded."
       (plist-put config :columns my-columns-config)))
 
 
-  ;; counsel -------------------------------------------------------------------
-  (setq counsel-rg-base-command
-        (append (butlast counsel-rg-base-command) '("--hidden" "%s")))
+  ;; ;; counsel -------------------------------------------------------------------
+  ;; (setq counsel-rg-base-command
+  ;;       (append (butlast counsel-rg-base-command) '("--hidden" "%s")))
 
 
   ;; autosave ------------------------------------------------------------------
@@ -920,8 +931,8 @@ before packages are loaded."
     (kbd "C-j") 'vterm-send-down)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-,") 'evil-normal-state)
 
-  (setq vterm-max-scrollback 100000 ; maximum size supported
-        vterm-min-window-width 1000 ; no suppress-hard-newline :(
+  (setq vterm-max-scrollback 100000  ; maximum size supported
+        vterm-min-window-width 65535 ; no suppress-hard-newline :(
         vterm-always-compile-module t
         ;; vterm-buffer-name-string "vterm: %s"  ;; breaks SPC-' functionality
         )
@@ -933,47 +944,48 @@ before packages are loaded."
     (kbd "C-k") 'haskell-interactive-mode-history-previous)
 
 
-  ;; angular/web ---------------------------------------------------------------
+  ;; ts/js ---------------------------------------------------------------
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
   (setenv "TSC_NONPOLLING_WATCHER" "true")
+
+  (let ((nvm-bin  (file-truename "~/.nvm/versions/node/v15.14.0/bin")))
+    (add-to-list 'exec-path nvm-bin)
+    (setenv "PATH" (concat (getenv "PATH") ":" nvm-bin)))
 
   ;; org --------------------------------------------------------------------------
   (with-eval-after-load 'org
     (org-babel-do-load-languages 'org-babel-load-languages '((scheme . t)))
-    (setq org-adapt-indentation nil
-          org-confirm-babel-evaluate nil
+    (setq org-confirm-babel-evaluate nil
           org-format-latex-options (plist-put org-format-latex-options :scale 1.2)))
 
+  (setq org-adapt-indentation nil)
   (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") 'org-babel-execute-src-block)
 
 
   ;; yadm ------------------------------------------------------------------------
-  ;; half works on linux, doesn't at all on mac
-  (with-eval-after-load 'tramp
-    (add-to-list 'tramp-methods
-                 '("yadm"
-                   (tramp-login-program "yadm")
-                   (tramp-login-args (("enter")))
-                   (tramp-login-env (("SHELL") ("/bin/sh")))
-                   (tramp-remote-shell "/bin/sh")
-                   (tramp-remote-shell-args ("-c")))))
-
-  (defun custom/magit-yadm ()
-    (interactive)
-    (magit-status "/yadm::"))
-  (spacemacs/set-leader-keys "gy" 'custom/magit-yadm)
+  ;; doesn't work
+  ;; (add-to-list 'tramp-methods
+  ;;              '("yadm"
+  ;;                (tramp-login-program "yadm")
+  ;;                (tramp-login-args (("enter")))
+  ;;                (tramp-login-env (("SHELL") ("/bin/sh")))
+  ;;                (tramp-remote-shell "/bin/sh")
+  ;;                (tramp-remote-shell-args ("-c"))))
+  ;; (defun custom/magit-yadm ()
+  ;;   (interactive)
+  ;;   (magit-status "/yadm::~"))
+  ;; (spacemacs/set-leader-keys "gy" 'custom/magit-yadm)
 
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
 
 
   ;; slack ----------------------------------------------------------------------
-  (let ((immuta-slack-token (getenv "IMMUTA_SLACK_TOKEN")))
-    (if immuta-slack-token
-        (slack-register-team
-         :name "immuta"
-         :default t
-         :token (getenv "SLACK_TOKEN"))))
+  (if-let ((immuta-slack-token (getenv "IMMUTA_SLACK_TOKEN")))
+      (slack-register-team
+       :name "immuta"
+       :default t
+       :token immuta-slack-token))
 )
 
 
@@ -1002,3 +1014,7 @@ before packages are loaded."
 (defun custom/browse-info ()
   (interactive)
   (info (buffer-file-name)))
+
+(defun custom/monitor-half-width ()
+  (interactive)
+  (set-frame-size (selected-frame) 945 1055 t))
