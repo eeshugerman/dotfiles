@@ -981,6 +981,7 @@ before packages are loaded."
 
 
   ;; slack ----------------------------------------------------------------------
+  ;; it would seem .spacemacs.env is loaded after this
   (if-let ((immuta-slack-token (getenv "IMMUTA_SLACK_TOKEN")))
       (slack-register-team
        :name "immuta"
