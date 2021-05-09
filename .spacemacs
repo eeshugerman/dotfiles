@@ -939,7 +939,7 @@ before packages are loaded."
 
 
   ;; haskell -------------------------------------------------------------------
-  (evil-define-key 'normal haskell-interactive-mode-map
+  (evil-define-key '(normal insert) haskell-interactive-mode-map
     (kbd "C-j") 'haskell-interactive-mode-history-next
     (kbd "C-k") 'haskell-interactive-mode-history-previous)
 
@@ -963,18 +963,18 @@ before packages are loaded."
 
 
   ;; yadm ------------------------------------------------------------------------
-  ;; doesn't work
-  ;; (add-to-list 'tramp-methods
-  ;;              '("yadm"
-  ;;                (tramp-login-program "yadm")
-  ;;                (tramp-login-args (("enter")))
-  ;;                (tramp-login-env (("SHELL") ("/bin/sh")))
-  ;;                (tramp-remote-shell "/bin/sh")
-  ;;                (tramp-remote-shell-args ("-c"))))
-  ;; (defun custom/magit-yadm ()
-  ;;   (interactive)
-  ;;   (magit-status "/yadm::~"))
-  ;; (spacemacs/set-leader-keys "gy" 'custom/magit-yadm)
+  ;; only half works on linux, not at all on mac
+  (add-to-list 'tramp-methods
+               '("yadm"
+                 (tramp-login-program "yadm")
+                 (tramp-login-args (("enter")))
+                 (tramp-login-env (("SHELL") ("/bin/sh")))
+                 (tramp-remote-shell "/bin/sh")
+                 (tramp-remote-shell-args ("-c"))))
+  (defun custom/magit-yadm ()
+    (interactive)
+    (magit-status "/yadm::~"))
+  (spacemacs/set-leader-keys "gy" 'custom/magit-yadm)
 
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
