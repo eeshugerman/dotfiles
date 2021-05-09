@@ -843,7 +843,7 @@ before packages are loaded."
   (let ((border-width 10))
     (fringe-mode (cons 0 border-width))  ; disable left fringe
     (setq ivy-posframe-border-width border-width
-          which-key-posframe-border-width border-width))
+          which-key-posframe-border-width 0)) ; use 0 for now bc spacing issues
 
   (defun do-theme-tweaks ()
     "misc tweaks that for some reason need a nudge after theme change"
