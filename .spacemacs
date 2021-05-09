@@ -708,7 +708,8 @@ before packages are loaded."
         projectile-indexing-method 'hybrid
         bidi-inhibit-bpa t
         bidi-paragraph-direction 'left-to-right
-        byte-compile-warnings '(cl-functions))
+        byte-compile-warnings '(cl-functions)
+        company-selection-wrap-around t)
 
   (let ((custom-file-path (file-truename "~/.emacs-custom.el")))
     (unless (file-exists-p custom-file-path)
