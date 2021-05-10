@@ -227,6 +227,9 @@ It should only modify the values of Spacemacs settings."
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
 
+   ;; Show numbers before the startup list lines. (default t)
+   dotspacemacs-show-startup-list-numbers t
+
    ;; The minimum delay in seconds between number key presses. (default 0.4)
    dotspacemacs-startup-buffer-multi-digit-delay 0.4
 
@@ -906,20 +909,23 @@ before packages are loaded."
                                      (evil-normal-state)
                                      (evil-insert-state)))
 
+  ;; ex stuff ---
+  ;; what about evil-ex-map? what does it do?
+  (dolist (my-keymap `(,evil-ex-completion-map ,evil-ex-search-keymap))
+    (evil-define-key* 'normal my-keymap
+      [escape] 'minibuffer-keyboard-quit)
+
+    (evil-define-key* '(normal insert) my-keymap
+      (kbd "C-j") 'next-history-element
+      (kbd "C-k") 'previous-history-element))
+
+
   ;; eval-expression, etc ---
-  (evil-define-key 'normal minibuffer-mode-map
+  (evil-define-key 'normal minibuffer-local-map
     [return] 'exit-minibuffer
     [escape] 'minibuffer-keyboard-quit)
 
-  (evil-define-key '(normal insert) minibuffer-mode-map
-    (kbd "C-j") 'next-history-element
-    (kbd "C-k") 'previous-history-element)
-
-  ;; ex ---
-  (evil-define-key 'normal evil-ex-completion-map
-    [escape] 'minibuffer-keyboard-quit)
-
-  (evil-define-key '(normal insert) evil-ex-completion-map
+  (evil-define-key '(normal insert) minibuffer-local-map
     (kbd "C-j") 'next-history-element
     (kbd "C-k") 'previous-history-element)
 
@@ -929,6 +935,7 @@ before packages are loaded."
   (evil-define-key 'emacs  'global (kbd "C-,") 'evil-normal-state)
 
   ;; normal mode in help, warning, etc buffers
+  ;; alternatively, could modify evil-evilified-state-map
   (delete 'special-mode evil-evilified-state-modes)
   (evil-define-key 'normal special-mode-map "q" 'quit-window)
 
@@ -990,7 +997,8 @@ before packages are loaded."
 
 
   ;; yadm ------------------------------------------------------------------------
-  ;; only half works on linux, not at all on mac
+  ;; only half works
+  (require 'tramp)
   (add-to-list 'tramp-methods
                '("yadm"
                  (tramp-login-program "yadm")
@@ -998,9 +1006,11 @@ before packages are loaded."
                  (tramp-login-env (("SHELL") ("/bin/sh")))
                  (tramp-remote-shell "/bin/sh")
                  (tramp-remote-shell-args ("-c"))))
+
   (defun custom/magit-yadm ()
     (interactive)
-    (magit-status "/yadm::~"))
+    (magit-status "/yadm::"))
+
   (spacemacs/set-leader-keys "gy" 'custom/magit-yadm)
 
   ;; c/c++ ----------------------------------------------------------------------
