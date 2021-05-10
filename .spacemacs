@@ -888,24 +888,38 @@ before packages are loaded."
     (kbd "V")   (kbd "C-v $")
     (kbd "RET") 'evil-ex-nohighlight)
 
-  ;; ivy/minibuffer ---
+  ;; evil in ivy/minibuffer
   (setq evil-want-minibuffer t)
 
-  ;; eval ---
-  (evil-define-key 'normal minibuffer-local-map [return] 'exit-minibuffer)
-  (evil-define-key 'normal minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-
   ;; ivy ---
-  ;; TODO: backspace only works in 'emacs state
   (evil-define-key 'normal ivy-minibuffer-map
     [return] 'exit-minibuffer
     [escape] 'minibuffer-keyboard-quit)
 
-  ;; ex ---
-  (evil-define-key 'normal evil-ex-completion-map [escape] 'minibuffer-keyboard-quit)
+  (evil-define-key '(normal insert) ivy-minibuffer-map
+    (kbd "C-j") 'ivy-next-line
+    (kbd "C-k") 'ivy-previous-line)
 
-  ;; only works in normal mode :/
-  (evil-define-key '(normal insert) minibuffer-local-map
+  ;; workaround for what seems to be a bug:
+  ;; C-j/C-k binding doesn't work until state is changed
+  (add-hook 'minibuffer-setup-hook (lambda ()
+                                     (evil-normal-state)
+                                     (evil-insert-state)))
+
+  ;; eval-expression, etc ---
+  (evil-define-key 'normal minibuffer-mode-map
+    [return] 'exit-minibuffer
+    [escape] 'minibuffer-keyboard-quit)
+
+  (evil-define-key '(normal insert) minibuffer-mode-map
+    (kbd "C-j") 'next-history-element
+    (kbd "C-k") 'previous-history-element)
+
+  ;; ex ---
+  (evil-define-key 'normal evil-ex-completion-map
+    [escape] 'minibuffer-keyboard-quit)
+
+  (evil-define-key '(normal insert) evil-ex-completion-map
     (kbd "C-j") 'next-history-element
     (kbd "C-k") 'previous-history-element)
 
@@ -947,7 +961,7 @@ before packages are loaded."
 
 
   ;; haskell -------------------------------------------------------------------
-  (evil-define-key 'normal haskell-interactive-mode-map
+  (evil-define-key '(normal insert) haskell-interactive-mode-map
     (kbd "C-j") 'haskell-interactive-mode-history-next
     (kbd "C-k") 'haskell-interactive-mode-history-previous)
 
@@ -976,18 +990,18 @@ before packages are loaded."
 
 
   ;; yadm ------------------------------------------------------------------------
-  ;; doesn't work
-  ;; (add-to-list 'tramp-methods
-  ;;              '("yadm"
-  ;;                (tramp-login-program "yadm")
-  ;;                (tramp-login-args (("enter")))
-  ;;                (tramp-login-env (("SHELL") ("/bin/sh")))
-  ;;                (tramp-remote-shell "/bin/sh")
-  ;;                (tramp-remote-shell-args ("-c"))))
-  ;; (defun custom/magit-yadm ()
-  ;;   (interactive)
-  ;;   (magit-status "/yadm::~"))
-  ;; (spacemacs/set-leader-keys "gy" 'custom/magit-yadm)
+  ;; only half works on linux, not at all on mac
+  (add-to-list 'tramp-methods
+               '("yadm"
+                 (tramp-login-program "yadm")
+                 (tramp-login-args (("enter")))
+                 (tramp-login-env (("SHELL") ("/bin/sh")))
+                 (tramp-remote-shell "/bin/sh")
+                 (tramp-remote-shell-args ("-c"))))
+  (defun custom/magit-yadm ()
+    (interactive)
+    (magit-status "/yadm::~"))
+  (spacemacs/set-leader-keys "gy" 'custom/magit-yadm)
 
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
