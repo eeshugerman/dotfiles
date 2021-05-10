@@ -613,6 +613,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    java-backend 'lsp
 
    javascript-import-tool 'import-js
+   javascript-repl 'nodejs
+   js2-include-node-externs t
 
    lsp-ui-doc-enable nil
    lsp-ui-doc-include-signature t
@@ -626,6 +628,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    lsp-ui-peek-enable t
    lsp-ui-peek-always-show nil
+   lsp-ui-peek-fontify 'always
+   lsp-ui-peek-show-directory t
+   lsp-ui-peek-list-width 60
 
 
    lsp-eldoc-enable-hover nil
@@ -740,7 +745,8 @@ before packages are loaded."
       ;; TODO: experiment with a portable (Linux/MacOS) venv + exec-path
       ;; solution for python dependencies (flake8, importmagic, etc)
       (add-to-list 'exec-path "~/Library/Python/3.8/bin")
-      (add-to-list 'exec-path "~/Library/Python/3.9/bin"))
+      (add-to-list 'exec-path "~/Library/Python/3.9/bin")
+      (setq python-shell-interpreter "python3"))
   (setq dap-python-debugger 'debugpy) ; this should be the default at some point
 
 
@@ -903,20 +909,23 @@ before packages are loaded."
                                      (evil-normal-state)
                                      (evil-insert-state)))
 
+  ;; ex stuff ---
+  ;; what about evil-ex-map? what does it do?
+  (dolist (my-keymap `(,evil-ex-completion-map ,evil-ex-search-keymap))
+    (evil-define-key* 'normal my-keymap
+      [escape] 'minibuffer-keyboard-quit)
+
+    (evil-define-key* '(normal insert) my-keymap
+      (kbd "C-j") 'next-history-element
+      (kbd "C-k") 'previous-history-element))
+
+
   ;; eval-expression, etc ---
-  (evil-define-key 'normal minibuffer-mode-map
+  (evil-define-key 'normal minibuffer-local-map
     [return] 'exit-minibuffer
     [escape] 'minibuffer-keyboard-quit)
 
-  (evil-define-key '(normal insert) minibuffer-mode-map
-    (kbd "C-j") 'next-history-element
-    (kbd "C-k") 'previous-history-element)
-
-  ;; ex ---
-  (evil-define-key 'normal evil-ex-completion-map
-    [escape] 'minibuffer-keyboard-quit)
-
-  (evil-define-key '(normal insert) evil-ex-completion-map
+  (evil-define-key '(normal insert) minibuffer-local-map
     (kbd "C-j") 'next-history-element
     (kbd "C-k") 'previous-history-element)
 
@@ -926,6 +935,7 @@ before packages are loaded."
   (evil-define-key 'emacs  'global (kbd "C-,") 'evil-normal-state)
 
   ;; normal mode in help, warning, etc buffers
+  ;; alternatively, could modify evil-evilified-state-map
   (delete 'special-mode evil-evilified-state-modes)
   (evil-define-key 'normal special-mode-map "q" 'quit-window)
 
@@ -952,6 +962,7 @@ before packages are loaded."
   (setq vterm-max-scrollback 100000  ; maximum size supported
         vterm-min-window-width 65535 ; no suppress-hard-newline :(
         vterm-always-compile-module t
+        vterm-clear-scrollback-when-clearing t
         ;; vterm-buffer-name-string "vterm: %s"  ;; breaks SPC-' functionality
         )
 
@@ -966,9 +977,14 @@ before packages are loaded."
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
   (setenv "TSC_NONPOLLING_WATCHER" "true")
 
-  (let ((nvm-bin  (file-truename "~/.nvm/versions/node/v15.14.0/bin")))
-    (add-to-list 'exec-path nvm-bin)
-    (setenv "PATH" (concat (getenv "PATH") ":" nvm-bin)))
+
+  (let* ((node-v-12 "v12.22.1")
+         (node-v-15 "v15.14.0")
+         (node-bin  (file-truename (f-join "~/.nvm/versions/node" node-v-15 "bin"))))
+    (add-to-list 'exec-path node-bin)
+    (setenv "PATH" (concat (getenv "PATH") ":" node-bin)))
+
+
 
   ;; org --------------------------------------------------------------------------
   (with-eval-after-load 'org
@@ -981,7 +997,8 @@ before packages are loaded."
 
 
   ;; yadm ------------------------------------------------------------------------
-  ;; only half works on linux, not at all on mac
+  ;; only half works
+  (require 'tramp)
   (add-to-list 'tramp-methods
                '("yadm"
                  (tramp-login-program "yadm")
@@ -989,9 +1006,11 @@ before packages are loaded."
                  (tramp-login-env (("SHELL") ("/bin/sh")))
                  (tramp-remote-shell "/bin/sh")
                  (tramp-remote-shell-args ("-c"))))
+
   (defun custom/magit-yadm ()
     (interactive)
-    (magit-status "/yadm::~"))
+    (magit-status "/yadm::"))
+
   (spacemacs/set-leader-keys "gy" 'custom/magit-yadm)
 
   ;; c/c++ ----------------------------------------------------------------------
@@ -1017,7 +1036,7 @@ before packages are loaded."
 
 (defun custom/kill-buffers (regexp)
   "Kill buffers matching REGEXP without asking for confirmation."
-  (interactive "Kill buffers matching this regular expression: ")
+  (interactive "MKill buffers matching this regular expression: ")
   (cl-letf (((symbol-function 'kill-buffer-ask)
          (lambda (buffer) (kill-buffer buffer))))
     (kill-matching-buffers regexp)))
