@@ -1043,6 +1043,18 @@ before packages are loaded."
        :name "immuta"
        :default t
        :token immuta-slack-token))
+
+  (set-face-background 'slack-message-mention-face (doom-color 'base3))
+
+  (set-face-background 'slack-message-mention-me-face (doom-color 'base3))
+  (set-face-foreground 'slack-message-mention-me-face (doom-color 'magenta))
+
+  (set-face-foreground 'slack-mrkdwn-code-face (doom-color 'violet))
+  (set-face-foreground 'slack-mrkdwn-code-block-face (doom-color 'violet))
+
+  (set-face-attribute 'slack-message-output-header nil
+                      :weight 'unspecified
+                      :height 0.75)
 )
 
 
