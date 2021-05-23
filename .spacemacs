@@ -256,7 +256,9 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(; the gotos
+   dotspacemacs-themes '(doom-solarized-dark
+                         doom-solarized-light
+
                          doom-nord
                          doom-nord-light
 
@@ -589,11 +591,12 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (if (eq system-type 'darwin)
       (setq insert-directory-program "/usr/local/bin/gls"))
 
-  ;; spacemacs layer vars
   (setq
 
    c-c++-lsp-enable-semantic-highlight t
    ;; c-c++-lsp-enable-semantic-highlight 'overlay
+
+   doom-solarized-dark-brighter-modeline t
 
    haskell-completion-backend 'lsp
 
@@ -672,6 +675,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    unicode-fonts-enable-ligatures t
    unicode-fonts-ligature-modes '(typescript-mode
                                   javascript-mode
+                                  js2-mode
                                   web-mode
                                   html-mode
                                   scss-mode
@@ -697,7 +701,9 @@ before packages are loaded."
   (use-package ivy-posframe           :config (ivy-posframe-mode 1))
   (use-package which-key-posframe     :config (which-key-posframe-mode 1))
   (use-package solaire-mode           :config (unless solaire-global-mode
-                                                (solaire-global-mode +1)
+                                                ;; seems like  should be t for dark themes, nil for light
+                                                (setq solaire-mode-auto-swap-bg nil)
+                                                (solaire-global-mode 1)
                                                 (spacemacs/load-default-theme)))
   (use-package diredfl                :hook (dired-mode . diredfl-global-mode))
   ;; (use-package dired-git-info
@@ -828,6 +834,19 @@ before packages are loaded."
 
 
   ;; themeing -----------------------------------------------------------------
+  ;; fix current-line jiggle w/ doom themes (mac only?)
+  (set-face-attribute 'line-number-current-line nil :weight 'normal)
+
+  (defun custom/load-theme (system-appearance)
+    (mapc 'disable-theme custom-enabled-themes)
+    (pcase system-appearance
+      ('light (load-theme 'doom-solarized-light t))
+      ('dark (load-theme 'doom-solarized-dark t))))
+
+  (when (boundp 'ns-system-appearance-change-functions)
+    (add-hook 'ns-system-appearance-change-functions 'custom/load-theme)
+    (custom/load-theme ns-system-appearance))
+
   ;; fringe ---
   (spacemacs/toggle-vi-tilde-fringe-off)
   ;; hide arrows at window border for truncated lines
@@ -852,7 +871,7 @@ before packages are loaded."
   (let ((border-width 10))
     (fringe-mode (cons 0 border-width))  ; disable left fringe
     (setq ivy-posframe-border-width border-width
-          which-key-posframe-border-width 0)) ; use 0 for now bc spacing issues
+          which-key-posframe-border-width border-width))
 
   (defun do-theme-tweaks ()
     "misc tweaks that for some reason need a nudge after theme change"
@@ -1024,6 +1043,19 @@ before packages are loaded."
        :name "immuta"
        :default t
        :token immuta-slack-token))
+
+  (require 'slack)
+  (set-face-background 'slack-message-mention-face (doom-color 'base3))
+
+  (set-face-background 'slack-message-mention-me-face (doom-color 'base3))
+  (set-face-foreground 'slack-message-mention-me-face (doom-color 'magenta))
+
+  (set-face-foreground 'slack-mrkdwn-code-face (doom-color 'violet))
+  (set-face-foreground 'slack-mrkdwn-code-block-face (doom-color 'violet))
+
+  (set-face-attribute 'slack-message-output-header nil
+                      :weight 'unspecified
+                      :height 0.75)
 )
 
 
