@@ -2,6 +2,8 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
+(setq custom/macos-flag (eq system-type 'darwin))
+
 (defun dotspacemacs/layers ()
   "Layer configuration:
 This function should only modify configuration layer settings."
@@ -300,7 +302,7 @@ It should only modify the values of Spacemacs settings."
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font `("Fira Code"
-                               :size ,(if (eq system-type 'darwin) 12.0 10.0)
+                               :size ,(if custom/macos-flag 12.0 10.0)
                                :weight normal
                                :width normal)
 
@@ -408,7 +410,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
    ;; variable with `dotspacemacs-maximized-at-startup' in OSX to obtain
    ;; borderless fullscreen. (default nil)
-   dotspacemacs-undecorated-at-startup (eq system-type 'darwin)
+   dotspacemacs-undecorated-at-startup custom/macos-flag
 
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
@@ -588,7 +590,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq ivy-posframe-display-functions-alist
         '((t . ivy-posframe-display-at-frame-center)))
   (setq byte-compile-warnings '(cl-functions))
-  (if (eq system-type 'darwin)
+  (if custom/macos-flag
       (setq insert-directory-program "/usr/local/bin/gls"))
 
   (setq
@@ -630,7 +632,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-imenu-enable nil
 
    lsp-ui-peek-enable t
-   lsp-ui-peek-always-show nil
+   lsp-ui-peek-always-show t
    lsp-ui-peek-fontify 'always
    lsp-ui-peek-show-directory t
    lsp-ui-peek-list-width 60
@@ -668,7 +670,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    treemacs-use-git-mode 'extended
    treemacs-use-follow-mode nil
    treemacs-read-string-input
-   (if (eq system-type 'gnu/linux)
+   (if (not custom/macos-flag)
        'from-minibuffer ;; https://github.com/Alexander-Miller/cfrs/issues/4
      'from-child-frame)
 
@@ -747,7 +749,7 @@ before packages are loaded."
 
   ;; interpreter and tooling ---
   (setq python-shell-interpreter "ipython3")
-  (if (eq system-type 'darwin)
+  (if custom/macos-flag
       ;; TODO: experiment with a portable (Linux/MacOS) venv + exec-path
       ;; solution for python dependencies (flake8, importmagic, etc)
       (add-to-list 'exec-path "~/Library/Python/3.8/bin")
@@ -803,11 +805,6 @@ before packages are loaded."
       (plist-put config :columns my-columns-config)))
 
 
-  ;; ;; counsel -------------------------------------------------------------------
-  ;; (setq counsel-rg-base-command
-  ;;       (append (butlast counsel-rg-base-command) '("--hidden" "%s")))
-
-
   ;; autosave ------------------------------------------------------------------
   (defun save-buffer-if-needed ()
     (when (and (buffer-file-name) (buffer-modified-p))
@@ -834,9 +831,6 @@ before packages are loaded."
 
 
   ;; themeing -----------------------------------------------------------------
-  ;; fix current-line jiggle w/ doom themes (mac only?)
-  (set-face-attribute 'line-number-current-line nil :weight 'normal)
-
   (defun custom/load-theme (system-appearance)
     (mapc 'disable-theme custom-enabled-themes)
     (pcase system-appearance
@@ -846,6 +840,8 @@ before packages are loaded."
   (when (boundp 'ns-system-appearance-change-functions)
     (add-hook 'ns-system-appearance-change-functions 'custom/load-theme)
     (custom/load-theme ns-system-appearance))
+
+  (toggle-menu-bar-mode-from-frame -1)
 
   ;; fringe ---
   (spacemacs/toggle-vi-tilde-fringe-off)
@@ -881,6 +877,9 @@ before packages are loaded."
       (set-face-background 'ivy-posframe-border       posframe-face)
       (set-face-background 'solaire-fringe-face       (face-background 'solaire-mode-line-face))
       (set-face-foreground 'window-divider            (face-background 'solaire-default-face)))
+    ;; fix current-line jiggle w/ doom themes (mac only?)
+    (if custom/macos-flag
+        (set-face-attribute 'line-number-current-line nil :weight 'normal))
     (window-divider-mode 1))
 
   (add-hook 'spacemacs-post-theme-change-hook 'do-theme-tweaks)
@@ -892,14 +891,12 @@ before packages are loaded."
 
 
   ;; doom-modeline -------------------------------------------------------------
-  (setq doom-modeline-window-width-limit 90
+  (setq doom-modeline-window-width-limit 80
         ;; doom-modeline-buffer-file-name-style 'truncate-with-project
-        doom-modeline-buffer-file-name-style 'auto
+        doom-modeline-buffer-file-name-style 'truncate-with-project
+        doom-modeline-hud t
+        doom-modeline-percent-position nil
         doom-modeline-buffer-encoding nil)
-  (doom-modeline-def-modeline 'main
-    ; default: https://github.com/seagle0128/doom-modeline/blob/master/doom-modeline.el#L92-L94
-    '(bar workspace-name window-number modals matches buffer-info remote-host buffer-position word-count parrot selection-info)
-    '(objed-state misc-info persp-name battery grip irc mu4e gnus github debug repl lsp minor-modes input-method indent-info buffer-encoding process vcs checker))
 
 
   ;; evil ------------------------------------------------------------------------
@@ -993,6 +990,11 @@ before packages are loaded."
 
 
   ;; ts/js ---------------------------------------------------------------
+  (defun custom/dap-node-enable ()
+    (require 'dap-node))
+  (add-hook 'js2-mode-hook 'custom/dap-node-enable)
+  (add-hook 'typescript-mode-hook 'custom/dap-node-enable)
+
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
   (setenv "TSC_NONPOLLING_WATCHER" "true")
 
@@ -1037,26 +1039,20 @@ before packages are loaded."
 
 
   ;; slack ----------------------------------------------------------------------
-  ;; it would seem .spacemacs.env is loaded after this
-  (if-let ((immuta-slack-token (getenv "IMMUTA_SLACK_TOKEN")))
-      (slack-register-team
-       :name "immuta"
-       :default t
-       :token immuta-slack-token))
-
+  (require 'slack)
   (set-face-background 'slack-message-mention-face (doom-color 'base3))
-
   (set-face-background 'slack-message-mention-me-face (doom-color 'base3))
   (set-face-foreground 'slack-message-mention-me-face (doom-color 'magenta))
-
   (set-face-foreground 'slack-mrkdwn-code-face (doom-color 'violet))
   (set-face-foreground 'slack-mrkdwn-code-block-face (doom-color 'violet))
-
   (set-face-attribute 'slack-message-output-header nil
                       :weight 'unspecified
                       :height 0.75)
-)
 
+  (let ((extra-junk  "~/.spacemacs-immuta.el"))
+    (if (file-exists-p extra-junk)
+        (load extra-junk)))
+)
 
 ;; functions for adhoc use ----------------------------------------------------
 (defun custom/hide-dos-eol ()
