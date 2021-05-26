@@ -1035,6 +1035,9 @@ before packages are loaded."
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
 
+  ;; geiser --------------------------------------------------------------------
+  (evil-define-key 'insert 'geiser-repl-mode-map
+    [M-return] 'geiser-repl--newline-and-indent)
 
   ;; slack ----------------------------------------------------------------------
   ;; it would seem .spacemacs.env is loaded after this
