@@ -705,11 +705,9 @@ before packages are loaded."
   (use-package ivy-rich               :config (ivy-rich-mode 1))
   (use-package ivy-posframe           :config (ivy-posframe-mode 1))
   (use-package which-key-posframe     :config (which-key-posframe-mode 1))
-  (use-package solaire-mode           :config (unless solaire-global-mode
-                                                ;; seems like  should be t for dark themes, nil for light
-                                                (setq solaire-mode-auto-swap-bg nil)
-                                                (solaire-global-mode 1)
-                                                (spacemacs/load-default-theme)))
+  (use-package solaire-mode           :config (add-to-list 'solaire-mode-themes-to-face-swap
+                                                           'doom-solarized-light)
+                                              (solaire-global-mode 1))
   (use-package diredfl                :hook (dired-mode . diredfl-global-mode))
   ;; (use-package dired-git-info
   ;;   :hook (dired-after-readin . dired-git-info-auto-enable)) ;; spacing issues
@@ -894,7 +892,6 @@ before packages are loaded."
 
   ;; doom-modeline -------------------------------------------------------------
   (setq doom-modeline-window-width-limit 80
-        ;; doom-modeline-buffer-file-name-style 'truncate-with-project
         doom-modeline-buffer-file-name-style 'truncate-with-project
         doom-modeline-hud t
         doom-modeline-percent-position nil
