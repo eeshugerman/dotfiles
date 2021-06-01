@@ -592,17 +592,15 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; misc
   (setq ivy-posframe-display-functions-alist
         '((t . ivy-posframe-display-at-frame-center)))
-  (setq byte-compile-warnings '(cl-functions))
+  ;; (setq byte-compile-warnings '(cl-functions))
   (if custom/macos-flag
       (setq insert-directory-program "/usr/local/bin/gls"))
 
   (setq
-
+   ;; misc -- TODO: organize these
    c-c++-lsp-enable-semantic-highlight t
    ;; c-c++-lsp-enable-semantic-highlight 'overlay
-
    doom-solarized-dark-brighter-modeline t
-
    haskell-completion-backend 'lsp
 
    html-enable-lsp t
@@ -665,6 +663,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    shell-default-height 30
    shell-default-position 'bottom
    shell-default-shell 'vterm
+
+   shell-dirtrack-mode nil ;; does this work?
 
    spell-checking-enable-by-default nil
 
@@ -880,8 +880,7 @@ before packages are loaded."
       (set-face-background 'ivy-posframe-border       posframe-face)
       (set-face-background 'solaire-fringe-face       (face-background 'solaire-mode-line-face))
       (set-face-foreground 'window-divider            (face-background 'solaire-default-face)))
-    ;; fix current-line jiggle w/ doom themes (mac only?)
-    (if custom/macos-flag
+    (if custom/macos-flag  ;; fix current-line jiggle w/ doom themes
         (set-face-attribute 'line-number-current-line nil :weight 'normal))
     (window-divider-mode 1))
 
@@ -961,7 +960,6 @@ before packages are loaded."
   ;; make C-k work in ivy/insert (and elsewhere, probably)
   (evil-define-key 'insert 'global (kbd "C-k") nil)
 
-
   ;; vterm ---------------------------------------------------------------------
   (defun pop-shell-at-project-root-or-home ()
     (interactive)
@@ -1009,7 +1007,6 @@ before packages are loaded."
     (setenv "PATH" (concat (getenv "PATH") ":" node-bin)))
 
 
-
   ;; org --------------------------------------------------------------------------
   (with-eval-after-load 'org
     (org-babel-do-load-languages 'org-babel-load-languages '((scheme . t)))
@@ -1048,9 +1045,13 @@ before packages are loaded."
   (set-face-foreground 'slack-message-mention-me-face (doom-color 'magenta))
   (set-face-foreground 'slack-mrkdwn-code-face (doom-color 'violet))
   (set-face-foreground 'slack-mrkdwn-code-block-face (doom-color 'violet))
+
+  (setq slack-render-image-p nil)
   (set-face-attribute 'slack-message-output-header nil
-                      :weight 'unspecified
-                      :height 0.75)
+                      :underline nil
+                      :weight 'bold
+                      :height 1.0
+                      :foreground (doom-color 'highlight))
 
   (let ((extra-junk  "~/.spacemacs-immuta.el"))
     (if (file-exists-p extra-junk)
