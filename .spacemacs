@@ -1004,13 +1004,6 @@ before packages are loaded."
   (setenv "TSC_NONPOLLING_WATCHER" "true")
 
 
-  (let* ((node-v-12 "v12.22.1")
-         (node-v-15 "v15.14.0")
-         (node-bin  (file-truename (f-join "~/.nvm/versions/node" node-v-15 "bin"))))
-    (add-to-list 'exec-path node-bin)
-    (setenv "PATH" (concat (getenv "PATH") ":" node-bin)))
-
-
   ;; org --------------------------------------------------------------------------
   (with-eval-after-load 'org
     (org-babel-do-load-languages 'org-babel-load-languages '((scheme . t)))
