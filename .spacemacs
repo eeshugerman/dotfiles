@@ -2,7 +2,7 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
-(setq custom/macos-flag (eq system-type 'darwin))
+(setq my/macos-flag (eq system-type 'darwin))
 
 (defun dotspacemacs/layers ()
   "Layer configuration:
@@ -302,9 +302,9 @@ It should only modify the values of Spacemacs settings."
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font `(("JetBrains Mono"
-                                :size ,(if custom/macos-flag 12.0 10.0))
+                                :size ,(if my/macos-flag 12.0 10.0))
                                ("Fira Code"
-                                :size ,(if custom/macos-flag 12.0 10.0)))
+                                :size ,(if my/macos-flag 12.0 10.0)))
 
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
@@ -410,7 +410,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
    ;; variable with `dotspacemacs-maximized-at-startup' in OSX to obtain
    ;; borderless fullscreen. (default nil)
-   dotspacemacs-undecorated-at-startup custom/macos-flag
+   dotspacemacs-undecorated-at-startup my/macos-flag
 
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
@@ -592,8 +592,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; misc
   (setq ivy-posframe-display-functions-alist
         '((t . ivy-posframe-display-at-frame-center)))
-  ;; (setq byte-compile-warnings '(cl-functions))
-  (if custom/macos-flag
+  (setq byte-compile-warnings '(cl-functions))
+  (if my/macos-flag
       (setq insert-directory-program "/usr/local/bin/gls"))
 
   (setq
@@ -673,7 +673,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    treemacs-use-git-mode 'extended
    treemacs-use-follow-mode nil
    treemacs-read-string-input
-   (if (not custom/macos-flag)
+   (if (not my/macos-flag)
        'from-minibuffer ;; https://github.com/Alexander-Miller/cfrs/issues/4
      'from-child-frame)
 
@@ -715,7 +715,7 @@ before packages are loaded."
   ;; misc/general --------------------------------------------------------------
   (spacemacs/set-leader-keys      ;; TODO: make which-key reflect these
     ":"  'eval-expression
-    "fE" 'custom/echo-file-path
+    "fE" 'my/echo-file-path
     "aw" 'eww)
 
   (add-hook 'hack-local-variables-hook 'spacemacs/toggle-truncate-lines-on)
@@ -750,7 +750,7 @@ before packages are loaded."
 
   ;; interpreter and tooling ---
   (setq python-shell-interpreter "ipython3")
-  (if custom/macos-flag
+  (if my/macos-flag
       ;; TODO: experiment with a portable (Linux/MacOS) venv + exec-path
       ;; solution for python dependencies (flake8, importmagic, etc)
       (add-to-list 'exec-path "~/Library/Python/3.8/bin")
@@ -832,15 +832,15 @@ before packages are loaded."
 
 
   ;; themeing -----------------------------------------------------------------
-  (defun custom/load-theme (system-appearance)
+  (defun my/load-theme (system-appearance)
     (mapc 'disable-theme custom-enabled-themes)
     (pcase system-appearance
       ('light (load-theme 'doom-solarized-light t))
       ('dark (load-theme 'doom-solarized-dark t))))
 
   (when (boundp 'ns-system-appearance-change-functions)
-    (add-hook 'ns-system-appearance-change-functions 'custom/load-theme)
-    (custom/load-theme ns-system-appearance))
+    (add-hook 'ns-system-appearance-change-functions 'my/load-theme)
+    (my/load-theme ns-system-appearance))
 
   (toggle-menu-bar-mode-from-frame -1)
 
@@ -878,7 +878,7 @@ before packages are loaded."
       (set-face-background 'ivy-posframe-border       posframe-face)
       (set-face-background 'solaire-fringe-face       (face-background 'solaire-mode-line-face))
       (set-face-foreground 'window-divider            (face-background 'solaire-default-face)))
-    (if custom/macos-flag  ;; fix current-line jiggle w/ doom themes
+    (if my/macos-flag  ;; fix current-line jiggle w/ doom themes
         (set-face-attribute 'line-number-current-line nil :weight 'normal))
     (window-divider-mode 1))
 
@@ -988,10 +988,10 @@ before packages are loaded."
 
 
   ;; ts/js ---------------------------------------------------------------
-  (defun custom/dap-node-enable ()
+  (defun my/dap-node-enable ()
     (require 'dap-node))
-  (add-hook 'js2-mode-hook 'custom/dap-node-enable)
-  (add-hook 'typescript-mode-hook 'custom/dap-node-enable)
+  (add-hook 'js2-mode-hook 'my/dap-node-enable)
+  (add-hook 'typescript-mode-hook 'my/dap-node-enable)
 
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
   (setenv "TSC_NONPOLLING_WATCHER" "true")
@@ -1025,11 +1025,11 @@ before packages are loaded."
                  (tramp-remote-shell "/bin/sh")
                  (tramp-remote-shell-args ("-c"))))
 
-  (defun custom/magit-yadm ()
+  (defun my/magit-yadm ()
     (interactive)
     (magit-status "/yadm::"))
 
-  (spacemacs/set-leader-keys "gy" 'custom/magit-yadm)
+  (spacemacs/set-leader-keys "gy" 'my/magit-yadm)
 
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
@@ -1056,31 +1056,31 @@ before packages are loaded."
 )
 
 ;; functions for adhoc use ----------------------------------------------------
-(defun custom/hide-dos-eol ()
+(defun my/hide-dos-eol ()
   "Do not show ^M in files containing mixed UNIX and DOS line endings."
   (interactive)
   (setq buffer-display-table (make-display-table))
   (aset buffer-display-table ?\^M []))
 
-(defun custom/kill-buffers (regexp)
+(defun my/kill-buffers (regexp)
   "Kill buffers matching REGEXP without asking for confirmation."
   (interactive "MKill buffers matching this regular expression: ")
   (cl-letf (((symbol-function 'kill-buffer-ask)
-         (lambda (buffer) (kill-buffer buffer))))
+             (lambda (buffer) (kill-buffer buffer))))
     (kill-matching-buffers regexp)))
 
-(defun custom/echo-file-path ()
+(defun my/magit-kill-all ()
+     (interactive)
+     (my/kill-buffers "^magit"))
+
+(defun my/echo-file-path ()
   (interactive)
   (spacemacs/echo (spacemacs--projectile-file-path)))
 
-(defun custom/magit-kill-all ()
-     (interactive)
-     (custom/kill-buffers "^magit"))
-
-(defun custom/browse-info ()
+(defun my/browse-info ()
   (interactive)
   (info (buffer-file-name)))
 
-(defun custom/monitor-half-width ()
+(defun my/monitor-half-width ()
   (interactive)
   (set-frame-size (selected-frame) 945 1055 t))
