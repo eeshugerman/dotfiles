@@ -952,6 +952,13 @@ before packages are loaded."
   ;; normal mode in help, warning, etc buffers
   ;; alternatively, could modify evil-evilified-state-map
   (delete 'special-mode evil-evilified-state-modes)
+  (dolist (mode '(docker-container-mode
+                   docker-volume-mode
+                   docker-machine-mode
+                   docker-network-mode
+                   docker-image-mode))
+           (add-to-list 'evil-evilified-state-modes mode))
+
   (evil-define-key 'normal special-mode-map "q" 'quit-window)
 
   ;; make C-k work in ivy/insert (and elsewhere, probably)
