@@ -149,7 +149,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Maximum allowed time in seconds to contact an ELPA repository.
    ;; (default 5)
-   dotspacemacs-elpa-timeout 10
+   dotspacemacs-elpa-timeout 5
 
    ;; Set `gc-cons-threshold' and `gc-cons-percentage' when startup finishes.
    ;; This is an advanced option and should not be changed unless you suspect
@@ -866,7 +866,7 @@ before packages are loaded."
   (menu-bar-bottom-and-right-window-divider)
 
   (let ((border-width 10))
-    (fringe-mode (cons 0 border-width))  ; disable left fringe
+    ;; (fringe-mode (cons 0 border-width))  ; disable left fringe
     (setq ivy-posframe-border-width border-width
           which-key-posframe-border-width border-width))
 
