@@ -2,6 +2,8 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
+(setq my/macos-flag (eq system-type 'darwin))
+
 (defun dotspacemacs/layers ()
   "Layer configuration:
 This function should only modify configuration layer settings."
@@ -147,7 +149,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Maximum allowed time in seconds to contact an ELPA repository.
    ;; (default 5)
-   dotspacemacs-elpa-timeout 10
+   dotspacemacs-elpa-timeout 5
 
    ;; Set `gc-cons-threshold' and `gc-cons-percentage' when startup finishes.
    ;; This is an advanced option and should not be changed unless you suspect
@@ -299,10 +301,10 @@ It should only modify the values of Spacemacs settings."
    ;; Default font or prioritized list of fonts. The `:size' can be specified as
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
-   dotspacemacs-default-font `("Fira Code"
-                               :size ,(if (eq system-type 'darwin) 12.0 10.0)
-                               :weight normal
-                               :width normal)
+   dotspacemacs-default-font `(("JetBrains Mono"
+                                :size ,(if my/macos-flag 12.0 10.0))
+                               ("Fira Code"
+                                :size ,(if my/macos-flag 12.0 10.0)))
 
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
@@ -408,7 +410,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
    ;; variable with `dotspacemacs-maximized-at-startup' in OSX to obtain
    ;; borderless fullscreen. (default nil)
-   dotspacemacs-undecorated-at-startup (eq system-type 'darwin)
+   dotspacemacs-undecorated-at-startup my/macos-flag
 
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
@@ -523,7 +525,7 @@ It should only modify the values of Spacemacs settings."
    ;; performance issues, instead of calculating the frame title by
    ;; `spacemacs/title-prepare' all the time.
    ;; (default "%I@%S")
-   dotspacemacs-frame-title-format "Emacs"
+   dotspacemacs-frame-title-format "%I@%S"
 
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
@@ -545,6 +547,9 @@ It should only modify the values of Spacemacs settings."
    ;; If it does deactivate it here.
    ;; (default t)
    dotspacemacs-use-clean-aindent-mode t
+
+   ;; Accept SPC as y for prompts if non nil. (default nil)
+   dotspacemacs-use-SPC-as-y nil
 
    ;; If non-nil shift your number row to match the entered keyboard layout
    ;; (only in insert state). Currently supported keyboard layouts are:
@@ -588,16 +593,14 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq ivy-posframe-display-functions-alist
         '((t . ivy-posframe-display-at-frame-center)))
   (setq byte-compile-warnings '(cl-functions))
-  (if (eq system-type 'darwin)
+  (if my/macos-flag
       (setq insert-directory-program "/usr/local/bin/gls"))
 
   (setq
-
+   ;; misc -- TODO: organize these
    c-c++-lsp-enable-semantic-highlight t
    ;; c-c++-lsp-enable-semantic-highlight 'overlay
-
    doom-solarized-dark-brighter-modeline t
-
    haskell-completion-backend 'lsp
 
    html-enable-lsp t
@@ -630,7 +633,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-imenu-enable nil
 
    lsp-ui-peek-enable t
-   lsp-ui-peek-always-show nil
+   lsp-ui-peek-always-show t
    lsp-ui-peek-fontify 'always
    lsp-ui-peek-show-directory t
    lsp-ui-peek-list-width 60
@@ -661,6 +664,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    shell-default-position 'bottom
    shell-default-shell 'vterm
 
+   shell-dirtrack-mode nil ;; does this work?
+
    spell-checking-enable-by-default nil
 
    treemacs-sorting 'alphabetic-asc
@@ -668,7 +673,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    treemacs-use-git-mode 'extended
    treemacs-use-follow-mode nil
    treemacs-read-string-input
-   (if (eq system-type 'gnu/linux)
+   (if (not my/macos-flag)
        'from-minibuffer ;; https://github.com/Alexander-Miller/cfrs/issues/4
      'from-child-frame)
 
@@ -700,11 +705,9 @@ before packages are loaded."
   (use-package ivy-rich               :config (ivy-rich-mode 1))
   (use-package ivy-posframe           :config (ivy-posframe-mode 1))
   (use-package which-key-posframe     :config (which-key-posframe-mode 1))
-  (use-package solaire-mode           :config (unless solaire-global-mode
-                                                ;; seems like  should be t for dark themes, nil for light
-                                                (setq solaire-mode-auto-swap-bg nil)
-                                                (solaire-global-mode 1)
-                                                (spacemacs/load-default-theme)))
+  (use-package solaire-mode           :config (add-to-list 'solaire-mode-themes-to-face-swap
+                                                           'doom-solarized-light)
+                                              (solaire-global-mode 1))
   (use-package diredfl                :hook (dired-mode . diredfl-global-mode))
   ;; (use-package dired-git-info
   ;;   :hook (dired-after-readin . dired-git-info-auto-enable)) ;; spacing issues
@@ -712,7 +715,7 @@ before packages are loaded."
   ;; misc/general --------------------------------------------------------------
   (spacemacs/set-leader-keys      ;; TODO: make which-key reflect these
     ":"  'eval-expression
-    "fE" 'custom/echo-file-path
+    "fE" 'my/echo-file-path
     "aw" 'eww)
 
   (add-hook 'hack-local-variables-hook 'spacemacs/toggle-truncate-lines-on)
@@ -747,7 +750,7 @@ before packages are loaded."
 
   ;; interpreter and tooling ---
   (setq python-shell-interpreter "ipython3")
-  (if (eq system-type 'darwin)
+  (if my/macos-flag
       ;; TODO: experiment with a portable (Linux/MacOS) venv + exec-path
       ;; solution for python dependencies (flake8, importmagic, etc)
       (add-to-list 'exec-path "~/Library/Python/3.8/bin")
@@ -803,11 +806,6 @@ before packages are loaded."
       (plist-put config :columns my-columns-config)))
 
 
-  ;; ;; counsel -------------------------------------------------------------------
-  ;; (setq counsel-rg-base-command
-  ;;       (append (butlast counsel-rg-base-command) '("--hidden" "%s")))
-
-
   ;; autosave ------------------------------------------------------------------
   (defun save-buffer-if-needed ()
     (when (and (buffer-file-name) (buffer-modified-p))
@@ -834,18 +832,17 @@ before packages are loaded."
 
 
   ;; themeing -----------------------------------------------------------------
-  ;; fix current-line jiggle w/ doom themes (mac only?)
-  (set-face-attribute 'line-number-current-line nil :weight 'normal)
-
-  (defun custom/load-theme (system-appearance)
+  (defun my/load-theme (system-appearance)
     (mapc 'disable-theme custom-enabled-themes)
     (pcase system-appearance
       ('light (load-theme 'doom-solarized-light t))
       ('dark (load-theme 'doom-solarized-dark t))))
 
   (when (boundp 'ns-system-appearance-change-functions)
-    (add-hook 'ns-system-appearance-change-functions 'custom/load-theme)
-    (custom/load-theme ns-system-appearance))
+    (add-hook 'ns-system-appearance-change-functions 'my/load-theme)
+    (my/load-theme ns-system-appearance))
+
+  (toggle-menu-bar-mode-from-frame -1)
 
   ;; fringe ---
   (spacemacs/toggle-vi-tilde-fringe-off)
@@ -869,7 +866,7 @@ before packages are loaded."
   (menu-bar-bottom-and-right-window-divider)
 
   (let ((border-width 10))
-    (fringe-mode (cons 0 border-width))  ; disable left fringe
+    ;; (fringe-mode (cons 0 border-width))  ; disable left fringe
     (setq ivy-posframe-border-width border-width
           which-key-posframe-border-width border-width))
 
@@ -881,6 +878,8 @@ before packages are loaded."
       (set-face-background 'ivy-posframe-border       posframe-face)
       (set-face-background 'solaire-fringe-face       (face-background 'solaire-mode-line-face))
       (set-face-foreground 'window-divider            (face-background 'solaire-default-face)))
+    (if my/macos-flag  ;; fix current-line jiggle w/ doom themes
+        (set-face-attribute 'line-number-current-line nil :weight 'normal))
     (window-divider-mode 1))
 
   (add-hook 'spacemacs-post-theme-change-hook 'do-theme-tweaks)
@@ -892,14 +891,11 @@ before packages are loaded."
 
 
   ;; doom-modeline -------------------------------------------------------------
-  (setq doom-modeline-window-width-limit 90
-        ;; doom-modeline-buffer-file-name-style 'truncate-with-project
-        doom-modeline-buffer-file-name-style 'auto
+  (setq doom-modeline-window-width-limit 80
+        doom-modeline-buffer-file-name-style 'truncate-with-project
+        doom-modeline-hud t
+        doom-modeline-percent-position nil
         doom-modeline-buffer-encoding nil)
-  (doom-modeline-def-modeline 'main
-    ; default: https://github.com/seagle0128/doom-modeline/blob/master/doom-modeline.el#L92-L94
-    '(bar workspace-name window-number modals matches buffer-info remote-host buffer-position word-count parrot selection-info)
-    '(objed-state misc-info persp-name battery grip irc mu4e gnus github debug repl lsp minor-modes input-method indent-info buffer-encoding process vcs checker))
 
 
   ;; evil ------------------------------------------------------------------------
@@ -956,11 +952,17 @@ before packages are loaded."
   ;; normal mode in help, warning, etc buffers
   ;; alternatively, could modify evil-evilified-state-map
   (delete 'special-mode evil-evilified-state-modes)
+  (dolist (mode '(docker-container-mode
+                   docker-volume-mode
+                   docker-machine-mode
+                   docker-network-mode
+                   docker-image-mode))
+           (add-to-list 'evil-evilified-state-modes mode))
+
   (evil-define-key 'normal special-mode-map "q" 'quit-window)
 
   ;; make C-k work in ivy/insert (and elsewhere, probably)
   (evil-define-key 'insert 'global (kbd "C-k") nil)
-
 
   ;; vterm ---------------------------------------------------------------------
   (defun pop-shell-at-project-root-or-home ()
@@ -993,16 +995,13 @@ before packages are loaded."
 
 
   ;; ts/js ---------------------------------------------------------------
+  (defun my/dap-node-enable ()
+    (require 'dap-node))
+  (add-hook 'js2-mode-hook 'my/dap-node-enable)
+  (add-hook 'typescript-mode-hook 'my/dap-node-enable)
+
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
   (setenv "TSC_NONPOLLING_WATCHER" "true")
-
-
-  (let* ((node-v-12 "v12.22.1")
-         (node-v-15 "v15.14.0")
-         (node-bin  (file-truename (f-join "~/.nvm/versions/node" node-v-15 "bin"))))
-    (add-to-list 'exec-path node-bin)
-    (setenv "PATH" (concat (getenv "PATH") ":" node-bin)))
-
 
 
   ;; org --------------------------------------------------------------------------
@@ -1026,68 +1025,62 @@ before packages are loaded."
                  (tramp-remote-shell "/bin/sh")
                  (tramp-remote-shell-args ("-c"))))
 
-  (defun custom/magit-yadm ()
+  (defun my/magit-yadm ()
     (interactive)
     (magit-status "/yadm::"))
 
-  (spacemacs/set-leader-keys "gy" 'custom/magit-yadm)
+  (spacemacs/set-leader-keys "gy" 'my/magit-yadm)
 
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
 
-  ;; geiser --------------------------------------------------------------------
-  (evil-define-key 'insert 'geiser-repl-mode-map
-    [M-return] 'geiser-repl--newline-and-indent)
 
   ;; slack ----------------------------------------------------------------------
-  ;; it would seem .spacemacs.env is loaded after this
-  (if-let ((immuta-slack-token (getenv "IMMUTA_SLACK_TOKEN")))
-      (slack-register-team
-       :name "immuta"
-       :default t
-       :token immuta-slack-token))
-
   (require 'slack)
   (set-face-background 'slack-message-mention-face (doom-color 'base3))
-
   (set-face-background 'slack-message-mention-me-face (doom-color 'base3))
   (set-face-foreground 'slack-message-mention-me-face (doom-color 'magenta))
-
   (set-face-foreground 'slack-mrkdwn-code-face (doom-color 'violet))
   (set-face-foreground 'slack-mrkdwn-code-block-face (doom-color 'violet))
 
+  (setq slack-render-image-p nil)
   (set-face-attribute 'slack-message-output-header nil
-                      :weight 'unspecified
-                      :height 0.75)
+                      :underline nil
+                      :weight 'bold
+                      :height 1.0
+                      :foreground (doom-color 'highlight))
+
+  (let ((extra-junk  "~/.spacemacs-immuta.el"))
+    (if (file-exists-p extra-junk)
+        (load extra-junk)))
 )
 
-
 ;; functions for adhoc use ----------------------------------------------------
-(defun custom/hide-dos-eol ()
+(defun my/hide-dos-eol ()
   "Do not show ^M in files containing mixed UNIX and DOS line endings."
   (interactive)
   (setq buffer-display-table (make-display-table))
   (aset buffer-display-table ?\^M []))
 
-(defun custom/kill-buffers (regexp)
+(defun my/kill-buffers (regexp)
   "Kill buffers matching REGEXP without asking for confirmation."
   (interactive "MKill buffers matching this regular expression: ")
   (cl-letf (((symbol-function 'kill-buffer-ask)
-         (lambda (buffer) (kill-buffer buffer))))
+             (lambda (buffer) (kill-buffer buffer))))
     (kill-matching-buffers regexp)))
 
-(defun custom/echo-file-path ()
+(defun my/magit-kill-all ()
+     (interactive)
+     (my/kill-buffers "^magit"))
+
+(defun my/echo-file-path ()
   (interactive)
   (spacemacs/echo (spacemacs--projectile-file-path)))
 
-(defun custom/magit-kill-all ()
-     (interactive)
-     (custom/kill-buffers "^magit"))
-
-(defun custom/browse-info ()
+(defun my/browse-info ()
   (interactive)
   (info (buffer-file-name)))
 
-(defun custom/monitor-half-width ()
+(defun my/monitor-half-width ()
   (interactive)
   (set-frame-size (selected-frame) 945 1055 t))
