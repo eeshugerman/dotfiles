@@ -664,8 +664,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    shell-default-position 'bottom
    shell-default-shell 'vterm
 
-   shell-dirtrack-mode nil ;; does this work?
-
    spell-checking-enable-by-default nil
 
    treemacs-sorting 'alphabetic-asc
@@ -1050,6 +1048,10 @@ before packages are loaded."
   (let ((extra-junk  "~/.spacemacs-immuta.el"))
     (if (file-exists-p extra-junk)
         (load extra-junk)))
+
+  ;; shell-scripts -------------------------------------------------------------
+  (if my/macos-flag
+      (add-hook 'sh-mode-hook (lambda () (company-mode -1))))
 )
 
 ;; functions for adhoc use ----------------------------------------------------
