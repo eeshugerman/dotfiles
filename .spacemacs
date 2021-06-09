@@ -705,9 +705,7 @@ before packages are loaded."
   (use-package ivy-rich               :config (ivy-rich-mode 1))
   (use-package ivy-posframe           :config (ivy-posframe-mode 1))
   (use-package which-key-posframe     :config (which-key-posframe-mode 1))
-  (use-package solaire-mode           :config (add-to-list 'solaire-mode-themes-to-face-swap
-                                                           'doom-solarized-light)
-                                              (solaire-global-mode 1))
+  (use-package solaire-mode           :config (solaire-global-mode 1))
   (use-package diredfl                :hook (dired-mode . diredfl-global-mode))
   ;; (use-package dired-git-info
   ;;   :hook (dired-after-readin . dired-git-info-auto-enable)) ;; spacing issues
@@ -866,24 +864,23 @@ before packages are loaded."
   (menu-bar-bottom-and-right-window-divider)
 
   (let ((border-width 10))
-    ;; (fringe-mode (cons 0 border-width))  ; disable left fringe
+    (fringe-mode (cons border-width border-width))
+    (setq doom-modeline-bar-width border-width)
     (setq ivy-posframe-border-width border-width
           which-key-posframe-border-width border-width))
 
-  (defun do-theme-tweaks ()
+  (defun my/do-theme-tweaks ()
     "misc tweaks that for some reason need a nudge after theme change"
-    (let ((posframe-face (face-background 'ivy-posframe)))
-      (set-face-background 'which-key-posframe        posframe-face)
-      (set-face-background 'which-key-posframe-border posframe-face)
-      (set-face-background 'ivy-posframe-border       posframe-face)
-      (set-face-background 'solaire-fringe-face       (face-background 'solaire-mode-line-face))
-      (set-face-foreground 'window-divider            (face-background 'solaire-default-face)))
+    (interactive)
+    ;; todo: this never works the first time around -- if fixed this needn't be interactive
+    (set-face-background 'child-frame-border (face-background 'solaire-default-face))
+    (set-face-foreground 'all-the-icons-ivy-rich-doc-face (doom-color 'base5))
     (if my/macos-flag  ;; fix current-line jiggle w/ doom themes
         (set-face-attribute 'line-number-current-line nil :weight 'normal))
     (window-divider-mode 1))
 
-  (add-hook 'spacemacs-post-theme-change-hook 'do-theme-tweaks)
-  (do-theme-tweaks)
+  (add-hook 'spacemacs-post-theme-change-hook 'my/do-theme-tweaks)
+  (my/do-theme-tweaks)
 
   (add-hook
    'terraform-mode-hook
