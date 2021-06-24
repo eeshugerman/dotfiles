@@ -2,7 +2,7 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
-(setq my/macos-flag (eq system-type 'darwin))
+(defconst my/macos-flag (eq system-type 'darwin))
 
 (defun dotspacemacs/layers ()
   "Layer configuration:
@@ -596,6 +596,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (if my/macos-flag
       (setq insert-directory-program "/usr/local/bin/gls"))
 
+
   (setq
    ;; misc -- TODO: organize these
    c-c++-lsp-enable-semantic-highlight t
@@ -759,6 +760,9 @@ before packages are loaded."
   (setq browse-at-remote-remote-type-domains '(("github.com" .  "github")))
   (setq magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
   ;; (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-topleft-v1)
+  (evil-define-key 'normal magit-diff-mode-map
+    (kbd "RET") 'magit-diff-visit-worktree-file-other-window)
+
 
 
   ;; writeroom -----------------------------------------------------------------
@@ -1024,7 +1028,7 @@ before packages are loaded."
     (interactive)
     (magit-status "/yadm::"))
 
-  (spacemacs/set-leader-keys "gy" 'my/magit-yadm)
+  (spacemacs/set-leader-keys "oy" 'my/magit-yadm)
 
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
@@ -1052,6 +1056,27 @@ before packages are loaded."
   ;; shell-scripts -------------------------------------------------------------
   (if my/macos-flag
       (add-hook 'sh-mode-hook (lambda () (company-mode -1))))
+
+  ;; proced -------------------------------------------------------------------
+  ;; maybe should go in user-init?
+  ;; pcpu and pmem don't work on mac
+  (setq-default proced-format '(pid user start pcpu pmem comm args)
+                proced-filter 'all)
+
+
+  ;; sql -------------------------------------------------------------------
+  (setq sqlfmt-executable "sql-formatter") ;; npm install sql-formatter
+  (setq sqlfmt-options nil)
+
+
+  ;; docker -------------------------------------------------------------------
+  (defun my/docker-tramp-find-file ()
+    (interactive)
+    (spacemacs/counsel-find-file "/docker:"))
+
+  (spacemacs/set-leader-keys "odf" 'my/docker-tramp-find-file)
+  (spacemacs/set-leader-keys "ods" 'docker-container-shell)
+  (spacemacs/set-leader-keys "odS" 'docker-container-shell-env)
 )
 
 ;; functions for adhoc use ----------------------------------------------------
