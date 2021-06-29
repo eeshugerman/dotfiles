@@ -2,7 +2,10 @@ export ZSH_DISABLE_COMPFIX=true   # ignore nonsense permission issue
 
 export ZSH="$HOME/.oh-my-zsh"
 
-ZSH_THEME="spaceship"
+# TODO: this is responsible for the duplicated prompt in shell-mode
+# ZSH_THEME="spaceship"
+
+ZSH_THEME="cloud"
 
 COMPLETION_WAITING_DOTS="true"
 
@@ -70,17 +73,18 @@ fi
 export GPG_TTY=$(tty)
 
 
-# emacs vterm stuff
-vterm_printf () {
-    printf "\e]%s\e\\" "$1"
-}
-vterm_prompt_end() {
-    vterm_printf "51;A$(pwd)";
-}
-
-if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
+if [[ "$INSIDE_EMACS" ]]; then
     # use evil instead of zsh's vi emulation
     bindkey -e
+fi
+
+if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
+    vterm_printf () {
+        printf "\e]%s\e\\" "$1"
+    }
+    vterm_prompt_end() {
+        vterm_printf "51;A$(pwd)";
+    }
 
     # https://github.com/akermu/emacs-libvterm#vterm-clear-scrollback
     alias clear='vterm_printf "51;Evterm-clear-scrollback";tput clear'
@@ -94,8 +98,6 @@ if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
     setopt PROMPT_SUBST
     PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
 fi
-
-# ends emacs vterm stuff
 
 export JAVA_HOME=/usr/local/Cellar/openjdk@11/11.0.10/libexec/openjdk.jdk/Contents/Home
 
