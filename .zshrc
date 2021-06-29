@@ -2,11 +2,7 @@ export ZSH_DISABLE_COMPFIX=true   # ignore nonsense permission issue
 
 export ZSH="$HOME/.oh-my-zsh"
 
-# TODO: this is responsible for the duplicated prompt in shell-mode
-# ZSH_THEME="spaceship"
-
-ZSH_THEME="cloud"
-
+ZSH_THEME="refined"
 COMPLETION_WAITING_DOTS="true"
 
 # Which plugins would you like to load?
