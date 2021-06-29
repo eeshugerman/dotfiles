@@ -832,6 +832,8 @@ before packages are loaded."
 
 
   ;; themeing -----------------------------------------------------------------
+  (defvar-local my/border-width 10)
+
   (defun my/load-theme (system-appearance)
     (mapc 'disable-theme custom-enabled-themes)
     (pcase system-appearance
@@ -858,18 +860,18 @@ before packages are loaded."
   (load-library "lsp-treemacs-themes")  ;; https://github.com/emacs-lsp/lsp-treemacs/issues/89
   (doom-themes-treemacs-config)
 
-  ;; border/fringe ---
-  ; don't actually want right divider but it overlaps a line
-  ; that i can't figure out how to remove or change the face of
+  ;; borders, etc ---
   (setq window-divider-default-right-width 1
         window-divider-default-bottom-width 1)
   (menu-bar-bottom-and-right-window-divider)
 
-  (let ((border-width 10))
-    (fringe-mode (cons border-width border-width))
-    (setq doom-modeline-bar-width border-width)
-    (setq ivy-posframe-border-width border-width
-          which-key-posframe-border-width border-width))
+  (fringe-mode (cons my/border-width my/border-width))
+
+  (setq ivy-posframe-border-width my/border-width
+        ;; which-key-posframe has spacing issues sometimes with nonzero border width
+        ;; which-key-posframe-border-width my/border-width
+        which-key-posframe-border-width 0)
+
 
   (defun my/do-theme-tweaks ()
     "misc tweaks that for some reason need a nudge after theme change"
@@ -894,7 +896,8 @@ before packages are loaded."
         doom-modeline-buffer-file-name-style 'truncate-with-project
         doom-modeline-hud t
         doom-modeline-percent-position nil
-        doom-modeline-buffer-encoding nil)
+        doom-modeline-buffer-encoding nil
+        doom-modeline-bar-width border-width)
 
 
   ;; evil ------------------------------------------------------------------------
