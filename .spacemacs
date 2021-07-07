@@ -630,7 +630,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-doc-alignment 'window
 
    lsp-ui-sideline-enable t
-
    lsp-ui-imenu-enable nil
 
    lsp-ui-peek-enable t
@@ -639,15 +638,12 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-peek-show-directory t
    lsp-ui-peek-list-width 60
 
-
    lsp-eldoc-enable-hover nil
+   lsp-enable-indentation nil
+   lsp-enable-on-type-formatting nil
    lsp-enable-symbol-highlighting t
    lsp-headerline-breadcrumb-enable t
    lsp-headerline-breadcrumb-segments '(symbols)
-
-   lsp-enable-on-type-formatting nil
-   lsp-enable-indentation nil
-
 
    python-backend 'lsp
    python-fill-column 100
@@ -663,7 +659,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    shell-default-height 30
    shell-default-position 'bottom
-   shell-default-shell 'vterm
+   shell-default-shell 'shell
 
    spell-checking-enable-by-default nil
 
@@ -731,6 +727,12 @@ before packages are loaded."
     (customize-set-variable 'custom-file custom-file-path))
   (load custom-file)
 
+  (defun pop-shell-at-project-root-or-home ()
+    (interactive)
+    (if (projectile-project-p)
+        (spacemacs/projectile-shell-pop)
+      (spacemacs/default-pop-shell)))
+  (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
 
   ;; xml ---------------------------------------------------------------------------
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
@@ -897,7 +899,7 @@ before packages are loaded."
         doom-modeline-hud t
         doom-modeline-percent-position nil
         doom-modeline-buffer-encoding nil
-        doom-modeline-bar-width border-width)
+        doom-modeline-bar-width my/border-width)
 
 
   ;; evil ------------------------------------------------------------------------
@@ -967,13 +969,6 @@ before packages are loaded."
   (evil-define-key 'insert 'global (kbd "C-k") nil)
 
   ;; vterm ---------------------------------------------------------------------
-  (defun pop-shell-at-project-root-or-home ()
-    (interactive)
-    (if (projectile-project-p)
-        (spacemacs/projectile-shell-pop)
-      (spacemacs/default-pop-shell)))
-  (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
-
   (evil-define-key 'emacs vterm-mode-map
     (kbd "C-k") 'evil-previous-line
     (kbd "C-j") 'evil-next-line)
@@ -988,7 +983,6 @@ before packages are loaded."
         vterm-clear-scrollback-when-clearing t
         ;; vterm-buffer-name-string "vterm: %s"  ;; breaks SPC-' functionality
         )
-
 
   ;; haskell -------------------------------------------------------------------
   (evil-define-key '(normal insert) haskell-interactive-mode-map
@@ -1080,6 +1074,9 @@ before packages are loaded."
   (spacemacs/set-leader-keys "odf" 'my/docker-tramp-find-file)
   (spacemacs/set-leader-keys "ods" 'docker-container-shell)
   (spacemacs/set-leader-keys "odS" 'docker-container-shell-env)
+
+
+  (setq garbage-collection-messages t)
 )
 
 ;; functions for adhoc use ----------------------------------------------------
