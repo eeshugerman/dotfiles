@@ -2,7 +2,7 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
-(setq my/macos-flag (eq system-type 'darwin))
+(defconst my/macos-flag (eq system-type 'darwin))
 
 (defun dotspacemacs/layers ()
   "Layer configuration:
@@ -596,6 +596,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (if my/macos-flag
       (setq insert-directory-program "/usr/local/bin/gls"))
 
+
   (setq
    ;; misc -- TODO: organize these
    c-c++-lsp-enable-semantic-highlight t
@@ -629,7 +630,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-doc-alignment 'window
 
    lsp-ui-sideline-enable t
-
    lsp-ui-imenu-enable nil
 
    lsp-ui-peek-enable t
@@ -638,15 +638,12 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-peek-show-directory t
    lsp-ui-peek-list-width 60
 
-
    lsp-eldoc-enable-hover nil
+   lsp-enable-indentation nil
+   lsp-enable-on-type-formatting nil
    lsp-enable-symbol-highlighting t
    lsp-headerline-breadcrumb-enable t
    lsp-headerline-breadcrumb-segments '(symbols)
-
-   lsp-enable-on-type-formatting nil
-   lsp-enable-indentation nil
-
 
    python-backend 'lsp
    python-fill-column 100
@@ -662,9 +659,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    shell-default-height 30
    shell-default-position 'bottom
-   shell-default-shell 'vterm
-
-   shell-dirtrack-mode nil ;; does this work?
+   shell-default-shell 'shell
 
    spell-checking-enable-by-default nil
 
@@ -704,10 +699,8 @@ before packages are loaded."
   (use-package all-the-icons-ivy-rich :config (all-the-icons-ivy-rich-mode 1))
   (use-package ivy-rich               :config (ivy-rich-mode 1))
   (use-package ivy-posframe           :config (ivy-posframe-mode 1))
-  (use-package which-key-posframe     :config (which-key-posframe-mode 1))
-  (use-package solaire-mode           :config (add-to-list 'solaire-mode-themes-to-face-swap
-                                                           'doom-solarized-light)
-                                              (solaire-global-mode 1))
+  ;; (use-package which-key-posframe     :config (which-key-posframe-mode 1))
+  (use-package solaire-mode           :config (solaire-global-mode 1))
   (use-package diredfl                :hook (dired-mode . diredfl-global-mode))
   ;; (use-package dired-git-info
   ;;   :hook (dired-after-readin . dired-git-info-auto-enable)) ;; spacing issues
@@ -734,6 +727,12 @@ before packages are loaded."
     (customize-set-variable 'custom-file custom-file-path))
   (load custom-file)
 
+  (defun pop-shell-at-project-root-or-home ()
+    (interactive)
+    (if (projectile-project-p)
+        (spacemacs/projectile-shell-pop)
+      (spacemacs/default-pop-shell)))
+  (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
 
   ;; xml ---------------------------------------------------------------------------
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
@@ -763,6 +762,9 @@ before packages are loaded."
   (setq browse-at-remote-remote-type-domains '(("github.com" .  "github")))
   (setq magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
   ;; (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-topleft-v1)
+  (evil-define-key 'normal magit-diff-mode-map
+    (kbd "RET") 'magit-diff-visit-worktree-file-other-window)
+
 
 
   ;; writeroom -----------------------------------------------------------------
@@ -832,6 +834,8 @@ before packages are loaded."
 
 
   ;; themeing -----------------------------------------------------------------
+  (defvar-local my/border-width 10)
+
   (defun my/load-theme (system-appearance)
     (mapc 'disable-theme custom-enabled-themes)
     (pcase system-appearance
@@ -858,32 +862,31 @@ before packages are loaded."
   (load-library "lsp-treemacs-themes")  ;; https://github.com/emacs-lsp/lsp-treemacs/issues/89
   (doom-themes-treemacs-config)
 
-  ;; border/fringe ---
-  ; don't actually want right divider but it overlaps a line
-  ; that i can't figure out how to remove or change the face of
+  ;; borders, etc ---
   (setq window-divider-default-right-width 1
         window-divider-default-bottom-width 1)
   (menu-bar-bottom-and-right-window-divider)
 
-  (let ((border-width 10))
-    ;; (fringe-mode (cons 0 border-width))  ; disable left fringe
-    (setq ivy-posframe-border-width border-width
-          which-key-posframe-border-width border-width))
+  (fringe-mode (cons my/border-width my/border-width))
 
-  (defun do-theme-tweaks ()
+  (setq ivy-posframe-border-width my/border-width
+        ;; which-key-posframe has spacing issues sometimes with nonzero border width
+        ;; which-key-posframe-border-width my/border-width
+        which-key-posframe-border-width 0)
+
+
+  (defun my/do-theme-tweaks ()
     "misc tweaks that for some reason need a nudge after theme change"
-    (let ((posframe-face (face-background 'ivy-posframe)))
-      (set-face-background 'which-key-posframe        posframe-face)
-      (set-face-background 'which-key-posframe-border posframe-face)
-      (set-face-background 'ivy-posframe-border       posframe-face)
-      (set-face-background 'solaire-fringe-face       (face-background 'solaire-mode-line-face))
-      (set-face-foreground 'window-divider            (face-background 'solaire-default-face)))
+    (interactive)
+    ;; todo: this never works the first time around -- if fixed this needn't be interactive
+    (set-face-background 'child-frame-border (face-background 'solaire-default-face))
+    (set-face-foreground 'all-the-icons-ivy-rich-doc-face (doom-color 'base5))
     (if my/macos-flag  ;; fix current-line jiggle w/ doom themes
         (set-face-attribute 'line-number-current-line nil :weight 'normal))
     (window-divider-mode 1))
 
-  (add-hook 'spacemacs-post-theme-change-hook 'do-theme-tweaks)
-  (do-theme-tweaks)
+  (add-hook 'spacemacs-post-theme-change-hook 'my/do-theme-tweaks)
+  (my/do-theme-tweaks)
 
   (add-hook
    'terraform-mode-hook
@@ -895,7 +898,8 @@ before packages are loaded."
         doom-modeline-buffer-file-name-style 'truncate-with-project
         doom-modeline-hud t
         doom-modeline-percent-position nil
-        doom-modeline-buffer-encoding nil)
+        doom-modeline-buffer-encoding nil
+        doom-modeline-bar-width my/border-width)
 
 
   ;; evil ------------------------------------------------------------------------
@@ -965,13 +969,6 @@ before packages are loaded."
   (evil-define-key 'insert 'global (kbd "C-k") nil)
 
   ;; vterm ---------------------------------------------------------------------
-  (defun pop-shell-at-project-root-or-home ()
-    (interactive)
-    (if (projectile-project-p)
-        (spacemacs/projectile-shell-pop)
-      (spacemacs/default-pop-shell)))
-  (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
-
   (evil-define-key 'emacs vterm-mode-map
     (kbd "C-k") 'evil-previous-line
     (kbd "C-j") 'evil-next-line)
@@ -986,7 +983,6 @@ before packages are loaded."
         vterm-clear-scrollback-when-clearing t
         ;; vterm-buffer-name-string "vterm: %s"  ;; breaks SPC-' functionality
         )
-
 
   ;; haskell -------------------------------------------------------------------
   (evil-define-key '(normal insert) haskell-interactive-mode-map
@@ -1029,7 +1025,7 @@ before packages are loaded."
     (interactive)
     (magit-status "/yadm::"))
 
-  (spacemacs/set-leader-keys "gy" 'my/magit-yadm)
+  (spacemacs/set-leader-keys "oy" 'my/magit-yadm)
 
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
@@ -1053,6 +1049,34 @@ before packages are loaded."
   (let ((extra-junk  "~/.spacemacs-immuta.el"))
     (if (file-exists-p extra-junk)
         (load extra-junk)))
+
+  ;; shell-scripts -------------------------------------------------------------
+  (if my/macos-flag
+      (add-hook 'sh-mode-hook (lambda () (company-mode -1))))
+
+  ;; proced -------------------------------------------------------------------
+  ;; maybe should go in user-init?
+  ;; pcpu and pmem don't work on mac
+  (setq-default proced-format '(pid user start pcpu pmem comm args)
+                proced-filter 'all)
+
+
+  ;; sql -------------------------------------------------------------------
+  (setq sqlfmt-executable "sql-formatter") ;; npm install sql-formatter
+  (setq sqlfmt-options nil)
+
+
+  ;; docker -------------------------------------------------------------------
+  (defun my/docker-tramp-find-file ()
+    (interactive)
+    (spacemacs/counsel-find-file "/docker:"))
+
+  (spacemacs/set-leader-keys "odf" 'my/docker-tramp-find-file)
+  (spacemacs/set-leader-keys "ods" 'docker-container-shell)
+  (spacemacs/set-leader-keys "odS" 'docker-container-shell-env)
+
+
+  (setq garbage-collection-messages t)
 )
 
 ;; functions for adhoc use ----------------------------------------------------
