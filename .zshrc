@@ -62,7 +62,6 @@ export PATH="$PATH:$HOME/.local/bin"
 
 if [ "$(uname)" = "Darwin" ]; then
   export PATH="$PATH:/usr/local/sbin"
-  export SPACESHIP_DOCKER_SHOW="false"
 fi
 
 # https://github.com/TheLocehiliosan/yadm/issues/33
@@ -73,26 +72,3 @@ if [[ "$INSIDE_EMACS" ]]; then
     # use evil instead of zsh's vi emulation
     bindkey -e
 fi
-
-if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
-    vterm_printf () {
-        printf "\e]%s\e\\" "$1"
-    }
-    vterm_prompt_end() {
-        vterm_printf "51;A$(pwd)";
-    }
-
-    # https://github.com/akermu/emacs-libvterm#vterm-clear-scrollback
-    alias clear='vterm_printf "51;Evterm-clear-scrollback";tput clear'
-
-    # https://github.com/akermu/emacs-libvterm#vterm-buffer-name-string
-    # (currently disabled)
-    autoload -U add-zsh-hook
-    add-zsh-hook -Uz chpwd (){ print -Pn "\e]2;%2~\a" }
-
-    # https://github.com/akermu/emacs-libvterm#directory-tracking-and-prompt-tracking
-    setopt PROMPT_SUBST
-    PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
-fi
-
-# ends emacs vterm stuff
