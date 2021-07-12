@@ -90,7 +90,8 @@ This function should only modify configuration layer settings."
      solaire-mode
      journalctl-mode
      diredfl
-     dired-git-info)
+     dired-git-info
+     fold-this)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
