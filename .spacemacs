@@ -713,6 +713,8 @@ before packages are loaded."
 
   (add-hook 'hack-local-variables-hook 'spacemacs/toggle-truncate-lines-on)
 
+  (global-highlight-parentheses-mode -1)
+
   (setq select-enable-clipboard nil
         create-lockfiles nil
         projectile-indexing-method 'hybrid
@@ -733,6 +735,10 @@ before packages are loaded."
         (spacemacs/projectile-shell-pop)
       (spacemacs/default-pop-shell)))
   (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
+
+  ;; doesn't work :(
+  (evil-define-key 'normal shell-mode-map ;; or comint-mode-map?
+    (kbd (concat dotspacemacs-leader-key " b d")) 'comint-send-eof)
 
   ;; xml ---------------------------------------------------------------------------
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
