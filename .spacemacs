@@ -742,9 +742,6 @@ before packages are loaded."
   (evil-define-key 'normal shell-mode-map ;; or comint-mode-map?
     (kbd (concat dotspacemacs-leader-key " b d")) 'comint-send-eof)
 
-  (evil-define-key 'normal comint-mode-map
-    [return] 'comint-send-input)
-
   ;; xml ---------------------------------------------------------------------------
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
   (add-hook 'nxml-mode-hook 'origami-mode)
