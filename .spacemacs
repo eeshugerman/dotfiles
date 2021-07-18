@@ -729,6 +729,8 @@ before packages are loaded."
     (customize-set-variable 'custom-file custom-file-path))
   (load custom-file)
 
+
+  ;; shell/term ---------------------------------------------------------------------
   (defun pop-shell-at-project-root-or-home ()
     (interactive)
     (if (projectile-project-p)
@@ -1115,3 +1117,6 @@ before packages are loaded."
 (defun my/monitor-half-width ()
   (interactive)
   (set-frame-size (selected-frame) 945 1055 t))
+
+(evil-define-key 'normal comint-mode-map
+  [return] 'comint-send-input)
