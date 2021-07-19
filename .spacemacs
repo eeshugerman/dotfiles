@@ -933,7 +933,8 @@ before packages are loaded."
   ;; C-j/C-k binding doesn't work until state is changed
   (add-hook 'minibuffer-setup-hook (lambda ()
                                      (evil-normal-state)
-                                     (evil-insert-state)))
+                                     (evil-insert-state)
+                                     (move-end-of-line nil)))
 
   ;; ex stuff ---
   ;; what about evil-ex-map? what does it do?
