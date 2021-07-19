@@ -878,8 +878,9 @@ before packages are loaded."
 
   (setq ivy-posframe-border-width my/border-width
         ;; which-key-posframe has spacing issues sometimes with nonzero border width
-        ;; which-key-posframe-border-width my/border-width
-        which-key-posframe-border-width 0)
+        ;; which-key-posframe-border-width 0
+        which-key-posframe-border-width my/border-width
+        )
 
 
   (defun my/do-theme-tweaks ()
@@ -988,9 +989,7 @@ before packages are loaded."
   (setq vterm-max-scrollback 100000  ; maximum size supported
         vterm-min-window-width 65535 ; no suppress-hard-newline :(
         vterm-always-compile-module t
-        vterm-clear-scrollback-when-clearing t
-        ;; vterm-buffer-name-string "vterm: %s"  ;; breaks SPC-' functionality
-        )
+        vterm-clear-scrollback-when-clearing t)
 
   ;; haskell -------------------------------------------------------------------
   (evil-define-key '(normal insert) haskell-interactive-mode-map
@@ -1038,6 +1037,8 @@ before packages are loaded."
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
 
+  ;; shell scripts -------------------------------------------------------------
+  (add-hook 'sh-mode-hook (lambda () (company-mode -1)))
 
   ;; slack ----------------------------------------------------------------------
   (require 'slack)
