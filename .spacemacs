@@ -363,7 +363,7 @@ It should only modify the values of Spacemacs settings."
    ;; auto-save the file in-place, `cache' to auto-save the file to another
    ;; file stored in the cache directory and `nil' to disable auto-saving.
    ;; (default 'cache)
-   dotspacemacs-auto-save-file-location 'cache
+   dotspacemacs-auto-save-file-location 'original
 
    ;; Maximum number of rollback slots to keep in the cache. (default 5)
    dotspacemacs-max-rollback-slots 5
@@ -479,12 +479,12 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc...
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
-   dotspacemacs-smart-closing-parenthesis nil
+   dotspacemacs-smart-closing-parenthesis t
 
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
-   dotspacemacs-highlight-delimiters 'all
+   dotspacemacs-highlight-delimiters 'current
 
    ;; If non-nil, start an Emacs server if one is not already running.
    ;; (default nil)
@@ -707,14 +707,12 @@ before packages are loaded."
   ;;   :hook (dired-after-readin . dired-git-info-auto-enable)) ;; spacing issues
 
   ;; misc/general --------------------------------------------------------------
-  (spacemacs/set-leader-keys      ;; TODO: make which-key reflect these
+  (spacemacs/set-leader-keys
     ":"  'eval-expression
     "fE" 'my/echo-file-path
     "aw" 'eww)
 
   (add-hook 'hack-local-variables-hook 'spacemacs/toggle-truncate-lines-on)
-
-  (global-highlight-parentheses-mode -1)
 
   (setq select-enable-clipboard nil
         create-lockfiles nil
@@ -730,6 +728,31 @@ before packages are loaded."
     (customize-set-variable 'custom-file custom-file-path))
   (load custom-file)
 
+  (let ((extra-junk  "~/.spacemacs-immuta.el"))
+    (if (file-exists-p extra-junk)
+        (load extra-junk)))
+
+
+  ;; autosave ------------------------------------------------------------------
+  (auto-save-mode 1)
+  (auto-save-visited-mode 1)
+  (setq auto-save-interval 30
+        auto-save-timeout 5)
+
+
+  ;; undo --------------------------------------------------------------------
+  ;; persistent undo ---
+  ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
+  (setq undo-tree-auto-save-history t
+        undo-tree-history-directory-alist
+        `(("." . ,(concat spacemacs-cache-directory "undo"))))
+  (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
+    (make-directory (concat spacemacs-cache-directory "undo")))
+  ;; granular history ---
+  (setq evil-want-fine-undo t)
+
+
+  ;; shell/term --------------------------------------------------------------------
   (defun pop-shell-at-project-root-or-home ()
     (interactive)
     (if (projectile-project-p)
@@ -741,6 +764,7 @@ before packages are loaded."
   (evil-define-key 'normal shell-mode-map ;; or comint-mode-map?
     (kbd (concat dotspacemacs-leader-key " b d")) 'comint-send-eof)
 
+
   ;; xml ---------------------------------------------------------------------------
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
   (add-hook 'nxml-mode-hook 'origami-mode)
@@ -748,6 +772,7 @@ before packages are loaded."
 
   ;; python ------------------------------------------------------------------------
   (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
+
 
   ;; ein ---
   (add-hook 'ein:notebook-mode-hook 'spacemacs/toggle-fill-column-indicator-off)
@@ -768,16 +793,14 @@ before packages are loaded."
   ;; git ----------------------------------------------------------------------
   (setq browse-at-remote-remote-type-domains '(("github.com" .  "github")))
   (setq magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
-  ;; (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-topleft-v1)
   (evil-define-key 'normal magit-diff-mode-map
     (kbd "RET") 'magit-diff-visit-worktree-file-other-window)
 
 
-
   ;; writeroom -----------------------------------------------------------------
-  (writeroom-mode -1) ;; for some vars aren't bound without this
-  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-visual-line-navigation)
-  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-spelling-checking)
+  (require 'writeroom-mode)
+  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-visual-line-navigation-on)
+  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-spelling-checking-on)
   (add-hook 'writeroom-mode-enable-hook 'spacemacs/toggle-visual-line-numbers-off)
   (add-hook 'writeroom-mode-disable-hook 'spacemacs/toggle-visual-line-numbers-on)
   (setq writeroom-maximize-window nil
@@ -813,32 +836,6 @@ before packages are loaded."
                         x (ivy-rich-minibuffer-width 0.3))))))))
     (dolist (config switch-buffer-configs)
       (plist-put config :columns my-columns-config)))
-
-
-  ;; autosave ------------------------------------------------------------------
-  (defun save-buffer-if-needed ()
-    (when (and (buffer-file-name) (buffer-modified-p))
-      (save-buffer)))
-  (add-hook 'focus-out-hook 'save-buffer-if-needed)
-  ;; the following don't seem to work :(
-  (defadvice switch-to-buffer (before set-buffer activate)
-    (save-buffer-if-needed))
-  (defadvice other-window (before other-window-now activate)
-    (save-buffer-if-needed))
-
-
-  ;; undo --------------------------------------------------------------------
-  ;; persistent undo
-  ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
-  (setq undo-tree-auto-save-history t
-        undo-tree-history-directory-alist
-        `(("." . ,(concat spacemacs-cache-directory "undo"))))
-  (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
-    (make-directory (concat spacemacs-cache-directory "undo")))
-
-  ;; granular history
-  (setq evil-want-fine-undo t)
-
 
   ;; themeing -----------------------------------------------------------------
   (defvar-local my/border-width 10)
@@ -1037,9 +1034,6 @@ before packages are loaded."
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
 
-  ;; shell scripts -------------------------------------------------------------
-  (add-hook 'sh-mode-hook (lambda () (company-mode -1)))
-
   ;; slack ----------------------------------------------------------------------
   (require 'slack)
   (set-face-background 'slack-message-mention-face (doom-color 'base3))
@@ -1054,10 +1048,6 @@ before packages are loaded."
                       :weight 'bold
                       :height 1.0
                       :foreground (doom-color 'highlight))
-
-  (let ((extra-junk  "~/.spacemacs-immuta.el"))
-    (if (file-exists-p extra-junk)
-        (load extra-junk)))
 
   ;; shell-scripts -------------------------------------------------------------
   (if my/macos-flag
@@ -1117,3 +1107,7 @@ before packages are loaded."
 (defun my/monitor-half-width ()
   (interactive)
   (set-frame-size (selected-frame) 945 1055 t))
+
+(defun my/ansi-color/apply-on-buffer ()
+  (interactive)
+  (ansi-color-apply-on-region (point-min) (point-max)))
