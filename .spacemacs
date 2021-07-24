@@ -64,6 +64,7 @@ This function should only modify configuration layer settings."
      shell
      shell-scripts
      slack
+     spacemacs-layouts
      spell-checking
      sql
      syntax-checking
@@ -339,7 +340,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-distinguish-gui-tab nil
 
    ;; Name of the default layout (default "Default")
-   dotspacemacs-default-layout-name "Default"
+   dotspacemacs-default-layout-name "default"
 
    ;; If non-nil the default layout name is displayed in the mode-line.
    ;; (default nil)
@@ -347,7 +348,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil then the last auto saved layouts are resumed automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts nil
+   dotspacemacs-auto-resume-layouts t
 
    ;; If non-nil, auto-generate layout name when creating new layouts. Only has
    ;; effect when using the "jump to layout by number" commands. (default nil)
@@ -660,6 +661,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    shell-default-height 30
    shell-default-position 'bottom
    shell-default-shell 'shell
+
+   spacemacs-layouts-restrict-spc-tab t
+   persp-autokill-buffer-on-remove t
 
    spell-checking-enable-by-default nil
 
