@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+
+    <key>Label</key>
+    <string>me.org-data-git-sync.plist</string>
+
+    <key>StartInterval</key>
+    <integer>120</integer>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/elliott.shugerman/log/git-sync/stderr.log</string>
+
+    <key>StandardOutPath</key>
+    <string>/Users/elliott.shugerman/log/git-sync/stdout.log</string>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/elliott.shugerman/org</string>
+
+    <key>ProgramArguments</key>
+    <array>
+      <string>/Users/elliott.shugerman/util/git-sync/git-sync</string>
+    </array>
+
+  </dict>
+</plist>
