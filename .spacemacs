@@ -363,7 +363,7 @@ It should only modify the values of Spacemacs settings."
    ;; auto-save the file in-place, `cache' to auto-save the file to another
    ;; file stored in the cache directory and `nil' to disable auto-saving.
    ;; (default 'cache)
-   dotspacemacs-auto-save-file-location 'cache
+   dotspacemacs-auto-save-file-location 'original
 
    ;; Maximum number of rollback slots to keep in the cache. (default 5)
    dotspacemacs-max-rollback-slots 5
@@ -479,7 +479,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc...
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
-   dotspacemacs-smart-closing-parenthesis nil
+   dotspacemacs-smart-closing-parenthesis t
 
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
@@ -710,7 +710,7 @@ before packages are loaded."
   ;;   :hook (dired-after-readin . dired-git-info-auto-enable)) ;; spacing issues
 
   ;; misc/general --------------------------------------------------------------
-  (spacemacs/set-leader-keys      ;; TODO: make which-key reflect these
+  (spacemacs/set-leader-keys
     ":"  'eval-expression
     "fE" 'my/echo-file-path
     "aw" 'eww)
@@ -732,8 +732,31 @@ before packages are loaded."
     (customize-set-variable 'custom-file custom-file-path))
   (load custom-file)
 
+  (let ((extra-junk  "~/.spacemacs-immuta.el"))
+    (if (file-exists-p extra-junk)
+        (load extra-junk)))
 
-  ;; shell/term ---------------------------------------------------------------------
+
+  ;; autosave ------------------------------------------------------------------
+  (auto-save-mode 1)
+  (auto-save-visited-mode 1)
+  (setq auto-save-interval 30
+        auto-save-timeout 5)
+
+
+  ;; undo --------------------------------------------------------------------
+  ;; persistent undo ---
+  ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
+  (setq undo-tree-auto-save-history t
+        undo-tree-history-directory-alist
+        `(("." . ,(concat spacemacs-cache-directory "undo"))))
+  (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
+    (make-directory (concat spacemacs-cache-directory "undo")))
+  ;; granular history ---
+  (setq evil-want-fine-undo t)
+
+
+  ;; shell/term --------------------------------------------------------------------
   (defun pop-shell-at-project-root-or-home ()
     (interactive)
     (if (projectile-project-p)
@@ -778,16 +801,14 @@ before packages are loaded."
   ;; git ----------------------------------------------------------------------
   (setq browse-at-remote-remote-type-domains '(("github.com" .  "github")))
   (setq magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
-  ;; (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-topleft-v1)
   (evil-define-key 'normal magit-diff-mode-map
     (kbd "RET") 'magit-diff-visit-worktree-file-other-window)
 
 
-
   ;; writeroom -----------------------------------------------------------------
-  (writeroom-mode -1) ;; for some vars aren't bound without this
-  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-visual-line-navigation)
-  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-spelling-checking)
+  (require 'writeroom-mode)
+  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-visual-line-navigation-on)
+  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-spelling-checking-on)
   (add-hook 'writeroom-mode-enable-hook 'spacemacs/toggle-visual-line-numbers-off)
   (add-hook 'writeroom-mode-disable-hook 'spacemacs/toggle-visual-line-numbers-on)
   (setq writeroom-maximize-window nil
@@ -823,32 +844,6 @@ before packages are loaded."
                         x (ivy-rich-minibuffer-width 0.3))))))))
     (dolist (config switch-buffer-configs)
       (plist-put config :columns my-columns-config)))
-
-
-  ;; autosave ------------------------------------------------------------------
-  (defun save-buffer-if-needed ()
-    (when (and (buffer-file-name) (buffer-modified-p))
-      (save-buffer)))
-  (add-hook 'focus-out-hook 'save-buffer-if-needed)
-  ;; the following don't seem to work :(
-  (defadvice switch-to-buffer (before set-buffer activate)
-    (save-buffer-if-needed))
-  (defadvice other-window (before other-window-now activate)
-    (save-buffer-if-needed))
-
-
-  ;; undo --------------------------------------------------------------------
-  ;; persistent undo
-  ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
-  (setq undo-tree-auto-save-history t
-        undo-tree-history-directory-alist
-        `(("." . ,(concat spacemacs-cache-directory "undo"))))
-  (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
-    (make-directory (concat spacemacs-cache-directory "undo")))
-
-  ;; granular history
-  (setq evil-want-fine-undo t)
-
 
   ;; themeing -----------------------------------------------------------------
   (defvar-local my/border-width 10)
@@ -888,8 +883,9 @@ before packages are loaded."
 
   (setq ivy-posframe-border-width my/border-width
         ;; which-key-posframe has spacing issues sometimes with nonzero border width
-        ;; which-key-posframe-border-width my/border-width
-        which-key-posframe-border-width 0)
+        ;; which-key-posframe-border-width 0
+        which-key-posframe-border-width my/border-width
+        )
 
 
   (defun my/do-theme-tweaks ()
@@ -998,9 +994,7 @@ before packages are loaded."
   (setq vterm-max-scrollback 100000  ; maximum size supported
         vterm-min-window-width 65535 ; no suppress-hard-newline :(
         vterm-always-compile-module t
-        vterm-clear-scrollback-when-clearing t
-        ;; vterm-buffer-name-string "vterm: %s"  ;; breaks SPC-' functionality
-        )
+        vterm-clear-scrollback-when-clearing t)
 
   ;; haskell -------------------------------------------------------------------
   (evil-define-key '(normal insert) haskell-interactive-mode-map
@@ -1048,7 +1042,6 @@ before packages are loaded."
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
 
-
   ;; slack ----------------------------------------------------------------------
   (require 'slack)
   (set-face-background 'slack-message-mention-face (doom-color 'base3))
@@ -1063,10 +1056,6 @@ before packages are loaded."
                       :weight 'bold
                       :height 1.0
                       :foreground (doom-color 'highlight))
-
-  (let ((extra-junk  "~/.spacemacs-immuta.el"))
-    (if (file-exists-p extra-junk)
-        (load extra-junk)))
 
   ;; shell-scripts -------------------------------------------------------------
   (if my/macos-flag
@@ -1126,3 +1115,6 @@ before packages are loaded."
   (interactive)
   (set-frame-size (selected-frame) 945 1055 t))
 
+(defun my/ansi-color/apply-on-buffer ()
+  (interactive)
+  (ansi-color-apply-on-region (point-min) (point-max)))
