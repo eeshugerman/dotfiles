@@ -33,16 +33,10 @@ bind k scrollline -10
 bind ZZ !s killall firefox
 
 
-bind ;v hint -F e => e.dispatchEvent(new MouseEvent('mouseeneter', {}))
-" trying to make ;v work on gitlab...
-" bind ;v hint -F e => { e.dispatchEvent(new MouseEvent('mouseover', {})); e.dispatchEvent(new MouseEvent('mouseenter', {})); }
-
-
 command light colors --url https://raw.githubusercontent.com/eeshugerman/shydactyl-variations/master/dist/shydactyl-all-icons.css shydactyl-all-icons
 command dark colors --url https://raw.githubusercontent.com/eeshugerman/shydactyl-variations/master/dist/shydactyl-all-icons-dark.css shydactyl-all-icons-dark
 
 light
-
 
 " disable searchurls
 setnull searchurls.amazon

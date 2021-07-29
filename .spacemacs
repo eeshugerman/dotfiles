@@ -91,7 +91,8 @@ This function should only modify configuration layer settings."
      solaire-mode
      journalctl-mode
      diredfl
-     dired-git-info)
+     dired-git-info
+     fold-this)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -736,6 +737,9 @@ before packages are loaded."
     (if (file-exists-p extra-junk)
         (load extra-junk)))
 
+  (if my/macos-flag
+      (global-display-line-numbers-mode 1)) ;; shouldn't be necessary
+
 
   ;; autosave ------------------------------------------------------------------
   (auto-save-mode 1)
@@ -774,7 +778,7 @@ before packages are loaded."
 
 
   ;; info ---------------------------------------------------------------------------
-  ;; pretty sure this used to be defaults?
+  ;; pretty sure this should be a default?
   (define-key Info-mode-map
     [return] 'Info-follow-nearest-node)
 
@@ -1018,8 +1022,10 @@ before packages are loaded."
     (setq org-confirm-babel-evaluate nil
           org-format-latex-options (plist-put org-format-latex-options :scale 1.2)))
 
-  (setq org-adapt-indentation nil)
+  (setq org-adapt-indentation t)
   (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") 'org-babel-execute-src-block)
+
+  (setq org-agenda-files '("~/org/immuta/notes.org"))
 
 
   ;; yadm ------------------------------------------------------------------------
@@ -1079,8 +1085,8 @@ before packages are loaded."
     (spacemacs/counsel-find-file "/docker:"))
 
   (spacemacs/set-leader-keys "odf" 'my/docker-tramp-find-file)
-  (spacemacs/set-leader-keys "ods" 'docker-container-shell)
-  (spacemacs/set-leader-keys "odS" 'docker-container-shell-env)
+  (spacemacs/set-leader-keys "odb" 'docker-container-shell)
+  (spacemacs/set-leader-keys "odB" 'docker-container-shell-env)
 
 
 )
