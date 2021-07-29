@@ -64,6 +64,7 @@ This function should only modify configuration layer settings."
      shell
      shell-scripts
      slack
+     spacemacs-layouts
      spell-checking
      sql
      syntax-checking
@@ -340,7 +341,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-distinguish-gui-tab nil
 
    ;; Name of the default layout (default "Default")
-   dotspacemacs-default-layout-name "Default"
+   dotspacemacs-default-layout-name "default"
 
    ;; If non-nil the default layout name is displayed in the mode-line.
    ;; (default nil)
@@ -348,7 +349,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil then the last auto saved layouts are resumed automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts nil
+   dotspacemacs-auto-resume-layouts t
 
    ;; If non-nil, auto-generate layout name when creating new layouts. Only has
    ;; effect when using the "jump to layout by number" commands. (default nil)
@@ -662,6 +663,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    shell-default-position 'bottom
    shell-default-shell 'shell
 
+   spacemacs-layouts-restrict-spc-tab t
+   persp-autokill-buffer-on-remove t
+
    spell-checking-enable-by-default nil
 
    treemacs-sorting 'alphabetic-asc
@@ -720,7 +724,8 @@ before packages are loaded."
         bidi-inhibit-bpa t
         bidi-paragraph-direction 'left-to-right
         byte-compile-warnings '(cl-functions)
-        company-selection-wrap-around t)
+        company-selection-wrap-around t
+        garbage-collection-messages t)
 
   (let ((custom-file-path (file-truename "~/.emacs-custom.el")))
     (unless (file-exists-p custom-file-path)
@@ -764,15 +769,19 @@ before packages are loaded."
   (evil-define-key 'normal shell-mode-map ;; or comint-mode-map?
     (kbd (concat dotspacemacs-leader-key " b d")) 'comint-send-eof)
 
-
   ;; xml ---------------------------------------------------------------------------
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
   (add-hook 'nxml-mode-hook 'origami-mode)
 
 
+  ;; info ---------------------------------------------------------------------------
+  ;; pretty sure this should be a default?
+  (define-key Info-mode-map
+    [return] 'Info-follow-nearest-node)
+
+
   ;; python ------------------------------------------------------------------------
   (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
-
 
   ;; ein ---
   (add-hook 'ein:notebook-mode-hook 'spacemacs/toggle-fill-column-indicator-off)
@@ -1077,7 +1086,6 @@ before packages are loaded."
   (spacemacs/set-leader-keys "odB" 'docker-container-shell-env)
 
 
-  (setq garbage-collection-messages t)
 )
 
 ;; functions for adhoc use ----------------------------------------------------
