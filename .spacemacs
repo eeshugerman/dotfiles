@@ -737,6 +737,9 @@ before packages are loaded."
     (if (file-exists-p extra-junk)
         (load extra-junk)))
 
+  (if my/macos-flag
+      (global-display-line-numbers-mode 1)) ;; shouldn't be necessary
+
 
   ;; autosave ------------------------------------------------------------------
   (auto-save-mode 1)
