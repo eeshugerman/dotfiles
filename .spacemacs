@@ -723,7 +723,8 @@ before packages are loaded."
         bidi-inhibit-bpa t
         bidi-paragraph-direction 'left-to-right
         byte-compile-warnings '(cl-functions)
-        company-selection-wrap-around t)
+        company-selection-wrap-around t
+        garbage-collection-messages t)
 
   (let ((custom-file-path (file-truename "~/.emacs-custom.el")))
     (unless (file-exists-p custom-file-path)
@@ -747,6 +748,12 @@ before packages are loaded."
   ;; xml ---------------------------------------------------------------------------
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
   (add-hook 'nxml-mode-hook 'origami-mode)
+
+
+  ;; info ---------------------------------------------------------------------------
+  ;; pretty sure this used to be defaults?
+  (define-key Info-mode-map
+    [return] 'Info-follow-nearest-node)
 
 
   ;; python ------------------------------------------------------------------------
@@ -1087,7 +1094,6 @@ before packages are loaded."
   (spacemacs/set-leader-keys "odS" 'docker-container-shell-env)
 
 
-  (setq garbage-collection-messages t)
 )
 
 ;; functions for adhoc use ----------------------------------------------------
