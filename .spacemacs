@@ -3,6 +3,7 @@
 ;; It must be stored in your home directory.
 
 (defconst my/macos-flag (eq system-type 'darwin))
+(defconst my/day-job "immuta")
 
 (defun dotspacemacs/layers ()
   "Layer configuration:
@@ -733,9 +734,8 @@ before packages are loaded."
     (customize-set-variable 'custom-file custom-file-path))
   (load custom-file)
 
-  (let ((extra-junk "~/.spacemacs-immuta.el"))
-    (if (file-exists-p extra-junk)
-        (load extra-junk)))
+  (load (file-truename (concat "~/.spacemacs-" my/day-job ".el"))
+        t nil t)
 
   (if my/macos-flag
       (global-display-line-numbers-mode 1)) ;; shouldn't be necessary
@@ -1025,7 +1025,7 @@ before packages are loaded."
   (setq org-adapt-indentation t)
   (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") 'org-babel-execute-src-block)
 
-  (setq org-agenda-files '("~/org/immuta/notes.org"))
+  (setq org-agenda-files (list (f-join "~/org" my/day-job "/notes.org")))
 
 
   ;; yadm ------------------------------------------------------------------------
