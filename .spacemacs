@@ -733,7 +733,7 @@ before packages are loaded."
     (customize-set-variable 'custom-file custom-file-path))
   (load custom-file)
 
-  (let ((extra-junk  "~/.spacemacs-immuta.el"))
+  (let ((extra-junk "~/.spacemacs-immuta.el"))
     (if (file-exists-p extra-junk)
         (load extra-junk)))
 
@@ -768,9 +768,9 @@ before packages are loaded."
       (spacemacs/default-pop-shell)))
   (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
 
-  ;; doesn't work :(
   (evil-define-key 'normal shell-mode-map ;; or comint-mode-map?
-    (kbd (concat dotspacemacs-leader-key " b d")) 'comint-send-eof)
+    (kbd (concat dotspacemacs-leader-key " b d")) 'comint-send-eof ;; doesn't work :(
+    [return] 'comint-send-input)
 
   ;; xml ---------------------------------------------------------------------------
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
