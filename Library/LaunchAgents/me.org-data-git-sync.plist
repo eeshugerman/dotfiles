@@ -7,7 +7,7 @@
     <string>me.org-data-git-sync.plist</string>
 
     <key>StartInterval</key>
-    <integer>120</integer>
+    <integer>300</integer>
 
     <key>StandardErrorPath</key>
     <string>/Users/elliott.shugerman/log/git-sync/stderr.log</string>
