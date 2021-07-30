@@ -768,7 +768,7 @@ before packages are loaded."
       (spacemacs/default-pop-shell)))
   (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
 
-  (evil-define-key 'normal shell-mode-map ;; or comint-mode-map?
+  (evil-define-key 'normal comint-mode-map
     (kbd (concat dotspacemacs-leader-key " b d")) 'comint-send-eof ;; doesn't work :(
     [return] 'comint-send-input)
 
