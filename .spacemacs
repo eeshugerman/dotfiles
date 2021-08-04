@@ -714,8 +714,8 @@ before packages are loaded."
   ;; misc/general --------------------------------------------------------------
   (spacemacs/set-leader-keys
     ":"  'eval-expression
-    "fE" 'my/echo-file-path
-    "aw" 'eww)
+    "ofe" 'my/echo-file-path
+    "oaw" 'eww)
 
   (add-hook 'hack-local-variables-hook 'spacemacs/toggle-truncate-lines-on)
 
@@ -1087,8 +1087,6 @@ before packages are loaded."
   (spacemacs/set-leader-keys "odf" 'my/docker-tramp-find-file)
   (spacemacs/set-leader-keys "odb" 'docker-container-shell)
   (spacemacs/set-leader-keys "odB" 'docker-container-shell-env)
-
-
 )
 
 ;; functions for adhoc use ----------------------------------------------------
@@ -1106,8 +1104,8 @@ before packages are loaded."
     (kill-matching-buffers regexp)))
 
 (defun my/magit-kill-all ()
-     (interactive)
-     (my/kill-buffers "^magit"))
+  (interactive)
+  (my/kill-buffers "^magit"))
 
 (defun my/echo-file-path ()
   (interactive)
