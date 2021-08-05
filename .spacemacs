@@ -747,6 +747,14 @@ before packages are loaded."
   (setq auto-save-interval 30
         auto-save-timeout 5)
 
+  ;; dired -----------------------------------------------------------------------
+  (defun my/dired-up-directory ()
+    (interactive)
+    (find-alternate-file ".."))
+
+  (evil-define-key 'normal dired-mode-map
+    [return] 'dired-find-alternate-file
+    "u" 'my/dired-up-directory)
 
   ;; undo --------------------------------------------------------------------
   ;; persistent undo ---
