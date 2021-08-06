@@ -768,7 +768,18 @@ before packages are loaded."
   (setq evil-want-fine-undo t)
 
 
+  ;; comint --------------------------------------------------------------------
+  (evil-define-key 'normal comint-mode-map
+    (kbd (concat dotspacemacs-leader-key " b d")) 'comint-send-eof ;; doesn't work :(
+    [return] 'comint-send-input)
+
+  (setq comint-move-point-for-output nil ;; does this do anything?
+        comint-scroll-to-bottom-on-input t
+        comint-terminfo-terminal "dumb-emacs-ansi") ;; see also `ansi-color-for-comint-*'
+
+
   ;; shell/term --------------------------------------------------------------------
+  (setq shell-pop-autocd-to-working-dir nil)
   (defun pop-shell-at-project-root-or-home ()
     (interactive)
     (if (projectile-project-p)
@@ -776,9 +787,6 @@ before packages are loaded."
       (spacemacs/default-pop-shell)))
   (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
 
-  (evil-define-key 'normal comint-mode-map
-    (kbd (concat dotspacemacs-leader-key " b d")) 'comint-send-eof ;; doesn't work :(
-    [return] 'comint-send-input)
 
   ;; xml ---------------------------------------------------------------------------
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
