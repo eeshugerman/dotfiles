@@ -252,7 +252,9 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, `kill-buffer' on *scratch* buffer
    ;; will bury it instead of killing.
-   dotspacemacs-scratch-buffer-unkillable t
+   dotspacemacs-scratch-buffer-unkillable nil ;; want `t' but it's buggy
+                                              ;; actually maybe doesn't matter if
+                                              ;; `dotspacemacs-scratch-buffer-persistent' is `t'
 
    ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
    ;; (default nil)
@@ -910,15 +912,15 @@ before packages are loaded."
 
   (defun my/do-theme-tweaks ()
     "misc tweaks that for some reason need a nudge after theme change"
-    (interactive)
     ;; todo: this never works the first time around -- if fixed this needn't be interactive
+    (interactive)
     (set-face-background 'child-frame-border (face-background 'solaire-default-face))
     (set-face-foreground 'all-the-icons-ivy-rich-doc-face (doom-color 'base5))
     (if my/macos-flag  ;; fix current-line jiggle w/ doom themes
         (set-face-attribute 'line-number-current-line nil :weight 'normal))
     (window-divider-mode 1))
 
-  (add-hook 'spacemacs-post-theme-change-hook 'my/do-theme-tweaks)
+  (add-hook 'spacemacs-post-theme-change-hook 'my/do-theme-tweaks) ;; doesn't work
   (my/do-theme-tweaks)
 
   (add-hook
@@ -1103,6 +1105,7 @@ before packages are loaded."
   (spacemacs/set-leader-keys "odf" 'my/docker-tramp-find-file)
   (spacemacs/set-leader-keys "odb" 'docker-container-shell)
   (spacemacs/set-leader-keys "odB" 'docker-container-shell-env)
+
 )
 
 ;; functions for adhoc use ----------------------------------------------------
@@ -1113,7 +1116,7 @@ before packages are loaded."
   (aset buffer-display-table ?\^M []))
 
 (defun my/kill-buffers (regexp)
-  "Kill buffers matching REGEXP without asking for confirmation."
+  "Kill buffers matching REGEXP (without asking for confirmation)."
   (interactive "MKill buffers matching this regular expression: ")
   (cl-letf (((symbol-function 'kill-buffer-ask)
              (lambda (buffer) (kill-buffer buffer))))
