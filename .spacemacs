@@ -650,6 +650,11 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-headerline-breadcrumb-enable t
    lsp-headerline-breadcrumb-segments '(symbols)
 
+
+   org-adapt-indentation t
+   org-enable-jira-support t
+
+
    python-backend 'lsp
    python-fill-column 100
    python-fill-docstring-style 'django
@@ -742,6 +747,8 @@ before packages are loaded."
   (if my/macos-flag
       (global-display-line-numbers-mode 1)) ;; shouldn't be necessary
 
+
+  (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
 
   ;; autosave ------------------------------------------------------------------
   (auto-save-mode 1)
@@ -841,7 +848,8 @@ before packages are loaded."
   (add-hook 'writeroom-mode-disable-hook 'spacemacs/toggle-visual-line-numbers-on)
   (setq writeroom-maximize-window nil
         writeroom-mode-line t
-        writeroom-global-effects (delq 'writeroom-set-fullscreen writeroom-global-effects))
+        writeroom-global-effects (delq 'writeroom-set-fullscreen
+                                       writeroom-global-effects))
 
 
   ;; ivy/ivy-rich --------------------------------------------------------------
@@ -1047,28 +1055,26 @@ before packages are loaded."
     (setq org-confirm-babel-evaluate nil
           org-format-latex-options (plist-put org-format-latex-options :scale 1.2)))
 
-  (setq org-adapt-indentation t)
+  (org-agenda-files (directory-files-recursively "~/org" "\.org$" nil))
+
   (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") 'org-babel-execute-src-block)
 
-  (setq org-agenda-files (list (f-join "~/org" my/day-job "/notes.org")))
 
+  ;; ;; yadm ------------------------------------------------------------------------
+  ;; ;; only half works, sometimes breaks stuff
+  ;; (require 'tramp)
+  ;; (add-to-list 'tramp-methods
+  ;;              '("yadm"
+  ;;                (tramp-login-program "yadm")
+  ;;                (tramp-login-args (("enter")))
+  ;;                (tramp-login-env (("SHELL") ("/bin/sh")))
+  ;;                (tramp-remote-shell "/bin/sh")
+  ;;                (tramp-remote-shell-args ("-c"))))
 
-  ;; yadm ------------------------------------------------------------------------
-  ;; only half works
-  (require 'tramp)
-  (add-to-list 'tramp-methods
-               '("yadm"
-                 (tramp-login-program "yadm")
-                 (tramp-login-args (("enter")))
-                 (tramp-login-env (("SHELL") ("/bin/sh")))
-                 (tramp-remote-shell "/bin/sh")
-                 (tramp-remote-shell-args ("-c"))))
-
-  (defun my/magit-yadm ()
-    (interactive)
-    (magit-status "/yadm::"))
-
-  (spacemacs/set-leader-keys "oy" 'my/magit-yadm)
+  ;; (defun my/magit-yadm ()
+  ;;   (interactive)
+  ;;   (magit-status "/yadm::"))
+  ;; (spacemacs/set-leader-keys "oy" 'my/magit-yadm)
 
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
