@@ -777,11 +777,17 @@ before packages are loaded."
 
   (setq comint-move-point-for-output nil ;; does this do anything?
         comint-scroll-to-bottom-on-input t
-        comint-terminfo-terminal "dumb-emacs-ansi") ;; see also `ansi-color-for-comint-*'
-
+        ;; enable colors in shell
+        ;; see also `ansi-color-for-comint-*'
+        ;; breaks sql-interactive-mode tho :(
+        ;; TODO: how to enable for shell-mode but not sql-interactive-mode?
+        ;; comint-terminfo-terminal "dumb-emacs-ansi"
+        )
 
   ;; shell/term --------------------------------------------------------------------
-  (setq shell-pop-autocd-to-working-dir nil)
+  (setq shell-pop-autocd-to-working-dir nil
+        shell-completion-execonly nil)
+
   (defun pop-shell-at-project-root-or-home ()
     (interactive)
     (if (projectile-project-p)
@@ -840,6 +846,7 @@ before packages are loaded."
 
   ;; ivy/ivy-rich --------------------------------------------------------------
   (ivy-rich-project-root-cache-mode)
+  (setq ivy-rich-parse-remote-buffer nil)
 
   ;; idk, recommended in the readme
   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
@@ -1105,26 +1112,18 @@ before packages are loaded."
   (spacemacs/set-leader-keys "odf" 'my/docker-tramp-find-file)
   (spacemacs/set-leader-keys "odb" 'docker-container-shell)
   (spacemacs/set-leader-keys "odB" 'docker-container-shell-env)
-
 )
 
-;; functions for adhoc use ----------------------------------------------------
+;; misc commands --------------------------------------------------------------
 (defun my/hide-dos-eol ()
   "Do not show ^M in files containing mixed UNIX and DOS line endings."
   (interactive)
   (setq buffer-display-table (make-display-table))
   (aset buffer-display-table ?\^M []))
 
-(defun my/kill-buffers (regexp)
-  "Kill buffers matching REGEXP (without asking for confirmation)."
-  (interactive "MKill buffers matching this regular expression: ")
-  (cl-letf (((symbol-function 'kill-buffer-ask)
-             (lambda (buffer) (kill-buffer buffer))))
-    (kill-matching-buffers regexp)))
-
 (defun my/magit-kill-all ()
   (interactive)
-  (my/kill-buffers "^magit"))
+  (kill-matching-buffers "^magit" nil t))
 
 (defun my/echo-file-path ()
   (interactive)
@@ -1141,3 +1140,8 @@ before packages are loaded."
 (defun my/ansi-color/apply-on-buffer ()
   (interactive)
   (ansi-color-apply-on-region (point-min) (point-max)))
+
+(defun my/tramp-ssh ()
+  (interactive)
+  (spacemacs/counsel-find-file "/ssh:"))
+

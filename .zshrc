@@ -80,3 +80,10 @@ alias snowsql=/Applications/SnowSQL.app/Contents/MacOS/snowsql
 export NVM_DIR="$HOME/.nvm"
 [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+for emacs_app_path in "/Applications/Emacs.app" "$HOME/opt/Emacs.app"; do
+    emacs_bin_path="${emacs_app_path}/Contents/MacOS/bin"
+    if [ -d emacs_bin_path ]; then
+        export PATH="${emacs_bin_path}:$PATH"
+    fi
+done
