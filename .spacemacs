@@ -769,8 +769,10 @@ before packages are loaded."
   (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
 
   (evil-define-key 'normal comint-mode-map
-    (kbd (concat dotspacemacs-leader-key " b d")) 'comint-send-eof ;; doesn't work :(
     [return] 'comint-send-input)
+
+  (spacemacs/set-leader-keys-for-major-mode 'comint-mode
+    "bd" 'comint-send-eof)
 
   ;; xml ---------------------------------------------------------------------------
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
@@ -1045,8 +1047,10 @@ before packages are loaded."
 
   (spacemacs/set-leader-keys "oy" 'my/magit-yadm)
 
+
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
+
 
   ;; slack ----------------------------------------------------------------------
   (require 'slack)
@@ -1063,9 +1067,11 @@ before packages are loaded."
                       :height 1.0
                       :foreground (doom-color 'highlight))
 
+
   ;; shell-scripts -------------------------------------------------------------
   (if my/macos-flag
       (add-hook 'sh-mode-hook (lambda () (company-mode -1))))
+
 
   ;; proced -------------------------------------------------------------------
   ;; maybe should go in user-init?
