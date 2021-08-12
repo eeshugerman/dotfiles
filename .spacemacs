@@ -960,8 +960,7 @@ before packages are loaded."
   (setq evil-want-Y-yank-to-eol t)
   (evil-define-key 'visual 'global (kbd "v") 'evil-visual-line)
   (evil-define-key 'motion 'global
-    (kbd "V")   (kbd "C-v $")
-    (kbd "RET") 'evil-ex-nohighlight)
+    (kbd "V") (kbd "C-v $"))
 
   ;; evil in ivy/minibuffer
   (setq evil-want-minibuffer t)
