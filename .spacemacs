@@ -782,6 +782,9 @@ before packages are loaded."
     (kbd (concat dotspacemacs-leader-key " b d")) 'comint-send-eof ;; doesn't work :(
     [return] 'comint-send-input)
 
+  (evil-define-key 'normal 'ielm-map
+    [return] 'ielm-return)
+
   (setq comint-move-point-for-output nil ;; does this do anything?
         comint-scroll-to-bottom-on-input t
         ;; enable colors in shell
