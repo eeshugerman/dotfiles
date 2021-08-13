@@ -1061,6 +1061,12 @@ before packages are loaded."
 
   (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") 'org-babel-execute-src-block)
 
+  (defun my/org-jira-defaults ()
+    (interactive)
+    (spacemacs/toggle-line-numbers-off)
+    (spacemacs/toggle-truncate-lines-off)
+    (spacemacs/toggle-visual-line-navigation-on))
+
 
   ;; ;; yadm ------------------------------------------------------------------------
   ;; ;; only half works, sometimes breaks stuff
