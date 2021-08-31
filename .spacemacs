@@ -252,7 +252,9 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, `kill-buffer' on *scratch* buffer
    ;; will bury it instead of killing.
-   dotspacemacs-scratch-buffer-unkillable t
+   dotspacemacs-scratch-buffer-unkillable nil ;; want `t' but it's buggy
+                                              ;; actually maybe doesn't matter if
+                                              ;; `dotspacemacs-scratch-buffer-persistent' is `t'
 
    ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
    ;; (default nil)
@@ -648,6 +650,11 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-headerline-breadcrumb-enable t
    lsp-headerline-breadcrumb-segments '(symbols)
 
+
+   org-adapt-indentation t
+   org-enable-jira-support t
+
+
    python-backend 'lsp
    python-fill-column 100
    python-fill-docstring-style 'django
@@ -714,8 +721,8 @@ before packages are loaded."
   ;; misc/general --------------------------------------------------------------
   (spacemacs/set-leader-keys
     ":"  'eval-expression
-    "fE" 'my/echo-file-path
-    "aw" 'eww)
+    "ofe" 'my/echo-file-path
+    "oaw" 'eww)
 
   (add-hook 'hack-local-variables-hook 'spacemacs/toggle-truncate-lines-on)
 
@@ -742,6 +749,7 @@ before packages are loaded."
   (if (not my/macos-flag)
       (global-highlight-parentheses-mode -1)) ;; shouldn't be necessary
 
+  (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
 
   ;; autosave ------------------------------------------------------------------
   (auto-save-mode 1)
@@ -749,6 +757,14 @@ before packages are loaded."
   (setq auto-save-interval 30
         auto-save-timeout 5)
 
+  ;; dired -----------------------------------------------------------------------
+  (defun my/dired-up-directory ()
+    (interactive)
+    (find-alternate-file ".."))
+
+  (evil-define-key 'normal dired-mode-map
+    [return] 'dired-find-alternate-file
+    "u" 'my/dired-up-directory)
 
   ;; undo --------------------------------------------------------------------
   ;; persistent undo ---
@@ -762,7 +778,27 @@ before packages are loaded."
   (setq evil-want-fine-undo t)
 
 
+  ;; comint --------------------------------------------------------------------
+  (evil-define-key 'normal comint-mode-map
+    (kbd (concat dotspacemacs-leader-key " b d")) 'comint-send-eof ;; doesn't work :(
+    [return] 'comint-send-input)
+
+  (evil-define-key 'normal 'ielm-map
+    [return] 'ielm-return)
+
+  (setq comint-move-point-for-output nil ;; does this do anything?
+        comint-scroll-to-bottom-on-input t
+        ;; enable colors in shell
+        ;; see also `ansi-color-for-comint-*'
+        ;; breaks sql-interactive-mode tho :(
+        ;; TODO: how to enable for shell-mode but not sql-interactive-mode?
+        ;; comint-terminfo-terminal "dumb-emacs-ansi"
+        )
+
   ;; shell/term --------------------------------------------------------------------
+  (setq shell-pop-autocd-to-working-dir nil
+        shell-completion-execonly nil)
+
   (defun pop-shell-at-project-root-or-home ()
     (interactive)
     (if (projectile-project-p)
@@ -770,11 +806,6 @@ before packages are loaded."
       (spacemacs/default-pop-shell)))
   (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
 
-  (evil-define-key 'normal comint-mode-map
-    [return] 'comint-send-input)
-
-  (spacemacs/set-leader-keys-for-major-mode 'comint-mode
-    "bd" 'comint-send-eof)
 
   ;; xml ---------------------------------------------------------------------------
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
@@ -821,11 +852,13 @@ before packages are loaded."
   (add-hook 'writeroom-mode-disable-hook 'spacemacs/toggle-visual-line-numbers-on)
   (setq writeroom-maximize-window nil
         writeroom-mode-line t
-        writeroom-global-effects (delq 'writeroom-set-fullscreen writeroom-global-effects))
+        writeroom-global-effects (delq 'writeroom-set-fullscreen
+                                       writeroom-global-effects))
 
 
   ;; ivy/ivy-rich --------------------------------------------------------------
   (ivy-rich-project-root-cache-mode)
+  (setq ivy-rich-parse-remote-buffer nil)
 
   ;; idk, recommended in the readme
   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
@@ -898,15 +931,15 @@ before packages are loaded."
 
   (defun my/do-theme-tweaks ()
     "misc tweaks that for some reason need a nudge after theme change"
-    (interactive)
     ;; todo: this never works the first time around -- if fixed this needn't be interactive
+    (interactive)
     (set-face-background 'child-frame-border (face-background 'solaire-default-face))
     (set-face-foreground 'all-the-icons-ivy-rich-doc-face (doom-color 'base5))
     (if my/macos-flag  ;; fix current-line jiggle w/ doom themes
         (set-face-attribute 'line-number-current-line nil :weight 'normal))
     (window-divider-mode 1))
 
-  (add-hook 'spacemacs-post-theme-change-hook 'my/do-theme-tweaks)
+  (add-hook 'spacemacs-post-theme-change-hook 'my/do-theme-tweaks) ;; doesn't work
   (my/do-theme-tweaks)
 
   (add-hook
@@ -927,7 +960,8 @@ before packages are loaded."
   ;; vi ---
   (setq evil-want-Y-yank-to-eol t)
   (evil-define-key 'visual 'global (kbd "v") 'evil-visual-line)
-  (evil-define-key 'motion 'global (kbd "V") (kbd "C-v $"))
+  (evil-define-key 'motion 'global
+    (kbd "V") (kbd "C-v $"))
 
   ;; evil in ivy/minibuffer
   (setq evil-want-minibuffer t)
@@ -1038,33 +1072,35 @@ before packages are loaded."
     (setq org-confirm-babel-evaluate nil
           org-format-latex-options (plist-put org-format-latex-options :scale 1.2)))
 
-  (setq org-adapt-indentation t)
+  (org-agenda-files (directory-files-recursively "~/org" "\.org$" nil))
+
   (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") 'org-babel-execute-src-block)
 
-  (setq org-agenda-files (list (f-join "~/org" my/day-job "/notes.org")))
-
-
-  ;; yadm ------------------------------------------------------------------------
-  ;; only half works
-  (require 'tramp)
-  (add-to-list 'tramp-methods
-               '("yadm"
-                 (tramp-login-program "yadm")
-                 (tramp-login-args (("enter")))
-                 (tramp-login-env (("SHELL") ("/bin/sh")))
-                 (tramp-remote-shell "/bin/sh")
-                 (tramp-remote-shell-args ("-c"))))
-
-  (defun my/magit-yadm ()
+  (defun my/org-jira-defaults ()
     (interactive)
-    (magit-status "/yadm::"))
+    (spacemacs/toggle-line-numbers-off)
+    (spacemacs/toggle-truncate-lines-off)
+    (spacemacs/toggle-visual-line-navigation-on))
 
-  (spacemacs/set-leader-keys "oy" 'my/magit-yadm)
 
+  ;; ;; yadm ------------------------------------------------------------------------
+  ;; ;; only half works, sometimes breaks stuff
+  ;; (require 'tramp)
+  ;; (add-to-list 'tramp-methods
+  ;;              '("yadm"
+  ;;                (tramp-login-program "yadm")
+  ;;                (tramp-login-args (("enter")))
+  ;;                (tramp-login-env (("SHELL") ("/bin/sh")))
+  ;;                (tramp-remote-shell "/bin/sh")
+  ;;                (tramp-remote-shell-args ("-c"))))
+
+  ;; (defun my/magit-yadm ()
+  ;;   (interactive)
+  ;;   (magit-status "/yadm::"))
+  ;; (spacemacs/set-leader-keys "oy" 'my/magit-yadm)
 
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
-
 
   ;; slack ----------------------------------------------------------------------
   (require 'slack)
@@ -1081,11 +1117,9 @@ before packages are loaded."
                       :height 1.0
                       :foreground (doom-color 'highlight))
 
-
   ;; shell-scripts -------------------------------------------------------------
   (if my/macos-flag
       (add-hook 'sh-mode-hook (lambda () (company-mode -1))))
-
 
   ;; proced -------------------------------------------------------------------
   ;; maybe should go in user-init?
@@ -1107,27 +1141,18 @@ before packages are loaded."
   (spacemacs/set-leader-keys "odf" 'my/docker-tramp-find-file)
   (spacemacs/set-leader-keys "odb" 'docker-container-shell)
   (spacemacs/set-leader-keys "odB" 'docker-container-shell-env)
-
-
 )
 
-;; functions for adhoc use ----------------------------------------------------
+;; misc commands --------------------------------------------------------------
 (defun my/hide-dos-eol ()
   "Do not show ^M in files containing mixed UNIX and DOS line endings."
   (interactive)
   (setq buffer-display-table (make-display-table))
   (aset buffer-display-table ?\^M []))
 
-(defun my/kill-buffers (regexp)
-  "Kill buffers matching REGEXP without asking for confirmation."
-  (interactive "MKill buffers matching this regular expression: ")
-  (cl-letf (((symbol-function 'kill-buffer-ask)
-             (lambda (buffer) (kill-buffer buffer))))
-    (kill-matching-buffers regexp)))
-
 (defun my/magit-kill-all ()
-     (interactive)
-     (my/kill-buffers "^magit"))
+  (interactive)
+  (kill-matching-buffers "^magit" nil t))
 
 (defun my/echo-file-path ()
   (interactive)
@@ -1144,3 +1169,8 @@ before packages are loaded."
 (defun my/ansi-color/apply-on-buffer ()
   (interactive)
   (ansi-color-apply-on-region (point-min) (point-max)))
+
+(defun my/tramp-ssh ()
+  (interactive)
+  (spacemacs/counsel-find-file "/ssh:"))
+
