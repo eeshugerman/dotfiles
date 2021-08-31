@@ -42,6 +42,7 @@ light
 setnull searchurls.amazon
 setnull searchurls.github
 setnull searchurls.google
+setnull searchurls.twitter
 
 " testing find
 " bind / fillcmdline find
