@@ -84,9 +84,7 @@ This function should only modify configuration layer settings."
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
-   '(all-the-icons-ivy-rich
-     ivy-rich
-     ivy-posframe
+   '(ivy-posframe
      which-key-posframe
      pacfiles-mode
      solaire-mode
@@ -616,7 +614,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    groovy-backend 'lsp
    groovy-lsp-jar-path "~/util/groovy-language-server/build/libs/groovy-language-server-all.jar"
 
-   ivy-enable-advanced-buffer-information nil
+   ivy-enable-icons t ;; also sets `ivy-enable-advanced-buffer-information'
    ivy-extra-directories nil
    ivy-initial-inputs-alist nil
    ivy-virtual-abbreviate 'full
@@ -709,8 +707,6 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
   ;; init standalone modes ----------------------------------------------------
-  (use-package all-the-icons-ivy-rich :config (all-the-icons-ivy-rich-mode 1))
-  (use-package ivy-rich               :config (ivy-rich-mode 1))
   (use-package ivy-posframe           :config (ivy-posframe-mode 1))
   (use-package which-key-posframe     :config (which-key-posframe-mode 1))
   (use-package solaire-mode           :config (solaire-global-mode 1))
@@ -857,11 +853,7 @@ before packages are loaded."
 
 
   ;; ivy/ivy-rich --------------------------------------------------------------
-  (ivy-rich-project-root-cache-mode)
   (setq ivy-rich-parse-remote-buffer nil)
-
-  ;; idk, recommended in the readme
-  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
 
   (let* ((switch-buffer-configs
           (mapcar (lambda (func) (plist-get ivy-rich-display-transformers-list func))
@@ -924,8 +916,8 @@ before packages are loaded."
 
   (setq ivy-posframe-border-width my/border-width
         ;; which-key-posframe has spacing issues sometimes with nonzero border width
-        ;; which-key-posframe-border-width 0
-        which-key-posframe-border-width my/border-width
+        which-key-posframe-border-width 0
+        ;; which-key-posframe-border-width my/border-width
         )
 
 
