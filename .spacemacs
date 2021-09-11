@@ -915,10 +915,9 @@ before packages are loaded."
   (fringe-mode (cons my/border-width my/border-width))
 
   (setq ivy-posframe-border-width my/border-width
-        ;; which-key-posframe has spacing issues sometimes with nonzero border width
-        which-key-posframe-border-width 0
-        ;; which-key-posframe-border-width my/border-width
-        )
+        which-key-posframe-border-width my/border-width)
+
+  (setq which-key-posframe-font "Jetbrains Mono NL") ;; ligatures break spacing
 
 
   (defun my/do-theme-tweaks ()
