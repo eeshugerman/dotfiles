@@ -4,6 +4,7 @@
 
 (defconst my/macos-flag (eq system-type 'darwin))
 (defconst my/day-job "immuta")
+(defconst my/border-width 10)
 
 (defun dotspacemacs/layers ()
   "Layer configuration:
@@ -86,6 +87,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages
    '(ivy-posframe
      which-key-posframe
+     transient-posframe
      pacfiles-mode
      solaire-mode
      journalctl-mode
@@ -593,8 +595,7 @@ It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   ;; misc
-  (setq ivy-posframe-display-functions-alist
-        '((t . ivy-posframe-display-at-frame-center)))
+  
   (setq byte-compile-warnings '(cl-functions))
   (if my/macos-flag
       (setq insert-directory-program "/usr/local/bin/gls"))
@@ -709,6 +710,7 @@ before packages are loaded."
   ;; init standalone modes ----------------------------------------------------
   (use-package ivy-posframe           :config (ivy-posframe-mode 1))
   (use-package which-key-posframe     :config (which-key-posframe-mode 1))
+  ;; (use-package transient-posframe     :config (transient-posframe-mode 1))
   (use-package solaire-mode           :config (solaire-global-mode 1))
   (use-package diredfl                :hook (dired-mode . diredfl-global-mode))
   ;; (use-package dired-git-info
@@ -803,6 +805,9 @@ before packages are loaded."
   (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
 
 
+  ;; transient --------------------------------------------------------------------
+  (define-key transient-map (kbd "<escape>") 'transient-quit-one)
+
   ;; xml ---------------------------------------------------------------------------
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
   (add-hook 'nxml-mode-hook 'origami-mode)
@@ -879,7 +884,6 @@ before packages are loaded."
       (plist-put config :columns my-columns-config)))
 
   ;; themeing -----------------------------------------------------------------
-  (defvar-local my/border-width 10)
 
   (defun my/load-theme (system-appearance)
     (mapc 'disable-theme custom-enabled-themes)
@@ -914,12 +918,6 @@ before packages are loaded."
 
   (fringe-mode (cons my/border-width my/border-width))
 
-  (setq ivy-posframe-border-width my/border-width
-        which-key-posframe-border-width my/border-width)
-
-  (setq which-key-posframe-font "Jetbrains Mono NL") ;; ligatures break spacing
-
-
   (defun my/do-theme-tweaks ()
     "misc tweaks that for some reason need a nudge after theme change"
     ;; todo: this never works the first time around -- if fixed this needn't be interactive
@@ -936,6 +934,21 @@ before packages are loaded."
   (add-hook
    'terraform-mode-hook
    (lambda () (set-face-foreground 'terraform--resource-name-face "hot pink")))
+
+  ;; <some-package>-posframe ---------------------------------------------
+  (setq ivy-posframe-border-width my/border-width
+        ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center))
+
+        which-key-posframe-border-width my/border-width
+        which-key-posframe-font "Jetbrains Mono NL"  ;; ligatures break spacing
+
+        ;; transient-posframe-border-width my/border-width
+        ;; transient-posframe-min-height 10
+        )
+
+  ;; (set-face-background 'transient-posframe-border
+  ;;                      (face-background 'solaire-default-face))
+
 
 
   ;; doom-modeline -------------------------------------------------------------
