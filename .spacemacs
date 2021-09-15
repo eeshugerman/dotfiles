@@ -251,9 +251,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, `kill-buffer' on *scratch* buffer
    ;; will bury it instead of killing.
-   dotspacemacs-scratch-buffer-unkillable nil ;; want `t' but it's buggy
-                                              ;; actually maybe doesn't matter if
-                                              ;; `dotspacemacs-scratch-buffer-persistent' is `t'
+   dotspacemacs-scratch-buffer-unkillable t
 
    ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
    ;; (default nil)
@@ -637,7 +635,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-imenu-enable nil
 
    lsp-ui-peek-enable t
-   lsp-ui-peek-always-show t
    lsp-ui-peek-fontify 'always
    lsp-ui-peek-show-directory t
    lsp-ui-peek-list-width 60
@@ -740,7 +737,7 @@ before packages are loaded."
   (load custom-file)
 
   (load (file-truename (concat "~/.spacemacs-" my/day-job ".el"))
-        t nil t)
+       t nil t)
 
   (global-display-line-numbers-mode 1) ;; shouldn't be necessary
 
@@ -773,6 +770,7 @@ before packages are loaded."
   ;; undo --------------------------------------------------------------------
   ;; persistent undo ---
   ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
+  ;; is slow?
   (setq undo-tree-auto-save-history t
         undo-tree-history-directory-alist
         `(("." . ,(concat spacemacs-cache-directory "undo"))))
@@ -832,12 +830,14 @@ before packages are loaded."
 
   ;; interpreter and tooling ---
   (setq python-shell-interpreter "ipython3")
-  (if my/macos-flag
+  (when my/macos-flag
       ;; TODO: experiment with a portable (Linux/MacOS) venv + exec-path
       ;; solution for python dependencies (flake8, importmagic, etc)
       (add-to-list 'exec-path "~/Library/Python/3.8/bin")
       (add-to-list 'exec-path "~/Library/Python/3.9/bin")
-      (setq python-shell-interpreter "python3"))
+      (setq python-shell-interpreter "python3"
+            python-shell-interpreter-args "-i"
+            python-shell-completion-native-enable nil))
   (setq dap-python-debugger 'debugpy) ; this should be the default at some point
 
 
