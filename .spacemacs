@@ -91,7 +91,8 @@ This function should only modify configuration layer settings."
      journalctl-mode
      diredfl
      dired-git-info
-     fold-this)
+     fold-this
+     gcmh)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -710,6 +711,7 @@ before packages are loaded."
   (use-package ivy-posframe           :config (ivy-posframe-mode 1))
   (use-package which-key-posframe     :config (which-key-posframe-mode 1))
   (use-package solaire-mode           :config (solaire-global-mode 1))
+  (use-package gcmh                   :config (gcmh-mode 1))
   (use-package diredfl                :hook (dired-mode . diredfl-global-mode))
   ;; (use-package dired-git-info
   ;;   :hook (dired-after-readin . dired-git-info-auto-enable)) ;; spacing issues
@@ -752,6 +754,12 @@ before packages are loaded."
   (auto-save-visited-mode 1)
   (setq auto-save-interval 30
         auto-save-timeout 5)
+
+  ;; gcmh ------------------------------------------------------------------------
+  (setq gcmh-verbose t
+        gcmh-low-cons-threshold (* 500 (expt 10 3))
+        gcmh-high-cons-threshold (* 500 (expt 10 6))
+        gcmh-idle-delay 5)
 
   ;; dired -----------------------------------------------------------------------
   (defun my/dired-up-directory ()
