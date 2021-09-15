@@ -899,6 +899,7 @@ before packages are loaded."
   (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b0))
   (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
   (define-fringe-bitmap 'right-arrow (make-vector 8 #b0))
+  (fringe-mode (cons my/border-width my/border-width))
 
   ;; doom ---
   (doom-themes-org-config)
@@ -912,19 +913,15 @@ before packages are loaded."
         window-divider-default-bottom-width 1)
   (menu-bar-bottom-and-right-window-divider)
 
-  (fringe-mode (cons my/border-width my/border-width))
-
   (setq ivy-posframe-border-width my/border-width
         which-key-posframe-border-width my/border-width)
 
-  (setq which-key-posframe-font "Jetbrains Mono NL") ;; ligatures break spacing
-
-
   (defun my/do-theme-tweaks ()
     "misc tweaks that for some reason need a nudge after theme change"
-    ;; todo: this never works the first time around -- if fixed this needn't be interactive
-    (interactive)
-    (set-face-background 'child-frame-border (face-background 'solaire-default-face))
+    (let ((default-background (face-background 'solaire-default-face)))
+      ;; for some reason both need to be set for which-key-posframe to look right
+      (set-face-background 'child-frame-border default-background)
+      (set-face-background 'which-key-posframe-border default-background))
     (set-face-foreground 'all-the-icons-ivy-rich-doc-face (doom-color 'base5))
     (if my/macos-flag  ;; fix current-line jiggle w/ doom themes
         (set-face-attribute 'line-number-current-line nil :weight 'normal))
@@ -936,6 +933,9 @@ before packages are loaded."
   (add-hook
    'terraform-mode-hook
    (lambda () (set-face-foreground 'terraform--resource-name-face "hot pink")))
+
+
+  (setq which-key-posframe-font "Jetbrains Mono NL") ;; ligatures break spacing
 
 
   ;; doom-modeline -------------------------------------------------------------
