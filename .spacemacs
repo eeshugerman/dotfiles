@@ -4,7 +4,6 @@
 
 (defconst my/macos-flag (eq system-type 'darwin))
 (defconst my/day-job "immuta")
-(defconst my/border-width 10)
 
 (defun dotspacemacs/layers ()
   "Layer configuration:
@@ -87,13 +86,13 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages
    '(ivy-posframe
      which-key-posframe
-     transient-posframe
      pacfiles-mode
      solaire-mode
      journalctl-mode
      diredfl
      dired-git-info
-     fold-this)
+     fold-this
+     gcmh)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -252,9 +251,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, `kill-buffer' on *scratch* buffer
    ;; will bury it instead of killing.
-   dotspacemacs-scratch-buffer-unkillable nil ;; want `t' but it's buggy
-                                              ;; actually maybe doesn't matter if
-                                              ;; `dotspacemacs-scratch-buffer-persistent' is `t'
+   dotspacemacs-scratch-buffer-unkillable t
 
    ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
    ;; (default nil)
@@ -595,7 +592,8 @@ It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   ;; misc
-  
+  (setq ivy-posframe-display-functions-alist
+        '((t . ivy-posframe-display-at-frame-center)))
   (setq byte-compile-warnings '(cl-functions))
   (if my/macos-flag
       (setq insert-directory-program "/usr/local/bin/gls"))
@@ -637,7 +635,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-imenu-enable nil
 
    lsp-ui-peek-enable t
-   lsp-ui-peek-always-show t
    lsp-ui-peek-fontify 'always
    lsp-ui-peek-show-directory t
    lsp-ui-peek-list-width 60
@@ -712,6 +709,7 @@ before packages are loaded."
   (use-package which-key-posframe     :config (which-key-posframe-mode 1))
   ;; (use-package transient-posframe     :config (transient-posframe-mode 1))
   (use-package solaire-mode           :config (solaire-global-mode 1))
+  (use-package gcmh                   :config (gcmh-mode 1))
   (use-package diredfl                :hook (dired-mode . diredfl-global-mode))
   ;; (use-package dired-git-info
   ;;   :hook (dired-after-readin . dired-git-info-auto-enable)) ;; spacing issues
@@ -740,7 +738,7 @@ before packages are loaded."
   (load custom-file)
 
   (load (file-truename (concat "~/.spacemacs-" my/day-job ".el"))
-        t nil t)
+       t nil t)
 
   (global-display-line-numbers-mode 1) ;; shouldn't be necessary
 
@@ -755,6 +753,12 @@ before packages are loaded."
   (setq auto-save-interval 30
         auto-save-timeout 5)
 
+  ;; gcmh ------------------------------------------------------------------------
+  (setq gcmh-verbose t
+        gcmh-low-cons-threshold (* 500 (expt 10 3))
+        gcmh-high-cons-threshold (* 500 (expt 10 6))
+        gcmh-idle-delay 5)
+
   ;; dired -----------------------------------------------------------------------
   (defun my/dired-up-directory ()
     (interactive)
@@ -767,6 +771,7 @@ before packages are loaded."
   ;; undo --------------------------------------------------------------------
   ;; persistent undo ---
   ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
+  ;; is slow?
   (setq undo-tree-auto-save-history t
         undo-tree-history-directory-alist
         `(("." . ,(concat spacemacs-cache-directory "undo"))))
@@ -829,12 +834,14 @@ before packages are loaded."
 
   ;; interpreter and tooling ---
   (setq python-shell-interpreter "ipython3")
-  (if my/macos-flag
+  (when my/macos-flag
       ;; TODO: experiment with a portable (Linux/MacOS) venv + exec-path
       ;; solution for python dependencies (flake8, importmagic, etc)
       (add-to-list 'exec-path "~/Library/Python/3.8/bin")
       (add-to-list 'exec-path "~/Library/Python/3.9/bin")
-      (setq python-shell-interpreter "python3"))
+      (setq python-shell-interpreter "python3"
+            python-shell-interpreter-args "-i"
+            python-shell-completion-native-enable nil))
   (setq dap-python-debugger 'debugpy) ; this should be the default at some point
 
 
@@ -884,6 +891,7 @@ before packages are loaded."
       (plist-put config :columns my-columns-config)))
 
   ;; themeing -----------------------------------------------------------------
+  (defvar-local my/border-width 10)
 
   (defun my/load-theme (system-appearance)
     (mapc 'disable-theme custom-enabled-themes)
@@ -903,6 +911,7 @@ before packages are loaded."
   (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b0))
   (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
   (define-fringe-bitmap 'right-arrow (make-vector 8 #b0))
+  (fringe-mode (cons my/border-width my/border-width))
 
   ;; doom ---
   (doom-themes-org-config)
@@ -916,13 +925,15 @@ before packages are loaded."
         window-divider-default-bottom-width 1)
   (menu-bar-bottom-and-right-window-divider)
 
-  (fringe-mode (cons my/border-width my/border-width))
+  (setq ivy-posframe-border-width my/border-width
+        which-key-posframe-border-width my/border-width)
 
   (defun my/do-theme-tweaks ()
     "misc tweaks that for some reason need a nudge after theme change"
-    ;; todo: this never works the first time around -- if fixed this needn't be interactive
-    (interactive)
-    (set-face-background 'child-frame-border (face-background 'solaire-default-face))
+    (let ((default-background (face-background 'solaire-default-face)))
+      ;; for some reason both need to be set for which-key-posframe to look right
+      (set-face-background 'child-frame-border default-background)
+      (set-face-background 'which-key-posframe-border default-background))
     (set-face-foreground 'all-the-icons-ivy-rich-doc-face (doom-color 'base5))
     (if my/macos-flag  ;; fix current-line jiggle w/ doom themes
         (set-face-attribute 'line-number-current-line nil :weight 'normal))
@@ -935,20 +946,8 @@ before packages are loaded."
    'terraform-mode-hook
    (lambda () (set-face-foreground 'terraform--resource-name-face "hot pink")))
 
-  ;; <some-package>-posframe ---------------------------------------------
-  (setq ivy-posframe-border-width my/border-width
-        ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center))
 
-        which-key-posframe-border-width my/border-width
-        which-key-posframe-font "Jetbrains Mono NL"  ;; ligatures break spacing
-
-        ;; transient-posframe-border-width my/border-width
-        ;; transient-posframe-min-height 10
-        )
-
-  ;; (set-face-background 'transient-posframe-border
-  ;;                      (face-background 'solaire-default-face))
-
+  (setq which-key-posframe-font "Jetbrains Mono NL") ;; ligatures break spacing
 
 
   ;; doom-modeline -------------------------------------------------------------
