@@ -14,7 +14,10 @@
 	cp = cherry-pick
 	news = "!git fetch --all && git log @..@{upstream}"
 	news-short = "!git fetch --all && git slog @..@{upstream}"
-	mr = !sh -c 'git fetch $1 merge-requests/$2/head:mr-$1-$2 && git checkout mr-$1-$2' -
+	gitlab-mr = !sh -c 'git fetch $1 merge-requests/$2/head:mr-$1-$2 && git checkout mr-$1-$2' -
 
 [pull]
 	ff = only
+
+[github]
+	user = eeshugerman

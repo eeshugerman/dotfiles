@@ -247,11 +247,11 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, *scratch* buffer will be persistent. Things you write down in
    ;; *scratch* buffer will be saved and restored automatically.
-   dotspacemacs-scratch-buffer-persistent nil
+   dotspacemacs-scratch-buffer-persistent t
 
    ;; If non-nil, `kill-buffer' on *scratch* buffer
    ;; will bury it instead of killing.
-   dotspacemacs-scratch-buffer-unkillable t
+   dotspacemacs-scratch-buffer-unkillable nil ;; want `t' but it's buggy
 
    ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
    ;; (default nil)
@@ -638,6 +638,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-peek-fontify 'always
    lsp-ui-peek-show-directory t
    lsp-ui-peek-list-width 60
+   lsp-ui-peek-always-show t
 
    lsp-eldoc-enable-hover nil
    lsp-enable-indentation nil
@@ -720,6 +721,9 @@ before packages are loaded."
     "ofe" 'my/echo-file-path
     "oaw" 'eww)
 
+  ;; trying to break this habit
+  (evil-define-key 'normal 'global "gd" (lambda () (interactive)))
+
   (add-hook 'hack-local-variables-hook 'spacemacs/toggle-truncate-lines-on)
 
   (setq select-enable-clipboard nil
@@ -729,7 +733,8 @@ before packages are loaded."
         bidi-paragraph-direction 'left-to-right
         byte-compile-warnings '(cl-functions)
         company-selection-wrap-around t
-        garbage-collection-messages t)
+        ;; garbage-collection-messages t
+        auth-sources '("~/.authinfo"))
 
   (let ((custom-file-path (file-truename "~/.emacs-custom.el")))
     (unless (file-exists-p custom-file-path)
@@ -738,9 +743,9 @@ before packages are loaded."
   (load custom-file)
 
   (load (file-truename (concat "~/.spacemacs-" my/day-job ".el"))
-       t nil t)
+        t nil t)
 
-  (global-display-line-numbers-mode 1) ;; shouldn't be necessary
+  ;; (global-display-line-numbers-mode 1) ;; shouldn't be necessary
 
   (if (not my/macos-flag)
       (global-highlight-parentheses-mode -1)) ;; shouldn't be necessary
@@ -798,7 +803,7 @@ before packages are loaded."
         ;; comint-terminfo-terminal "dumb-emacs-ansi"
         )
 
-  ;; shell/term --------------------------------------------------------------------
+  ;; shell (comint) --------------------------------------------------------------------
   (setq shell-pop-autocd-to-working-dir nil
         shell-completion-execonly nil)
 
@@ -809,6 +814,9 @@ before packages are loaded."
       (spacemacs/default-pop-shell)))
   (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
 
+
+  ;; term -------------------------------------------------------------------------
+  (add-hook 'term-mode-hook (lambda () (term-line-mode)))
 
   ;; transient --------------------------------------------------------------------
   (with-eval-after-load 'transient
