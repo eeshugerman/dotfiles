@@ -73,7 +73,7 @@ if [[ "$INSIDE_EMACS" ]]; then
     bindkey -e
 fi
 
-export JAVA_HOME=/usr/local/Cellar/openjdk@11/11.0.10/libexec/openjdk.jdk/Contents/Home
+export JAVA_HOME=/usr/local/Cellar/openjdk@11/11.0.12/libexec/openjdk.jdk/Contents/Home
 
 alias snowsql=/Applications/SnowSQL.app/Contents/MacOS/snowsql
 
