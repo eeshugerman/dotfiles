@@ -759,7 +759,7 @@ before packages are loaded."
         auto-save-timeout 5)
 
   ;; gcmh ------------------------------------------------------------------------
-  (setq gcmh-verbose t
+  (setq gcmh-verbose nil
         gcmh-low-cons-threshold (* 500 (expt 10 3))
         gcmh-high-cons-threshold (* 500 (expt 10 6))
         gcmh-idle-delay 5)
