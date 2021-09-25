@@ -708,6 +708,7 @@ before packages are loaded."
   ;; init standalone modes ----------------------------------------------------
   (use-package ivy-posframe           :config (ivy-posframe-mode 1))
   (use-package which-key-posframe     :config (which-key-posframe-mode 1))
+  ;; (use-package transient-posframe     :config (transient-posframe-mode 1))
   (use-package solaire-mode           :config (solaire-global-mode 1))
   (use-package gcmh                   :config (gcmh-mode 1))
   (use-package diredfl                :hook (dired-mode . diredfl-global-mode))
@@ -817,6 +818,9 @@ before packages are loaded."
   ;; term -------------------------------------------------------------------------
   (add-hook 'term-mode-hook (lambda () (term-line-mode)))
 
+  ;; transient --------------------------------------------------------------------
+  (with-eval-after-load 'transient
+    (define-key transient-map (kbd "<escape>") 'transient-quit-one))
 
   ;; xml ---------------------------------------------------------------------------
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
@@ -873,7 +877,8 @@ before packages are loaded."
   (setq ivy-rich-parse-remote-buffer nil)
 
   (let* ((switch-buffer-configs
-          (mapcar (lambda (func) (plist-get ivy-rich-display-transformers-list func))
+          (mapcar (lambda (func)
+                    (plist-get ivy-rich-display-transformers-list func))
                   '(ivy-switch-buffer
                     ivy-switch-buffer-other-window
                     counsel-switch-buffer
@@ -881,7 +886,8 @@ before packages are loaded."
                     persp-switch-to-buffer)))
          (my-columns-config
           '((all-the-icons-ivy-rich-buffer-icon)
-            (ivy-rich-candidate (:width 45))
+            (ivy-rich-candidate
+             (:width 45))
             (ivy-rich-switch-buffer-indicators
              (:width 4 :face error :align right))
             (ivy-rich-switch-buffer-major-mode
@@ -891,7 +897,8 @@ before packages are loaded."
             (ivy-rich-switch-buffer-path
              (:width (lambda (x)
                        (ivy-rich-switch-buffer-shorten-path
-                        x (ivy-rich-minibuffer-width 0.3))))))))
+                        x
+                        (ivy-rich-minibuffer-width 0.3))))))))
     (dolist (config switch-buffer-configs)
       (plist-put config :columns my-columns-config)))
 
@@ -939,7 +946,7 @@ before packages are loaded."
       ;; for some reason both need to be set for which-key-posframe to look right
       (set-face-background 'child-frame-border default-background)
       (set-face-background 'which-key-posframe-border default-background))
-    (set-face-foreground 'all-the-icons-ivy-rich-doc-face (doom-color 'base5))
+    (set-face-foreground 'all-the-icons-ivy-rich-doc-face (doom-color 'base7))
     (if my/macos-flag  ;; fix current-line jiggle w/ doom themes
         (set-face-attribute 'line-number-current-line nil :weight 'normal))
     (window-divider-mode 1))
