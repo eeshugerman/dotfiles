@@ -1189,3 +1189,6 @@ before packages are loaded."
   (interactive)
   (spacemacs/counsel-find-file "/ssh:"))
 
+(defun my/kill-buffer-process ()
+  (interactive)
+  (kill-process (get-buffer-process (current-buffer))))
