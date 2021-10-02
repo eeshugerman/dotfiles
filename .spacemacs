@@ -669,7 +669,11 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    shell-default-shell 'shell
 
    spacemacs-layouts-restrict-spc-tab t
-   persp-autokill-buffer-on-remove t
+   spacemacs-layouts-restricted-functions '(ivy-switch-buffer ;; doesn't work. also, shouldn't be necessary
+                                            spacemacs/window-split-double-columns
+                                            spacemacs/window-split-triple-columns
+                                            spacemacs/window-split-grid)
+   persp-autokill-buffer-on-remove 'kill-weak
 
    spell-checking-enable-by-default nil
 
@@ -825,6 +829,9 @@ before packages are loaded."
   ;; xml ---------------------------------------------------------------------------
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
   (add-hook 'nxml-mode-hook 'origami-mode)
+  (setq nxml-child-indent 2
+        nxml-attribute-indent 2)
+
 
 
   ;; info ---------------------------------------------------------------------------
@@ -945,7 +952,8 @@ before packages are loaded."
     (let ((default-background (face-background 'solaire-default-face)))
       ;; for some reason both need to be set for which-key-posframe to look right
       (set-face-background 'child-frame-border default-background)
-      (set-face-background 'which-key-posframe-border default-background))
+      (set-face-background 'which-key-posframe-border default-background)
+      (set-face-background 'ivy-posframe-border default-background))
     (set-face-foreground 'all-the-icons-ivy-rich-doc-face (doom-color 'base7))
     (if my/macos-flag  ;; fix current-line jiggle w/ doom themes
         (set-face-attribute 'line-number-current-line nil :weight 'normal))
@@ -1030,9 +1038,8 @@ before packages are loaded."
                   docker-volume-mode
                   docker-machine-mode
                   docker-network-mode
-                  docker-image-mode
-                  ivy-occur-grep-mode)) ;; maybe not necessary?
-           (add-to-list 'evil-evilified-state-modes mode))
+                  docker-image-mode))
+    (add-to-list 'evil-evilified-state-modes mode))
 
 
   ;; trying to fix ivy-occur links not working
@@ -1192,3 +1199,6 @@ before packages are loaded."
   (interactive)
   (spacemacs/counsel-find-file "/ssh:"))
 
+(defun my/kill-buffer-process ()
+  (interactive)
+  (kill-process (get-buffer-process (current-buffer))))
