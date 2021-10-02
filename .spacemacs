@@ -747,8 +747,8 @@ before packages are loaded."
 
   ;; (global-display-line-numbers-mode 1) ;; shouldn't be necessary
 
-  (if (not my/macos-flag)
-      (global-highlight-parentheses-mode -1)) ;; shouldn't be necessary
+  (when (not my/macos-flag)
+    (global-highlight-parentheses-mode -1)) ;; shouldn't be necessary
 
   (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
 
@@ -1097,6 +1097,9 @@ before packages are loaded."
     (spacemacs/toggle-truncate-lines-off)
     (spacemacs/toggle-visual-line-navigation-on))
 
+  ;; scheme -------------------------------------------------------------------------
+  (spacemacs/set-leader-keys-for-major-mode 'scheme-mode
+    "gd" 'spacemacs/jump-to-definition)
 
   ;; ;; yadm ------------------------------------------------------------------------
   ;; ;; only half works, sometimes breaks stuff
