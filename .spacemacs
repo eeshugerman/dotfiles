@@ -667,6 +667,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    shell-default-height 30
    shell-default-position 'bottom
    shell-default-shell 'shell
+   shell-pop-restore-window-configuration nil ;; not really sure what this does
 
    spacemacs-layouts-restrict-spc-tab t
    spacemacs-layouts-restricted-functions '(ivy-switch-buffer ;; doesn't work. also, shouldn't be necessary
@@ -681,10 +682,10 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    treemacs-use-filewatch-mode t
    treemacs-use-git-mode 'extended
    treemacs-use-follow-mode nil
-   treemacs-read-string-input
-   (if (not my/macos-flag)
-       'from-minibuffer ;; https://github.com/Alexander-Miller/cfrs/issues/4
-     'from-child-frame)
+   ;; https://github.com/Alexander-Miller/cfrs/issues/4
+   treemacs-read-string-input (if (not my/macos-flag)
+                                  'from-minibuffer
+                                'from-child-frame)
 
    unicode-fonts-enable-ligatures t
    unicode-fonts-ligature-modes '(typescript-mode
@@ -751,8 +752,8 @@ before packages are loaded."
 
   ;; (global-display-line-numbers-mode 1) ;; shouldn't be necessary
 
-  (if (not my/macos-flag)
-      (global-highlight-parentheses-mode -1)) ;; shouldn't be necessary
+  (when (not my/macos-flag)
+    (global-highlight-parentheses-mode -1)) ;; shouldn't be necessary
 
   (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
 
@@ -1105,6 +1106,10 @@ before packages are loaded."
     (spacemacs/toggle-truncate-lines-off)
     (spacemacs/toggle-visual-line-navigation-on))
 
+  ;; scheme -------------------------------------------------------------------------
+  (spacemacs/set-leader-keys-for-major-mode 'scheme-mode
+    "gd" 'spacemacs/jump-to-definition)
+  (add-hook 'scheme-mode-hook (lambda () (indent-guide-mode 1)))
 
   ;; ;; yadm ------------------------------------------------------------------------
   ;; ;; only half works, sometimes breaks stuff
