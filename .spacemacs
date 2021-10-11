@@ -957,7 +957,8 @@ before packages are loaded."
     (set-face-foreground 'all-the-icons-ivy-rich-doc-face (doom-color 'base7))
     (if my/macos-flag  ;; fix current-line jiggle w/ doom themes
         (set-face-attribute 'line-number-current-line nil :weight 'normal))
-    (window-divider-mode 1))
+    (window-divider-mode 1)
+    (doom-modeline-invalidate-huds))
 
   (add-hook 'spacemacs-post-theme-change-hook 'my/do-theme-tweaks) ;; doesn't work
   (my/do-theme-tweaks)
@@ -1163,6 +1164,11 @@ before packages are loaded."
   (spacemacs/set-leader-keys "odf" 'my/docker-tramp-find-file)
   (spacemacs/set-leader-keys "odb" 'docker-container-shell)
   (spacemacs/set-leader-keys "odB" 'docker-container-shell-env)
+
+  ;; yaml ---------------------------------------------------------------------
+  (add-hook 'yaml-mode-hook (lambda ()
+                              (spacemacs/toggle-indent-guide-on)
+                              (origami-mode +1)))
 )
 
 ;; misc commands --------------------------------------------------------------
