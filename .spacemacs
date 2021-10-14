@@ -394,7 +394,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
    ;; nil to boost the loading time. (default t)
-   dotspacemacs-loading-progress-bar t
+   dotspacemacs-loading-progress-bar nil
 
    ;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
@@ -837,8 +837,9 @@ before packages are loaded."
 
   ;; info ---------------------------------------------------------------------------
   ;; pretty sure this should be a default?
-  (define-key Info-mode-map
-    [return] 'Info-follow-nearest-node)
+  (define-key Info-mode-map [return] 'Info-follow-nearest-node)
+  (define-key evil-motion-state-map (kbd "C-m") nil)
+  (define-key Info-mode-map (kbd "C-m") 'Info-goto-node)
 
 
   ;; python ------------------------------------------------------------------------
