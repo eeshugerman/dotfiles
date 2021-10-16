@@ -72,3 +72,5 @@ if [[ "$INSIDE_EMACS" ]]; then
     # use evil instead of zsh's vi emulation
     bindkey -e
 fi
+
+eval "$(direnv hook zsh)"
