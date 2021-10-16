@@ -93,7 +93,8 @@ This function should only modify configuration layer settings."
      dired-git-info
      fold-this
      gcmh
-     guix)
+     guix
+     direnv)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -721,6 +722,7 @@ before packages are loaded."
   ;; (use-package dired-git-info
   ;;   :hook (dired-after-readin . dired-git-info-auto-enable)) ;; spacing issues
   (use-package guix)
+  (use-package direnv                 :config (direnv-mode 1))
 
   ;; misc/general --------------------------------------------------------------
   (spacemacs/set-leader-keys
