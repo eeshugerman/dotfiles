@@ -92,7 +92,9 @@ This function should only modify configuration layer settings."
      diredfl
      dired-git-info
      fold-this
-     gcmh)
+     gcmh
+     guix
+     direnv)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -247,7 +249,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, *scratch* buffer will be persistent. Things you write down in
    ;; *scratch* buffer will be saved and restored automatically.
-   dotspacemacs-scratch-buffer-persistent t
+   dotspacemacs-scratch-buffer-persistent my/macos-flag ;; buggy on linux
 
    ;; If non-nil, `kill-buffer' on *scratch* buffer
    ;; will bury it instead of killing.
@@ -394,7 +396,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
    ;; nil to boost the loading time. (default t)
-   dotspacemacs-loading-progress-bar t
+   dotspacemacs-loading-progress-bar nil
 
    ;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
@@ -719,6 +721,8 @@ before packages are loaded."
   (use-package diredfl                :hook (dired-mode . diredfl-global-mode))
   ;; (use-package dired-git-info
   ;;   :hook (dired-after-readin . dired-git-info-auto-enable)) ;; spacing issues
+  (use-package guix)
+  (use-package direnv                 :config (direnv-mode 1))
 
   ;; misc/general --------------------------------------------------------------
   (spacemacs/set-leader-keys
@@ -837,8 +841,9 @@ before packages are loaded."
 
   ;; info ---------------------------------------------------------------------------
   ;; pretty sure this should be a default?
-  (define-key Info-mode-map
-    [return] 'Info-follow-nearest-node)
+  (define-key Info-mode-map [return] 'Info-follow-nearest-node)
+  (define-key evil-motion-state-map (kbd "C-m") nil)
+  (define-key Info-mode-map (kbd "C-m") 'Info-goto-node)
 
 
   ;; python ------------------------------------------------------------------------
