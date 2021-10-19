@@ -927,10 +927,10 @@ before packages are loaded."
 
   ;; fringe ---
   (spacemacs/toggle-vi-tilde-fringe-off)
-  ;; hide arrows at window border for truncated lines
-  (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b0))
-  (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
-  (define-fringe-bitmap 'right-arrow (make-vector 8 #b0))
+  ;; hide arrows at window border for truncated lines -- not working
+  ;; (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b0))
+  ;; (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
+  ;; (define-fringe-bitmap 'right-arrow (make-vector 8 #b0))
   (fringe-mode (cons my/border-width my/border-width))
 
   ;; doom ---
@@ -1138,7 +1138,9 @@ before packages are loaded."
   (set-face-foreground 'slack-mrkdwn-code-face (doom-color 'violet))
   (set-face-foreground 'slack-mrkdwn-code-block-face (doom-color 'violet))
 
-  (setq slack-render-image-p nil)
+  (setq slack-render-image-p nil
+        slack-prefer-current-team t)
+
   (set-face-attribute 'slack-message-output-header nil
                       :underline nil
                       :weight 'bold
