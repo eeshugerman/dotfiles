@@ -47,6 +47,7 @@ This function should only modify configuration layer settings."
      github
      groovy
      haskell
+     helpful
      html
      import-js
      ipython-notebook
