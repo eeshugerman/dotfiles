@@ -627,9 +627,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    javascript-repl 'nodejs
    js2-include-node-externs t
 
-   lsp-ui-doc-enable nil
+   lsp-ui-doc-enable t
    lsp-ui-doc-include-signature t
-   lsp-ui-doc-header t
+   lsp-ui-doc-header nil
    lsp-ui-doc-delay 1 ; seconds
    lsp-ui-doc-alignment 'window
 
@@ -932,10 +932,10 @@ before packages are loaded."
 
   ;; fringe ---
   (spacemacs/toggle-vi-tilde-fringe-off)
-  ;; hide arrows at window border for truncated lines
-  (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b0))
-  (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
-  (define-fringe-bitmap 'right-arrow (make-vector 8 #b0))
+  ;; hide arrows at window border for truncated lines -- not working
+  ;; (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b0))
+  ;; (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
+  ;; (define-fringe-bitmap 'right-arrow (make-vector 8 #b0))
   (fringe-mode (cons my/border-width my/border-width))
 
   ;; doom ---
@@ -974,7 +974,7 @@ before packages are loaded."
    (lambda () (set-face-foreground 'terraform--resource-name-face "hot pink")))
 
 
-  (setq which-key-posframe-font "Jetbrains Mono NL") ;; ligatures break spacing
+  (setq which-key-posframe-font "JetBrains Mono NL") ;; ligatures break spacing
 
 
   ;; doom-modeline -------------------------------------------------------------
@@ -1143,7 +1143,9 @@ before packages are loaded."
   (set-face-foreground 'slack-mrkdwn-code-face (doom-color 'violet))
   (set-face-foreground 'slack-mrkdwn-code-block-face (doom-color 'violet))
 
-  (setq slack-render-image-p nil)
+  (setq slack-render-image-p nil
+        slack-prefer-current-team t)
+
   (set-face-attribute 'slack-message-output-header nil
                       :underline nil
                       :weight 'bold
