@@ -839,12 +839,12 @@ before packages are loaded."
         nxml-attribute-indent 2)
 
 
-
   ;; info ---------------------------------------------------------------------------
-  ;; pretty sure this should be a default?
-  (define-key Info-mode-map [return] 'Info-follow-nearest-node)
-  (define-key evil-motion-state-map (kbd "C-m") nil)
-  (define-key Info-mode-map (kbd "C-m") 'Info-goto-node)
+  (evil-define-key 'motion Info-mode-map
+    [return] 'Info-follow-nearest-node
+    (kbd "[[") 'Info-last
+    (kbd "]]") 'Info-next
+    (kbd "C-m") 'Info-goto-node)
 
 
   ;; python ------------------------------------------------------------------------
@@ -1116,6 +1116,7 @@ before packages are loaded."
   (spacemacs/set-leader-keys-for-major-mode 'scheme-mode
     "gd" 'spacemacs/jump-to-definition)
   (add-hook 'scheme-mode-hook (lambda () (indent-guide-mode 1)))
+  (setq geiser-repl-history-no-dups-p nil)
 
   ;; ;; yadm ------------------------------------------------------------------------
   ;; ;; only half works, sometimes breaks stuff
