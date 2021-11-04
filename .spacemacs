@@ -85,17 +85,21 @@ This function should only modify configuration layer settings."
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
-   '(ivy-posframe
-     which-key-posframe
-     pacfiles-mode
-     solaire-mode
-     journalctl-mode
-     diredfl
+   '(
      dired-git-info
+     diredfl
+     direnv
      fold-this
      gcmh
      guix
-     direnv)
+     ivy-posframe
+     journalctl-mode
+     pacfiles-mode
+     solaire-mode
+     ;; symex
+     which-key-posframe
+     ;; mini-frame
+     )
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -714,16 +718,25 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
   ;; init standalone modes ----------------------------------------------------
-  (use-package ivy-posframe           :config (ivy-posframe-mode 1))
-  (use-package which-key-posframe     :config (which-key-posframe-mode 1))
-  ;; (use-package transient-posframe     :config (transient-posframe-mode 1))
-  (use-package solaire-mode           :config (solaire-global-mode 1))
-  (use-package gcmh                   :config (gcmh-mode 1))
-  (use-package diredfl                :hook (dired-mode . diredfl-global-mode))
-  ;; (use-package dired-git-info
-  ;;   :hook (dired-after-readin . dired-git-info-auto-enable)) ;; spacing issues
+  (use-package diredfl :hook (dired-mode . diredfl-global-mode))
+  (use-package direnv :config (direnv-mode 1))
+  (use-package gcmh :config (gcmh-mode 1))
   (use-package guix)
-  (use-package direnv                 :config (direnv-mode 1))
+  (use-package ivy-posframe :config (ivy-posframe-mode 1))
+  (use-package solaire-mode :config (solaire-global-mode 1))
+  ;; (use-package symex :config (symex-initialize))
+  (use-package which-key-posframe :config (which-key-posframe-mode 1))
+
+  ;; keep an eye on https://github.com/yanghaoxie/transient-posframe/pull/3
+  ;; (use-package transient-posframe     :config (transient-posframe-mode 1))
+
+  ;; todo: try this non non-pgtk
+  ;; (use-package mini-frame             :config (mini-frame-mode 1))
+
+  ;; spacing issues
+  ;; (use-package dired-git-info
+  ;;   :hook (dired-after-readin . dired-git-info-auto-enable))
+
 
   ;; misc/general --------------------------------------------------------------
   (spacemacs/set-leader-keys
@@ -757,8 +770,8 @@ before packages are loaded."
 
   ;; (global-display-line-numbers-mode 1) ;; shouldn't be necessary
 
-  (when (not my/macos-flag)
-    (global-highlight-parentheses-mode -1)) ;; shouldn't be necessary
+  ;; (when (not my/macos-flag)
+  ;;   (global-highlight-parentheses-mode -1)) ;; shouldn't be necessary
 
   (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
 
@@ -974,8 +987,10 @@ before packages are loaded."
    'terraform-mode-hook
    (lambda () (set-face-foreground 'terraform--resource-name-face "hot pink")))
 
-
   (setq which-key-posframe-font "JetBrains Mono NL") ;; ligatures break spacing
+
+  (set-face-attribute 'show-paren-match nil
+                      :underline t)
 
 
   ;; doom-modeline -------------------------------------------------------------
@@ -1183,6 +1198,13 @@ before packages are loaded."
   (add-hook 'yaml-mode-hook (lambda ()
                               (spacemacs/toggle-indent-guide-on)
                               (origami-mode +1)))
+
+  ;; mini-frame
+  ;; (custom-set-variables
+  ;;  '(mini-frame-show-parameters
+  ;;    '((top . 10)
+  ;;      (width . 0.7)
+  ;;      (left . 0.5))))
 )
 
 ;; misc commands --------------------------------------------------------------
