@@ -492,7 +492,7 @@ It should only modify the values of Spacemacs settings."
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
-   dotspacemacs-highlight-delimiters 'current
+   dotspacemacs-highlight-delimiters 'all
 
    ;; If non-nil, start an Emacs server if one is not already running.
    ;; (default nil)
@@ -770,11 +770,6 @@ before packages are loaded."
 
   (load (file-truename (concat "~/.spacemacs-" my/day-job ".el"))
         t nil t)
-
-  ;; (global-display-line-numbers-mode 1) ;; shouldn't be necessary
-
-  (when (not my/macos-flag)
-    (global-highlight-parentheses-mode -1)) ;; shouldn't be necessary
 
   (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
 
