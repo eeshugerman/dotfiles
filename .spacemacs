@@ -96,7 +96,7 @@ This function should only modify configuration layer settings."
      journalctl-mode
      pacfiles-mode
      solaire-mode
-     ;; symex
+     symex
      which-key-posframe
      ;; mini-frame
      )
@@ -731,7 +731,7 @@ before packages are loaded."
   (use-package guix)
   (use-package ivy-posframe :config (ivy-posframe-mode 1))
   (use-package solaire-mode :config (solaire-global-mode 1))
-  ;; (use-package symex :config (symex-initialize))
+  (use-package symex)
   (use-package which-key-posframe :config (which-key-posframe-mode 1))
 
   ;; keep an eye on https://github.com/yanghaoxie/transient-posframe/pull/3
@@ -1206,12 +1206,26 @@ before packages are loaded."
                               (spacemacs/toggle-indent-guide-on)
                               (origami-mode +1)))
 
-  ;; mini-frame
+  ;; mini-frame ---------------------------------------------------------------
   ;; (custom-set-variables
   ;;  '(mini-frame-show-parameters
   ;;    '((top . 10)
   ;;      (width . 0.7)
   ;;      (left . 0.5))))
+
+
+  ;; symex --------------------------------------------------------------------
+  (define-key undo-tree-map (kbd "C-/") nil)
+  (define-key global-map (kbd "C-/") 'symex-mode-interface)
+  (setq symex--user-evil-keyspec
+        '(("j" . symex-go-up)
+          ("k" . symex-go-down)
+          ("C-j" . symex-climb-branch)
+          ("C-k" . symex-descend-branch)
+          ("M-j" . symex-goto-highest)
+          ("M-k" . symex-goto-lowest)))
+  (symex-initialize)
+
 )
 
 ;; misc commands --------------------------------------------------------------
