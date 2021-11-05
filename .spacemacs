@@ -767,9 +767,11 @@ before packages are loaded."
         auto-save-timeout 5)
 
   ;; company --------------------------------------------------------------------
-  (setq company-selection-wrap-around t
-        ;; disable in sh-mode
-        company-shell-modes '(eshell-mode))
+  (setq company-selection-wrap-around t)
+
+  (when my/macos-flag
+    ;; disable in sh-mode
+    company-shell-modes '(eshell-mode))
 
   ;; gcmh ------------------------------------------------------------------------
   (setq gcmh-verbose nil
