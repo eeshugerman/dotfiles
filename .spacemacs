@@ -987,7 +987,7 @@ before packages are loaded."
     (window-divider-mode 1)
     (doom-modeline-invalidate-huds))
 
-  (add-hook 'spacemacs-post-theme-change-hook 'my/do-theme-tweaks) ;; doesn't work
+  (add-hook 'spacemacs-post-theme-change-hook 'my/do-theme-tweaks)
   (my/do-theme-tweaks)
 
   (add-hook
@@ -1215,8 +1215,7 @@ before packages are loaded."
 
 
   ;; symex --------------------------------------------------------------------
-  (define-key undo-tree-map (kbd "C-/") nil)
-  (define-key global-map (kbd "C-/") 'symex-mode-interface)
+  (define-key global-map (kbd "S-<escape>") 'symex-mode-interface)
   (setq symex--user-evil-keyspec
         '(("j" . symex-go-up)
           ("k" . symex-go-down)
