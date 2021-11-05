@@ -789,7 +789,7 @@ before packages are loaded."
 
   (when my/macos-flag
     ;; disable in sh-mode
-    company-shell-modes '(eshell-mode))
+    (setq company-shell-modes '(eshell-mode)))
 
   ;; gcmh ------------------------------------------------------------------------
   (setq gcmh-verbose nil
