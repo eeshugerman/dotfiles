@@ -741,7 +741,6 @@ before packages are loaded."
         bidi-inhibit-bpa t
         bidi-paragraph-direction 'left-to-right
         byte-compile-warnings '(cl-functions)
-        company-selection-wrap-around t
         ;; garbage-collection-messages t
         auth-sources '("~/.authinfo"))
 
@@ -766,6 +765,11 @@ before packages are loaded."
   (auto-save-visited-mode 1)
   (setq auto-save-interval 30
         auto-save-timeout 5)
+
+  ;; company --------------------------------------------------------------------
+  (setq company-selection-wrap-around t
+        ;; disable in sh-mode
+        company-shell-modes '(eshell-mode))
 
   ;; gcmh ------------------------------------------------------------------------
   (setq gcmh-verbose nil
