@@ -600,9 +600,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   ;; temp workaround for https://github.com/Somelauw/evil-org-mode/issues/93
   (fset 'evil-redirect-digit-argument 'ignore) ;; before evil-org loaded
-  (add-to-list 'evil-digit-bound-motions 'evil-org-beginning-of-line)
-  (evil-define-key 'motion 'evil-org-mode
-    (kbd "0") 'evil-org-beginning-of-line)
 
 
   ;; misc
