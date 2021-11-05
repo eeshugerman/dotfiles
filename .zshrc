@@ -73,6 +73,10 @@ if [[ "$INSIDE_EMACS" ]]; then
     bindkey -e
 fi
 
+export HOMEBREW_NO_AUTO_UPDATE=1
+
+eval "$(direnv hook zsh)"
+
 export JAVA_HOME=/usr/local/Cellar/openjdk@11/11.0.12/libexec/openjdk.jdk/Contents/Home
 
 alias snowsql=/Applications/SnowSQL.app/Contents/MacOS/snowsql
@@ -80,8 +84,6 @@ alias snowsql=/Applications/SnowSQL.app/Contents/MacOS/snowsql
 export NVM_DIR="$HOME/.nvm"
 [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
-export HOMEBREW_NO_AUTO_UPDATE=1
 
 # i think this is just for launching emacs from cli -- not worth poluting the PATH
 # for emacs_app_path in "/Applications/Emacs.app" "$HOME/opt/Emacs.app"; do

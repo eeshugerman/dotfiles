@@ -47,6 +47,7 @@ This function should only modify configuration layer settings."
      github
      groovy
      haskell
+     helpful
      html
      import-js
      ipython-notebook
@@ -84,17 +85,21 @@ This function should only modify configuration layer settings."
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
-   '(ivy-posframe
-     which-key-posframe
-     pacfiles-mode
-     solaire-mode
-     journalctl-mode
-     diredfl
+   '(
      dired-git-info
+     diredfl
+     direnv
      fold-this
      gcmh
      guix
-     direnv)
+     ivy-posframe
+     journalctl-mode
+     pacfiles-mode
+     solaire-mode
+     symex
+     which-key-posframe
+     ;; mini-frame
+     )
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -593,6 +598,10 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
+  ;; temp workaround for https://github.com/Somelauw/evil-org-mode/issues/93
+  (fset 'evil-redirect-digit-argument 'ignore) ;; before evil-org loaded
+
+
   ;; misc
   (setq ivy-posframe-display-functions-alist
         '((t . ivy-posframe-display-at-frame-center)))
@@ -713,16 +722,25 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
   ;; init standalone modes ----------------------------------------------------
-  (use-package ivy-posframe           :config (ivy-posframe-mode 1))
-  (use-package which-key-posframe     :config (which-key-posframe-mode 1))
-  ;; (use-package transient-posframe     :config (transient-posframe-mode 1))
-  (use-package solaire-mode           :config (solaire-global-mode 1))
-  (use-package gcmh                   :config (gcmh-mode 1))
-  (use-package diredfl                :hook (dired-mode . diredfl-global-mode))
-  ;; (use-package dired-git-info
-  ;;   :hook (dired-after-readin . dired-git-info-auto-enable)) ;; spacing issues
+  (use-package diredfl :hook (dired-mode . diredfl-global-mode))
+  (use-package direnv :config (direnv-mode 1))
+  (use-package gcmh :config (gcmh-mode 1))
   (use-package guix)
-  (use-package direnv                 :config (direnv-mode 1))
+  (use-package ivy-posframe :config (ivy-posframe-mode 1))
+  (use-package solaire-mode :config (solaire-global-mode 1))
+  (use-package symex)
+  (use-package which-key-posframe :config (which-key-posframe-mode 1))
+
+  ;; keep an eye on https://github.com/yanghaoxie/transient-posframe/pull/3
+  ;; (use-package transient-posframe     :config (transient-posframe-mode 1))
+
+  ;; todo: try this non non-pgtk
+  ;; (use-package mini-frame             :config (mini-frame-mode 1))
+
+  ;; spacing issues
+  ;; (use-package dired-git-info
+  ;;   :hook (dired-after-readin . dired-git-info-auto-enable))
+
 
   ;; misc/general --------------------------------------------------------------
   (spacemacs/set-leader-keys
@@ -844,12 +862,12 @@ before packages are loaded."
         nxml-attribute-indent 2)
 
 
-
   ;; info ---------------------------------------------------------------------------
-  ;; pretty sure this should be a default?
-  (define-key Info-mode-map [return] 'Info-follow-nearest-node)
-  (define-key evil-motion-state-map (kbd "C-m") nil)
-  (define-key Info-mode-map (kbd "C-m") 'Info-goto-node)
+  (evil-define-key 'motion Info-mode-map
+    [return] 'Info-follow-nearest-node
+    (kbd "[[") 'Info-last
+    (kbd "]]") 'Info-next
+    (kbd "C-m") 'Info-goto-node)
 
 
   ;; python ------------------------------------------------------------------------
@@ -972,15 +990,17 @@ before packages are loaded."
     (window-divider-mode 1)
     (doom-modeline-invalidate-huds))
 
-  (add-hook 'spacemacs-post-theme-change-hook 'my/do-theme-tweaks) ;; doesn't work
+  (add-hook 'spacemacs-post-theme-change-hook 'my/do-theme-tweaks)
   (my/do-theme-tweaks)
 
   (add-hook
    'terraform-mode-hook
    (lambda () (set-face-foreground 'terraform--resource-name-face "hot pink")))
 
-
   (setq which-key-posframe-font "JetBrains Mono NL") ;; ligatures break spacing
+
+  (set-face-attribute 'show-paren-match nil
+                      :underline t)
 
 
   ;; doom-modeline -------------------------------------------------------------
@@ -1124,6 +1144,7 @@ before packages are loaded."
   (spacemacs/set-leader-keys-for-major-mode 'scheme-mode
     "gd" 'spacemacs/jump-to-definition)
   (add-hook 'scheme-mode-hook (lambda () (indent-guide-mode 1)))
+  (setq geiser-repl-history-no-dups-p nil)
 
   ;; ;; yadm ------------------------------------------------------------------------
   ;; ;; only half works, sometimes breaks stuff
@@ -1190,6 +1211,26 @@ before packages are loaded."
   (add-hook 'yaml-mode-hook (lambda ()
                               (spacemacs/toggle-indent-guide-on)
                               (origami-mode +1)))
+
+  ;; mini-frame ---------------------------------------------------------------
+  ;; (custom-set-variables
+  ;;  '(mini-frame-show-parameters
+  ;;    '((top . 10)
+  ;;      (width . 0.7)
+  ;;      (left . 0.5))))
+
+
+  ;; symex --------------------------------------------------------------------
+  (define-key global-map (kbd "S-<escape>") 'symex-mode-interface)
+  (setq symex--user-evil-keyspec
+        '(("j" . symex-go-up)
+          ("k" . symex-go-down)
+          ("C-j" . symex-climb-branch)
+          ("C-k" . symex-descend-branch)
+          ("M-j" . symex-goto-highest)
+          ("M-k" . symex-goto-lowest)))
+  (symex-initialize)
+
 )
 
 ;; misc commands --------------------------------------------------------------
