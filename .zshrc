@@ -73,4 +73,6 @@ if [[ "$INSIDE_EMACS" ]]; then
     bindkey -e
 fi
 
+export HOMEBREW_NO_AUTO_UPDATE=1
+
 eval "$(direnv hook zsh)"

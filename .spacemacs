@@ -254,7 +254,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, *scratch* buffer will be persistent. Things you write down in
    ;; *scratch* buffer will be saved and restored automatically.
-   dotspacemacs-scratch-buffer-persistent my/macos-flag ;; buggy on linux
+   dotspacemacs-scratch-buffer-persistent nil
 
    ;; If non-nil, `kill-buffer' on *scratch* buffer
    ;; will bury it instead of killing.
@@ -759,7 +759,6 @@ before packages are loaded."
         bidi-inhibit-bpa t
         bidi-paragraph-direction 'left-to-right
         byte-compile-warnings '(cl-functions)
-        company-selection-wrap-around t
         ;; garbage-collection-messages t
         auth-sources '("~/.authinfo"))
 
@@ -774,8 +773,8 @@ before packages are loaded."
 
   ;; (global-display-line-numbers-mode 1) ;; shouldn't be necessary
 
-  ;; (when (not my/macos-flag)
-  ;;   (global-highlight-parentheses-mode -1)) ;; shouldn't be necessary
+  (when (not my/macos-flag)
+    (global-highlight-parentheses-mode -1)) ;; shouldn't be necessary
 
   (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
 
@@ -784,6 +783,13 @@ before packages are loaded."
   (auto-save-visited-mode 1)
   (setq auto-save-interval 30
         auto-save-timeout 5)
+
+  ;; company --------------------------------------------------------------------
+  (setq company-selection-wrap-around t)
+
+  (when my/macos-flag
+    ;; disable in sh-mode
+    (setq company-shell-modes '(eshell-mode)))
 
   ;; gcmh ------------------------------------------------------------------------
   (setq gcmh-verbose nil
@@ -1113,6 +1119,9 @@ before packages are loaded."
 
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
   (setenv "TSC_NONPOLLING_WATCHER" "true")
+
+  (spacemacs/set-leader-keys-for-major-mode 'typescript-mode
+    "si" 'nodejs-repl)
 
 
   ;; org --------------------------------------------------------------------------

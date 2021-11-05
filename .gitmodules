@@ -1,6 +1,3 @@
-[submodule "/home/elliott/.config/nvim/bundle/Vundle.vim"]
-	path = .config/nvim/bundle/Vundle.vim
-	url = https://github.com/VundleVim/Vundle.vim.git
 [submodule "/home/elliott/.emacs.d"]
 	path = .emacs.d
 	url = https://github.com/syl20bnr/spacemacs
@@ -10,6 +7,3 @@
 [submodule ".themes/Juno"]
 	path = .themes/Juno
 	url = https://github.com/EliverLara/Juno
-[submodule ".config/tridactyl/themes/base16-tridactyl"]
-	path = .config/tridactyl/themes/base16-tridactyl
-	url = https://github.com/bezmi/base16-tridactyl
