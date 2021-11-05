@@ -83,9 +83,10 @@ export NVM_DIR="$HOME/.nvm"
 
 export HOMEBREW_NO_AUTO_UPDATE=1
 
-for emacs_app_path in "/Applications/Emacs.app" "$HOME/opt/Emacs.app"; do
-    emacs_bin_path="${emacs_app_path}/Contents/MacOS/bin"
-    if [ -d emacs_bin_path ]; then
-        export PATH="${emacs_bin_path}:$PATH"
-    fi
-done
+# i think this is just for launching emacs from cli -- not worth poluting the PATH
+# for emacs_app_path in "/Applications/Emacs.app" "$HOME/opt/Emacs.app"; do
+#     emacs_bin_path="${emacs_app_path}/Contents/MacOS/bin"
+#     if [ -d emacs_bin_path ]; then
+#         export PATH="${emacs_bin_path}:$PATH"
+#     fi
+# done
