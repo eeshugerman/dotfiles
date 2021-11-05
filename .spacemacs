@@ -1100,6 +1100,9 @@ before packages are loaded."
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
   (setenv "TSC_NONPOLLING_WATCHER" "true")
 
+  (spacemacs/set-leader-keys-for-major-mode 'typescript-mode
+    "si" 'nodejs-repl)
+
 
   ;; org --------------------------------------------------------------------------
   (with-eval-after-load 'org
