@@ -35,7 +35,8 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(ansible
+   '(graphviz
+     ansible
      auto-completion
      c-c++
      csv
@@ -50,6 +51,7 @@ This function should only modify configuration layer settings."
      haskell
      helpful
      html
+     ibuffer
      import-js
      ipython-notebook
      ivy
@@ -675,12 +677,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    python-sort-imports-on-save nil
    python-tab-width 4
 
-   rcirc-enable-authinfo-support t
-   rcirc-enable-late-fix t
-   rcirc-enable-emojify t
-   rcirc-enable-erc-image t
-   rcirc-enable-styles t
-
    scheme-implementations '(guile)
 
    shell-default-height 30
@@ -1232,28 +1228,25 @@ before packages are loaded."
           ("M-k" . symex-goto-lowest)))
   (symex-initialize)
 
-
-  ;; rcirc --------------------------------------------------------------------
-  (setq rcirc-server-alist
+  ;; erc ----------------------------------------------------------------------
+  (setq erc-autojoin-timing 'connect
+        erc-fill-function 'erc-fill-static
+        erc-fill-static-center 22
+        erc-hide-list '("JOIN" "PART" "QUIT")
+        erc-lurker-hide-list '("JOIN" "PART" "QUIT")
+        erc-lurker-threshold-time 43200
+        erc-prompt-for-nickserv-password nil
+        erc-server-list
         '(("irc.libera.chat"
-           :user-name "ees"
            :nick "ees"
            :port "6697"
-           :channels ("#emacs"
-                      "#guile"
-                      "#guix"
-                      "#rcirc")
-           :encryption tls)))
-
-  ;; erc ----------------------------------------------------------------------
-  (setq erc-prompt-for-nickserv-password nil
-        erc-server-list '(("irc.libera.chat"
-                           :nick "ees"
-                           :port "6697"
-                           :ssl t))
-        erc-autojoin-channels-alist '(("libera.chat" . ("#emacs"
-                                                        "#guile"
-                                                        "#guix"))))
+           :ssl t))
+        erc-autojoin-channels-alist
+        '(("libera.chat" . ("#emacs"
+                            "#guile"
+                            "#guix"
+                            "#haskell"
+                            "##politics"))))
   )
 
 ;; misc commands --------------------------------------------------------------
