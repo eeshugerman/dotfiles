@@ -60,6 +60,7 @@ This function should only modify configuration layer settings."
      nginx
      org
      python
+     rcirc
      ruby
      rust
      scheme
@@ -673,6 +674,12 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    python-sort-imports-on-save nil
    python-tab-width 4
 
+   rcirc-enable-authinfo-support t
+   rcirc-enable-late-fix t
+   rcirc-enable-emojify t
+   rcirc-enable-erc-image t
+   rcirc-enable-styles t
+
    scheme-implementations '(guile)
 
    shell-default-height 30
@@ -758,9 +765,7 @@ before packages are loaded."
         projectile-indexing-method 'hybrid
         bidi-inhibit-bpa t
         bidi-paragraph-direction 'left-to-right
-        byte-compile-warnings '(cl-functions)
-        ;; garbage-collection-messages t
-        auth-sources '("~/.authinfo"))
+        byte-compile-warnings '(cl-functions))
 
   (let ((custom-file-path (file-truename "~/.emacs-custom.el")))
     (unless (file-exists-p custom-file-path)
@@ -1226,7 +1231,16 @@ before packages are loaded."
           ("M-k" . symex-goto-lowest)))
   (symex-initialize)
 
-)
+
+  ;; rcirc --------------------------------------------------------------------
+  (setq rcirc-server-alist
+        '(("irc.libera.chat"
+           :user-name "ees"
+           :nick "ees"
+           :port "6697"
+           :channels ("#emacs" "#guile" "#rcirc")
+           :encryption tls)))
+  )
 
 ;; misc commands --------------------------------------------------------------
 (defun my/hide-dos-eol ()
