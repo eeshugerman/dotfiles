@@ -43,6 +43,7 @@ This function should only modify configuration layer settings."
      docker
      emacs-lisp
      epub
+     erc
      git
      github
      groovy
@@ -1238,8 +1239,21 @@ before packages are loaded."
            :user-name "ees"
            :nick "ees"
            :port "6697"
-           :channels ("#emacs" "#guile" "#rcirc")
+           :channels ("#emacs"
+                      "#guile"
+                      "#guix"
+                      "#rcirc")
            :encryption tls)))
+
+  ;; erc ----------------------------------------------------------------------
+  (setq erc-prompt-for-nickserv-password nil
+        erc-server-list '(("irc.libera.chat"
+                           :nick "ees"
+                           :port "6697"
+                           :ssl t))
+        erc-autojoin-channels-alist '(("libera.chat" . ("#emacs"
+                                                        "#guile"
+                                                        "#guix"))))
   )
 
 ;; misc commands --------------------------------------------------------------
