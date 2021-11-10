@@ -3,7 +3,7 @@
 ;; It must be stored in your home directory.
 
 (defconst my/macos-flag (eq system-type 'darwin))
-(defconst my/day-job "immuta")
+(defconst my/work-flag nil)
 
 (defun dotspacemacs/layers ()
   "Layer configuration:
@@ -35,7 +35,8 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(ansible
+   '(graphviz
+     ansible
      auto-completion
      c-c++
      csv
@@ -43,12 +44,14 @@ This function should only modify configuration layer settings."
      docker
      emacs-lisp
      epub
+     erc
      git
      github
      groovy
      haskell
      helpful
      html
+     ibuffer
      import-js
      ipython-notebook
      ivy
@@ -371,7 +374,7 @@ It should only modify the values of Spacemacs settings."
    ;; auto-save the file in-place, `cache' to auto-save the file to another
    ;; file stored in the cache directory and `nil' to disable auto-saving.
    ;; (default 'cache)
-   dotspacemacs-auto-save-file-location 'cache  ;; want 'original but issues with scratch, etc
+   dotspacemacs-auto-save-file-location 'original
 
    ;; Maximum number of rollback slots to keep in the cache. (default 5)
    dotspacemacs-max-rollback-slots 5
@@ -758,9 +761,7 @@ before packages are loaded."
         projectile-indexing-method 'hybrid
         bidi-inhibit-bpa t
         bidi-paragraph-direction 'left-to-right
-        byte-compile-warnings '(cl-functions)
-        ;; garbage-collection-messages t
-        auth-sources '("~/.authinfo"))
+        byte-compile-warnings '(cl-functions))
 
   (let ((custom-file-path (file-truename "~/.emacs-custom.el")))
     (unless (file-exists-p custom-file-path)
@@ -768,13 +769,12 @@ before packages are loaded."
     (customize-set-variable 'custom-file custom-file-path))
   (load custom-file)
 
-  (load (file-truename (concat "~/.spacemacs-" my/day-job ".el"))
-        t nil t)
+  (when my/work-flag
+    (load (file-truename (concat "~/.day-job.el")) t nil t))
 
   (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
 
   ;; autosave ------------------------------------------------------------------
-  ;; does this actually save the file without `dotspacemacs-auto-save-file-location' 'original ?
   (auto-save-mode 1)
   (auto-save-visited-mode 1)
   (setq auto-save-interval 30
@@ -1005,7 +1005,8 @@ before packages are loaded."
         doom-modeline-hud t
         doom-modeline-percent-position nil
         doom-modeline-buffer-encoding nil
-        doom-modeline-bar-width my/border-width)
+        doom-modeline-bar-width my/border-width
+        doom-modeline-irc t)
 
 
   ;; evil ------------------------------------------------------------------------
@@ -1227,7 +1228,38 @@ before packages are loaded."
           ("M-k" . symex-goto-lowest)))
   (symex-initialize)
 
-)
+  ;; erc ----------------------------------------------------------------------
+  (setq erc-server-reconnect-attempts 5
+        erc-server-reconnect-timeout 3
+        erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
+                                  "324" "329" "332" "333" "353" "477")
+        erc-fill-function 'erc-fill-static
+        erc-fill-static-center 22
+        erc-hide-list '("JOIN" "PART" "QUIT")
+        erc-lurker-hide-list '("JOIN" "PART" "QUIT")
+        erc-lurker-threshold-time 43200
+        erc-prompt-for-nickserv-password nil
+        erc-track-exclude-server-buffer t
+        erc-track-position-in-mode-line t
+        erc-track-shorten-function nil
+        erc-track-showcount t
+        erc-autojoin-timing 'connect
+        erc-server-list
+        (if my/work-flag
+            '()
+          '(("irc.libera.chat"
+             :nick "ees"
+             :port "6697"
+             :ssl t)))
+        erc-autojoin-channels-alist
+        (if my/work-flag
+            '()
+          '(("libera.chat" . ("#emacs"
+                              "#guile"
+                              "#guix"
+                              "#haskell"
+                              "##politics")))))
+  )
 
 ;; misc commands --------------------------------------------------------------
 (defun my/hide-dos-eol ()
