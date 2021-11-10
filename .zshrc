@@ -81,6 +81,9 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
+# https://github.com/immuta/bodata/blob/master/README.md#getting-started
+sudo ifconfig lo0 alias 10.0.2.2
+
 # i think this is just for launching emacs from cli -- not worth poluting the PATH
 # for emacs_app_path in "/Applications/Emacs.app" "$HOME/opt/Emacs.app"; do
 #     emacs_bin_path="${emacs_app_path}/Contents/MacOS/bin"
