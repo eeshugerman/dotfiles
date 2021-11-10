@@ -13,9 +13,8 @@ bind gD tabdetach
 bind --mode=ex <C-j> ex.next_completion
 bind --mode=ex <C-k> ex.prev_completion
 
-" not sure if this is gonna work on linux
-set editorcmd /usr/local/bin/emacsclient +%l:%c %f
-    
+jsb tri.excmds.set("editorcmd", (browser.runtime.PlatformOs === "mac" ? "/usr/local/bin/" : "/usr/bin/") + "emacsclient +%l:%c %f")
+
 set hintchars wertyuioasdfjkl;zxcnm
 
 " fixamo
@@ -43,6 +42,7 @@ setnull searchurls.twitter
 " bind N findnext -1
 " bind <Return> nohlsearch
 
+" TODO: look into `auto` and `midnight`
 command light colors --url https://raw.githubusercontent.com/eeshugerman/shydactyl-variations/master/dist/shydactyl-all-icons.css shydactyl-all-icons
 command dark colors --url https://raw.githubusercontent.com/eeshugerman/shydactyl-variations/master/dist/shydactyl-all-icons-dark.css shydactyl-all-icons-dark
 
