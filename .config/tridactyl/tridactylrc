@@ -13,11 +13,10 @@ bind gD tabdetach
 bind --mode=ex <C-j> ex.next_completion
 bind --mode=ex <C-k> ex.prev_completion
 
-" can't get native editor to work correctly, use wasavi instead (plus it's nicer anyway in some ways)
-unbind --mode=input <C-i>
-
+" not sure if this is gonna work on linux
+set editorcmd /usr/local/bin/emacsclient +%l:%c %f
+    
 set hintchars wertyuioasdfjkl;zxcnm
-
 
 " fixamo
 jsb tri.excmds.setpref("privacy.resistFingerprinting.block_mozAddonManager", "true").then(tri.excmds.setpref("extensions.webextensions.restrictedDomains", '""'))
@@ -30,13 +29,6 @@ set scrollduration 100
 bind j scrollline 10
 bind k scrollline -10
 
-bind ZZ !s killall firefox
-
-
-command light colors --url https://raw.githubusercontent.com/eeshugerman/shydactyl-variations/master/dist/shydactyl-all-icons.css shydactyl-all-icons
-command dark colors --url https://raw.githubusercontent.com/eeshugerman/shydactyl-variations/master/dist/shydactyl-all-icons-dark.css shydactyl-all-icons-dark
-
-light
 
 " disable searchurls
 setnull searchurls.amazon
@@ -50,5 +42,10 @@ setnull searchurls.twitter
 " bind n findnext 1
 " bind N findnext -1
 " bind <Return> nohlsearch
+
+command light colors --url https://raw.githubusercontent.com/eeshugerman/shydactyl-variations/master/dist/shydactyl-all-icons.css shydactyl-all-icons
+command dark colors --url https://raw.githubusercontent.com/eeshugerman/shydactyl-variations/master/dist/shydactyl-all-icons-dark.css shydactyl-all-icons-dark
+
+light
 
 js console.log('config source complete!')

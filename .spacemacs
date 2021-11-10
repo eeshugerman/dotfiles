@@ -1295,3 +1295,10 @@ before packages are loaded."
 (defun my/kill-buffer-process ()
   (interactive)
   (kill-process (get-buffer-process (current-buffer))))
+
+(defun my/unescape-newlines ()
+  (interactive)
+  (save-excursion
+    (beginning-of-line)
+    (while (search-forward "\\n" (line-end-position) t)
+      (replace-match "\n"))))

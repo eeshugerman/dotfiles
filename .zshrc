@@ -60,10 +60,6 @@ alias dconf-load="dconf load / < $HOME/.config/dconf.ini"
 
 export PATH="$PATH:$HOME/.local/bin"
 
-if [ "$(uname)" = "Darwin" ]; then
-  export PATH="$PATH:/usr/local/sbin"
-fi
-
 # https://github.com/TheLocehiliosan/yadm/issues/33
 export GPG_TTY=$(tty)
 
