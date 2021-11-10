@@ -254,11 +254,11 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, *scratch* buffer will be persistent. Things you write down in
    ;; *scratch* buffer will be saved and restored automatically.
-   dotspacemacs-scratch-buffer-persistent nil
+   dotspacemacs-scratch-buffer-persistent t
 
    ;; If non-nil, `kill-buffer' on *scratch* buffer
    ;; will bury it instead of killing.
-   dotspacemacs-scratch-buffer-unkillable nil ;; want `t' but it's buggy
+   dotspacemacs-scratch-buffer-unkillable t
 
    ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
    ;; (default nil)
@@ -371,7 +371,7 @@ It should only modify the values of Spacemacs settings."
    ;; auto-save the file in-place, `cache' to auto-save the file to another
    ;; file stored in the cache directory and `nil' to disable auto-saving.
    ;; (default 'cache)
-   dotspacemacs-auto-save-file-location 'original
+   dotspacemacs-auto-save-file-location 'cache  ;; want 'original but issues with scratch, etc
 
    ;; Maximum number of rollback slots to keep in the cache. (default 5)
    dotspacemacs-max-rollback-slots 5
@@ -774,6 +774,7 @@ before packages are loaded."
   (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
 
   ;; autosave ------------------------------------------------------------------
+  ;; does this actually save the file without `dotspacemacs-auto-save-file-location' 'original ?
   (auto-save-mode 1)
   (auto-save-visited-mode 1)
   (setq auto-save-interval 30
