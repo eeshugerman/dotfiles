@@ -3,7 +3,7 @@
 ;; It must be stored in your home directory.
 
 (defconst my/macos-flag (eq system-type 'darwin))
-(defconst my/day-job "immuta")
+(defconst my/work-flag nil)
 
 (defun dotspacemacs/layers ()
   "Layer configuration:
@@ -63,7 +63,6 @@ This function should only modify configuration layer settings."
      nginx
      org
      python
-     rcirc
      ruby
      rust
      scheme
@@ -770,8 +769,8 @@ before packages are loaded."
     (customize-set-variable 'custom-file custom-file-path))
   (load custom-file)
 
-  (load (file-truename (concat "~/.spacemacs-" my/day-job ".el"))
-        t nil t)
+  (when my/work-flag
+    (load (file-truename (concat "~/.day-job.el")) t nil t))
 
   (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
 
@@ -1006,7 +1005,8 @@ before packages are loaded."
         doom-modeline-hud t
         doom-modeline-percent-position nil
         doom-modeline-buffer-encoding nil
-        doom-modeline-bar-width my/border-width)
+        doom-modeline-bar-width my/border-width
+        doom-modeline-irc t)
 
 
   ;; evil ------------------------------------------------------------------------
@@ -1229,24 +1229,36 @@ before packages are loaded."
   (symex-initialize)
 
   ;; erc ----------------------------------------------------------------------
-  (setq erc-autojoin-timing 'connect
+  (setq erc-server-reconnect-attempts 5
+        erc-server-reconnect-timeout 3
+        erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
+                                  "324" "329" "332" "333" "353" "477")
         erc-fill-function 'erc-fill-static
         erc-fill-static-center 22
         erc-hide-list '("JOIN" "PART" "QUIT")
         erc-lurker-hide-list '("JOIN" "PART" "QUIT")
         erc-lurker-threshold-time 43200
         erc-prompt-for-nickserv-password nil
+        erc-track-exclude-server-buffer t
+        erc-track-position-in-mode-line t
+        erc-track-shorten-function nil
+        erc-track-showcount t
+        erc-autojoin-timing 'connect
         erc-server-list
-        '(("irc.libera.chat"
-           :nick "ees"
-           :port "6697"
-           :ssl t))
+        (if my/work-flag
+            '()
+          '(("irc.libera.chat"
+             :nick "ees"
+             :port "6697"
+             :ssl t)))
         erc-autojoin-channels-alist
-        '(("libera.chat" . ("#emacs"
-                            "#guile"
-                            "#guix"
-                            "#haskell"
-                            "##politics"))))
+        (if my/work-flag
+            '()
+          '(("libera.chat" . ("#emacs"
+                              "#guile"
+                              "#guix"
+                              "#haskell"
+                              "##politics")))))
   )
 
 ;; misc commands --------------------------------------------------------------
