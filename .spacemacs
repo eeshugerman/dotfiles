@@ -3,7 +3,7 @@
 ;; It must be stored in your home directory.
 
 (defconst my/macos-flag (eq system-type 'darwin))
-(defconst my/work-flag nil)
+(defconst my/work-flag t)
 
 (defun dotspacemacs/layers ()
   "Layer configuration:
