@@ -938,11 +938,12 @@ before packages are loaded."
   ;; themeing -----------------------------------------------------------------
   (defvar-local my/border-width 10)
 
+  ;; also called by gnome extension via emacsclient
   (defun my/load-theme (system-appearance)
     (mapc 'disable-theme custom-enabled-themes)
     (pcase system-appearance
-      ('light (load-theme 'doom-solarized-light t))
-      ('dark (load-theme 'doom-solarized-dark t))))
+      ('dark (load-theme (first dotspacemacs-themes) t))
+      ('light (load-theme (second dotspacemacs-themes) t))))
 
   (when (boundp 'ns-system-appearance-change-functions)
     (add-hook 'ns-system-appearance-change-functions 'my/load-theme)
