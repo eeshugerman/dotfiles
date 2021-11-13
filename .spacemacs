@@ -624,6 +624,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    css-enable-lsp t
    scss-enable-lsp t
 
+   dap-ui-controls-mode nil
+
    groovy-backend 'lsp
    groovy-lsp-jar-path "~/util/groovy-language-server/build/libs/groovy-language-server-all.jar"
 
@@ -994,7 +996,7 @@ before packages are loaded."
    'terraform-mode-hook
    (lambda () (set-face-foreground 'terraform--resource-name-face "hot pink")))
 
-  (setq which-key-posframe-font "JetBrains Mono NL") ;; ligatures break spacing
+  (setq which-key-posframe-font "JetBrains Mono NL") ;; ligatures break spacing (sometimes?)
 
   (set-face-attribute 'show-paren-match nil
                       :underline t)
