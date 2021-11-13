@@ -35,7 +35,8 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(ansible
+   '(graphviz
+     ansible
      auto-completion
      c-c++
      csv
@@ -46,7 +47,6 @@ This function should only modify configuration layer settings."
      erc
      git
      github
-     graphviz
      groovy
      haskell
      helpful
@@ -374,7 +374,7 @@ It should only modify the values of Spacemacs settings."
    ;; auto-save the file in-place, `cache' to auto-save the file to another
    ;; file stored in the cache directory and `nil' to disable auto-saving.
    ;; (default 'cache)
-   dotspacemacs-auto-save-file-location 'original
+   dotspacemacs-auto-save-file-location 'cache
 
    ;; Maximum number of rollback slots to keep in the cache. (default 5)
    dotspacemacs-max-rollback-slots 5
@@ -770,7 +770,7 @@ before packages are loaded."
   (load custom-file)
 
   (when my/work-flag
-    (load (file-truename (concat "~/.day-job.el")) t nil t))
+    (load (file-truename "~/.day-job.el") nil nil t))
 
   (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
 
@@ -1124,6 +1124,7 @@ before packages are loaded."
 
   ;; org --------------------------------------------------------------------------
   (with-eval-after-load 'org
+    (require 'ox-jira)
     (org-babel-do-load-languages 'org-babel-load-languages '((scheme . t)))
     (setq org-confirm-babel-evaluate nil
           org-format-latex-options (plist-put org-format-latex-options :scale 1.2)))
@@ -1169,10 +1170,13 @@ before packages are loaded."
   (set-face-background 'slack-message-mention-me-face (doom-color 'base3))
   (set-face-foreground 'slack-message-mention-me-face (doom-color 'magenta))
   (set-face-foreground 'slack-mrkdwn-code-face (doom-color 'violet))
+  (set-face-background 'slack-mrkdwn-code-face (doom-color 'base5))
   (set-face-foreground 'slack-mrkdwn-code-block-face (doom-color 'violet))
+  (set-face-background 'slack-mrkdwn-code-block-face (doom-color 'base5))
 
   (setq slack-render-image-p nil
-        slack-prefer-current-team t)
+        slack-prefer-current-team t
+        slack-thread-also-send-to-room nil)
 
   (set-face-attribute 'slack-message-output-header nil
                       :underline nil
