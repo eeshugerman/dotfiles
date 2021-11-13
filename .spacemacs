@@ -35,8 +35,7 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(graphviz
-     ansible
+   '(ansible
      auto-completion
      c-c++
      csv
@@ -47,6 +46,7 @@ This function should only modify configuration layer settings."
      erc
      git
      github
+     graphviz
      groovy
      haskell
      helpful
@@ -1241,9 +1241,9 @@ before packages are loaded."
         erc-lurker-threshold-time 43200
         erc-prompt-for-nickserv-password nil
         erc-track-exclude-server-buffer t
-        erc-track-position-in-mode-line t
         erc-track-shorten-function nil
         erc-track-showcount t
+        erc-track-position-in-mode-line nil
         erc-autojoin-timing 'connect
         erc-server-list
         (if my/work-flag

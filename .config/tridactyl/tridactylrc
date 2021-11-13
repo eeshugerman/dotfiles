@@ -28,7 +28,6 @@ set scrollduration 100
 bind j scrollline 10
 bind k scrollline -10
 
-
 " disable searchurls
 setnull searchurls.amazon
 setnull searchurls.github
