@@ -624,6 +624,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    css-enable-lsp t
    scss-enable-lsp t
 
+   dap-ui-controls-mode nil
+
    groovy-backend 'lsp
    groovy-lsp-jar-path "~/util/groovy-language-server/build/libs/groovy-language-server-all.jar"
 
@@ -938,11 +940,12 @@ before packages are loaded."
   ;; themeing -----------------------------------------------------------------
   (defvar-local my/border-width 10)
 
+  ;; also called by gnome extension via emacsclient
   (defun my/load-theme (system-appearance)
     (mapc 'disable-theme custom-enabled-themes)
     (pcase system-appearance
-      ('light (load-theme 'doom-solarized-light t))
-      ('dark (load-theme 'doom-solarized-dark t))))
+      ('dark (load-theme (first dotspacemacs-themes) t))
+      ('light (load-theme (second dotspacemacs-themes) t))))
 
   (when (boundp 'ns-system-appearance-change-functions)
     (add-hook 'ns-system-appearance-change-functions 'my/load-theme)
@@ -993,7 +996,7 @@ before packages are loaded."
    'terraform-mode-hook
    (lambda () (set-face-foreground 'terraform--resource-name-face "hot pink")))
 
-  (setq which-key-posframe-font "JetBrains Mono NL") ;; ligatures break spacing
+  (setq which-key-posframe-font "JetBrains Mono NL") ;; ligatures break spacing (sometimes?)
 
   (set-face-attribute 'show-paren-match nil
                       :underline t)
@@ -1244,9 +1247,9 @@ before packages are loaded."
         erc-lurker-threshold-time 43200
         erc-prompt-for-nickserv-password nil
         erc-track-exclude-server-buffer t
-        erc-track-position-in-mode-line t
         erc-track-shorten-function nil
         erc-track-showcount t
+        erc-track-position-in-mode-line nil
         erc-autojoin-timing 'connect
         erc-server-list
         (if my/work-flag
@@ -1295,10 +1298,6 @@ before packages are loaded."
 (defun my/tramp-ssh ()
   (interactive)
   (spacemacs/counsel-find-file "/ssh:"))
-
-(defun my/tramp-sudo ()
-  (interactive)
-  (spacemacs/counsel-find-file "/sudo::/"))
 
 (defun my/kill-buffer-process ()
   (interactive)
