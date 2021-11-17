@@ -704,6 +704,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                                 'from-child-frame)
 
    unicode-fonts-enable-ligatures t
+   unicode-fonts-less-feedback t
    unicode-fonts-ligature-modes '(typescript-mode
                                   javascript-mode
                                   js2-mode
@@ -808,11 +809,11 @@ before packages are loaded."
   ;; persistent undo ---
   ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
   ;; is slow?
-  (setq undo-tree-auto-save-history t
-        undo-tree-history-directory-alist
-        `(("." . ,(concat spacemacs-cache-directory "undo"))))
-  (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
-    (make-directory (concat spacemacs-cache-directory "undo")))
+  (let ((undo-tree-cache-dir (concat spacemacs-cache-directory "undo")))
+    (unless (file-exists-p undo-tree-cache-dir)
+      (make-directory undo-tree-cache-dir))
+    (setq undo-tree-auto-save-history t
+          undo-tree-history-directory-alist `(("." . ,undo-tree-cache-dir))))
   ;; granular history ---
   (setq evil-want-fine-undo t)
 
