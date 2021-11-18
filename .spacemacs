@@ -1266,6 +1266,10 @@ before packages are loaded."
                               "#guix"
                               "#haskell"
                               "##politics")))))
+
+  ;; highlight-indentation ----------------------------------------------------
+  ;; this is off by default
+  (setq highlight-indentation-blank-lines t)
   )
 
 ;; misc commands --------------------------------------------------------------
