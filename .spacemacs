@@ -748,6 +748,8 @@ before packages are loaded."
 
 
   ;; misc/general --------------------------------------------------------------
+  (server-start)
+
   (spacemacs/set-leader-keys
     ":"  'eval-expression
     "ofe" 'my/echo-file-path
