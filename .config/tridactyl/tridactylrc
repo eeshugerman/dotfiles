@@ -13,7 +13,7 @@ bind gD tabdetach
 bind --mode=ex <C-j> ex.next_completion
 bind --mode=ex <C-k> ex.prev_completion
 
-js tri.browserBg.runtime.getPlatformInfo().then(info => tri.config.set("editorcmd", (info.os === "mac" ? "usr/local/bin/" : "/usr/bin/") + "emacsclient +%l:%c %f"))
+js tri.browserBg.runtime.getPlatformInfo().then(info => tri.config.set("editorcmd", (info.os === "mac" ? "/usr/local/bin/" : "/usr/bin/") + "emacsclient +%l:%c %f"))
 
 set hintchars wertyuioasdfjkl;zxcnm
 
