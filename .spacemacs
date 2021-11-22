@@ -374,7 +374,7 @@ It should only modify the values of Spacemacs settings."
    ;; auto-save the file in-place, `cache' to auto-save the file to another
    ;; file stored in the cache directory and `nil' to disable auto-saving.
    ;; (default 'cache)
-   dotspacemacs-auto-save-file-location 'cache
+   dotspacemacs-auto-save-file-location 'original
 
    ;; Maximum number of rollback slots to keep in the cache. (default 5)
    dotspacemacs-max-rollback-slots 5
@@ -780,8 +780,7 @@ before packages are loaded."
   (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
 
   ;; autosave ------------------------------------------------------------------
-  (auto-save-mode 1)
-  (auto-save-visited-mode 1)
+  (auto-save-mode -1) ;; only want auto-save-visited-mode
   (setq auto-save-interval 30
         auto-save-timeout 5)
 
@@ -1326,3 +1325,36 @@ before packages are loaded."
     (beginning-of-line)
     (while (search-forward "\\n" (line-end-position) t)
       (replace-match "\n"))))
+
+(defvar my/prosey nil)
+
+(defun my/toggle-prosey-on ()
+  (interactive)
+  (spacemacs/toggle-line-numbers-off) ;; doesn't always work?
+  (spacemacs/toggle-relative-line-numbers-off)
+  (spacemacs/toggle-truncate-lines-off)
+  (unless writeroom-mode ;; void at startup
+    (spacemacs/toggle-centered-buffer))
+  (visual-line-mode +1)
+  (setq my/prosey t))
+
+(defun my/toggle-prosey-off ()
+  (interactive)
+  (spacemacs/toggle-line-numbers-on)
+  (spacemacs/toggle-relative-line-numbers-on)
+  (spacemacs/toggle-truncate-lines-on)
+  (spacemacs/toggle-centered-buffer)
+  (when writeroom-mode
+    (speacemacs/toggle-centered-buffer))
+  (visual-line-mode -1)
+  (setq my/prosey nil))
+
+(defun my/toggle-prosey ()
+  (interactive)
+  (if my/prosey
+    (my/toggle-prosey-off)
+    (my/toggle-prosey-on)))
+
+(add-hook 'text-mode-hook 'my/toggle-prosey-on)
+(add-hook 'markdown-mode 'my/toggle-prosey-off)
+(add-hook 'org-mode 'my/toggle-prosey)
