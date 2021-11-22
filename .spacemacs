@@ -704,6 +704,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                                 'from-child-frame)
 
    unicode-fonts-enable-ligatures t
+   unicode-fonts-less-feedback t
    unicode-fonts-ligature-modes '(typescript-mode
                                   javascript-mode
                                   js2-mode
@@ -809,11 +810,11 @@ before packages are loaded."
   ;; persistent undo ---
   ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
   ;; is slow?
-  (setq undo-tree-auto-save-history t
-        undo-tree-history-directory-alist
-        `(("." . ,(concat spacemacs-cache-directory "undo"))))
-  (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
-    (make-directory (concat spacemacs-cache-directory "undo")))
+  (let ((undo-tree-cache-dir (concat spacemacs-cache-directory "undo")))
+    (unless (file-exists-p undo-tree-cache-dir)
+      (make-directory undo-tree-cache-dir))
+    (setq undo-tree-auto-save-history t
+          undo-tree-history-directory-alist `(("." . ,undo-tree-cache-dir))))
   ;; granular history ---
   (setq evil-want-fine-undo t)
 
@@ -1237,21 +1238,28 @@ before packages are loaded."
   (symex-initialize)
 
   ;; erc ----------------------------------------------------------------------
-  (setq erc-server-reconnect-attempts 5
-        erc-server-reconnect-timeout 3
-        erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
-                                  "324" "329" "332" "333" "353" "477")
+  (setq erc-autojoin-timing 'connect
+
         erc-fill-function 'erc-fill-static
         erc-fill-static-center 22
+
         erc-hide-list '("JOIN" "PART" "QUIT")
+
         erc-lurker-hide-list '("JOIN" "PART" "QUIT")
         erc-lurker-threshold-time 43200
+
         erc-prompt-for-nickserv-password nil
+
+        erc-server-reconnect-attempts 5
+        erc-server-reconnect-timeout 3
+
         erc-track-exclude-server-buffer t
+        erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
+                                  "324" "329" "332" "333" "353" "477")
+        erc-track-position-in-mode-line nil
         erc-track-shorten-function nil
         erc-track-showcount t
-        erc-track-position-in-mode-line nil
-        erc-autojoin-timing 'connect
+
         erc-server-list
         (if my/work-flag
             '()
@@ -1259,6 +1267,7 @@ before packages are loaded."
              :nick "ees"
              :port "6697"
              :ssl t)))
+
         erc-autojoin-channels-alist
         (if my/work-flag
             '()
