@@ -21,15 +21,19 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (defconst tree-sitter-packages
-  '(tree-sitter
+  '(
+    tree-sitter
     tree-sitter-langs
-    ;; tree-sitter-indent
+    ;; tree-sitter-indent ;; not ready for primetime
     ))
 
 (defun tree-sitter/init-tree-sitter ()
   (use-package tree-sitter
     :defer t
-    :config (global-tree-sitter-mode)))
+    :init
+    (progn
+      (global-tree-sitter-mode)
+      (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))))
 
 (defun tree-sitter/init-tree-sitter-langs ()
   (use-package tree-sitter-langs
