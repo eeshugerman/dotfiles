@@ -648,7 +648,10 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-doc-delay 1 ; seconds
    lsp-ui-doc-alignment 'window
 
+   lsp-ui-sideline-diagnostic-max-line-length 70
+   lsp-ui-sideline-diagnostic-max-lines 5
    lsp-ui-sideline-enable t
+
    lsp-ui-imenu-enable nil
 
    lsp-ui-peek-enable t
@@ -782,7 +785,7 @@ before packages are loaded."
 
   ;; autosave ------------------------------------------------------------------
   (auto-save-mode -1) ;; only want auto-save-visited-mode
-  (setq auto-save-interval 30
+  (setq ;; auto-save-interval 30
         auto-save-timeout 5)
 
   ;; company --------------------------------------------------------------------
@@ -1001,9 +1004,12 @@ before packages are loaded."
 
   (setq which-key-posframe-font "JetBrains Mono NL") ;; ligatures break spacing (sometimes?)
 
-  (set-face-attribute 'show-paren-match nil
-                      :underline t)
+  (set-face-attribute 'show-paren-match nil :underline t)
 
+  (with-eval-after-load 'lsp-ui
+    ;; (set-face-attribute 'lsp-ui-sideline-global nil :background (doom-color 'base1))
+    (set-face-attribute 'lsp-ui-sideline-global nil :weight 'light)
+    (set-face-attribute 'lsp-ui-sideline-global nil :slant 'italic))
 
   ;; doom-modeline -------------------------------------------------------------
   (setq doom-modeline-window-width-limit 80
@@ -1335,6 +1341,7 @@ before packages are loaded."
     (while (search-forward "\\n" (line-end-position) t)
       (replace-match "\n"))))
 
+;; actually it seems like writeroom-mode already does what we want
 (defvar my/prosey nil)
 
 (defun my/toggle-prosey-on ()
@@ -1364,6 +1371,6 @@ before packages are loaded."
     (my/toggle-prosey-off)
     (my/toggle-prosey-on)))
 
-(add-hook 'text-mode-hook 'my/toggle-prosey-on)
-(add-hook 'markdown-mode 'my/toggle-prosey-off)
-(add-hook 'org-mode 'my/toggle-prosey)
+;; (add-hook 'text-mode-hook 'my/toggle-prosey-on)
+;; (add-hook 'markdown-mode 'my/toggle-prosey-off)
+;; (add-hook 'org-mode 'my/toggle-prosey)
