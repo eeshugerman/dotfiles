@@ -221,7 +221,7 @@ It should only modify the values of Spacemacs settings."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner 0
 
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
@@ -1240,6 +1240,8 @@ before packages are loaded."
   ;; erc ----------------------------------------------------------------------
   (setq erc-autojoin-timing 'connect
 
+        erc-enable-notifications t
+
         erc-fill-function 'erc-fill-static
         erc-fill-static-center 22
 
@@ -1252,6 +1254,8 @@ before packages are loaded."
 
         erc-server-reconnect-attempts 5
         erc-server-reconnect-timeout 3
+
+        erc-status-sidebar-width 20
 
         erc-track-exclude-server-buffer t
         erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
@@ -1363,6 +1367,6 @@ before packages are loaded."
     (my/toggle-prosey-off)
     (my/toggle-prosey-on)))
 
-(add-hook 'text-mode-hook 'my/toggle-prosey-on)
-(add-hook 'markdown-mode 'my/toggle-prosey-off)
-(add-hook 'org-mode 'my/toggle-prosey)
+;; (add-hook 'text-mode-hook 'my/toggle-prosey-on)
+;; (add-hook 'markdown-mode 'my/toggle-prosey-off)
+;; (add-hook 'org-mode 'my/toggle-prosey)
