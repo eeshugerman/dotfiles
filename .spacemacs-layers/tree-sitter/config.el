@@ -20,23 +20,8 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-(defconst tree-sitter-packages
-  '(
-    tree-sitter
-    tree-sitter-langs
-    ;; tree-sitter-indent
-    ;; tree-sitter-fold ;; not on melpa
+(defvar tree-sitter-want-indent nil
+  "use `tree-sitter-indent'")
 
-    ))
-
-(defun tree-sitter/init-tree-sitter ()
-  (use-package tree-sitter
-    :defer t
-    :init
-    (progn
-      (global-tree-sitter-mode)
-      (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))))
-
-(defun tree-sitter/init-tree-sitter-langs ()
-  (use-package tree-sitter-langs
-    :defer t))
+(defvar tree-sitter-want-fold nil
+  "use `tree-sitter-fold'")
