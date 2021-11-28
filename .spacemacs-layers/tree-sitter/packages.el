@@ -36,7 +36,7 @@
     :defer t
     :init
     (progn
-      (when tree-sitter-hl-enable
+      (when tree-sitter-syntax-highlight-enable
        (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)))
     :config
     (progn
