@@ -699,7 +699,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    spell-checking-enable-by-default nil
 
    tree-sitter-indent-enable t
-   tree-sitter-fold-enable t
+   tree-sitter-fold-indicators-enable t
 
    treemacs-sorting 'alphabetic-asc
    treemacs-use-filewatch-mode t

@@ -29,5 +29,5 @@
 (defvar tree-sitter-fold-enable nil
   "If non nil, use tree sitter for code folding (for supported languages).")
 
-(defvar tree-sitter-fold-indicators t
+(defvar tree-sitter-fold-indicators-enable t
   "If non nil, show fold indicators in fringe.")
