@@ -28,10 +28,10 @@
 
 * Configure
   #+begin_comment
-  Enabled features /should/ override existing mechanism seamlessly. For example,
+  Enabled features /should/ override existing mechanisms seamlessly. For example,
   there's no need to separately disable regexp-based syntax highlighting, and in
-  general you do not need to update keybindings to point to tree sitter
-  analogues.
+  general you do not need to update keybindings to point to new tree-sitter-based
+  commands.
   #+end_comment
   
   Set =tree-sitter-syntax-highlight-enable t= for syntax highlighting, provided
