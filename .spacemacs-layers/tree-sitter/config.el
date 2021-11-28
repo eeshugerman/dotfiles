@@ -1,4 +1,4 @@
-;;; packages.el --- tree-sitter layer packages file for Spacemacs.
+;;; config.el --- tree-sitter layer packages file for Spacemacs.
 ;;
 ;; Copyright (c) 2012-2021 Sylvain Benner & Contributors
 ;;
@@ -30,4 +30,4 @@
   "If non nil, use tree sitter for code folding (for supported languages).")
 
 (defvar tree-sitter-fold-indicators-enable t
-  "If non nil, show fold indicators in fringe.")
+  "If non nil, and `tree-sitter-fold-enable' is non nil, show fold indicators in fringe.")
