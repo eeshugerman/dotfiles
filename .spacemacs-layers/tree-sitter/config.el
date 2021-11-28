@@ -20,8 +20,14 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+(defvar tree-sitter-hl-enable t
+  "If non nil, use tree sitter for syntax highlighting (for supported languages).")
+
 (defvar tree-sitter-indent-enable nil
-  "use `tree-sitter-indent'")
+  "If non nil, use tree sitter for indentation (for supported languages).")
 
 (defvar tree-sitter-fold-enable nil
-  "use `tree-sitter-fold'")
+  "If non nil, use tree sitter for code folding (for supported languages).")
+
+(defvar tree-sitter-fold-indicators t
+  "If non nil, show fold indicators in fringe.")

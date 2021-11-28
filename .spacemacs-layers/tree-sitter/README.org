@@ -17,8 +17,7 @@ Set =tree-sitter-indent-enable= to enable
 [[https://codeberg.org/FelipeLema/tree-sitter-indent.el][=tree-sitter-indent=]].
 Currently only Rust is supported.
 
-Set =tree-sitter-fold-enable= to
-enable[[https://github.com/junyi-hou/tree-sitter-fold][=tree-sitter-fold=]].
+Set =tree-sitter-fold-enable= to enable [[https://github.com/jcs090218/ts-fold][=ts-fold=]].
 
 
 ** Features:
