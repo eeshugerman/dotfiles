@@ -20,8 +20,8 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-(defvar tree-sitter-want-indent nil
+(defvar tree-sitter-indent-enable nil
   "use `tree-sitter-indent'")
 
-(defvar tree-sitter-want-fold nil
+(defvar tree-sitter-fold-enable nil
   "use `tree-sitter-fold'")

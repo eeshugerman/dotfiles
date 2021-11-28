@@ -9,8 +9,17 @@
 - [[#install][Install]]
 
 * Description
-This layer integrates [[https://github.com/emacs-tree-sitter/elisp-tree-sitter][=Emacs Tree-sitter=]] and (optionally) a few experimental
-packages built around it.
+This layer integrates
+[[https://github.com/emacs-tree-sitter/elisp-tree-sitter][=Emacs Tree-sitter=]]
+and (optionally) a few experimental packages built around it.
+
+Set =tree-sitter-indent-enable= to enable
+[[https://codeberg.org/FelipeLema/tree-sitter-indent.el][=tree-sitter-indent=]].
+Currently only Rust is supported.
+
+Set =tree-sitter-fold-enable= to
+enable[[https://github.com/junyi-hou/tree-sitter-fold][=tree-sitter-fold=]].
+
 
 ** Features:
   - Syntax highlighting
