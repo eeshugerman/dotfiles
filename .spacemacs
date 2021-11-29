@@ -222,7 +222,7 @@ It should only modify the values of Spacemacs settings."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner 0
 
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
@@ -697,6 +697,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    persp-autokill-buffer-on-remove 'kill-weak
 
    spell-checking-enable-by-default nil
+
+   tree-sitter-indent-enable t
+   tree-sitter-fold-indicators-enable t
 
    treemacs-sorting 'alphabetic-asc
    treemacs-use-filewatch-mode t
@@ -1247,6 +1250,8 @@ before packages are loaded."
   ;; erc ----------------------------------------------------------------------
   (setq erc-autojoin-timing 'connect
 
+        erc-enable-notifications t
+
         erc-fill-function 'erc-fill-static
         erc-fill-static-center 22
 
@@ -1259,6 +1264,8 @@ before packages are loaded."
 
         erc-server-reconnect-attempts 5
         erc-server-reconnect-timeout 3
+
+        erc-status-sidebar-width 20
 
         erc-track-exclude-server-buffer t
         erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
