@@ -1002,7 +1002,7 @@ before packages are loaded."
    'terraform-mode-hook
    (lambda () (set-face-foreground 'terraform--resource-name-face "hot pink")))
 
-  (setq which-key-posframe-font "JetBrains Mono NL") ;; ligatures break spacing (sometimes?)
+  (setq which-key-posframe-font (if my/macos-flag "Fira Code" "JetBrains Mono NL")) ;; spacing issues
 
   (set-face-attribute 'show-paren-match nil :underline t)
 
