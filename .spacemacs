@@ -103,7 +103,10 @@ This function should only modify configuration layer settings."
      symex
      which-key-posframe
      ;; mini-frame
-     )
+     (org-clock-reminder
+      :location (recipe
+                 :fetcher github
+                 :repo "eeshugerman/org-clock-reminder")))
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -642,7 +645,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    javascript-repl 'nodejs
    js2-include-node-externs t
 
-   lsp-ui-doc-enable t
+   lsp-ui-doc-enable nil ;; slow w/ large files
    lsp-ui-doc-include-signature t
    lsp-ui-doc-header nil
    lsp-ui-doc-delay 1 ; seconds
@@ -700,6 +703,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    tree-sitter-indent-enable t
    tree-sitter-fold-enable t
+   tree-sitter-fold-indicators-enable nil ;; cool but kind of slow
 
    treemacs-sorting 'alphabetic-asc
    treemacs-use-filewatch-mode t
@@ -744,6 +748,19 @@ before packages are loaded."
   (use-package symex)
   (use-package which-key-posframe :config (which-key-posframe-mode 1))
 
+  (use-package org-clock-reminder
+    :if my/macos-flag
+    :custom
+    (org-clock-reminder-remind-activity nil)
+    (org-clock-reminder-remind-inactivity t)
+    (org-clock-reminder-method 'message)
+    (org-clock-reminder-interval 300)
+    (org-clock-reminder-format-string "You've worked for %s on *%s*")
+    (org-clock-reminder-empty-text "No task clocked!")
+    :config
+    (org-clock-reminder-activate))
+
+  ;; TODO: posframe layer?
   ;; keep an eye on https://github.com/yanghaoxie/transient-posframe/pull/3
   ;; (use-package transient-posframe     :config (transient-posframe-mode 1))
 
@@ -773,7 +790,8 @@ before packages are loaded."
         projectile-indexing-method 'hybrid
         bidi-inhibit-bpa t
         bidi-paragraph-direction 'left-to-right
-        byte-compile-warnings '(cl-functions))
+        byte-compile-warnings '(cl-functions)
+        completions-ignore-case t)
 
   (let ((custom-file-path (file-truename "~/.emacs-custom.el")))
     (unless (file-exists-p custom-file-path)
@@ -868,7 +886,6 @@ before packages are loaded."
   (setq nxml-child-indent 2
         nxml-attribute-indent 2)
 
-
   ;; info ---------------------------------------------------------------------------
   (evil-define-key 'motion Info-mode-map
     [return] 'Info-follow-nearest-node
@@ -906,16 +923,13 @@ before packages are loaded."
 
 
   ;; writeroom -----------------------------------------------------------------
-  (require 'writeroom-mode)
-  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-visual-line-navigation-on)
-  (add-hook 'writeroom-mode-hook 'spacemacs/toggle-spelling-checking-on)
-  (add-hook 'writeroom-mode-enable-hook 'spacemacs/toggle-visual-line-numbers-off)
-  (add-hook 'writeroom-mode-disable-hook 'spacemacs/toggle-visual-line-numbers-on)
-  (setq writeroom-maximize-window nil
-        writeroom-mode-line t
-        writeroom-global-effects (delq 'writeroom-set-fullscreen
-                                       writeroom-global-effects))
-
+  (use-package writeroom-mode
+    :defer t
+    :custom
+    (writeroom-maximize-window nil)
+    (writeroom-mode-line t)
+    (writeroom-global-effects (delq 'writeroom-set-fullscreen
+                                    writeroom-global-effects)))
 
   ;; ivy/ivy-rich --------------------------------------------------------------
   (setq ivy-rich-parse-remote-buffer nil)
@@ -1005,7 +1019,7 @@ before packages are loaded."
    'terraform-mode-hook
    (lambda () (set-face-foreground 'terraform--resource-name-face "hot pink")))
 
-  (setq which-key-posframe-font "JetBrains Mono NL") ;; ligatures break spacing (sometimes?)
+  (setq which-key-posframe-font "JetBrains Mono NL")
 
   (set-face-attribute 'show-paren-match nil :underline t)
 
@@ -1129,6 +1143,13 @@ before packages are loaded."
   (add-hook 'js2-mode-hook 'my/dap-node-enable)
   (add-hook 'typescript-mode-hook 'my/dap-node-enable)
 
+  (defun my/js-fill-column-indicator ()
+    (set-fill-column 120)
+    (display-fill-column-indicator-mode 1))
+
+  (add-hook 'js2-mode-hook 'my/js-fill-column-indicator)
+  (add-hook 'typescript-mode-hook 'my/js-fill-column-indicator)
+
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
   (setenv "TSC_NONPOLLING_WATCHER" "true")
 
@@ -1147,11 +1168,6 @@ before packages are loaded."
 
   (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") 'org-babel-execute-src-block)
 
-  (defun my/org-jira-defaults ()
-    (interactive)
-    (spacemacs/toggle-line-numbers-off)
-    (spacemacs/toggle-truncate-lines-off)
-    (spacemacs/toggle-visual-line-navigation-on))
 
   ;; scheme -------------------------------------------------------------------------
   (spacemacs/set-leader-keys-for-major-mode 'scheme-mode
@@ -1312,7 +1328,15 @@ before packages are loaded."
     (sp-update-local-pairs 'minibuffer-pairs))
   (add-hook 'eval-expression-minibuffer-setup-hook 'my/minibuffer-fix-sp)
 
-  )
+  
+  ;; tree-sitter
+  ;; make objects foldable
+  (defun my/add-javascript-folds (alist)
+    (append '((object . ts-fold-range-seq)
+              (template_string . ts-fold-range-seq))
+            alist))
+
+  (advice-add 'ts-fold-parsers-javascript :filter-return #'my/add-javascript-folds))
 
 ;; misc commands --------------------------------------------------------------
 (defun my/hide-dos-eol ()
@@ -1356,7 +1380,7 @@ before packages are loaded."
     (while (search-forward "\\n" (line-end-position) t)
       (replace-match "\n"))))
 
-;; actually it seems like writeroom-mode already does what we want
+;; TODO: implement as mode deriving writeroom-mode
 (defvar my/prosey nil)
 
 (defun my/toggle-prosey-on ()
@@ -1387,5 +1411,5 @@ before packages are loaded."
     (my/toggle-prosey-on)))
 
 ;; (add-hook 'text-mode-hook 'my/toggle-prosey-on)
-;; (add-hook 'markdown-mode 'my/toggle-prosey-off)
-;; (add-hook 'org-mode 'my/toggle-prosey)
+;; (add-hook 'markdown-mode 'my/toggle-prosey-on)
+;; (add-hook 'org-mode 'my/toggle-prosey-on)
