@@ -1,4 +1,4 @@
-;;; config.el --- tree-sitter layer packages file for Spacemacs.
+;;; config.el --- tree-sitter layer config file for Spacemacs.
 ;;
 ;; Copyright (c) 2012-2021 Sylvain Benner & Contributors
 ;;
