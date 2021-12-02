@@ -749,8 +749,7 @@ before packages are loaded."
   (use-package which-key-posframe :config (which-key-posframe-mode 1))
 
   (use-package org-clock-reminder
-    ;; :init
-    ;; (org-clock-reminder-method 'my/macos-notify)
+    :if my/macos-flag
     :custom
     (org-clock-reminder-remind-activity nil)
     (org-clock-reminder-remind-inactivity t)
@@ -761,6 +760,7 @@ before packages are loaded."
     :config
     (org-clock-reminder-activate))
 
+  ;; TODO: posframe layer?
   ;; keep an eye on https://github.com/yanghaoxie/transient-posframe/pull/3
   ;; (use-package transient-posframe     :config (transient-posframe-mode 1))
 
@@ -886,7 +886,6 @@ before packages are loaded."
   (setq nxml-child-indent 2
         nxml-attribute-indent 2)
 
-
   ;; info ---------------------------------------------------------------------------
   (evil-define-key 'motion Info-mode-map
     [return] 'Info-follow-nearest-node
@@ -924,12 +923,13 @@ before packages are loaded."
 
 
   ;; writeroom -----------------------------------------------------------------
-  ;; (require 'writeroom-mode)
-  (setq writeroom-maximize-window nil
-        writeroom-mode-line t
-        writeroom-global-effects (delq 'writeroom-set-fullscreen
-                                       writeroom-global-effects))
-
+  (use-package writeroom-mode
+    :defer t
+    :custom
+    (writeroom-maximize-window nil)
+    (writeroom-mode-line t)
+    (writeroom-global-effects (delq 'writeroom-set-fullscreen
+                                    writeroom-global-effects)))
 
   ;; ivy/ivy-rich --------------------------------------------------------------
   (setq ivy-rich-parse-remote-buffer nil)
