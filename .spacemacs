@@ -103,7 +103,10 @@ This function should only modify configuration layer settings."
      symex
      which-key-posframe
      ;; mini-frame
-     )
+     (org-clock-reminder
+      :location (recipe
+                 :fetcher github
+                 :repo "eeshugerman/org-clock-reminder")))
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -743,6 +746,19 @@ before packages are loaded."
   (use-package solaire-mode :config (solaire-global-mode 1))
   (use-package symex)
   (use-package which-key-posframe :config (which-key-posframe-mode 1))
+
+  (use-package org-clock-reminder
+    ;; :init
+    ;; (org-clock-reminder-method 'my/macos-notify)
+    :custom
+    (org-clock-reminder-remind-activity nil)
+    (org-clock-reminder-remind-inactivity t)
+    (org-clock-reminder-method 'message)
+    (org-clock-reminder-interval 300)
+    (org-clock-reminder-format-string "You've worked for %s on *%s*")
+    (org-clock-reminder-empty-text "No task clocked!")
+    :config
+    (org-clock-reminder-activate))
 
   ;; keep an eye on https://github.com/yanghaoxie/transient-posframe/pull/3
   ;; (use-package transient-posframe     :config (transient-posframe-mode 1))
