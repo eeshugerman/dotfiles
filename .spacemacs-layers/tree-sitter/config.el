@@ -1,4 +1,4 @@
-;;; config.el --- tree-sitter layer packages file for Spacemacs.
+;;; config.el --- tree-sitter layer config file for Spacemacs.
 ;;
 ;; Copyright (c) 2012-2021 Sylvain Benner & Contributors
 ;;
@@ -20,14 +20,14 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-(defvar tree-sitter-hl-enable t
-  "If non nil, use tree sitter for syntax highlighting (for supported languages).")
+(defvar tree-sitter-syntax-highlight-enable t
+  "If non nil, use tree-sitter for syntax highlighting where supported.")
 
 (defvar tree-sitter-indent-enable nil
-  "If non nil, use tree sitter for indentation (for supported languages).")
+  "If non nil, use tree-sitter for indentation where supported.")
 
 (defvar tree-sitter-fold-enable nil
-  "If non nil, use tree sitter for code folding (for supported languages).")
+  "If non nil, use tree-sitter for code folding where supported.")
 
 (defvar tree-sitter-fold-indicators-enable t
   "If non nil, and `tree-sitter-fold-enable' is non nil, show fold indicators in fringe.")

@@ -36,7 +36,7 @@
     :defer t
     :init
     (progn
-      (when tree-sitter-hl-enable
+      (when tree-sitter-syntax-highlight-enable
        (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)))
     :config
     (progn
@@ -49,15 +49,12 @@
 (defun tree-sitter/init-tree-sitter-indent ()
   (use-package tree-sitter-indent
     :if tree-sitter-indent-enable
-    ;; missing autoload https://codeberg.org/FelipeLema/tree-sitter-indent.el/pulls/15
-    ;; :defer t
+    :defer t
     :init
     (progn
       (add-hook 'rust-mode-hook #'tree-sitter-indent-mode))))
 
-;; how can we avoid listing these explicitly?
-;; pull them out of ts-fold at init-time somehow?
-(defconst tree-sitter//ts-fold-supported-major-modes
+(defconst tree-sitter//ts-fold-supported-major-mode-hooks
   '(agda-mode-hook
     sh-mode-hook
     c-mode-hook
@@ -92,7 +89,7 @@
     :init
     (progn
       (when tree-sitter-fold-enable
-        (dolist (mode-hook tree-sitter//ts-fold-supported-major-modes)
+        (dolist (mode-hook tree-sitter//ts-fold-supported-major-mode-hooks)
           (when (boundp mode-hook)
             (add-hook mode-hook #'ts-fold-mode)
             (when tree-sitter-fold-indicators-enable

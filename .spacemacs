@@ -804,10 +804,10 @@ before packages are loaded."
 
   (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
 
+
   ;; autosave ------------------------------------------------------------------
   (auto-save-mode -1) ;; only want auto-save-visited-mode
-  (setq ;; auto-save-interval 30
-        auto-save-timeout 5)
+  (setq auto-save-timeout 5)
 
   ;; company --------------------------------------------------------------------
   (setq company-selection-wrap-around t)
@@ -905,13 +905,13 @@ before packages are loaded."
   ;; interpreter and tooling ---
   (setq python-shell-interpreter "ipython3")
   (when my/macos-flag
-      ;; TODO: experiment with a portable (Linux/MacOS) venv + exec-path
-      ;; solution for python dependencies (flake8, importmagic, etc)
-      (add-to-list 'exec-path "~/Library/Python/3.8/bin")
-      (add-to-list 'exec-path "~/Library/Python/3.9/bin")
-      (setq python-shell-interpreter "python3"
-            python-shell-interpreter-args "-i"
-            python-shell-completion-native-enable nil))
+    ;; TODO: experiment with a portable (Linux/MacOS) venv + exec-path
+    ;; solution for python dependencies (flake8, importmagic, etc)
+    (add-to-list 'exec-path "~/Library/Python/3.8/bin")
+    (add-to-list 'exec-path "~/Library/Python/3.9/bin")
+    (setq python-shell-interpreter "python3"
+          python-shell-interpreter-args "-i"
+          python-shell-completion-native-enable nil))
   (setq dap-python-debugger 'debugpy) ; this should be the default at some point
 
 
@@ -1281,7 +1281,7 @@ before packages are loaded."
         erc-server-reconnect-attempts 5
         erc-server-reconnect-timeout 3
 
-        erc-status-sidebar-width 20
+        erc-status-sidebar-width 25
 
         erc-track-exclude-server-buffer t
         erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
@@ -1296,6 +1296,10 @@ before packages are loaded."
           '(("irc.libera.chat"
              :nick "ees"
              :port "6697"
+             :ssl t)
+            ("irc.gitter.im"
+             :nick "eeshugerman"
+             :port "6697"
              :ssl t)))
 
         erc-autojoin-channels-alist
@@ -1305,7 +1309,11 @@ before packages are loaded."
                               "#guile"
                               "#guix"
                               "#haskell"
-                              "##politics")))))
+                              "#tridactyl"
+                              "##politics"))
+            ("gitter.im" . ("#syl20bnr/spacemacs")))))
+
+  (add-hook 'erc-track-minor-mode-hook 'erc-status-sidebar-open)
 
   ;; highlight-indentation ----------------------------------------------------
   ;; this is off by default
