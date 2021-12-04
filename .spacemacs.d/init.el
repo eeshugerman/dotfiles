@@ -31,7 +31,7 @@ This function should only modify configuration layer settings."
 
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '("~/.spacemacs-layers/")
+   dotspacemacs-configuration-layer-path '()
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
@@ -656,6 +656,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-sideline-enable t
 
    lsp-ui-imenu-enable nil
+   lsp-ui-imenu-auto-refresh 'after-save
 
    lsp-ui-peek-enable t
    lsp-ui-peek-fontify 'always
@@ -781,14 +782,14 @@ before packages are loaded."
         byte-compile-warnings '(cl-functions)
         completions-ignore-case t)
 
-  (let ((custom-file-path (file-truename "~/.emacs-custom.el")))
+  (let ((custom-file-path (file-truename "~/.spacemacs.d/custom.el")))
     (unless (file-exists-p custom-file-path)
       (with-temp-buffer (write-file custom-file-path)))
     (customize-set-variable 'custom-file custom-file-path))
   (load custom-file)
 
   (when my/work-flag
-    (load (file-truename "~/.day-job.el") nil nil t))
+    (load (file-truename "~/.spacemacs.d/day-job.el") nil nil t))
 
   (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
 
