@@ -62,6 +62,7 @@ This function should only modify configuration layer settings."
      nav-flash
      nginx
      org
+     posframe
      python
      ruby
      rust
@@ -96,12 +97,10 @@ This function should only modify configuration layer settings."
      fold-this
      gcmh
      guix
-     ivy-posframe
      journalctl-mode
      pacfiles-mode
      solaire-mode
      symex
-     which-key-posframe
      ;; mini-frame
      (org-clock-reminder
       :location (recipe
@@ -609,10 +608,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (fset 'evil-redirect-digit-argument 'ignore) ;; before evil-org loaded
 
 
-  ;; misc
-  (setq ivy-posframe-display-functions-alist
-        '((t . ivy-posframe-display-at-frame-center)))
-  ;; (setq byte-compile-warnings '(cl-functions)) ;; already in user-config
+  (setq byte-compile-warnings '(cl-functions))
   (if my/macos-flag
       (setq insert-directory-program "/usr/local/bin/gls"))
 
@@ -740,18 +736,15 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
   ;; init standalone modes ----------------------------------------------------
-  (use-package diredfl :hook (dired-mode . diredfl-global-mode))
-  (use-package direnv :config (direnv-mode 1))
+  (use-package diredfl
+    :defer t
+    :hook (dired-mode . diredfl-global-mode))
+
   (use-package gcmh :config (gcmh-mode 1))
+  (use-package direnv :config (direnv-mode 1))
   (use-package guix)
-  (use-package ivy-posframe :config (ivy-posframe-mode 1))
   (use-package solaire-mode :config (solaire-global-mode 1))
   (use-package symex)
-  (use-package which-key-posframe :config (which-key-posframe-mode 1))
-
-  ;; TODO: posframe layer?
-  ;; keep an eye on https://github.com/yanghaoxie/transient-posframe/pull/3
-  ;; (use-package transient-posframe     :config (transient-posframe-mode 1))
 
   ;; still needs lots of work
   ;; doesn't work with pgtk
@@ -788,7 +781,6 @@ before packages are loaded."
         projectile-indexing-method 'hybrid
         bidi-inhibit-bpa t
         bidi-paragraph-direction 'left-to-right
-        byte-compile-warnings '(cl-functions)
         completions-ignore-case t)
 
   (let ((custom-file-path (file-truename "~/.spacemacs.d/custom.el")))
