@@ -31,7 +31,7 @@ This function should only modify configuration layer settings."
 
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
+   dotspacemacs-configuration-layer-path '()
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
@@ -656,6 +656,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-sideline-enable t
 
    lsp-ui-imenu-enable nil
+   lsp-ui-imenu-auto-refresh 'after-save
 
    lsp-ui-peek-enable t
    lsp-ui-peek-fontify 'always
@@ -748,18 +749,6 @@ before packages are loaded."
   (use-package symex)
   (use-package which-key-posframe :config (which-key-posframe-mode 1))
 
-  (use-package org-clock-reminder
-    :if my/macos-flag
-    :custom
-    (org-clock-reminder-remind-activity nil)
-    (org-clock-reminder-remind-inactivity t)
-    (org-clock-reminder-method 'message)
-    (org-clock-reminder-interval 300)
-    (org-clock-reminder-format-string "You've worked for %s on *%s*")
-    (org-clock-reminder-empty-text "No task clocked!")
-    :config
-    (org-clock-reminder-activate))
-
   ;; TODO: posframe layer?
   ;; keep an eye on https://github.com/yanghaoxie/transient-posframe/pull/3
   ;; (use-package transient-posframe     :config (transient-posframe-mode 1))
@@ -802,16 +791,19 @@ before packages are loaded."
         byte-compile-warnings '(cl-functions)
         completions-ignore-case t)
 
-  (let ((custom-file-path (file-truename "~/.emacs-custom.el")))
+  (let ((custom-file-path (file-truename "~/.spacemacs.d/custom.el")))
     (unless (file-exists-p custom-file-path)
       (with-temp-buffer (write-file custom-file-path)))
     (customize-set-variable 'custom-file custom-file-path))
   (load custom-file)
 
   (when my/work-flag
-    (load (file-truename "~/.day-job.el") nil nil t))
+    (load (file-truename "~/.spacemacs.d/day-job.el") nil nil t))
 
   (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
+
+  (when my/macos-flag
+    (savehist-mode -1)) ;; performance issues?
 
 
   ;; autosave ------------------------------------------------------------------
@@ -826,7 +818,7 @@ before packages are loaded."
     (setq company-shell-modes '(eshell-mode)))
 
   ;; gcmh ------------------------------------------------------------------------
-  (setq gcmh-verbose nil
+  (setq gcmh-verbose t
         gcmh-low-cons-threshold (* 500 (expt 10 3))
         gcmh-high-cons-threshold (* 500 (expt 10 6))
         gcmh-idle-delay 5)
@@ -1171,11 +1163,13 @@ before packages are loaded."
     (require 'ox-jira)
     (org-babel-do-load-languages 'org-babel-load-languages '((scheme . t)))
     (setq org-confirm-babel-evaluate nil
-          org-format-latex-options (plist-put org-format-latex-options :scale 1.2)))
+          org-format-latex-options (plist-put org-format-latex-options :scale 1.2)
+          org-clock-auto-clockout-timer (* 60 15)))
 
   (org-agenda-files (directory-files-recursively "~/org" "\.org$" nil))
 
   (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") 'org-babel-execute-src-block)
+
 
 
   ;; scheme -------------------------------------------------------------------------
@@ -1329,15 +1323,46 @@ before packages are loaded."
     (sp-update-local-pairs 'minibuffer-pairs))
   (add-hook 'eval-expression-minibuffer-setup-hook 'my/minibuffer-fix-sp)
 
-  
-  ;; tree-sitter
+  ;; tree-sitter ----------------------------------------------------------------
   ;; make objects foldable
   (defun my/add-javascript-folds (alist)
     (append '((object . ts-fold-range-seq)
               (template_string . ts-fold-range-seq))
             alist))
 
-  (advice-add 'ts-fold-parsers-javascript :filter-return #'my/add-javascript-folds))
+  (advice-add 'ts-fold-parsers-javascript :filter-return #'my/add-javascript-folds)
+
+
+  ;; org clock ------------------------------------------------------------
+
+  (defvar my/org-clock-reminder-interval 300)
+  (defvar my/org-clock-reminder-timer nil)
+
+  (defun my/org-clock-reminder-function ()
+    (unless (or (org-clocking-p)
+                (> (org-user-idle-seconds) my/org-clock-reminder-interval))
+        (alert "No task clocked!"
+               :never-persist t)))
+
+  (setq my/org-clock-reminder-timer
+        (run-with-timer my/org-clock-reminder-interval
+                        my/org-clock-reminder-interval
+                        #'my/org-clock-reminder-function))
+
+  ;; (use-package org-clock-reminder
+  ;;   :if my/work-flag
+  ;;   :custom
+  ;;   (org-clock-reminder-remind-activity nil)
+  ;;   (org-clock-reminder-remind-inactivity t)
+  ;;   (org-clock-reminder-method 'message)
+  ;;   (org-clock-reminder-interval 300)
+  ;;   (org-clock-reminder-format-string "You've worked for %s on *%s*")
+  ;;   (org-clock-reminder-empty-text "No task clocked!")
+  ;;   :config
+  ;;   (org-clock-reminder-activate))
+
+
+  )
 
 ;; misc commands --------------------------------------------------------------
 (defun my/hide-dos-eol ()
