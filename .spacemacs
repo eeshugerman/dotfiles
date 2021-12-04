@@ -612,7 +612,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; misc
   (setq ivy-posframe-display-functions-alist
         '((t . ivy-posframe-display-at-frame-center)))
-  (setq byte-compile-warnings '(cl-functions))
+  ;; (setq byte-compile-warnings '(cl-functions)) ;; already in user-config
   (if my/macos-flag
       (setq insert-directory-program "/usr/local/bin/gls"))
 
@@ -997,7 +997,7 @@ before packages are loaded."
   (doom-themes-org-config)
   (doom-themes-visual-bell-config)
   (setq doom-themes-treemacs-theme "doom-colors")
-  (load-library "lsp-treemacs-themes")  ;; https://github.com/emacs-lsp/lsp-treemacs/issues/89
+  ;; (load-library "lsp-treemacs-themes")  ;; https://github.com/emacs-lsp/lsp-treemacs/issues/89
   (doom-themes-treemacs-config)
 
   ;; borders, etc ---
