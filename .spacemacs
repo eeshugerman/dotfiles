@@ -764,8 +764,17 @@ before packages are loaded."
   ;; keep an eye on https://github.com/yanghaoxie/transient-posframe/pull/3
   ;; (use-package transient-posframe     :config (transient-posframe-mode 1))
 
-  ;; todo: try this non non-pgtk
-  ;; (use-package mini-frame             :config (mini-frame-mode 1))
+  ;; still needs lots of work
+  ;; doesn't work with pgtk
+  ;; (use-package mini-frame
+  ;;   :config
+  ;;   (ivy-posframe-mode -1)
+  ;;   (which-key-posframe-mode -1)
+  ;;   (setq which-key-popup-type 'minibuffer  ;; doesn't work
+  ;;         mini-frame-show-parameters '((top . 10)
+  ;;                                      (width . 0.7)
+  ;;                                      (left . 0.5)))
+  ;;   (mini-frame-mode 1))
 
   ;; spacing issues
   ;; (use-package dired-git-info
@@ -1243,14 +1252,6 @@ before packages are loaded."
   (add-hook 'yaml-mode-hook (lambda ()
                               (spacemacs/toggle-indent-guide-on)
                               (origami-mode +1)))
-
-  ;; mini-frame ---------------------------------------------------------------
-  ;; (custom-set-variables
-  ;;  '(mini-frame-show-parameters
-  ;;    '((top . 10)
-  ;;      (width . 0.7)
-  ;;      (left . 0.5))))
-
 
   ;; symex --------------------------------------------------------------------
   (define-key global-map (kbd "S-<escape>") 'symex-mode-interface)
