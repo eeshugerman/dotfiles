@@ -274,7 +274,10 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(doom-solarized-dark
+   dotspacemacs-themes '(spacemacs-dark
+                         spacemacs-light
+
+                         doom-solarized-dark
                          doom-solarized-light
 
                          doom-nord
@@ -628,8 +631,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    css-enable-lsp t
    scss-enable-lsp t
 
-   dap-ui-controls-mode nil
-
    groovy-backend 'lsp
    groovy-lsp-jar-path "~/util/groovy-language-server/build/libs/groovy-language-server-all.jar"
 
@@ -663,6 +664,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-peek-show-directory t
    lsp-ui-peek-list-width 60
    lsp-ui-peek-always-show t
+
+   lsp-eslint-code-action-show-documentation nil
 
    lsp-eldoc-enable-hover nil
    lsp-enable-indentation nil
@@ -778,9 +781,6 @@ before packages are loaded."
     "ofe" 'my/echo-file-path
     "oaw" 'eww)
 
-  ;; trying to break this habit
-  (evil-define-key 'normal 'global "gd" (lambda () (interactive)))
-
   (add-hook 'hack-local-variables-hook 'spacemacs/toggle-truncate-lines-on)
 
   (setq select-enable-clipboard nil
@@ -805,6 +805,11 @@ before packages are loaded."
   (when my/macos-flag
     (savehist-mode -1)) ;; performance issues?
 
+  ;; emacs lisp ----------------------------------------------------------------
+  ;; alternatively, switch to gg everywhere?
+  (spacemacs/set-leader-keys-for-major-mode 'emacs-lisp-mode
+    "gd" 'spacemacs/jump-to-definition)
+
 
   ;; autosave ------------------------------------------------------------------
   (auto-save-mode -1) ;; only want auto-save-visited-mode
@@ -818,7 +823,7 @@ before packages are loaded."
     (setq company-shell-modes '(eshell-mode)))
 
   ;; gcmh ------------------------------------------------------------------------
-  (setq gcmh-verbose t
+  (setq gcmh-verbose nil
         gcmh-low-cons-threshold (* 500 (expt 10 3))
         gcmh-high-cons-threshold (* 500 (expt 10 6))
         gcmh-idle-delay 5)
@@ -1006,7 +1011,8 @@ before packages are loaded."
       ;; for some reason both need to be set for which-key-posframe to look right
       (set-face-background 'child-frame-border default-background)
       (set-face-background 'which-key-posframe-border default-background)
-      (set-face-background 'ivy-posframe-border default-background))
+      (set-face-background 'ivy-posframe-border default-background)
+      (set-face-background 'fringe default-background))
     (set-face-foreground 'all-the-icons-ivy-rich-doc-face (doom-color 'base7))
     (if my/macos-flag  ;; fix current-line jiggle w/ doom themes
         (set-face-attribute 'line-number-current-line nil :weight 'normal))
@@ -1036,8 +1042,12 @@ before packages are loaded."
         doom-modeline-percent-position nil
         doom-modeline-buffer-encoding nil
         doom-modeline-bar-width my/border-width
-        doom-modeline-irc t)
+        doom-modeline-irc t
+        doom-modeline-persp-name nil)
 
+  (set-face-attribute 'doom-modeline-persp-name nil :inherit 'unspecified)
+  (add-hook 'buffer-list-update-hook 'doom-modeline-redisplay)
+  (defun doom-modeline-segment--major-mode () nil)
 
   ;; evil ------------------------------------------------------------------------
   ;; vi ---
@@ -1156,6 +1166,10 @@ before packages are loaded."
 
   (spacemacs/set-leader-keys-for-major-mode 'typescript-mode
     "si" 'nodejs-repl)
+
+  ;; reduce modeline clutter
+  (add-hook 'lsp-before-initialize-hook
+            (lambda () (defun lsp-eslint-status-handler (foo bar) t)))
 
 
   ;; org --------------------------------------------------------------------------
@@ -1327,7 +1341,8 @@ before packages are loaded."
   ;; make objects foldable
   (defun my/add-javascript-folds (alist)
     (append '((object . ts-fold-range-seq)
-              (template_string . ts-fold-range-seq))
+              (template_string . ts-fold-range-seq)
+              (class_body . ts-fold-range-seq))
             alist))
 
   (advice-add 'ts-fold-parsers-javascript :filter-return #'my/add-javascript-folds)
@@ -1335,8 +1350,10 @@ before packages are loaded."
 
   ;; org clock ------------------------------------------------------------
 
+  (require 'org-clock)
   (defvar my/org-clock-reminder-interval 300)
-  (defvar my/org-clock-reminder-timer nil)
+  (unless (boundp 'my/org-clock-reminder-timer)
+    (defvar my/org-clock-reminder-timer nil))
 
   (defun my/org-clock-reminder-function ()
     (unless (or (org-clocking-p)
@@ -1344,10 +1361,11 @@ before packages are loaded."
         (alert "No task clocked!"
                :never-persist t)))
 
-  (setq my/org-clock-reminder-timer
-        (run-with-timer my/org-clock-reminder-interval
-                        my/org-clock-reminder-interval
-                        #'my/org-clock-reminder-function))
+  (unless my/org-clock-reminder-timer
+    (setq my/org-clock-reminder-timer
+          (run-with-timer my/org-clock-reminder-interval
+                          my/org-clock-reminder-interval
+                          #'my/org-clock-reminder-function)))
 
   ;; (use-package org-clock-reminder
   ;;   :if my/work-flag
