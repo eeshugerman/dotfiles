@@ -52,7 +52,7 @@ This function should only modify configuration layer settings."
      helpful
      html
      ibuffer
-     import-js
+     (import-js :toggle my/work-flag)
      ipython-notebook
      ivy
      java
@@ -62,6 +62,7 @@ This function should only modify configuration layer settings."
      nav-flash
      nginx
      org
+     posframe
      python
      ruby
      rust
@@ -96,12 +97,10 @@ This function should only modify configuration layer settings."
      fold-this
      gcmh
      guix
-     ivy-posframe
      journalctl-mode
      pacfiles-mode
      solaire-mode
      symex
-     which-key-posframe
      ;; mini-frame
      (org-clock-reminder
       :location (recipe
@@ -612,10 +611,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (fset 'evil-redirect-digit-argument 'ignore) ;; before evil-org loaded
 
 
-  ;; misc
-  (setq ivy-posframe-display-functions-alist
-        '((t . ivy-posframe-display-at-frame-center)))
-  ;; (setq byte-compile-warnings '(cl-functions)) ;; already in user-config
+  (add-to-list 'warning-suppress-types '(comp))
+
   (if my/macos-flag
       (setq insert-directory-program "/usr/local/bin/gls"))
 
@@ -642,7 +639,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    java-backend 'lsp
 
-   javascript-import-tool 'import-js
+   javascript-import-tool (if my/work-flag 'import-js nil)
    javascript-repl 'nodejs
    js2-include-node-externs t
 
@@ -744,18 +741,15 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
   ;; init standalone modes ----------------------------------------------------
-  (use-package diredfl :hook (dired-mode . diredfl-global-mode))
-  (use-package direnv :config (direnv-mode 1))
+  (use-package diredfl
+    :defer t
+    :hook (dired-mode . diredfl-global-mode))
+
   (use-package gcmh :config (gcmh-mode 1))
+  (use-package direnv :config (direnv-mode 1))
   (use-package guix)
-  (use-package ivy-posframe :config (ivy-posframe-mode 1))
   (use-package solaire-mode :config (solaire-global-mode 1))
   (use-package symex)
-  (use-package which-key-posframe :config (which-key-posframe-mode 1))
-
-  ;; TODO: posframe layer?
-  ;; keep an eye on https://github.com/yanghaoxie/transient-posframe/pull/3
-  ;; (use-package transient-posframe     :config (transient-posframe-mode 1))
 
   ;; still needs lots of work
   ;; doesn't work with pgtk
@@ -789,7 +783,6 @@ before packages are loaded."
         projectile-indexing-method 'hybrid
         bidi-inhibit-bpa t
         bidi-paragraph-direction 'left-to-right
-        byte-compile-warnings '(cl-functions)
         completions-ignore-case t)
 
   (let ((custom-file-path (file-truename "~/.spacemacs.d/custom.el")))
@@ -1013,7 +1006,8 @@ before packages are loaded."
       (set-face-background 'child-frame-border default-background)
       (set-face-background 'which-key-posframe-border default-background)
       (set-face-background 'ivy-posframe-border default-background)
-      (set-face-background 'fringe default-background))
+      (set-face-background 'fringe default-background)
+      (set-face-attribute 'show-paren-match nil :underline t))
     (set-face-foreground 'all-the-icons-ivy-rich-doc-face (doom-color 'base7))
     (if my/macos-flag  ;; fix current-line jiggle w/ doom themes
         (set-face-attribute 'line-number-current-line nil :weight 'normal))
@@ -1355,7 +1349,8 @@ before packages are loaded."
         erc-autojoin-channels-alist
         (if my/work-flag
             '()
-          '(("libera.chat" . ("#emacs"
+          '(("libera.chat" . ("#chickadee"
+                              "#emacs"
                               "#guile"
                               "#guix"
                               "#haskell"
@@ -1402,7 +1397,7 @@ before packages are loaded."
         (alert "No task clocked!"
                :never-persist t)))
 
-  (unless my/org-clock-reminder-timer
+  (unless (or my/org-clock-reminder-timer (not my/work-flag))
     (setq my/org-clock-reminder-timer
           (run-with-timer my/org-clock-reminder-interval
                           my/org-clock-reminder-interval
@@ -1500,3 +1495,13 @@ before packages are loaded."
 ;; (add-hook 'text-mode-hook 'my/toggle-prosey-on)
 ;; (add-hook 'markdown-mode 'my/toggle-prosey-on)
 ;; (add-hook 'org-mode 'my/toggle-prosey-on)
+
+;; disgusting hack until https://github.com/emacs-tree-sitter/tree-sitter-langs/pull/55
+;; is merged. issues w/ installing from a the pr branch.
+(defun my/tree-sitter-js-fix ()
+  (interactive)
+  (url-copy-file
+   "https://raw.githubusercontent.com/emacs-tree-sitter/tree-sitter-langs/bc87a728f41348e9d285469f90d5fb36d7b58ac6/queries/javascript/highlights.scm"
+   (f-join (file-name-directory (locate-library "tree-sitter-langs"))
+           "queries/javascript/highlights.scm")
+   t))
