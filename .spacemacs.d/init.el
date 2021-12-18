@@ -1254,7 +1254,14 @@ before packages are loaded."
                               (origami-mode +1)))
 
   ;; symex --------------------------------------------------------------------
-  (define-key global-map (kbd "S-<escape>") 'symex-mode-interface)
+  (define-key global-map (kbd "S-<escape>")
+    #'(lambda ()
+        ;; not sure why `symex-mode-interface' from
+        ;; normal state is not reliable
+        (interactive)
+        (evil-insert-state)
+        (symex-mode-interface)))
+
   (setq symex--user-evil-keyspec
         '(("j" . symex-go-up)
           ("k" . symex-go-down)
