@@ -666,6 +666,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-peek-always-show t
 
    lsp-eslint-code-action-show-documentation nil
+   lsp-eslint-warn-on-ignored-files t
 
    lsp-eldoc-enable-hover nil
    lsp-enable-indentation nil
@@ -993,7 +994,7 @@ before packages are loaded."
   ;; doom ---
   (doom-themes-org-config)
   (doom-themes-visual-bell-config)
-  (setq doom-themes-treemacs-theme "doom-colors")
+  ;; (setq doom-themes-treemacs-theme "doom-colors")
   ;; (load-library "lsp-treemacs-themes")  ;; https://github.com/emacs-lsp/lsp-treemacs/issues/89
   (doom-themes-treemacs-config)
 
@@ -1036,8 +1037,7 @@ before packages are loaded."
     (set-face-attribute 'lsp-ui-sideline-global nil :slant 'italic))
 
   ;; doom-modeline -------------------------------------------------------------
-  (setq doom-modeline-window-width-limit 80
-        doom-modeline-buffer-file-name-style 'truncate-with-project
+  (setq doom-modeline-buffer-file-name-style 'truncate-with-project
         doom-modeline-hud t
         doom-modeline-percent-position nil
         doom-modeline-buffer-encoding nil
@@ -1127,6 +1127,47 @@ before packages are loaded."
 
   ;; make C-k work in ivy/insert (and elsewhere, probably)
   (evil-define-key 'insert 'global (kbd "C-k") nil)
+
+
+  ;; override this to support col number
+  ;; todo: cleanup and upstream?
+  (evil-define-command evil-find-file-at-point-with-line ()
+    "Opens the file at point and goes to line-number."
+    (require 'ffap)
+    (let ((fname (with-no-warnings (ffap-file-at-point))))
+      (if fname
+          (let* ((line-with-char
+                 (save-excursion
+                   (goto-char (cadr ffap-string-at-point-region))
+                   (and (re-search-backward ":\\([0-9]+\\):\\([0-9]+\\)\\="
+                                            (line-beginning-position) t)
+                        (string-to-number (match-string 1)))))
+                 (char
+                  (if line-with-char
+                      (save-excursion
+                        (goto-char (cadr ffap-string-at-point-region))
+                        (and (re-search-backward ":\\([0-9]+\\):\\([0-9]+\\)\\="
+                                                 (line-beginning-position) t)
+                             (string-to-number (match-string 2))))
+                    nil))
+                 (line-no-char
+                  (if (not line-with-char)
+                      (save-excursion
+                        (goto-char (cadr ffap-string-at-point-region))
+                        (and (re-search-backward ":\\([0-9]+\\)\\="
+                                                 (line-beginning-position) t)
+                             (string-to-number (match-string 1))))
+                    nil)))
+            (message "line: %s" (or line-with-char line-no-char))
+            (with-no-warnings (find-file-at-point fname))
+            (when line-no-char
+              (goto-char (point-min))
+              (forward-line (1- line-no-char)))
+            (when line-with-char
+              (goto-char (point-min))
+              (forward-line (1- line-with-char))
+              (move-to-column (1- char))))
+        (user-error "File does not exist."))))
 
   ;; vterm ---------------------------------------------------------------------
   (evil-define-key 'emacs vterm-mode-map
@@ -1432,6 +1473,7 @@ before packages are loaded."
   (spacemacs/toggle-line-numbers-off) ;; doesn't always work?
   (spacemacs/toggle-relative-line-numbers-off)
   (spacemacs/toggle-truncate-lines-off)
+  (spacemacs/toggle-spelling-checking-on)
   (unless writeroom-mode ;; void at startup
     (spacemacs/toggle-centered-buffer))
   (visual-line-mode +1)
@@ -1443,6 +1485,7 @@ before packages are loaded."
   (spacemacs/toggle-relative-line-numbers-on)
   (spacemacs/toggle-truncate-lines-on)
   (spacemacs/toggle-centered-buffer)
+  (spacemacs/toggle-spelling-checking-off)
   (when writeroom-mode
     (speacemacs/toggle-centered-buffer))
   (visual-line-mode -1)
