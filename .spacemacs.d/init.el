@@ -611,7 +611,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (fset 'evil-redirect-digit-argument 'ignore) ;; before evil-org loaded
 
 
-  (setq byte-compile-warnings '(cl-functions))
+  (add-to-list 'warning-suppress-types '(comp))
+
   (if my/macos-flag
       (setq insert-directory-program "/usr/local/bin/gls"))
 
@@ -1449,3 +1450,13 @@ before packages are loaded."
 ;; (add-hook 'text-mode-hook 'my/toggle-prosey-on)
 ;; (add-hook 'markdown-mode 'my/toggle-prosey-on)
 ;; (add-hook 'org-mode 'my/toggle-prosey-on)
+
+;; disgusting hack until https://github.com/emacs-tree-sitter/tree-sitter-langs/pull/55
+;; is merged. issues w/ installing from a the pr branch.
+(defun my/tree-sitter-js-fix ()
+  (interactive)
+  (url-copy-file
+   "https://raw.githubusercontent.com/emacs-tree-sitter/tree-sitter-langs/bc87a728f41348e9d285469f90d5fb36d7b58ac6/queries/javascript/highlights.scm"
+   (f-join (file-name-directory (locate-library "tree-sitter-langs"))
+           "queries/javascript/highlights.scm")
+   t))
