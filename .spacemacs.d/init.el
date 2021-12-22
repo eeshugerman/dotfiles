@@ -1338,7 +1338,6 @@ before packages are loaded."
   (add-hook 'eval-expression-minibuffer-setup-hook 'my/minibuffer-fix-sp)
 
   ;; tree-sitter ----------------------------------------------------------------
-  ;; make objects foldable
   (defun my/add-javascript-folds (alist)
     (append '((object . ts-fold-range-seq)
               (template_string . ts-fold-range-seq)
