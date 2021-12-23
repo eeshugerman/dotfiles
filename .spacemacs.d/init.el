@@ -1122,45 +1122,47 @@ before packages are loaded."
   ;; make C-k work in ivy/insert (and elsewhere, probably)
   (evil-define-key 'insert 'global (kbd "C-k") nil)
 
-
   ;; override this to support col number
-  ;; todo: cleanup and upstream?
+  ;; todo: upstream?
   (evil-define-command evil-find-file-at-point-with-line ()
-    "Opens the file at point and goes to line-number."
+    "Opens the file at point and goes to line number (and char number if present)."
     (require 'ffap)
     (let ((fname (with-no-warnings (ffap-file-at-point))))
-      (if fname
-          (let* ((line-with-char
-                 (save-excursion
-                   (goto-char (cadr ffap-string-at-point-region))
-                   (and (re-search-backward ":\\([0-9]+\\):\\([0-9]+\\)\\="
-                                            (line-beginning-position) t)
-                        (string-to-number (match-string 1)))))
-                 (char
-                  (if line-with-char
-                      (save-excursion
-                        (goto-char (cadr ffap-string-at-point-region))
-                        (and (re-search-backward ":\\([0-9]+\\):\\([0-9]+\\)\\="
-                                                 (line-beginning-position) t)
-                             (string-to-number (match-string 2))))
-                    nil))
-                 (line-no-char
-                  (if (not line-with-char)
-                      (save-excursion
-                        (goto-char (cadr ffap-string-at-point-region))
-                        (and (re-search-backward ":\\([0-9]+\\)\\="
-                                                 (line-beginning-position) t)
-                             (string-to-number (match-string 1))))
-                    nil)))
-            (message "line: %s" (or line-with-char line-no-char))
-            (with-no-warnings (find-file-at-point fname))
-            (when line-no-char
-              (goto-char (point-min))
-              (forward-line (1- line-no-char)))
-            (when line-with-char
-              (goto-char (point-min))
-              (forward-line (1- line-with-char))
-              (move-to-column (1- char))))
+      (when fname
+        (let* ((get-match
+                (lambda (pattern match-number)
+                  (save-excursion
+                    (goto-char (cadr ffap-string-at-point-region))
+                    (and (re-search-backward pattern (line-beginning-position) t)
+                         (string-to-number (match-string match-number))))))
+
+               (line-and-char-pattern
+                ":\\([0-9]+\\):\\([0-9]+\\)\\=" )
+               (line-pattern
+                ":\\([0-9]+\\)\\=" )
+
+               (line-number/with-char
+                (funcall get-match line-and-char-pattern 1))
+
+               (line-number/without-char
+                (if (not line-number/with-char)
+                    (funcall get-match line-pattern 1)
+                  nil))
+
+               (char-number
+                (if line-number/with-char
+                    (funcall get-match line-and-char-pattern 2)
+                  nil)))
+
+          (message "line: %s" (or line-number/with-char line-number/without-char))
+          (with-no-warnings (find-file-at-point fname))
+          (when line-number/without-char
+            (goto-char (point-min))
+            (forward-line (1- line-number/without-char)))
+          (when line-number/with-char
+            (goto-char (point-min))
+            (forward-line (1- line-number/with-char))
+            (move-to-column (1- char-number))))
         (user-error "File does not exist."))))
 
 
