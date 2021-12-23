@@ -623,6 +623,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    ;; c-c++-lsp-enable-semantic-highlight 'overlay
    doom-solarized-dark-brighter-modeline t
    haskell-completion-backend 'lsp
+   evil-respect-visual-line-mode t
 
    html-enable-lsp t
    css-enable-lsp t
@@ -923,8 +924,9 @@ before packages are loaded."
 
 
   ;; writeroom -----------------------------------------------------------------
+  (defvar writeroom-global-effects '()) ;; not sure why this hack is necessary
   (use-package writeroom-mode
-    :defer t
+    ;; :defer t ;; `writeroom-mode' isn't autoloaded :(
     :custom
     (writeroom-maximize-window nil)
     (writeroom-mode-line t)
@@ -1160,6 +1162,7 @@ before packages are loaded."
               (forward-line (1- line-with-char))
               (move-to-column (1- char))))
         (user-error "File does not exist."))))
+
 
   ;; vterm ---------------------------------------------------------------------
   (evil-define-key 'emacs vterm-mode-map
