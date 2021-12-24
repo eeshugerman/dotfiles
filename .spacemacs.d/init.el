@@ -1129,7 +1129,7 @@ before packages are loaded."
     (require 'ffap)
     (let ((fname (with-no-warnings (ffap-file-at-point))))
       (when fname
-        (let* ((get-match
+        (let* ((get-number
                 (lambda (pattern match-number)
                   (save-excursion
                     (goto-char (cadr ffap-string-at-point-region))
@@ -1142,16 +1142,16 @@ before packages are loaded."
                 ":\\([0-9]+\\)\\=" )
 
                (line-number/with-char
-                (funcall get-match line-and-char-pattern 1))
+                (funcall get-number line-and-char-pattern 1))
 
                (line-number/without-char
                 (if (not line-number/with-char)
-                    (funcall get-match line-pattern 1)
+                    (funcall get-number line-pattern 1)
                   nil))
 
                (char-number
                 (if line-number/with-char
-                    (funcall get-match line-and-char-pattern 2)
+                    (funcall get-number line-and-char-pattern 2)
                   nil)))
 
           (message "line: %s" (or line-number/with-char line-number/without-char))
@@ -1470,7 +1470,7 @@ before packages are loaded."
     (while (search-forward "\\n" (line-end-position) t)
       (replace-match "\n"))))
 
-;; TODO: implement as mode deriving writeroom-mode
+;; TODO: implement as mode? deriving writeroom-mode?
 (defvar my/prosey nil)
 
 (defun my/toggle-prosey-on ()
@@ -1479,8 +1479,8 @@ before packages are loaded."
   (spacemacs/toggle-relative-line-numbers-off)
   (spacemacs/toggle-truncate-lines-off)
   (spacemacs/toggle-spelling-checking-on)
-  (unless writeroom-mode ;; void at startup
-    (spacemacs/toggle-centered-buffer))
+  ;; (unless writeroom-mode
+  ;;   (spacemacs/toggle-centered-buffer))
   (visual-line-mode +1)
   (setq my/prosey t))
 
@@ -1489,10 +1489,9 @@ before packages are loaded."
   (spacemacs/toggle-line-numbers-on)
   (spacemacs/toggle-relative-line-numbers-on)
   (spacemacs/toggle-truncate-lines-on)
-  (spacemacs/toggle-centered-buffer)
   (spacemacs/toggle-spelling-checking-off)
-  (when writeroom-mode
-    (speacemacs/toggle-centered-buffer))
+  ;; (when writeroom-mode
+  ;;   (speacemacs/toggle-centered-buffer))
   (visual-line-mode -1)
   (setq my/prosey nil))
 
