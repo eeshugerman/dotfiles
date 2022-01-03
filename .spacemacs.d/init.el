@@ -987,8 +987,8 @@ before packages are loaded."
   ;; doom ---
   (doom-themes-org-config)
   (doom-themes-visual-bell-config)
-  ;; (setq doom-themes-treemacs-theme "doom-colors")
-  ;; (load-library "lsp-treemacs-themes")  ;; https://github.com/emacs-lsp/lsp-treemacs/issues/89
+  (setq doom-themes-treemacs-theme "doom-colors")
+  (load-library "lsp-treemacs-themes")  ;; https://github.com/emacs-lsp/lsp-treemacs/issues/89
   (doom-themes-treemacs-config)
 
   ;; borders, etc ---
