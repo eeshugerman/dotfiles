@@ -623,6 +623,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    ;; c-c++-lsp-enable-semantic-highlight 'overlay
    doom-solarized-dark-brighter-modeline t
    haskell-completion-backend 'lsp
+   evil-respect-visual-line-mode t
 
    html-enable-lsp t
    css-enable-lsp t
@@ -923,8 +924,9 @@ before packages are loaded."
 
 
   ;; writeroom -----------------------------------------------------------------
+  (defvar writeroom-global-effects '()) ;; not sure why this hack is necessary
   (use-package writeroom-mode
-    :defer t
+    ;; :defer t ;; `writeroom-mode' isn't autoloaded :(
     :custom
     (writeroom-maximize-window nil)
     (writeroom-mode-line t)
@@ -1023,8 +1025,6 @@ before packages are loaded."
 
   (setq which-key-posframe-font "JetBrains Mono NL")
 
-  (set-face-attribute 'show-paren-match nil :underline t)
-
   (with-eval-after-load 'lsp-ui
     ;; (set-face-attribute 'lsp-ui-sideline-global nil :background (doom-color 'base1))
     (set-face-attribute 'lsp-ui-sideline-global nil :weight 'light)
@@ -1122,46 +1122,49 @@ before packages are loaded."
   ;; make C-k work in ivy/insert (and elsewhere, probably)
   (evil-define-key 'insert 'global (kbd "C-k") nil)
 
-
   ;; override this to support col number
-  ;; todo: cleanup and upstream?
+  ;; todo: upstream?
   (evil-define-command evil-find-file-at-point-with-line ()
-    "Opens the file at point and goes to line-number."
+    "Opens the file at point and goes to line number (and char number if present)."
     (require 'ffap)
     (let ((fname (with-no-warnings (ffap-file-at-point))))
-      (if fname
-          (let* ((line-with-char
-                 (save-excursion
-                   (goto-char (cadr ffap-string-at-point-region))
-                   (and (re-search-backward ":\\([0-9]+\\):\\([0-9]+\\)\\="
-                                            (line-beginning-position) t)
-                        (string-to-number (match-string 1)))))
-                 (char
-                  (if line-with-char
-                      (save-excursion
-                        (goto-char (cadr ffap-string-at-point-region))
-                        (and (re-search-backward ":\\([0-9]+\\):\\([0-9]+\\)\\="
-                                                 (line-beginning-position) t)
-                             (string-to-number (match-string 2))))
-                    nil))
-                 (line-no-char
-                  (if (not line-with-char)
-                      (save-excursion
-                        (goto-char (cadr ffap-string-at-point-region))
-                        (and (re-search-backward ":\\([0-9]+\\)\\="
-                                                 (line-beginning-position) t)
-                             (string-to-number (match-string 1))))
-                    nil)))
-            (message "line: %s" (or line-with-char line-no-char))
-            (with-no-warnings (find-file-at-point fname))
-            (when line-no-char
-              (goto-char (point-min))
-              (forward-line (1- line-no-char)))
-            (when line-with-char
-              (goto-char (point-min))
-              (forward-line (1- line-with-char))
-              (move-to-column (1- char))))
+      (when fname
+        (let* ((get-number
+                (lambda (pattern match-number)
+                  (save-excursion
+                    (goto-char (cadr ffap-string-at-point-region))
+                    (and (re-search-backward pattern (line-beginning-position) t)
+                         (string-to-number (match-string match-number))))))
+
+               (line-and-char-pattern
+                ":\\([0-9]+\\):\\([0-9]+\\)\\=" )
+               (line-pattern
+                ":\\([0-9]+\\)\\=" )
+
+               (line-number/with-char
+                (funcall get-number line-and-char-pattern 1))
+
+               (line-number/without-char
+                (if (not line-number/with-char)
+                    (funcall get-number line-pattern 1)
+                  nil))
+
+               (char-number
+                (if line-number/with-char
+                    (funcall get-number line-and-char-pattern 2)
+                  nil)))
+
+          (message "line: %s" (or line-number/with-char line-number/without-char))
+          (with-no-warnings (find-file-at-point fname))
+          (when line-number/without-char
+            (goto-char (point-min))
+            (forward-line (1- line-number/without-char)))
+          (when line-number/with-char
+            (goto-char (point-min))
+            (forward-line (1- line-number/with-char))
+            (move-to-column (1- char-number))))
         (user-error "File does not exist."))))
+
 
   ;; vterm ---------------------------------------------------------------------
   (evil-define-key 'emacs vterm-mode-map
@@ -1297,7 +1300,14 @@ before packages are loaded."
                               (origami-mode +1)))
 
   ;; symex --------------------------------------------------------------------
-  (define-key global-map (kbd "S-<escape>") 'symex-mode-interface)
+  (define-key global-map (kbd "S-<escape>")
+    #'(lambda ()
+        ;; not sure why `symex-mode-interface' from
+        ;; normal state is not reliable
+        (interactive)
+        (evil-insert-state)
+        (symex-mode-interface)))
+
   (setq symex--user-evil-keyspec
         '(("j" . symex-go-up)
           ("k" . symex-go-down)
@@ -1460,7 +1470,7 @@ before packages are loaded."
     (while (search-forward "\\n" (line-end-position) t)
       (replace-match "\n"))))
 
-;; TODO: implement as mode deriving writeroom-mode
+;; TODO: implement as mode? deriving writeroom-mode?
 (defvar my/prosey nil)
 
 (defun my/toggle-prosey-on ()
@@ -1469,8 +1479,8 @@ before packages are loaded."
   (spacemacs/toggle-relative-line-numbers-off)
   (spacemacs/toggle-truncate-lines-off)
   (spacemacs/toggle-spelling-checking-on)
-  (unless writeroom-mode ;; void at startup
-    (spacemacs/toggle-centered-buffer))
+  ;; (unless writeroom-mode
+  ;;   (spacemacs/toggle-centered-buffer))
   (visual-line-mode +1)
   (setq my/prosey t))
 
@@ -1479,10 +1489,9 @@ before packages are loaded."
   (spacemacs/toggle-line-numbers-on)
   (spacemacs/toggle-relative-line-numbers-on)
   (spacemacs/toggle-truncate-lines-on)
-  (spacemacs/toggle-centered-buffer)
   (spacemacs/toggle-spelling-checking-off)
-  (when writeroom-mode
-    (speacemacs/toggle-centered-buffer))
+  ;; (when writeroom-mode
+  ;;   (speacemacs/toggle-centered-buffer))
   (visual-line-mode -1)
   (setq my/prosey nil))
 
@@ -1497,7 +1506,7 @@ before packages are loaded."
 ;; (add-hook 'org-mode 'my/toggle-prosey-on)
 
 ;; disgusting hack until https://github.com/emacs-tree-sitter/tree-sitter-langs/pull/55
-;; is merged. issues w/ installing from a the pr branch.
+;; is merged and released. issues w/ installing from a the pr branch.
 (defun my/tree-sitter-js-fix ()
   (interactive)
   (url-copy-file
