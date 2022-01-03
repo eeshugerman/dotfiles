@@ -990,7 +990,7 @@ before packages are loaded."
   (doom-themes-org-config)
   (doom-themes-visual-bell-config)
   (setq doom-themes-treemacs-theme "doom-colors")
-  ;; (load-library "lsp-treemacs-themes")  ;; https://github.com/emacs-lsp/lsp-treemacs/issues/89
+  (load-library "lsp-treemacs-themes")  ;; https://github.com/emacs-lsp/lsp-treemacs/issues/89
   (doom-themes-treemacs-config)
 
   ;; borders, etc ---
@@ -1506,7 +1506,7 @@ before packages are loaded."
 ;; (add-hook 'org-mode 'my/toggle-prosey-on)
 
 ;; disgusting hack until https://github.com/emacs-tree-sitter/tree-sitter-langs/pull/55
-;; is merged. issues w/ installing from a the pr branch.
+;; is merged and released. issues w/ installing from a the pr branch.
 (defun my/tree-sitter-js-fix ()
   (interactive)
   (url-copy-file
