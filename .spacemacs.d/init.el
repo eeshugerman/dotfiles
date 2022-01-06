@@ -41,6 +41,7 @@ This function should only modify configuration layer settings."
      c-c++
      csv
      dap
+     debug
      docker
      emacs-lisp
      epub
@@ -650,9 +651,12 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-doc-delay 1 ; seconds
    lsp-ui-doc-alignment 'window
 
+   lsp-ui-sideline-enable t
    lsp-ui-sideline-diagnostic-max-line-length 70
    lsp-ui-sideline-diagnostic-max-lines 5
-   lsp-ui-sideline-enable t
+   lsp-ui-sideline-show-symbol nil
+   lsp-ui-sideline-show-hover nil
+   lsp-ui-sideline-show-diagnostics t
 
    lsp-ui-imenu-enable nil
    lsp-ui-imenu-auto-refresh 'after-save
@@ -663,13 +667,14 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-peek-list-width 60
    lsp-ui-peek-always-show t
 
-   lsp-eslint-code-action-show-documentation nil
+   ;; lsp-eslint-code-action-show-documentation nil
    lsp-eslint-warn-on-ignored-files t
 
    lsp-eldoc-enable-hover nil
    lsp-enable-indentation nil
    lsp-enable-on-type-formatting nil
    lsp-enable-symbol-highlighting t
+
    lsp-headerline-breadcrumb-enable t
    lsp-headerline-breadcrumb-segments '(symbols)
 
@@ -1118,6 +1123,7 @@ before packages are loaded."
 
 
   (evil-define-key 'normal special-mode-map "q" 'quit-window)
+  (evil-define-key 'normal helpful-mode-map "q" 'kill-buffer-and-window)
 
   ;; make C-k work in ivy/insert (and elsewhere, probably)
   (evil-define-key 'insert 'global (kbd "C-k") nil)
@@ -1125,45 +1131,28 @@ before packages are loaded."
   ;; override this to support col number
   ;; todo: upstream?
   (evil-define-command evil-find-file-at-point-with-line ()
-    "Opens the file at point and goes to line number (and char number if present)."
+    "Opens the file at point and goes to position if present."
     (require 'ffap)
     (let ((fname (with-no-warnings (ffap-file-at-point))))
-      (when fname
-        (let* ((get-number
-                (lambda (pattern match-number)
-                  (save-excursion
-                    (goto-char (cadr ffap-string-at-point-region))
-                    (and (re-search-backward pattern (line-beginning-position) t)
-                         (string-to-number (match-string match-number))))))
-
-               (line-and-char-pattern
-                ":\\([0-9]+\\):\\([0-9]+\\)\\=" )
-               (line-pattern
-                ":\\([0-9]+\\)\\=" )
-
-               (line-number/with-char
-                (funcall get-number line-and-char-pattern 1))
-
-               (line-number/without-char
-                (if (not line-number/with-char)
-                    (funcall get-number line-pattern 1)
-                  nil))
-
-               (char-number
-                (if line-number/with-char
-                    (funcall get-number line-and-char-pattern 2)
-                  nil)))
-
-          (message "line: %s" (or line-number/with-char line-number/without-char))
-          (with-no-warnings (find-file-at-point fname))
-          (when line-number/without-char
-            (goto-char (point-min))
-            (forward-line (1- line-number/without-char)))
-          (when line-number/with-char
-            (goto-char (point-min))
-            (forward-line (1- line-number/with-char))
-            (move-to-column (1- char-number))))
-        (user-error "File does not exist."))))
+      (unless fname
+        (user-error "File does not exist."))
+      (let* ((line-number-pattern ":\\([0-9]+\\)\\=" )
+             (line-and-column-numbers-pattern ":\\([0-9]+\\):\\([0-9]+\\)\\=")
+             (get-number (lambda (pattern match-number)
+                           (save-excursion
+                             (goto-char (cadr ffap-string-at-point-region))
+                             (and (re-search-backward pattern (line-beginning-position) t)
+                                  (string-to-number (match-string match-number))))))
+             (line-number (or (funcall get-number line-and-column-numbers-pattern 1)
+                              (funcall get-number line-number-pattern 1)))
+             (column-number (funcall get-number line-and-column-numbers-pattern 2)))
+        (message "line: %s, column: %s" line-number column-number)
+        (with-no-warnings (find-file-at-point fname))
+        (when line-number
+          (goto-char (point-min))
+          (forward-line (1- line-number))
+          (when column-number
+            (move-to-column (1- column-number)))))))
 
 
   ;; vterm ---------------------------------------------------------------------
