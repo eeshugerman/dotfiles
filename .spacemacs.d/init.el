@@ -1170,13 +1170,6 @@ before packages are loaded."
   (add-hook 'js2-mode-hook 'my/dap-node-enable)
   (add-hook 'typescript-mode-hook 'my/dap-node-enable)
 
-  (defun my/js-fill-column-indicator ()
-    (set-fill-column 120)
-    (display-fill-column-indicator-mode 1))
-
-  (add-hook 'js2-mode-hook 'my/js-fill-column-indicator)
-  (add-hook 'typescript-mode-hook 'my/js-fill-column-indicator)
-
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
   (setenv "TSC_NONPOLLING_WATCHER" "true")
 
