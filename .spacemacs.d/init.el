@@ -1111,17 +1111,6 @@ before packages are loaded."
     (add-to-list 'evil-evilified-state-modes mode))
 
 
-  ;; trying to fix ivy-occur links not working
-  ;; attempt 1 (a hack, doesn't work):
-  ;; (add-hook 'ivy-occur-mode-hook 'ivy-occur-grep-mode)
-
-  ;; attempt 2 (less of a hack, also doesn't work):
-  ;; (dolist (command '(spacemcas/search-auto
-  ;;                    spacemacs/search-project-auto
-  ;;                    spacemacs/search-project-auto-region-or-symbol))
-  ;;   (plist-put ivy--occurs-list command 'counsel-ag-occur))
-
-
   (evil-define-key 'normal special-mode-map "q" 'quit-window)
   (evil-define-key 'normal helpful-mode-map "q" 'kill-buffer-and-window)
 
