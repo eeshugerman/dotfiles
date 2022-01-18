@@ -787,6 +787,7 @@ before packages are loaded."
     "oaw" 'eww)
 
   (add-hook 'hack-local-variables-hook 'spacemacs/toggle-truncate-lines-on)
+  (add-hook 'special-mode-hook 'spacemacs/toggle-truncate-lines-on) ;; not working for dap locals :(
 
   (setq select-enable-clipboard nil
         create-lockfiles nil
