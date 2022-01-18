@@ -64,6 +64,7 @@ This function should only modify configuration layer settings."
      nginx
      org
      posframe
+     prettier
      python
      ruby
      rust
