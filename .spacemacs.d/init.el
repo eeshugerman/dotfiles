@@ -600,7 +600,8 @@ This function defines the environment variables for your Emacs session. By
 default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
-  (spacemacs/load-spacemacs-env))
+  (spacemacs/load-spacemacs-env)
+)
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
@@ -731,13 +732,15 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                                   web-mode
                                   html-mode
                                   scss-mode
-                                  css-mode)))
+                                  css-mode))
+)
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
-dump.")
+dump."
+)
 
 
 (defun dotspacemacs/user-config ()
@@ -1384,21 +1387,7 @@ before packages are loaded."
           (run-with-timer my/org-clock-reminder-interval
                           my/org-clock-reminder-interval
                           #'my/org-clock-reminder-function)))
-
-  ;; (use-package org-clock-reminder
-  ;;   :if my/work-flag
-  ;;   :custom
-  ;;   (org-clock-reminder-remind-activity nil)
-  ;;   (org-clock-reminder-remind-inactivity t)
-  ;;   (org-clock-reminder-method 'message)
-  ;;   (org-clock-reminder-interval 300)
-  ;;   (org-clock-reminder-format-string "You've worked for %s on *%s*")
-  ;;   (org-clock-reminder-empty-text "No task clocked!")
-  ;;   :config
-  ;;   (org-clock-reminder-activate))
-
-
-  )
+)
 
 ;; misc commands --------------------------------------------------------------
 (defun my/hide-dos-eol ()
