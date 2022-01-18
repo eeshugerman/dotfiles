@@ -53,7 +53,6 @@ This function should only modify configuration layer settings."
      helpful
      html
      ibuffer
-     (import-js :toggle my/work-flag)
      ipython-notebook
      ivy
      java
@@ -64,6 +63,7 @@ This function should only modify configuration layer settings."
      nginx
      org
      posframe
+     prettier
      python
      ruby
      rust
@@ -599,7 +599,8 @@ This function defines the environment variables for your Emacs session. By
 default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
-  (spacemacs/load-spacemacs-env))
+  (spacemacs/load-spacemacs-env)
+)
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
@@ -730,13 +731,15 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                                   web-mode
                                   html-mode
                                   scss-mode
-                                  css-mode)))
+                                  css-mode))
+)
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
-dump.")
+dump."
+)
 
 
 (defun dotspacemacs/user-config ()
@@ -782,8 +785,6 @@ before packages are loaded."
     "ofe" 'my/echo-file-path
     "oaw" 'eww)
 
-  (add-hook 'hack-local-variables-hook 'spacemacs/toggle-truncate-lines-on)
-
   (setq select-enable-clipboard nil
         create-lockfiles nil
         projectile-indexing-method 'hybrid
@@ -804,6 +805,21 @@ before packages are loaded."
 
   (when my/macos-flag
     (savehist-mode -1)) ;; performance issues?
+
+  (defmacro my/with-no-messages (&rest body)
+    ;; `inhibit-message' still logs to *Messages* and (apprently?) clears previous message
+    ;; so instead...
+    `(cl-letf (((symbol-function 'message) (lambda (&rest args) nil)))
+      (progn ,@body)))
+
+  (defun my/suppress-messages-advice (func &rest args)
+    (my/with-no-messages (apply func args)))
+
+  (defun my/suppress-messages-hook (func)
+    (lambda () (my/with-no-messages (funcall func))))
+
+  (add-hook 'hack-local-variables-hook (my/suppress-messages-hook 'spacemacs/toggle-truncate-lines-on))
+  (add-hook 'special-mode-hook (my/suppress-messages-hook 'spacemacs/toggle-truncate-lines-on))
 
   ;; emacs lisp ----------------------------------------------------------------
   ;; alternatively, switch to gg everywhere?
@@ -848,6 +864,8 @@ before packages are loaded."
           undo-tree-history-directory-alist `(("." . ,undo-tree-cache-dir))))
   ;; granular history ---
   (setq evil-want-fine-undo t)
+
+  (advice-add #'undo-tree-load-history :around #'my/suppress-messages-advice)
 
 
   ;; comint --------------------------------------------------------------------
@@ -1117,33 +1135,6 @@ before packages are loaded."
   ;; make C-k work in ivy/insert (and elsewhere, probably)
   (evil-define-key 'insert 'global (kbd "C-k") nil)
 
-  ;; override this to support col number
-  ;; todo: upstream?
-  (evil-define-command evil-find-file-at-point-with-line ()
-    "Opens the file at point and goes to position if present."
-    (require 'ffap)
-    (let ((fname (with-no-warnings (ffap-file-at-point))))
-      (unless fname
-        (user-error "File does not exist."))
-      (let* ((line-number-pattern ":\\([0-9]+\\)\\=" )
-             (line-and-column-numbers-pattern ":\\([0-9]+\\):\\([0-9]+\\)\\=")
-             (get-number (lambda (pattern match-number)
-                           (save-excursion
-                             (goto-char (cadr ffap-string-at-point-region))
-                             (and (re-search-backward pattern (line-beginning-position) t)
-                                  (string-to-number (match-string match-number))))))
-             (line-number (or (funcall get-number line-and-column-numbers-pattern 1)
-                              (funcall get-number line-number-pattern 1)))
-             (column-number (funcall get-number line-and-column-numbers-pattern 2)))
-        (message "line: %s, column: %s" line-number column-number)
-        (with-no-warnings (find-file-at-point fname))
-        (when line-number
-          (goto-char (point-min))
-          (forward-line (1- line-number))
-          (when column-number
-            (move-to-column (1- column-number)))))))
-
-
   ;; vterm ---------------------------------------------------------------------
   (evil-define-key 'emacs vterm-mode-map
     (kbd "C-k") 'evil-previous-line
@@ -1381,21 +1372,7 @@ before packages are loaded."
           (run-with-timer my/org-clock-reminder-interval
                           my/org-clock-reminder-interval
                           #'my/org-clock-reminder-function)))
-
-  ;; (use-package org-clock-reminder
-  ;;   :if my/work-flag
-  ;;   :custom
-  ;;   (org-clock-reminder-remind-activity nil)
-  ;;   (org-clock-reminder-remind-inactivity t)
-  ;;   (org-clock-reminder-method 'message)
-  ;;   (org-clock-reminder-interval 300)
-  ;;   (org-clock-reminder-format-string "You've worked for %s on *%s*")
-  ;;   (org-clock-reminder-empty-text "No task clocked!")
-  ;;   :config
-  ;;   (org-clock-reminder-activate))
-
-
-  )
+)
 
 ;; misc commands --------------------------------------------------------------
 (defun my/hide-dos-eol ()
