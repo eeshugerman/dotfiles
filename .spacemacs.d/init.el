@@ -53,7 +53,6 @@ This function should only modify configuration layer settings."
      helpful
      html
      ibuffer
-     (import-js :toggle my/work-flag)
      ipython-notebook
      ivy
      java
@@ -786,9 +785,6 @@ before packages are loaded."
     "ofe" 'my/echo-file-path
     "oaw" 'eww)
 
-  (add-hook 'hack-local-variables-hook 'spacemacs/toggle-truncate-lines-on)
-  (add-hook 'special-mode-hook 'spacemacs/toggle-truncate-lines-on) ;; not working for dap locals :(
-
   (setq select-enable-clipboard nil
         create-lockfiles nil
         projectile-indexing-method 'hybrid
@@ -809,6 +805,21 @@ before packages are loaded."
 
   (when my/macos-flag
     (savehist-mode -1)) ;; performance issues?
+
+  (defmacro my/with-no-messages (&rest body)
+    ;; `inhibit-message' still logs to *Messages* and (apprently?) clears previous message
+    ;; so instead...
+    `(cl-letf (((symbol-function 'message) (lambda (&rest args) nil)))
+      (progn ,@body)))
+
+  (defun my/suppress-messages-advice (func &rest args)
+    (my/with-no-messages (apply func args)))
+
+  (defun my/suppress-messages-hook (func)
+    (lambda () (my/with-no-messages (funcall func))))
+
+  (add-hook 'hack-local-variables-hook (my/suppress-messages-hook 'spacemacs/toggle-truncate-lines-on))
+  (add-hook 'special-mode-hook (my/suppress-messages-hook 'spacemacs/toggle-truncate-lines-on))
 
   ;; emacs lisp ----------------------------------------------------------------
   ;; alternatively, switch to gg everywhere?
@@ -853,6 +864,8 @@ before packages are loaded."
           undo-tree-history-directory-alist `(("." . ,undo-tree-cache-dir))))
   ;; granular history ---
   (setq evil-want-fine-undo t)
+
+  (advice-add #'undo-tree-load-history :around #'my/suppress-messages-advice)
 
 
   ;; comint --------------------------------------------------------------------
