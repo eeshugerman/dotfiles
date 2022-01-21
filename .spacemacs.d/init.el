@@ -609,10 +609,6 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
-  ;; temp workaround for https://github.com/Somelauw/evil-org-mode/issues/93
-  (fset 'evil-redirect-digit-argument 'ignore) ;; before evil-org loaded
-
-
   (add-to-list 'warning-suppress-types '(comp))
 
   (if my/macos-flag
@@ -748,6 +744,16 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+
+  ;; temp ---------------------------------------------------------------------
+  ;; remove once https://github.com/syl20bnr/evil-iedit-state/pull/37 is merged
+  (defun evil-iedit-state//goto-overlay-start ()
+    "Return the position of the start of the current overlay."
+    (let ((overlay (iedit-find-current-occurrence-overlay)))
+      (if overlay
+          (goto-char (overlay-start overlay))
+        (call-interactively 'evil-beginning-of-line))))
+  (define-key evil-iedit-state-map "0"   'evil-iedit-state/evil-beginning-of-line)
 
   ;; init standalone modes ----------------------------------------------------
   (use-package diredfl
