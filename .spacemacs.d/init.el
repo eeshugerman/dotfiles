@@ -506,7 +506,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, start an Emacs server if one is not already running.
    ;; (default nil)
-   dotspacemacs-enable-server nil
+   dotspacemacs-enable-server t
 
    ;; Set the emacs server socket location.
    ;; If nil, uses whatever the Emacs default is, otherwise a directory path
@@ -608,10 +608,6 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-
-  ;; temp workaround for https://github.com/Somelauw/evil-org-mode/issues/93
-  (fset 'evil-redirect-digit-argument 'ignore) ;; before evil-org loaded
-
 
   (add-to-list 'warning-suppress-types '(comp))
 
@@ -778,7 +774,10 @@ before packages are loaded."
 
 
   ;; misc/general --------------------------------------------------------------
-  (server-start)
+  ;; (server-start)
+  (if (not my/macos-flag)
+      ;; trying to debug
+      (setq server-log t))
 
   (spacemacs/set-leader-keys
     ":"  'eval-expression
