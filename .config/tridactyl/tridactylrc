@@ -24,9 +24,11 @@ jsb tri.excmds.setpref("privacy.resistFingerprinting.block_mozAddonManager", "tr
 jsb browser.webRequest.onHeadersReceived.addListener(tri.request.clobberCSP,{urls:["<all_urls>"],types:["main_frame"]},["blocking","responseHeaders"])
 
 set smoothscroll true
-set scrollduration 100
+set scrollduration 150
 bind j scrollline 10
 bind k scrollline -10
+bind J scrollline 25
+bind K scrollline -25
 
 " disable searchurls
 setnull searchurls.amazon
