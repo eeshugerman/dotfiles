@@ -747,13 +747,13 @@ before packages are loaded."
 
   ;; temp ---------------------------------------------------------------------
   ;; remove once https://github.com/syl20bnr/evil-iedit-state/pull/37 is merged
-  (defun evil-iedit-state//goto-overlay-start ()
-    "Return the position of the start of the current overlay."
-    (let ((overlay (iedit-find-current-occurrence-overlay)))
-      (if overlay
-          (goto-char (overlay-start overlay))
-        (call-interactively 'evil-beginning-of-line))))
-  (define-key evil-iedit-state-map "0"   'evil-iedit-state/evil-beginning-of-line)
+  ;; (defun evil-iedit-state//goto-overlay-start ()
+  ;;   "Return the position of the start of the current overlay."
+  ;;   (let ((overlay (iedit-find-current-occurrence-overlay)))
+  ;;     (if overlay
+  ;;         (goto-char (overlay-start overlay))
+  ;;       (call-interactively 'evil-beginning-of-line))))
+  ;; (define-key evil-iedit-state-map "0"   'evil-iedit-state/evil-beginning-of-line)
 
   ;; init standalone modes ----------------------------------------------------
   (use-package diredfl
@@ -809,8 +809,8 @@ before packages are loaded."
 
   (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
 
-  (when my/macos-flag
-    (savehist-mode -1)) ;; performance issues?
+  ;; (when my/macos-flag
+  ;;   (savehist-mode -1)) ;; performance issues?
 
   (defmacro my/with-no-messages (&rest body)
     ;; `inhibit-message' still logs to *Messages* and (apprently?) clears previous message
@@ -879,7 +879,7 @@ before packages are loaded."
     (kbd (concat dotspacemacs-leader-key " b d")) 'comint-send-eof ;; doesn't work :(
     [return] 'comint-send-input)
 
-  (evil-define-key 'normal 'ielm-map
+  (evil-define-key 'normal ielm-map
     [return] 'ielm-return)
 
   (setq comint-move-point-for-output nil ;; does this do anything?
@@ -1431,6 +1431,7 @@ before packages are loaded."
   (spacemacs/toggle-relative-line-numbers-off)
   (spacemacs/toggle-truncate-lines-off)
   (spacemacs/toggle-spelling-checking-on)
+  ;; (hl-line-mode -1)
   ;; (unless writeroom-mode
   ;;   (spacemacs/toggle-centered-buffer))
   (visual-line-mode +1)
@@ -1442,6 +1443,7 @@ before packages are loaded."
   (spacemacs/toggle-relative-line-numbers-on)
   (spacemacs/toggle-truncate-lines-on)
   (spacemacs/toggle-spelling-checking-off)
+  ;; (hl-line-mode +1)
   ;; (when writeroom-mode
   ;;   (speacemacs/toggle-centered-buffer))
   (visual-line-mode -1)
