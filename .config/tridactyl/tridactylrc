@@ -2,8 +2,8 @@
 
 sanitise tridactyllocal tridactylsync
 
-bind <C-k> tabnext
-bind <C-j> tabprev
+bind K tabnext
+bind J tabprev
 
 bind D tabclosealltoright
 bind C composite tabclosealltoright ; fillcmdline open
@@ -24,9 +24,11 @@ jsb tri.excmds.setpref("privacy.resistFingerprinting.block_mozAddonManager", "tr
 jsb browser.webRequest.onHeadersReceived.addListener(tri.request.clobberCSP,{urls:["<all_urls>"],types:["main_frame"]},["blocking","responseHeaders"])
 
 set smoothscroll true
-set scrollduration 100
+set scrollduration 140
 bind j scrollline 10
 bind k scrollline -10
+bind <C-j> scrollline 25
+bind <C-k> scrollline -25
 
 " disable searchurls
 setnull searchurls.amazon
