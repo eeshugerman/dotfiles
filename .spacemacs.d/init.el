@@ -951,6 +951,9 @@ before packages are loaded."
   (evil-define-key 'normal magit-diff-mode-map
     (kbd "RET") 'magit-diff-visit-worktree-file-other-window)
 
+  ;; https://github.com/magit/magit/issues/2942#issuecomment-1026201640
+  ;; (use-package magit-delta
+  ;;   :hook (magit-mode . magit-delta-mode))
 
   ;; writeroom -----------------------------------------------------------------
   (defvar writeroom-global-effects '()) ;; not sure why this hack is necessary
@@ -1366,10 +1369,12 @@ before packages are loaded."
   (defvar my/org-clock-reminder-interval 300)
   (unless (boundp 'my/org-clock-reminder-timer)
     (defvar my/org-clock-reminder-timer nil))
+  (defvar my/org-clock-reminder-disable nil)
 
   (defun my/org-clock-reminder-function ()
     (unless (or (org-clocking-p)
-                (> (org-user-idle-seconds) my/org-clock-reminder-interval))
+                (> (org-user-idle-seconds) my/org-clock-reminder-interval)
+                my/org-clock-reminder-disable)
         (alert "No task clocked!"
                :never-persist t)))
 
@@ -1458,13 +1463,3 @@ before packages are loaded."
 ;; (add-hook 'text-mode-hook 'my/toggle-prosey-on)
 ;; (add-hook 'markdown-mode 'my/toggle-prosey-on)
 ;; (add-hook 'org-mode 'my/toggle-prosey-on)
-
-;; disgusting hack until https://github.com/emacs-tree-sitter/tree-sitter-langs/pull/55
-;; is merged and released. issues w/ installing from a the pr branch.
-(defun my/tree-sitter-js-fix ()
-  (interactive)
-  (url-copy-file
-   "https://raw.githubusercontent.com/emacs-tree-sitter/tree-sitter-langs/bc87a728f41348e9d285469f90d5fb36d7b58ac6/queries/javascript/highlights.scm"
-   (f-join (file-name-directory (locate-library "tree-sitter-langs"))
-           "queries/javascript/highlights.scm")
-   t))
