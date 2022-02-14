@@ -129,16 +129,16 @@ This function should only modify configuration layer settings."
 This function is called at the very beginning of Spacemacs startup,
 before layer configuration.
 It should only modify the values of Spacemacs settings."
-
-  ;; https://www.reddit.com/r/emacs/comments/cdf48c/failed_to_download_gnu_archive/
-  ;; (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
-   ;; If non-nil then enable support for the portable dumper. You'll need
-   ;; to compile Emacs 27 from source following the instructions in file
+   ;; If non-nil then enable support for the portable dumper. You'll need to
+   ;; compile Emacs 27 from source following the instructions in file
    ;; EXPERIMENTAL.org at to root of the git repository.
+   ;;
+   ;; WARNING: pdumper does not work with Native Compilation, so it's disabled
+   ;; regardless of the following setting when native compilation is in effect.
+   ;;
    ;; (default nil)
    dotspacemacs-enable-emacs-pdumper nil
 
@@ -257,7 +257,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-new-empty-buffer-major-mode 'text-mode
 
    ;; Default major mode of the scratch buffer (default `text-mode')
-   dotspacemacs-scratch-mode 'emacs-lisp-mode
+   dotspacemacs-scratch-mode 'text-mode
 
    ;; If non-nil, *scratch* buffer will be persistent. Things you write down in
    ;; *scratch* buffer will be saved and restored automatically.
