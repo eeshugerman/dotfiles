@@ -107,7 +107,11 @@ This function should only modify configuration layer settings."
      (org-clock-reminder
       :location (recipe
                  :fetcher github
-                 :repo "eeshugerman/org-clock-reminder")))
+                 :repo "eeshugerman/org-clock-reminder"))
+     (dconf-wrangler
+      :location (recipe
+                 :fetcher file
+                 :path "~/devel/dconf-wrangler/dconf-wrangler.el")))
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
