@@ -129,16 +129,16 @@ This function should only modify configuration layer settings."
 This function is called at the very beginning of Spacemacs startup,
 before layer configuration.
 It should only modify the values of Spacemacs settings."
-
-  ;; https://www.reddit.com/r/emacs/comments/cdf48c/failed_to_download_gnu_archive/
-  ;; (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
-   ;; If non-nil then enable support for the portable dumper. You'll need
-   ;; to compile Emacs 27 from source following the instructions in file
+   ;; If non-nil then enable support for the portable dumper. You'll need to
+   ;; compile Emacs 27 from source following the instructions in file
    ;; EXPERIMENTAL.org at to root of the git repository.
+   ;;
+   ;; WARNING: pdumper does not work with Native Compilation, so it's disabled
+   ;; regardless of the following setting when native compilation is in effect.
+   ;;
    ;; (default nil)
    dotspacemacs-enable-emacs-pdumper nil
 
@@ -257,7 +257,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-new-empty-buffer-major-mode 'text-mode
 
    ;; Default major mode of the scratch buffer (default `text-mode')
-   dotspacemacs-scratch-mode 'emacs-lisp-mode
+   dotspacemacs-scratch-mode 'text-mode
 
    ;; If non-nil, *scratch* buffer will be persistent. Things you write down in
    ;; *scratch* buffer will be saved and restored automatically.
@@ -506,7 +506,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, start an Emacs server if one is not already running.
    ;; (default nil)
-   dotspacemacs-enable-server t
+   dotspacemacs-enable-server nil
 
    ;; Set the emacs server socket location.
    ;; If nil, uses whatever the Emacs default is, otherwise a directory path
@@ -745,6 +745,16 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
+  ;; temp ---------------------------------------------------------------------
+  ;; remove once https://github.com/syl20bnr/evil-iedit-state/pull/37 is merged
+  ;; (defun evil-iedit-state//goto-overlay-start ()
+  ;;   "Return the position of the start of the current overlay."
+  ;;   (let ((overlay (iedit-find-current-occurrence-overlay)))
+  ;;     (if overlay
+  ;;         (goto-char (overlay-start overlay))
+  ;;       (call-interactively 'evil-beginning-of-line))))
+  ;; (define-key evil-iedit-state-map "0"   'evil-iedit-state/evil-beginning-of-line)
+
   ;; init standalone modes ----------------------------------------------------
   (use-package diredfl
     :defer t
@@ -774,10 +784,7 @@ before packages are loaded."
 
 
   ;; misc/general --------------------------------------------------------------
-  ;; (server-start)
-  (if (not my/macos-flag)
-      ;; trying to debug
-      (setq server-log t))
+  (server-start)
 
   (spacemacs/set-leader-keys
     ":"  'eval-expression
@@ -802,8 +809,8 @@ before packages are loaded."
 
   (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
 
-  (when my/macos-flag
-    (savehist-mode -1)) ;; performance issues?
+  ;; (when my/macos-flag
+  ;;   (savehist-mode -1)) ;; performance issues?
 
   (defmacro my/with-no-messages (&rest body)
     ;; `inhibit-message' still logs to *Messages* and (apprently?) clears previous message
@@ -872,7 +879,7 @@ before packages are loaded."
     (kbd (concat dotspacemacs-leader-key " b d")) 'comint-send-eof ;; doesn't work :(
     [return] 'comint-send-input)
 
-  (evil-define-key 'normal 'ielm-map
+  (evil-define-key 'normal ielm-map
     [return] 'ielm-return)
 
   (setq comint-move-point-for-output nil ;; does this do anything?
@@ -944,6 +951,9 @@ before packages are loaded."
   (evil-define-key 'normal magit-diff-mode-map
     (kbd "RET") 'magit-diff-visit-worktree-file-other-window)
 
+  ;; https://github.com/magit/magit/issues/2942#issuecomment-1026201640
+  ;; (use-package magit-delta
+  ;;   :hook (magit-mode . magit-delta-mode))
 
   ;; writeroom -----------------------------------------------------------------
   (defvar writeroom-global-effects '()) ;; not sure why this hack is necessary
@@ -1359,10 +1369,12 @@ before packages are loaded."
   (defvar my/org-clock-reminder-interval 300)
   (unless (boundp 'my/org-clock-reminder-timer)
     (defvar my/org-clock-reminder-timer nil))
+  (defvar my/org-clock-reminder-disable nil)
 
   (defun my/org-clock-reminder-function ()
     (unless (or (org-clocking-p)
-                (> (org-user-idle-seconds) my/org-clock-reminder-interval))
+                (> (org-user-idle-seconds) my/org-clock-reminder-interval)
+                my/org-clock-reminder-disable)
         (alert "No task clocked!"
                :never-persist t)))
 
@@ -1424,6 +1436,7 @@ before packages are loaded."
   (spacemacs/toggle-relative-line-numbers-off)
   (spacemacs/toggle-truncate-lines-off)
   (spacemacs/toggle-spelling-checking-on)
+  ;; (hl-line-mode -1)
   ;; (unless writeroom-mode
   ;;   (spacemacs/toggle-centered-buffer))
   (visual-line-mode +1)
@@ -1435,6 +1448,7 @@ before packages are loaded."
   (spacemacs/toggle-relative-line-numbers-on)
   (spacemacs/toggle-truncate-lines-on)
   (spacemacs/toggle-spelling-checking-off)
+  ;; (hl-line-mode +1)
   ;; (when writeroom-mode
   ;;   (speacemacs/toggle-centered-buffer))
   (visual-line-mode -1)
@@ -1449,13 +1463,3 @@ before packages are loaded."
 ;; (add-hook 'text-mode-hook 'my/toggle-prosey-on)
 ;; (add-hook 'markdown-mode 'my/toggle-prosey-on)
 ;; (add-hook 'org-mode 'my/toggle-prosey-on)
-
-;; disgusting hack until https://github.com/emacs-tree-sitter/tree-sitter-langs/pull/55
-;; is merged and released. issues w/ installing from a the pr branch.
-(defun my/tree-sitter-js-fix ()
-  (interactive)
-  (url-copy-file
-   "https://raw.githubusercontent.com/emacs-tree-sitter/tree-sitter-langs/bc87a728f41348e9d285469f90d5fb36d7b58ac6/queries/javascript/highlights.scm"
-   (f-join (file-name-directory (locate-library "tree-sitter-langs"))
-           "queries/javascript/highlights.scm")
-   t))
