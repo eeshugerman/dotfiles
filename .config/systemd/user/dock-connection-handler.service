@@ -1,0 +1,12 @@
+[Unit]
+Description=Dock connection handler
+Wants=dock-connection-handler.timer
+
+[Service]
+ExecStart=%h/.local/bin/dock-connection-handler
+Type=oneshot
+# doesn't work :/
+LogLevelMax=info
+
+[Install]
+WantedBy=default.target
