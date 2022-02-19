@@ -4,7 +4,7 @@ Requires=dock-connection-handler.service
 [Timer]
 # Unit=dock-connection-handler.service
 OnBootSec=1min
-OnUnitActiveSec=5sec
+OnUnitActiveSec=15sec
 
 [Install]
 WantedBy=timers.target
