@@ -55,8 +55,8 @@ else
 fi
 
 alias dconf-dump="dconf dump / | vim -R -c 'set ft=dosini'"
-alias dconf-edit="vim $HOME/.config/dconf.ini"
-alias dconf-load="dconf load / < $HOME/.config/dconf.ini"
+alias dconf-edit="vim $HOME/.config/dconf-user.conf"
+alias dconf-load="dconf load / < $HOME/.config/dconf-user.conf"
 
 export PATH="$PATH:$HOME/.local/bin"
 
