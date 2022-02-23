@@ -31,19 +31,12 @@ else
     export PAGER="less"
 fi
 
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR="vim"
-else
-  export EDITOR="nvim"
-fi
+export EDITOR="vim"
 
 unsetopt beep
 
 # reduce delay entering normal mode
 KEYTIMEOUT=1  # 10ms
-
-alias vim="nvim"
-alias ep="sudo eopkg"
 
 if [ "$(uname)" = "Darwin" ]; then
     alias cbcopy="pbcopy"
