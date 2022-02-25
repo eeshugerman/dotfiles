@@ -274,14 +274,14 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
+   dotspacemacs-themes '(doom-nord
+                         doom-nord-light
+
+                         spacemacs-dark
                          spacemacs-light
 
                          doom-solarized-dark
                          doom-solarized-light
-
-                         doom-nord
-                         doom-nord-light
 
                          ; extra lights
                          doom-one-light
@@ -626,6 +626,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    html-enable-lsp t
    css-enable-lsp t
    scss-enable-lsp t
+
+   dap-debug-restart-keep-session nil
 
    groovy-backend 'lsp
    groovy-lsp-jar-path "~/util/groovy-language-server/build/libs/groovy-language-server-all.jar"
