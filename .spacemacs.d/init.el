@@ -108,10 +108,12 @@ This function should only modify configuration layer settings."
       :location (recipe
                  :fetcher github
                  :repo "eeshugerman/org-clock-reminder"))
-     (dconf-wrangler
+     (dconf-dotfile
       :location (recipe
                  :fetcher file
-                 :path "~/devel/dconf-wrangler/dconf-wrangler.el")))
+                 :path "~/devel/dconf-dotfile/dconf-dotfile.el"))
+     (tree-sitter-langs
+      :location local))
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -1144,7 +1146,7 @@ before packages are loaded."
 
 
   (evil-define-key 'normal special-mode-map "q" 'quit-window)
-  (evil-define-key 'normal helpful-mode-map "q" 'kill-buffer-and-window)
+  (evil-define-key 'normal helpful-mode-map "q" 'kill-buffer-and-window) ;; doesn't kill buffer?
 
   ;; make C-k work in ivy/insert (and elsewhere, probably)
   (evil-define-key 'insert 'global (kbd "C-k") nil)
@@ -1208,19 +1210,19 @@ before packages are loaded."
 
   ;; ;; yadm ------------------------------------------------------------------------
   ;; ;; only half works, sometimes breaks stuff
-  ;; (require 'tramp)
-  ;; (add-to-list 'tramp-methods
-  ;;              '("yadm"
-  ;;                (tramp-login-program "yadm")
-  ;;                (tramp-login-args (("enter")))
-  ;;                (tramp-login-env (("SHELL") ("/bin/sh")))
-  ;;                (tramp-remote-shell "/bin/sh")
-  ;;                (tramp-remote-shell-args ("-c"))))
+  (require 'tramp)
+  (add-to-list 'tramp-methods
+               '("yadm"
+                 (tramp-login-program "yadm")
+                 (tramp-login-args (("enter")))
+                 (tramp-login-env (("SHELL") ("/bin/sh")))
+                 (tramp-remote-shell "/bin/sh")
+                 (tramp-remote-shell-args ("-c"))))
 
-  ;; (defun my/magit-yadm ()
-  ;;   (interactive)
-  ;;   (magit-status "/yadm::"))
-  ;; (spacemacs/set-leader-keys "oy" 'my/magit-yadm)
+  (defun my/magit-yadm ()
+    (interactive)
+    (magit-status "/yadm::"))
+  (spacemacs/set-leader-keys "oy" 'my/magit-yadm)
 
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
