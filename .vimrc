@@ -1,13 +1,11 @@
 set nocompatible
 set laststatus=2
-set background=dark
 set nowrap
 nnoremap <CR> :nohlsearch<CR>
 
 syntax on
 filetype indent plugin on
 
-" basic sanity
 nnoremap Y y$
 nnoremap vv V
 nnoremap V <C-V>$
