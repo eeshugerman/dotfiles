@@ -62,8 +62,11 @@ if [[ "$INSIDE_EMACS" ]]; then
     bindkey -e
 fi
 
-export HOMEBREW_NO_AUTO_UPDATE=1
 
 eval "$(direnv hook zsh)"
 
 source /usr/share/nvm/init-nvm.sh
+
+# macos stuff
+export HOMEBREW_NO_AUTO_UPDATE=1
+alias fix-org-data-sync="launchctl unload -w Library/LaunchAgents/me.org-data-git-sync.plist && launchctl load -w Library/LaunchAgents/me.org-data-git-sync.plist"
