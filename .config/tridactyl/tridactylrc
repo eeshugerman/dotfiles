@@ -43,10 +43,6 @@ setnull searchurls.twitter
 " bind N findnext -1
 " bind <Return> nohlsearch
 
-" TODO: look into `auto` and `midnight`
-command light colors --url https://raw.githubusercontent.com/eeshugerman/shydactyl-variations/master/dist/shydactyl-all-icons.css shydactyl-all-icons
-command dark colors --url https://raw.githubusercontent.com/eeshugerman/shydactyl-variations/master/dist/shydactyl-all-icons-dark.css shydactyl-all-icons-dark
-
-light
+colors --url https://raw.githubusercontent.com/eeshugerman/shydactyl-variations/master/dist/shydactyl-all-icons.css shydactyl-all-icons
 
 js console.log('config source complete!')
