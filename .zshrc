@@ -65,7 +65,7 @@ fi
 
 eval "$(direnv hook zsh)"
 
-+source /usr/share/nvm/init-nvm.sh
+source /usr/share/nvm/init-nvm.sh
 
 # macos stuff
 export HOMEBREW_NO_AUTO_UPDATE=1
