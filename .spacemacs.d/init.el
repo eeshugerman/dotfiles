@@ -108,12 +108,13 @@ This function should only modify configuration layer settings."
       :location (recipe
                  :fetcher github
                  :repo "eeshugerman/org-clock-reminder"))
-     (dconf-dotfile
-      :location (recipe
-                 :fetcher file
-                 :path "~/devel/dconf-dotfile/dconf-dotfile.el"))
-     (tree-sitter-langs
-      :location local))
+     ;; (dconf-dotfile
+     ;;  :location (recipe
+     ;;             :fetcher file
+     ;;             :path "~/devel/dconf-dotfile/dconf-dotfile.el"))
+     ;; (tree-sitter-langs
+     ;;  :location local)
+     )
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
