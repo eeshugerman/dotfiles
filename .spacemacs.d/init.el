@@ -93,6 +93,7 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(
+     ox-reveal
      dired-git-info
      diredfl
      direnv
@@ -1201,7 +1202,7 @@ before packages are loaded."
 
   (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") 'org-babel-execute-src-block)
 
-
+  (add-hook 'org-mode-hook 'spacemacs/toggle-line-numbers-off)  ;; doesn't work
 
   ;; scheme -------------------------------------------------------------------------
   (spacemacs/set-leader-keys-for-major-mode 'scheme-mode
