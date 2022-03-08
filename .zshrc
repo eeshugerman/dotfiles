@@ -84,3 +84,5 @@ sudo ifconfig lo0 alias 10.0.2.2
 #         export PATH="${emacs_bin_path}:$PATH"
 #     fi
 # done
+
+alias fix-org-data-sync="launchctl unload -w Library/LaunchAgents/me.org-data-git-sync.plist && launchctl load -w Library/LaunchAgents/me.org-data-git-sync.plist"
