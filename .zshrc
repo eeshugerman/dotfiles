@@ -65,7 +65,13 @@ fi
 
 eval "$(direnv hook zsh)"
 
-source /usr/share/nvm/init-nvm.sh
+if [ "$(uname)" = "Darwin" ]; then
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+    [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+else
+    source /usr/share/nvm/init-nvm.sh
+fi
 
 # macos stuff
 export HOMEBREW_NO_AUTO_UPDATE=1
