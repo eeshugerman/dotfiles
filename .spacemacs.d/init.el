@@ -47,7 +47,6 @@ This function should only modify configuration layer settings."
      epub
      erc
      git
-     github
      gnome-shell
      graphviz
      groovy
@@ -84,6 +83,7 @@ This function should only modify configuration layer settings."
      treemacs
      typescript
      unicode-fonts
+     version-control
      yaml)
 
    ;; List of additional packages that will be installed without being wrapped
