@@ -747,7 +747,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                                   web-mode
                                   html-mode
                                   scss-mode
-                                  css-mode))
+                                  css-mode)
+   version-control-diff-tool 'diff-hl)
 )
 
 (defun dotspacemacs/user-load ()
