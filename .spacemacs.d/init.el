@@ -31,12 +31,11 @@ This function should only modify configuration layer settings."
 
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '()
+   dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(systemd
-     graphviz
+   '(
      ansible
      auto-completion
      c-c++
@@ -48,6 +47,8 @@ This function should only modify configuration layer settings."
      epub
      erc
      git
+     gnome-shell
+     graphviz
      groovy
      haskell
      helpful
@@ -58,6 +59,7 @@ This function should only modify configuration layer settings."
      java
      javascript
      markdown
+     meson
      multiple-cursors
      nav-flash
      nginx
@@ -75,11 +77,13 @@ This function should only modify configuration layer settings."
      spell-checking
      sql
      syntax-checking
+     systemd
      terraform
      tree-sitter
      treemacs
      typescript
      unicode-fonts
+     version-control
      yaml)
 
    ;; List of additional packages that will be installed without being wrapped
@@ -446,7 +450,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
    ;; variable with `dotspacemacs-maximized-at-startup' in OSX to obtain
    ;; borderless fullscreen. (default nil)
-   dotspacemacs-undecorated-at-startup my/macos-flag
+   dotspacemacs-undecorated-at-startup t
 
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
@@ -813,8 +817,6 @@ before packages are loaded."
   ;; spacing issues
   ;; (use-package dired-git-info
   ;;   :hook (dired-after-readin . dired-git-info-auto-enable))
-
-
 
 
   ;; misc/general --------------------------------------------------------------
@@ -1216,6 +1218,9 @@ before packages are loaded."
   (add-hook 'lsp-before-initialize-hook
             (lambda () (defun lsp-eslint-status-handler (foo bar) t)))
 
+  ;; css/scss ------------------------------------------------------------------------
+  (setq css-fontify-colors nil)
+
 
   ;; org --------------------------------------------------------------------------
   (with-eval-after-load 'org
@@ -1512,6 +1517,17 @@ before packages are loaded."
   (if my/prosey
     (my/toggle-prosey-off)
     (my/toggle-prosey-on)))
+
+(defun my/clone-new-project (url)
+  (interactive "surl? ")
+  (require 's)
+  (let ((default-directory "~/devel")
+        (repo-name  (s-replace ".git" "" (car (last (split-string url "/"))))))
+    (shell-command (format "git clone %s" url))
+    (persp-add-new repo-name) ;; how to swith to the new one?
+    ;; (spacemacs/layout-switch-to repo-name)
+    ;; (find-file (f-join repo-name "README.md")))
+  ))
 
 ;; (add-hook 'text-mode-hook 'my/toggle-prosey-on)
 ;; (add-hook 'markdown-mode 'my/toggle-prosey-on)

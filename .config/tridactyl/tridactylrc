@@ -17,12 +17,6 @@ js tri.browserBg.runtime.getPlatformInfo().then(info => tri.config.set("editorcm
 
 set hintchars wertyuioasdfjkl;zxcnm
 
-" fixamo
-jsb tri.excmds.setpref("privacy.resistFingerprinting.block_mozAddonManager", "true").then(tri.excmds.setpref("extensions.webextensions.restrictedDomains", '""'))
-
-" csp clobber
-jsb browser.webRequest.onHeadersReceived.addListener(tri.request.clobberCSP,{urls:["<all_urls>"],types:["main_frame"]},["blocking","responseHeaders"])
-
 set smoothscroll true
 set scrollduration 140
 bind j scrollline 10

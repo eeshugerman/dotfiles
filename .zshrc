@@ -51,8 +51,6 @@ alias dconf-dump="dconf dump / | vim -R -c 'set ft=dosini'"
 alias dconf-edit="vim $HOME/.config/dconf-user.conf"
 alias dconf-load="dconf load / < $HOME/.config/dconf-user.conf"
 
-export PATH="$PATH:$HOME/.local/bin"
-
 # https://github.com/TheLocehiliosan/yadm/issues/33
 export GPG_TTY=$(tty)
 
