@@ -665,6 +665,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    javascript-repl 'nodejs
    js2-include-node-externs t
 
+   lsp-clients-typescript-max-ts-server-memory 4096
+   lsp-idle-delay 0.2
+
    lsp-ui-doc-enable nil ;; slow w/ large files
    lsp-ui-doc-include-signature t
    lsp-ui-doc-header nil
@@ -751,7 +754,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                                   web-mode
                                   html-mode
                                   scss-mode
-                                  css-mode))
+                                  css-mode)
+   version-control-diff-tool 'diff-hl)
+
 )
 
 (defun dotspacemacs/user-load ()
