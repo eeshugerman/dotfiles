@@ -83,6 +83,7 @@ This function should only modify configuration layer settings."
      treemacs
      typescript
      unicode-fonts
+     vagrant
      version-control
      yaml)
 
@@ -801,6 +802,7 @@ before packages are loaded."
   (use-package guix)
   (use-package solaire-mode :config (solaire-global-mode 1))
   (use-package symex)
+  ;; (use-package dconf-dotfile)
   ;; not working :(
   ;; (use-package undo-hl
   ;;   :config
