@@ -1,3 +1,5 @@
+day_job=false
+
 export ZSH_DISABLE_COMPFIX=true   # ignore nonsense permission issue
 
 export ZSH="$HOME/.oh-my-zsh"
@@ -74,3 +76,10 @@ fi
 # macos stuff
 export HOMEBREW_NO_AUTO_UPDATE=1
 alias fix-org-data-sync="launchctl unload -w Library/LaunchAgents/me.org-data-git-sync.plist && launchctl load -w Library/LaunchAgents/me.org-data-git-sync.plist"
+
+if [ $day_job = true ]; then
+    export JAVA_HOME=/usr/local/Cellar/openjdk@11/11.0.12/libexec/openjdk.jdk/Contents/Home
+    alias snowsql=/Applications/SnowSQL.app/Contents/MacOS/snowsql
+    # https://github.com/immuta/bodata/blob/master/README.md#getting-started
+    sudo ifconfig lo0 alias 10.0.2.2
+fi
