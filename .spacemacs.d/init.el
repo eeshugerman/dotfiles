@@ -113,13 +113,16 @@ This function should only modify configuration layer settings."
       :location (recipe
                  :fetcher github
                  :repo "eeshugerman/org-clock-reminder"))
-     (dconf-dotfile
-      :toggle (not my/macos-flag)
-      :location (recipe
-                 :fetcher file
-                 :path "~/devel/dconf-dotfile/dconf-dotfile.el"))
+     ;; (dconf-dotfile
+     ;;  :location (recipe
+     ;;             :fetcher file
+     ;;             :path "~/devel/dconf-dotfile/dconf-dotfile.el"))
      ;; (tree-sitter-langs
      ;;  :location local)
+     ;; (undo-hl
+     ;;  :location (recipe
+     ;;             :fetcher github
+     ;;             :repo "casouri/undo-hl"))
      )
 
    ;; A list of packages that cannot be updated.
@@ -663,6 +666,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    javascript-repl 'nodejs
    js2-include-node-externs t
 
+   lsp-clients-typescript-max-ts-server-memory 4096
+   lsp-idle-delay 0.2
+
    lsp-ui-doc-enable nil ;; slow w/ large files
    lsp-ui-doc-include-signature t
    lsp-ui-doc-header nil
@@ -730,6 +736,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    tree-sitter-indent-enable t
    tree-sitter-fold-enable t
    tree-sitter-fold-indicators-enable nil ;; cool but kind of slow
+   tree-sitter-hl-enable-query-region-extension t
 
    treemacs-sorting 'alphabetic-asc
    treemacs-use-filewatch-mode t
@@ -750,6 +757,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                                   scss-mode
                                   css-mode)
    version-control-diff-tool 'diff-hl)
+
 )
 
 (defun dotspacemacs/user-load ()
@@ -777,6 +785,13 @@ before packages are loaded."
   ;;       (call-interactively 'evil-beginning-of-line))))
   ;; (define-key evil-iedit-state-map "0"   'evil-iedit-state/evil-beginning-of-line)
 
+
+  ;; fixes js org blocks -- why??
+  (defface tree-sitter-hl-face:punctuation
+    '((default :inherit unspecified))
+    "Face for punctuations."
+    :group 'tree-sitter-hl-faces)
+
   ;; init standalone modes ----------------------------------------------------
   (use-package diredfl
     :defer t
@@ -787,7 +802,12 @@ before packages are loaded."
   (use-package guix)
   (use-package solaire-mode :config (solaire-global-mode 1))
   (use-package symex)
-  (use-package dconf-dotfile)
+  ;; (use-package dconf-dotfile)
+  ;; not working :(
+  ;; (use-package undo-hl
+  ;;   :config
+  ;;   (add-to-list 'undo-hl-undo-commands evil-undo-function)
+  ;;   (add-to-list 'undo-hl-undo-commands evil-redo-function))
 
   ;; still needs lots of work
   ;; doesn't work with pgtk
@@ -819,7 +839,8 @@ before packages are loaded."
         projectile-indexing-method 'hybrid
         bidi-inhibit-bpa t
         bidi-paragraph-direction 'left-to-right
-        completions-ignore-case t)
+        completions-ignore-case t
+        diff-refine nil)
 
   (let ((custom-file-path (file-truename "~/.spacemacs.d/custom.el")))
     (unless (file-exists-p custom-file-path)
@@ -839,7 +860,7 @@ before packages are loaded."
     ;; `inhibit-message' still logs to *Messages* and (apprently?) clears previous message
     ;; so instead...
     `(cl-letf (((symbol-function 'message) (lambda (&rest args) nil)))
-      (progn ,@body)))
+       (progn ,@body)))
 
   (defun my/suppress-messages-advice (func &rest args)
     (my/with-no-messages (apply func args)))
@@ -1028,7 +1049,7 @@ before packages are loaded."
       ('light (load-theme (second dotspacemacs-themes) t))))
 
   (when (boundp 'ns-system-appearance-change-functions)
-    (add-hook 'ns-system-appearance-change-functions 'my/load-theme)
+    (add-hook 'ns-system-appearance-change-functions #'my/load-theme)
     (my/load-theme ns-system-appearance))
 
   (toggle-menu-bar-mode-from-frame -1)
@@ -1145,9 +1166,9 @@ before packages are loaded."
     (kbd "C-k") 'previous-history-element)
 
   ;; misc ---
-  (evil-define-key 'normal 'global (kbd "C-,") 'evil-emacs-state)
-  (evil-define-key 'insert 'global (kbd "C-,") 'evil-emacs-state)
-  (evil-define-key 'emacs  'global (kbd "C-,") 'evil-normal-state)
+  (evil-define-key 'normal 'global (kbd "C-,") #'evil-emacs-state)
+  (evil-define-key 'insert 'global (kbd "C-,") #'evil-emacs-state)
+  (evil-define-key 'emacs  'global (kbd "C-,") #'evil-normal-state)
 
   ;; normal mode in help, warning, etc buffers
   ;; alternatively, could modify evil-evilified-state-map
@@ -1157,24 +1178,23 @@ before packages are loaded."
                   docker-volume-mode
                   docker-machine-mode
                   docker-network-mode
-                  docker-image-mode
-                  nov-mode))
+                  docker-image-mode))
     (add-to-list 'evil-evilified-state-modes mode))
 
 
-  (evil-define-key 'normal special-mode-map "q" 'quit-window)
-  (evil-define-key 'normal helpful-mode-map "q" 'kill-buffer-and-window) ;; doesn't kill buffer?
+  (evil-define-key 'normal special-mode-map (kbd "q") #'quit-window)
+  (evil-define-key 'normal helpful-mode-map (kbd "q") #'kill-buffer-and-window)
 
   ;; make C-k work in ivy/insert (and elsewhere, probably)
   (evil-define-key 'insert 'global (kbd "C-k") nil)
 
   ;; vterm ---------------------------------------------------------------------
   (evil-define-key 'emacs vterm-mode-map
-    (kbd "C-k") 'evil-previous-line
-    (kbd "C-j") 'evil-next-line)
+    (kbd "C-k") #'evil-previous-line
+    (kbd "C-j") #'evil-next-line)
   (evil-define-key '(normal insert) vterm-mode-map
-    (kbd "C-k") 'vterm-send-up
-    (kbd "C-j") 'vterm-send-down)
+    (kbd "C-k") #'vterm-send-up
+    (kbd "C-j") #'vterm-send-down)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-,") 'evil-normal-state)
 
   (setq vterm-max-scrollback 100000  ; maximum size supported
@@ -1184,21 +1204,22 @@ before packages are loaded."
 
   ;; haskell -------------------------------------------------------------------
   (evil-define-key '(normal insert) haskell-interactive-mode-map
-    (kbd "C-j") 'haskell-interactive-mode-history-next
-    (kbd "C-k") 'haskell-interactive-mode-history-previous)
+    (kbd "C-j") #'haskell-interactive-mode-history-next
+    (kbd "C-k") #'haskell-interactive-mode-history-previous)
 
 
   ;; ts/js ---------------------------------------------------------------
   (defun my/dap-node-enable ()
     (require 'dap-node))
-  (add-hook 'js2-mode-hook 'my/dap-node-enable)
-  (add-hook 'typescript-mode-hook 'my/dap-node-enable)
+  (add-hook 'js2-mode-hook #'my/dap-node-enable)
+  (add-hook 'typescript-mode-hook #'my/dap-node-enable)
+  (add-hook 'typescript-mode-hook #'spacemacs/toggle-indent-guide-on)
 
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
   (setenv "TSC_NONPOLLING_WATCHER" "true")
 
   (spacemacs/set-leader-keys-for-major-mode 'typescript-mode
-    "si" 'nodejs-repl)
+    (kbd "si") #'nodejs-repl)
 
   ;; reduce modeline clutter
   (add-hook 'lsp-before-initialize-hook
@@ -1225,7 +1246,7 @@ before packages are loaded."
   ;; scheme -------------------------------------------------------------------------
   (spacemacs/set-leader-keys-for-major-mode 'scheme-mode
     "gd" 'spacemacs/jump-to-definition)
-  (add-hook 'scheme-mode-hook (lambda () (indent-guide-mode 1)))
+  (add-hook 'scheme-mode-hook #'spacemacs/toggle-indent-guide-on)
   (setq geiser-repl-history-no-dups-p nil)
 
   ;; ;; yadm ------------------------------------------------------------------------
@@ -1291,6 +1312,18 @@ before packages are loaded."
   (spacemacs/set-leader-keys "odf" 'my/docker-tramp-find-file)
   (spacemacs/set-leader-keys "odb" 'docker-container-shell)
   (spacemacs/set-leader-keys "odB" 'docker-container-shell-env)
+
+  (setq docker-container-columns '((:name "Id" :width 16 :template "{{ json .ID }}" :sort nil :format nil)
+                                   (:name "Image" :width 15 :template "{{ json .Image }}" :sort nil :format nil)
+                                   (:name "Names" :width 20 :template "{{ json .Names }}" :sort nil :format nil)
+                                   (:name "Status" :width 20 :template "{{ json .Status }}" :sort nil :format nil)
+                                   (:name "Created" :width 23 :template "{{ json .CreatedAt }}" :sort nil :format
+                                          (lambda
+                                            (x)
+                                            (format-time-string "%F %T"
+                                                                (date-to-time x))))
+                                   (:name "Ports" :width 10 :template "{{ json .Ports }}" :sort nil :format nil)
+                                   (:name "Command" :width 30 :template "{{ json .Command }}" :sort nil :format nil)))
 
   ;; yaml ---------------------------------------------------------------------
   (add-hook 'yaml-mode-hook (lambda ()
@@ -1380,7 +1413,8 @@ before packages are loaded."
   (add-hook 'eval-expression-minibuffer-setup-hook 'my/minibuffer-fix-sp)
 
   ;; tree-sitter ----------------------------------------------------------------
-  ;; make objects foldable
+  ;; make more stuff foldable
+  ;; TODO: add still more stuff: arrays, function calls
   (defun my/add-javascript-folds (alist)
     (append '((object . ts-fold-range-seq)
               (template_string . ts-fold-range-seq)
@@ -1402,15 +1436,19 @@ before packages are loaded."
     (unless (or (org-clocking-p)
                 (> (org-user-idle-seconds) my/org-clock-reminder-interval)
                 my/org-clock-reminder-disable)
-        (alert "No task clocked!"
-               :never-persist t)))
+      (alert "No task clocked!"
+             :never-persist t)))
 
   (unless (or my/org-clock-reminder-timer (not my/work-flag))
     (setq my/org-clock-reminder-timer
           (run-with-timer my/org-clock-reminder-interval
                           my/org-clock-reminder-interval
                           #'my/org-clock-reminder-function)))
-)
+
+  (evil-define-key 'normal web-mode-map
+    (kbd "zc") 'web-mode-fold-or-unfold
+    (kbd "zo") 'web-mode-fold-or-unfold)
+  )
 
 ;; misc commands --------------------------------------------------------------
 (defun my/hide-dos-eol ()
