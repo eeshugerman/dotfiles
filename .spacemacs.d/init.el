@@ -47,7 +47,7 @@ This function should only modify configuration layer settings."
      epub
      erc
      git
-     gnome-shell
+     ;; gnome-shell ;; not in spacemacs repo, installed as local layer
      graphviz
      groovy
      haskell
@@ -1247,8 +1247,7 @@ before packages are loaded."
   (add-hook 'scheme-mode-hook #'spacemacs/toggle-indent-guide-on)
   (setq geiser-repl-history-no-dups-p nil)
 
-  ;; ;; yadm ------------------------------------------------------------------------
-  ;; ;; only half works, sometimes breaks stuff
+  ;; yadm ------------------------------------------------------------------------
   (require 'tramp)
   (add-to-list 'tramp-methods
                '("yadm"
