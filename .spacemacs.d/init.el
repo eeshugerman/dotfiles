@@ -83,6 +83,7 @@ This function should only modify configuration layer settings."
      treemacs
      typescript
      unicode-fonts
+     vagrant
      version-control
      yaml)
 
