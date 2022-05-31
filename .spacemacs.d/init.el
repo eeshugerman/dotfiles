@@ -118,7 +118,7 @@ This function should only modify configuration layer settings."
      ;;             :fetcher file
      ;;             :path "~/devel/dconf-dotfile/dconf-dotfile.el"))
      ;; (tree-sitter-langs
-     ;;  :location local)
+     ;;  :location (recipe :fetcher local)
      ;; (undo-hl
      ;;  :location (recipe
      ;;             :fetcher github
@@ -840,7 +840,8 @@ before packages are loaded."
         bidi-inhibit-bpa t
         bidi-paragraph-direction 'left-to-right
         completions-ignore-case t
-        diff-refine nil)
+        diff-refine nil
+        flycheck-checker-error-threshold 1000)
 
   (let ((custom-file-path (file-truename "~/.spacemacs.d/custom.el")))
     (unless (file-exists-p custom-file-path)
