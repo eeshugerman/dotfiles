@@ -118,7 +118,7 @@ This function should only modify configuration layer settings."
      ;;             :fetcher file
      ;;             :path "~/devel/dconf-dotfile/dconf-dotfile.el"))
      ;; (tree-sitter-langs
-     ;;  :location local)
+     ;;  :location (recipe :fetcher local)
      ;; (undo-hl
      ;;  :location (recipe
      ;;             :fetcher github
@@ -840,7 +840,8 @@ before packages are loaded."
         bidi-inhibit-bpa t
         bidi-paragraph-direction 'left-to-right
         completions-ignore-case t
-        diff-refine nil)
+        diff-refine nil
+        flycheck-checker-error-threshold 1000)
 
   (let ((custom-file-path (file-truename "~/.spacemacs.d/custom.el")))
     (unless (file-exists-p custom-file-path)
@@ -1208,7 +1209,7 @@ before packages are loaded."
     (kbd "C-k") #'haskell-interactive-mode-history-previous)
 
 
-  ;; ts/js ---------------------------------------------------------------
+  ;; ts/js/web ---------------------------------------------------------------
   (defun my/dap-node-enable ()
     (require 'dap-node))
   (add-hook 'js2-mode-hook #'my/dap-node-enable)
@@ -1224,6 +1225,11 @@ before packages are loaded."
   ;; reduce modeline clutter
   (add-hook 'lsp-before-initialize-hook
             (lambda () (defun lsp-eslint-status-handler (foo bar) t)))
+
+  (evil-define-key 'normal web-mode-map
+    (kbd "zc") 'web-mode-fold-or-unfold
+    (kbd "zo") 'web-mode-fold-or-unfold)
+
 
   ;; css/scss ------------------------------------------------------------------------
   (setq css-fontify-colors nil)
@@ -1423,30 +1429,7 @@ before packages are loaded."
   (advice-add 'ts-fold-parsers-javascript :filter-return #'my/add-javascript-folds)
 
 
-  ;; org clock ------------------------------------------------------------
-
-  (require 'org-clock)
-  (defvar my/org-clock-reminder-interval 300)
-  (unless (boundp 'my/org-clock-reminder-timer)
-    (defvar my/org-clock-reminder-timer nil))
-  (defvar my/org-clock-reminder-disable nil)
-
-  (defun my/org-clock-reminder-function ()
-    (unless (or (org-clocking-p)
-                (> (org-user-idle-seconds) my/org-clock-reminder-interval)
-                my/org-clock-reminder-disable)
-      (alert "No task clocked!"
-             :never-persist t)))
-
-  (unless (or my/org-clock-reminder-timer (not my/work-flag))
-    (setq my/org-clock-reminder-timer
-          (run-with-timer my/org-clock-reminder-interval
-                          my/org-clock-reminder-interval
-                          #'my/org-clock-reminder-function)))
-
-  (evil-define-key 'normal web-mode-map
-    (kbd "zc") 'web-mode-fold-or-unfold
-    (kbd "zo") 'web-mode-fold-or-unfold)
+  
   )
 
 ;; misc commands --------------------------------------------------------------
