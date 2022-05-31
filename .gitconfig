@@ -21,3 +21,6 @@
 
 [github]
 	user = eeshugerman
+
+[merge]
+	conflictstyle = diff3
