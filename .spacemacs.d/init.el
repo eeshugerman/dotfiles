@@ -36,18 +36,19 @@ This function should only modify configuration layer settings."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     ;; gnome-shell ;; not in spacemacs repo, installed as local layer
+     ;; erc ;; broken last i checked
      ansible
      auto-completion
      c-c++
      csv
      dap
      debug
+     dhall
      docker
      emacs-lisp
      epub
-     erc
      git
-     ;; gnome-shell ;; not in spacemacs repo, installed as local layer
      graphviz
      groovy
      haskell
@@ -66,6 +67,7 @@ This function should only modify configuration layer settings."
      org
      posframe
      prettier
+     purescript
      python
      ruby
      rust
@@ -1441,8 +1443,9 @@ before packages are loaded."
 
 
   ;; purescript ----------------------------------------------------------------
-  ;; piggyback on `spago repl` to ,si (`purs repl`) work
-  (add-to-list 'psci/arguments ".spago/psci-support/**/*.purs")
+  ;; piggyback on `spago repl` to make ,si (`purs repl`) work
+  ;; why is `psci/arguments' void at startup?
+  ;; (add-to-list 'psci/arguments ".spago/psci-support/**/*.purs")
   )
 
 ;; misc commands --------------------------------------------------------------
