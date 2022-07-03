@@ -789,16 +789,6 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
   ;; temp ---------------------------------------------------------------------
-  ;; remove once https://github.com/syl20bnr/evil-iedit-state/pull/37 is merged
-  ;; (defun evil-iedit-state//goto-overlay-start ()
-  ;;   "Return the position of the start of the current overlay."
-  ;;   (let ((overlay (iedit-find-current-occurrence-overlay)))
-  ;;     (if overlay
-  ;;         (goto-char (overlay-start overlay))
-  ;;       (call-interactively 'evil-beginning-of-line))))
-  ;; (define-key evil-iedit-state-map "0"   'evil-iedit-state/evil-beginning-of-line)
-
-
   ;; fixes js org blocks -- why??
   (defface tree-sitter-hl-face:punctuation
     '((default :inherit unspecified))
@@ -1068,8 +1058,9 @@ before packages are loaded."
 
   (toggle-menu-bar-mode-from-frame -1)
 
+  (spacemacs/toggle-vi-tilde-fringe-off)
+
   ;; fringe ---
-  (spacemacs/toggle-vim-empty-lines-mode-off)
   ;; hide arrows at window border for truncated lines -- not working
   ;; (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b0))
   ;; (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
