@@ -110,11 +110,14 @@ This function should only modify configuration layer settings."
      pacfiles-mode
      solaire-mode
      symex
+     magit-delta
      ;; mini-frame
-     (org-clock-reminder
-      :location (recipe
-                 :fetcher github
-                 :repo "eeshugerman/org-clock-reminder"))
+
+     ;; (org-clock-reminder
+     ;;  :location (recipe
+     ;;             :fetcher github
+     ;;             :repo "eeshugerman/org-clock-reminder"))
+
      ;; (dconf-dotfile
      ;;  :location (recipe
      ;;             :fetcher file
@@ -839,13 +842,22 @@ before packages are loaded."
   ;;   :hook (dired-after-readin . dired-git-info-auto-enable))
 
 
+  ;; https://github.com/magit/magit/issues/2942#issuecomment-1026201640
+  (use-package magit-delta
+    :hook (magit-mode . magit-delta-mode))
+
+
+
   ;; misc/general --------------------------------------------------------------
   (server-start)
 
   (spacemacs/set-leader-keys
     ":"  'eval-expression
-    "ofe" 'my/echo-file-path
-    "oaw" 'eww)
+    "of" 'my/echo-file-path
+    "ow" 'eww
+    "oc" 'comint-clear-buffer
+    "og" 'revert-buffer
+    "ou" 'my/unescape-newlines)
 
   (setq select-enable-clipboard nil
         create-lockfiles nil
@@ -1008,10 +1020,6 @@ before packages are loaded."
   (setq magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
   (evil-define-key 'normal magit-diff-mode-map
     (kbd "RET") 'magit-diff-visit-worktree-file-other-window)
-
-  ;; https://github.com/magit/magit/issues/2942#issuecomment-1026201640
-  ;; (use-package magit-delta
-  ;;   :hook (magit-mode . magit-delta-mode))
 
   ;; writeroom -----------------------------------------------------------------
   (defvar writeroom-global-effects '()) ;; not sure why this hack is necessary
@@ -1470,6 +1478,10 @@ before packages are loaded."
 (defun my/monitor-half-width ()
   (interactive)
   (set-frame-size (selected-frame) 945 1055 t))
+
+(defun my/monitor-half-width/4k ()
+  (interactive)
+  (set-frame-size (selected-frame) (- (/ 3840 2) 650) (- 2160 750) t))
 
 (defun my/ansi-color/apply-on-buffer ()
   (interactive)
