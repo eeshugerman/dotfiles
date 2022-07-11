@@ -36,18 +36,19 @@ This function should only modify configuration layer settings."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     ;; gnome-shell ;; not in spacemacs repo, installed as local layer
+     ;; erc ;; broken last i checked
      ansible
      auto-completion
      c-c++
      csv
      dap
      debug
+     dhall
      docker
      emacs-lisp
      epub
-     erc
      git
-     ;; gnome-shell ;; not in spacemacs repo, installed as local layer
      graphviz
      groovy
      haskell
@@ -66,6 +67,7 @@ This function should only modify configuration layer settings."
      org
      posframe
      prettier
+     purescript
      python
      ruby
      rust
@@ -231,6 +233,12 @@ It should only modify the values of Spacemacs settings."
                                     vim-style-visual-line-move-text t
                                     vim-style-ex-substitute-global t)
 
+   ;; If non-nil, show vim-like empty line indicators at the end of files.
+   ;; Takes effect only if `spacemacs-evil' layer is enabled.
+   ;; NOTICE: `spacemacs-evil' is included in `spacemacs' distribution.
+   ;; See `dotspacemacs-distribution'.
+   dotspacemacs-evil-show-empty-line-indicators t
+
    ;; If non-nil show the version string in the Spacemacs buffer. It will
    ;; appear as (spacemacs version)@(emacs version)
    ;; (default t)
@@ -244,6 +252,13 @@ It should only modify the values of Spacemacs settings."
    ;; If the value is nil then no banner is displayed. (default 'official)
    dotspacemacs-startup-banner 0
 
+   ;; Scale factor controls the scaling (size) of the startup banner. Default
+   ;; value is `auto' for scaling the logo automatically to fit all buffer
+   ;; contents, to a maximum of the full image height and a minimum of 3 line
+   ;; heights. If set to a number (int or float) it is used as a constant
+   ;; scaling factor for the default logo size.
+   dotspacemacs-startup-banner-scale 'auto
+
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
@@ -254,10 +269,8 @@ It should only modify the values of Spacemacs settings."
    ;; pair of numbers, e.g. `(recents-by-project . (7 .  5))', where the first
    ;; number is the project limit and the second the limit on the recent files
    ;; within a project.
-   dotspacemacs-startup-lists '((todos . 5)
-                                (agenda . 5)
-                                (recents . 5)
-                                (projects . 5))
+   dotspacemacs-startup-lists '((recents . 5)
+                                (projects . 7))
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
@@ -676,8 +689,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-doc-alignment 'window
 
    lsp-ui-sideline-enable t
-   lsp-ui-sideline-diagnostic-max-line-length 70
-   lsp-ui-sideline-diagnostic-max-lines 5
+   lsp-ui-sideline-diagnostic-max-line-length 90
+   lsp-ui-sideline-diagnostic-max-lines 10
    lsp-ui-sideline-show-symbol nil
    lsp-ui-sideline-show-hover nil
    lsp-ui-sideline-show-diagnostics t
@@ -1056,7 +1069,7 @@ before packages are loaded."
   (toggle-menu-bar-mode-from-frame -1)
 
   ;; fringe ---
-  (spacemacs/toggle-vi-tilde-fringe-off)
+  (spacemacs/toggle-vim-empty-lines-mode-off)
   ;; hide arrows at window border for truncated lines -- not working
   ;; (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b0))
   ;; (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
@@ -1429,7 +1442,10 @@ before packages are loaded."
   (advice-add 'ts-fold-parsers-javascript :filter-return #'my/add-javascript-folds)
 
 
-  
+  ;; purescript ----------------------------------------------------------------
+  ;; piggyback on `spago repl` to make ,si (`purs repl`) work
+  ;; why is `psci/arguments' void at startup?
+  ;; (add-to-list 'psci/arguments ".spago/psci-support/**/*.purs")
   )
 
 ;; misc commands --------------------------------------------------------------
