@@ -720,6 +720,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    org-enable-jira-support t
 
 
+   purescript-fmt-on-save t
+
    python-backend 'lsp
    python-fill-column 100
    python-fill-docstring-style 'django
@@ -1437,6 +1439,9 @@ before packages are loaded."
   ;; piggyback on `spago repl` to make ,si (`purs repl`) work
   ;; why is `psci/arguments' void at startup?
   ;; (add-to-list 'psci/arguments ".spago/psci-support/**/*.purs")
+  (remove-hook 'purescript-mode-hook 'purescript-indentation-mode)
+  (add-hook 'purescript-mode-hook 'purescript-indentation-mode)
+  (setq purescript-indent-offset 2)
   )
 
 ;; misc commands --------------------------------------------------------------
