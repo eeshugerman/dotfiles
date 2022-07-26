@@ -111,6 +111,7 @@ This function should only modify configuration layer settings."
      solaire-mode
      symex
      magit-delta
+     coterm
      ;; mini-frame
 
      ;; (org-clock-reminder
@@ -685,11 +686,14 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-clients-typescript-max-ts-server-memory 4096
    lsp-idle-delay 0.2
 
-   lsp-ui-doc-enable nil ;; slow w/ large files
+   lsp-ui-doc-enable t ;; slow w/ large files?
    lsp-ui-doc-include-signature t
    lsp-ui-doc-header nil
    lsp-ui-doc-delay 1 ; seconds
    lsp-ui-doc-alignment 'window
+   lsp-ui-doc-show-with-cursor t
+   lsp-ui-doc-show-with-mouse nil
+   lsp-ui-doc-use-childframe t
 
    lsp-ui-sideline-enable t
    lsp-ui-sideline-diagnostic-max-line-length 90
@@ -812,6 +816,7 @@ before packages are loaded."
   (use-package diredfl
     :defer t
     :hook (dired-mode . diredfl-global-mode))
+  (use-package coterm :config (coterm-mode 1) (coterm-auto-char-mode 1))
 
   (use-package gcmh :config (gcmh-mode 1))
   (use-package direnv :config (direnv-mode 1))
@@ -843,8 +848,9 @@ before packages are loaded."
 
 
   ;; https://github.com/magit/magit/issues/2942#issuecomment-1026201640
-  (use-package magit-delta
-    :hook (magit-mode . magit-delta-mode))
+  ;; (use-package magit-delta
+  ;;   :after magit
+  ;;   :hook (magit-mode . magit-delta-mode))
 
 
 
@@ -1077,7 +1083,6 @@ before packages are loaded."
   (toggle-menu-bar-mode-from-frame -1)
 
   ;; fringe ---
-  (spacemacs/toggle-vim-empty-lines-mode-off)
   ;; hide arrows at window border for truncated lines -- not working
   ;; (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b0))
   ;; (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
@@ -1098,6 +1103,8 @@ before packages are loaded."
 
   (setq ivy-posframe-border-width my/border-width
         which-key-posframe-border-width my/border-width)
+
+  (spacemacs/toggle-vi-tilde-fringe-off)
 
   (defun my/do-theme-tweaks ()
     "misc tweaks that for some reason need a nudge after theme change"
