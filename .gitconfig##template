@@ -1,5 +1,9 @@
 [user]
+{% if yadm.class == "WORK" %}
 	email = elliott.shugerman@immuta.com
+{% else %}
+	email = eeshugerman@gmail.com
+{% endif %}
 	name = Elliott Shugerman
 
 [credential]

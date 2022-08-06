@@ -1,4 +1,4 @@
-day_job=true
+if [ "$(yadm config --get local.class)" = "WORK" ]; then day_job=true; else day_job=false; fi
 
 export ZSH_DISABLE_COMPFIX=true   # ignore nonsense permission issue
 

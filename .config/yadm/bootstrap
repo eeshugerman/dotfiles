@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+# NOTE: Must set yadm class variable, eg: `yadm config local.class WORK`
+
 set -eux
 
 cd "$HOME"

@@ -1,4 +1,4 @@
-day_job=true
+if [ "$(yadm config --get local.class)" = "WORK" ]; then day_job=true; else day_job=false; fi
 
 if [ $day_job = true ]; then
     # added by Snowflake SnowSQL installer v1.2
