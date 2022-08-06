@@ -114,17 +114,13 @@ This function should only modify configuration layer settings."
      coterm
      ;; mini-frame
 
-     ;; (org-clock-reminder
-     ;;  :location (recipe
-     ;;             :fetcher github
-     ;;             :repo "eeshugerman/org-clock-reminder"))
-
      ;; (dconf-dotfile
      ;;  :location (recipe
      ;;             :fetcher file
      ;;             :path "~/devel/dconf-dotfile/dconf-dotfile.el"))
      ;; (tree-sitter-langs
      ;;  :location (recipe :fetcher local)
+     ;;
      ;; (undo-hl
      ;;  :location (recipe
      ;;             :fetcher github
