@@ -723,6 +723,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    org-enable-jira-support t
 
 
+   purescript-fmt-on-save t
+
    python-backend 'lsp
    python-fill-column 100
    python-fill-docstring-style 'django
@@ -792,16 +794,6 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
   ;; temp ---------------------------------------------------------------------
-  ;; remove once https://github.com/syl20bnr/evil-iedit-state/pull/37 is merged
-  ;; (defun evil-iedit-state//goto-overlay-start ()
-  ;;   "Return the position of the start of the current overlay."
-  ;;   (let ((overlay (iedit-find-current-occurrence-overlay)))
-  ;;     (if overlay
-  ;;         (goto-char (overlay-start overlay))
-  ;;       (call-interactively 'evil-beginning-of-line))))
-  ;; (define-key evil-iedit-state-map "0"   'evil-iedit-state/evil-beginning-of-line)
-
-
   ;; fixes js org blocks -- why??
   (defface tree-sitter-hl-face:punctuation
     '((default :inherit unspecified))
@@ -1457,6 +1449,9 @@ before packages are loaded."
   ;; piggyback on `spago repl` to make ,si (`purs repl`) work
   ;; why is `psci/arguments' void at startup?
   ;; (add-to-list 'psci/arguments ".spago/psci-support/**/*.purs")
+  (remove-hook 'purescript-mode-hook 'purescript-indentation-mode)
+  (add-hook 'purescript-mode-hook 'purescript-indentation-mode)
+  (setq purescript-indent-offset 2)
   )
 
 ;; misc commands --------------------------------------------------------------
