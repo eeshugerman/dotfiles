@@ -890,6 +890,10 @@ before packages are loaded."
   (defun my/suppress-messages-hook (func)
     (lambda () (my/with-no-messages (funcall func))))
 
+  (dolist (hook '(hack-local-variables-hook
+                  special-mode-hook
+                  shell-mode-hook))
+          (add-hook hook (my/suppress-messages-hook 'spacemacs/toggle-truncate-lines-on)))
   (add-hook 'hack-local-variables-hook (my/suppress-messages-hook 'spacemacs/toggle-truncate-lines-on))
   (add-hook 'special-mode-hook (my/suppress-messages-hook 'spacemacs/toggle-truncate-lines-on))
 
