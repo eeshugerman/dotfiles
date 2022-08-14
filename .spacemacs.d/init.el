@@ -1202,6 +1202,7 @@ before packages are loaded."
   ;; default is just #'kill-window
   ;; todo: do the same for some magit modes?
   (evil-define-key '(normal motion) helpful-mode-map (kbd "q") #'kill-buffer-and-window)
+  (evil-define-key '(normal motion) magit-mode-map (kbd "q") #'kill-buffer-and-window)
 
   ;; make C-k work in ivy/insert (and elsewhere, probably)
   (evil-define-key 'insert 'global (kbd "C-k") nil)
