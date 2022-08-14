@@ -1189,8 +1189,7 @@ before packages are loaded."
   (evil-define-key 'insert 'global (kbd "C-,") #'evil-emacs-state)
   (evil-define-key 'emacs  'global (kbd "C-,") #'evil-normal-state)
 
-  ;; normal mode in help, warning, etc buffers
-  ;; alternatively, could modify evil-evilified-state-map
+  ;; motion-state instead of evilified-state in special-mode buffers (eg *helpful, *Messages*)
   (delete 'special-mode evil-evilified-state-modes)
   ;; these special-mode-inheriting modes are exceptions
   (dolist (mode '(docker-container-mode
@@ -1200,9 +1199,8 @@ before packages are loaded."
                   docker-image-mode))
     (add-to-list 'evil-evilified-state-modes mode))
 
-
-  (evil-define-key 'normal special-mode-map (kbd "q") #'quit-window)
-  (evil-define-key 'normal helpful-mode-map (kbd "q") #'kill-buffer-and-window)
+  ;; default is just #'kill-window
+  (evil-define-key 'motion special-mode-map (kbd "q") #'kill-buffer-and-window)
 
   ;; make C-k work in ivy/insert (and elsewhere, probably)
   (evil-define-key 'insert 'global (kbd "C-k") nil)
