@@ -899,14 +899,11 @@ before packages are loaded."
                   special-mode-hook
                   shell-mode-hook))
           (add-hook hook (my/suppress-messages-hook 'spacemacs/toggle-truncate-lines-on)))
-  (add-hook 'hack-local-variables-hook (my/suppress-messages-hook 'spacemacs/toggle-truncate-lines-on))
-  (add-hook 'special-mode-hook (my/suppress-messages-hook 'spacemacs/toggle-truncate-lines-on))
 
   ;; emacs lisp ----------------------------------------------------------------
   ;; alternatively, switch to gg everywhere?
   (spacemacs/set-leader-keys-for-major-mode 'emacs-lisp-mode
     "gd" 'spacemacs/jump-to-definition)
-
 
   ;; autosave ------------------------------------------------------------------
   (auto-save-mode -1)
