@@ -1076,9 +1076,18 @@ before packages are loaded."
       ('dark (load-theme (first dotspacemacs-themes) t))
       ('light (load-theme (second dotspacemacs-themes) t))))
 
+  ;; using emacs-plus integration for macos
   (when (boundp 'ns-system-appearance-change-functions)
     (add-hook 'ns-system-appearance-change-functions #'my/load-theme)
     (my/load-theme ns-system-appearance))
+
+  ;; for gnome, best we can do right now is check on startup
+  (unless my/macos-flag
+    (thread-first "gsettings get org.gnome.desktop.interface color-scheme"
+                  shell-command-to-string
+                  (string-trim "'" "'\n")
+                  (pcase ("default" 'light) ("prefer-dark" 'dark))
+                  (my/load-theme)))
 
   (toggle-menu-bar-mode-from-frame -1)
 
