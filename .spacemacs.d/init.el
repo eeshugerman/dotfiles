@@ -1219,12 +1219,6 @@ before packages are loaded."
         vterm-always-compile-module t
         vterm-clear-scrollback-when-clearing t)
 
-  ;; haskell -------------------------------------------------------------------
-  (evil-define-key '(normal insert) haskell-interactive-mode-map
-    (kbd "C-j") #'haskell-interactive-mode-history-next
-    (kbd "C-k") #'haskell-interactive-mode-history-previous)
-
-
   ;; ts/js/web ---------------------------------------------------------------
   (defun my/dap-node-enable ()
     (require 'dap-node))
