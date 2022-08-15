@@ -37,7 +37,7 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(go
      ;; gnome-shell ;; not in spacemacs repo, installed as local layer
      ;; erc ;; broken last i checked
      ansible
@@ -311,7 +311,7 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(doom-nord
+   dotspacemacs-themes '(doom-nord-aurora
                          doom-nord-light
 
                          spacemacs-dark
@@ -691,7 +691,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-doc-alignment 'window
    lsp-ui-doc-show-with-cursor t
    lsp-ui-doc-show-with-mouse nil
-   lsp-ui-doc-use-childframe t
+   lsp-ui-doc-use-childframe nil
 
    lsp-ui-sideline-enable t
    lsp-ui-sideline-diagnostic-max-line-length 90
