@@ -1434,7 +1434,10 @@ before packages are loaded."
   (add-hook 'eval-expression-minibuffer-setup-hook 'my/minibuffer-fix-sp)
 
   ;; tree-sitter ----------------------------------------------------------------
-  ;; make more stuff foldable
+
+  (setq tree-sitter-debug-jump-buttons t tree-sitter-debug-highlight-jump-region t)
+
+  ;; make more stuff foldable TODO: upstream these
   ;; TODO: add still more stuff: arrays, function calls
   (defun my/add-javascript-folds (alist)
     (append '((object . ts-fold-range-seq)
@@ -1442,7 +1445,12 @@ before packages are loaded."
               (class_body . ts-fold-range-seq))
             alist))
 
+  (defun my/add-typescript-folds (alist)
+    ;; not working :(
+    (append '((object_type . ts-fold-range-seq)) alist))
+
   (advice-add 'ts-fold-parsers-javascript :filter-return #'my/add-javascript-folds)
+  (advice-add 'ts-fold-parsers-typescript :filter-return #'my/add-typescript-folds)
 
 
   ;; purescript ----------------------------------------------------------------
