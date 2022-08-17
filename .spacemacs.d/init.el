@@ -691,7 +691,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-doc-alignment 'window
    lsp-ui-doc-show-with-cursor t
    lsp-ui-doc-show-with-mouse nil
-   lsp-ui-doc-use-childframe nil
+   lsp-ui-doc-use-childframe t
 
    lsp-ui-sideline-enable t
    lsp-ui-sideline-diagnostic-max-line-length 90
