@@ -80,9 +80,14 @@
       "SPC" #'counsel-M-x)
 
 (map! :leader
-      :desc "last buffer"
+      :desc "Eval expression"
+      ":" #'eval-expression)
+
+(map! :leader
+      :desc "Last buffer"
       "TAB" #'evil-switch-to-windows-last-buffer)
 
 
-
 (vi-tilde-fringe-mode -1)
+(setq flycheck-checker-error-threshold 500)
+(global-tree-sitter-mode)
