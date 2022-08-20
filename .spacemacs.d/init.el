@@ -1254,21 +1254,6 @@ before packages are loaded."
   ;; css/scss ------------------------------------------------------------------------
   (setq css-fontify-colors nil)
 
-
-  ;; flycheck ----------------------------------------------------------------------------
-  ;; chain certain checkers to the lsp checker depending on major mode
-  ;; https://github.com/flycheck/flycheck/issues/1762#issuecomment-750458442
-  (defvar-local my/flycheck-local-cache nil)
-  (defun my/flycheck-checker-get (fn checker property)
-    (or (alist-get property (alist-get checker my/flycheck-local-cache))
-        (funcall fn checker property)))
-  (advice-add 'flycheck-checker-get :around 'my/flycheck-checker-get)
-  (add-hook 'lsp-managed-mode-hook
-            (lambda ()
-              (when (derived-mode-p 'typescript-mode 'js-mode)
-                (setq my/flycheck-local-cache '((lsp . ((next-checkers . (javascript-eslint)))))))));
-
-
   ;; org --------------------------------------------------------------------------
   (with-eval-after-load 'org
     (require 'ox-jira)
