@@ -681,9 +681,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    javascript-repl 'nodejs
    js2-include-node-externs t
 
-   lsp-clients-typescript-max-ts-server-memory 6144
-   ;; https://github.com/typescript-language-server/typescript-language-server#initializationoptions
-   ;; lsp-clients-typescript-preferences '(:allowIncompleteCompletions nil) ;; faster maybe?
+   lsp-clients-typescript-max-ts-server-memory 4096
+   lsp-eslint-enable t ;; note: not in on npm, use `lsp-install-server'
    lsp-idle-delay 0.2
 
    lsp-ui-doc-enable t ;; slow w/ large files?
@@ -695,7 +694,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-doc-show-with-mouse nil
    lsp-ui-doc-use-childframe t
 
-   lsp-ui-sideline-enable t
+   lsp-ui-sideline-enable nil
    lsp-ui-sideline-diagnostic-max-line-length 90
    lsp-ui-sideline-diagnostic-max-lines 10
    lsp-ui-sideline-show-symbol nil
@@ -908,7 +907,8 @@ before packages are loaded."
 
 
   ;; autosave ------------------------------------------------------------------
-  (auto-save-mode -1) ;; only want auto-save-visited-mode
+  (auto-save-mode -1)
+  (auto-save-visited-mode -1)
   (setq auto-save-timeout 5)
 
   ;; company --------------------------------------------------------------------
