@@ -681,7 +681,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    javascript-repl 'nodejs
    js2-include-node-externs t
 
-   lsp-clients-typescript-max-ts-server-memory 4096
+   lsp-clients-typescript-max-ts-server-memory 6144
+   ;; https://github.com/typescript-language-server/typescript-language-server#initializationoptions
+   ;; lsp-clients-typescript-preferences '(:allowIncompleteCompletions nil) ;; faster maybe?
    lsp-idle-delay 0.2
 
    lsp-ui-doc-enable t ;; slow w/ large files?
@@ -698,7 +700,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-sideline-diagnostic-max-lines 10
    lsp-ui-sideline-show-symbol nil
    lsp-ui-sideline-show-hover nil
-   lsp-ui-sideline-show-diagnostics t
+   lsp-ui-sideline-show-diagnostics nil ;; use SPC e x instead
+   lsp-ui-sideline-show-code-actions nil
+   lsp-ui-sideline-update-mode 'line ;; more performant maybe?
 
    lsp-ui-imenu-enable nil
    lsp-ui-imenu-auto-refresh 'after-save
