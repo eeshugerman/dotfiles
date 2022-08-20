@@ -1,5 +1,5 @@
 [submodule "/home/elliott/.emacs.d"]
-	path = .emacs.d
+	path = spacemacs.emacs.d.bk
 	url = https://github.com/syl20bnr/spacemacs
 [submodule "/home/elliott/.themes/Nordic"]
 	path = .themes/Nordic
