@@ -7,3 +7,6 @@
 [submodule ".themes/Juno"]
 	path = .themes/Juno
 	url = https://github.com/EliverLara/Juno
+[submodule "/Users/elliott.shugerman/.emacs.d"]
+	path = /Users/elliott.shugerman/.emacs.d
+	url = https://github.com/doomemacs/doomemacs
