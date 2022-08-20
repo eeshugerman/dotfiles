@@ -83,11 +83,89 @@
       :desc "Eval expression"
       ":" #'eval-expression)
 
+
+;; buffer
 (map! :leader
-      :desc "Last buffer"
+      :desc "Go to last buffer"
       "TAB" #'evil-switch-to-windows-last-buffer)
 
+(defun my/switch-to-messages-buffer ()
+  (interactive)
+  (switch-to-buffer (messages-buffer)))
 
-(vi-tilde-fringe-mode -1)
-(setq flycheck-checker-error-threshold 500)
-(global-tree-sitter-mode)
+(map! :leader
+      :desc "Go to *Message*"
+      "b m" #'my/switch-to-messages-buffer)
+
+;; window
+(map! :leader
+      :desc "Vertical split"
+      "w /" #'+evil-window-vsplit-a)
+
+(map! :leader
+      :desc "Horizontal split"
+      "w -" #'+evil-window-split-a)
+
+
+
+;; help
+(map! :leader
+      :desc "Describe function"
+      "h d f" #'describe-function)
+
+(map! :leader
+      :desc "Describe variable"
+      "h d v" #'describe-variable)
+
+(map! :leader
+      :desc "Describe key"
+      "h d k" #'describe-key)
+
+
+;; evil
+
+(map! :leader
+      :desc "Clear evil-ex search"
+      "s c" #'evil-ex-search-abort) ;; not working
+
+(after! evil
+  (setq evil-want-minibuffer t
+        evil-want-fine-undo t
+        evil-want-Y-yank-to-eol t)
+
+  ;; todo: use map!
+  (evil-define-key 'visual 'global (kbd "v") 'evil-visual-line)
+  (evil-define-key 'motion 'global (kbd "V") (kbd "C-v $"))
+
+  (evil-define-key 'normal 'global (kbd "C-,") #'evil-emacs-state)
+  (evil-define-key 'insert 'global (kbd "C-,") #'evil-emacs-state)
+  (evil-define-key 'emacs  'global (kbd "C-,") #'evil-normal-state)
+
+  )
+
+
+(after! vi-tilde-fringe
+  (vi-tilde-fringe-mode -1))
+
+(after! flycheck
+  (setq flycheck-checker-error-threshold 500))
+
+(after! tree-sitter
+  (global-tree-sitter-mode))
+
+
+(after! symex
+  (evil-define-key 'normal symex-mode-map
+    (kbd "<escape>") 'symex-mode-interface)
+
+  (evil-define-key 'insert symex-mode-map
+    (kbd "<escape>") 'symex-mode-interface)
+
+  (setq symex--user-evil-keyspec
+        '(("j" . symex-go-up)
+          ("k" . symex-go-down)
+          ("C-j" . symex-climb-branch)
+          ("C-k" . symex-descend-branch)
+          ("M-j" . symex-goto-highest)
+          ("M-k" . symex-goto-lowest)))
+  (symex-initialize))

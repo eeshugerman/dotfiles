@@ -811,7 +811,6 @@ before packages are loaded."
     :defer t
     :hook (dired-mode . diredfl-global-mode))
   (use-package coterm :config (coterm-mode 1) (coterm-auto-char-mode 1))
-
   (use-package gcmh :config (gcmh-mode 1))
   (use-package direnv :config (direnv-mode 1))
   (use-package guix)
@@ -1150,8 +1149,7 @@ before packages are loaded."
   ;; vi ---
   (setq evil-want-Y-yank-to-eol t)
   (evil-define-key 'visual 'global (kbd "v") 'evil-visual-line)
-  (evil-define-key 'motion 'global
-    (kbd "V") (kbd "C-v $"))
+  (evil-define-key 'motion 'global (kbd "V") (kbd "C-v $"))
 
   ;; evil in ivy/minibuffer
   (setq evil-want-minibuffer t)
@@ -1161,6 +1159,7 @@ before packages are loaded."
     [return] 'exit-minibuffer
     [escape] 'minibuffer-keyboard-quit)
 
+  ;; are these still necessary? worked in doom with no setup
   (evil-define-key '(normal insert) ivy-minibuffer-map
     (kbd "C-j") 'ivy-next-line
     (kbd "C-k") 'ivy-previous-line)
