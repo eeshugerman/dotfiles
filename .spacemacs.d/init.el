@@ -1494,6 +1494,19 @@ before packages are loaded."
   (interactive)
   (set-frame-size (selected-frame) (- (/ 3840 2) 650) (- 2160 750) t))
 
+
+(defun my/toggle-frame-decorated ()
+  "Useful because decoration breaks Rectangle stuff on OSX.
+TODO: messes with ivy-posframe background color? "
+  (interactive)
+  (if (frame-parameter nil 'undecorated)
+      (set-frame-parameter nil 'undecorated nil)
+    (set-frame-parameter nil 'undecorated t))
+  (toggle-frame-maximized)
+  (toggle-frame-maximized)
+  (posframe-delete-all) ;; some kind of bug
+  )
+
 (defun my/ansi-color/apply-on-buffer ()
   (interactive)
   (ansi-color-apply-on-region (point-min) (point-max)))
