@@ -712,6 +712,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-peek-list-width 60
    lsp-ui-peek-always-show t
 
+   lsp-use-plists t
+
    ;; lsp-eslint-code-action-show-documentation nil
    lsp-eslint-warn-on-ignored-files t
 
