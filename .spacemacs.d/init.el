@@ -37,9 +37,9 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(go
-     ;; gnome-shell ;; not in spacemacs repo, installed as local layer
+   '(
      ;; erc ;; broken last i checked
+     ;; gnome-shell ;; not in spacemacs repo, installed as local layer
      ansible
      auto-completion
      c-c++
@@ -51,6 +51,7 @@ This function should only modify configuration layer settings."
      emacs-lisp
      epub
      git
+     go
      graphviz
      groovy
      haskell
@@ -112,7 +113,6 @@ This function should only modify configuration layer settings."
      pacfiles-mode
      solaire-mode
      symex
-     magit-delta ;; why doesn't this work??
      coterm
      ;; mini-frame
 
@@ -666,6 +666,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    dap-debug-restart-keep-session nil
 
+   git-enable-magit-delta-plugin t
    groovy-backend 'lsp
    groovy-lsp-jar-path "~/util/groovy-language-server/build/libs/groovy-language-server-all.jar"
 
@@ -781,7 +782,11 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                                   html-mode
                                   scss-mode
                                   css-mode)
-   version-control-diff-tool 'diff-hl)
+   version-control-diff-tool 'diff-hl
+
+   writeroom-maximize-window nil
+   writeroom-mode-line t
+   writeroom-global-effects nil)
 
 )
 
@@ -814,7 +819,6 @@ before packages are loaded."
     :defer t
     :hook (dired-mode . diredfl-global-mode))
   (use-package coterm :config (coterm-mode 1) (coterm-auto-char-mode 1))
-
   (use-package gcmh :config (gcmh-mode 1))
   (use-package direnv :config (direnv-mode 1))
   (use-package guix)
@@ -842,13 +846,6 @@ before packages are loaded."
   ;; spacing issues
   ;; (use-package dired-git-info
   ;;   :hook (dired-after-readin . dired-git-info-auto-enable))
-
-
-  ;; https://github.com/magit/magit/issues/2942#issuecomment-1026201640
-  (use-package magit-delta
-    :after magit
-    :hook (magit-mode . magit-delta-mode))
-
 
 
   ;; misc/general --------------------------------------------------------------
@@ -1022,21 +1019,11 @@ before packages are loaded."
 
 
   ;; git ----------------------------------------------------------------------
-  ;; (add-to-list 'browse-at-remote-remote-type-regexps '("^gitlab\\.gnome\\.org$" . "gitlab"))
+  ;; https://github.com/rmuslimov/browse-at-remote/pull/93
+  (with-eval-after-load 'browse-at-remote
+    (add-to-list 'browse-at-remote-remote-type-regexps '("^gitlab\\.gnome\\.org$" . "gitlab")))
 
-  (setq magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
-  (evil-define-key 'normal magit-diff-mode-map
-    (kbd "RET") 'magit-diff-visit-worktree-file-other-window)
-
-  ;; writeroom -----------------------------------------------------------------
-  (defvar writeroom-global-effects '()) ;; not sure why this hack is necessary
-  (use-package writeroom-mode
-    ;; :defer t ;; `writeroom-mode' isn't autoloaded :(
-    :custom
-    (writeroom-maximize-window nil)
-    (writeroom-mode-line t)
-    (writeroom-global-effects (delq 'writeroom-set-fullscreen
-                                    writeroom-global-effects)))
+  (setq magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
 
   ;; ivy/ivy-rich --------------------------------------------------------------
   (setq ivy-rich-parse-remote-buffer nil)
@@ -1092,13 +1079,6 @@ before packages are loaded."
 
   (toggle-menu-bar-mode-from-frame -1)
 
-  ;; fringe ---
-  ;; hide arrows at window border for truncated lines -- not working
-  ;; (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b0))
-  ;; (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
-  ;; (define-fringe-bitmap 'right-arrow (make-vector 8 #b0))
-  (fringe-mode (cons my/border-width my/border-width))
-
   ;; doom ---
   (doom-themes-org-config)
   (doom-themes-visual-bell-config)
@@ -1107,6 +1087,8 @@ before packages are loaded."
   (doom-themes-treemacs-config)
 
   ;; borders, etc ---
+  (fringe-mode (cons my/border-width my/border-width))
+
   (setq window-divider-default-right-width 1
         window-divider-default-bottom-width 1)
   (menu-bar-bottom-and-right-window-divider)
@@ -1131,7 +1113,7 @@ before packages are loaded."
     (window-divider-mode 1)
     (doom-modeline-invalidate-huds))
 
-  (add-hook 'spacemacs-post-theme-change-hook 'my/do-theme-tweaks)
+  (add-hook 'spacemacs-post-theme-change-hook #'my/do-theme-tweaks)
   (my/do-theme-tweaks)
 
   (add-hook
