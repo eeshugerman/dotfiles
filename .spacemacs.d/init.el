@@ -800,6 +800,8 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
+  (spacemacs/toggle-debug-on-error-on)
+
   ;; temp ---------------------------------------------------------------------
   ;; fixes js org blocks -- why??
   (defface tree-sitter-hl-face:punctuation
@@ -1473,7 +1475,9 @@ before packages are loaded."
   (remove-hook 'purescript-mode-hook 'purescript-indentation-mode)
   (add-hook 'purescript-mode-hook 'purescript-indentation-mode)
   (setq purescript-indent-offset 2)
-  )
+
+
+  (spacemacs/toggle-debug-on-error-off))
 
 ;; misc commands --------------------------------------------------------------
 (defun my/hide-dos-eol ()
