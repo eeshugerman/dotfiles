@@ -112,7 +112,7 @@ This function should only modify configuration layer settings."
      pacfiles-mode
      solaire-mode
      symex
-     magit-delta
+     magit-delta ;; why doesn't this work??
      coterm
      ;; mini-frame
 
@@ -843,9 +843,9 @@ before packages are loaded."
 
 
   ;; https://github.com/magit/magit/issues/2942#issuecomment-1026201640
-  ;; (use-package magit-delta
-  ;;   :after magit
-  ;;   :hook (magit-mode . magit-delta-mode))
+  (use-package magit-delta
+    :after magit
+    :hook (magit-mode . magit-delta-mode))
 
 
 
@@ -904,6 +904,7 @@ before packages are loaded."
   ;; alternatively, switch to gg everywhere?
   (spacemacs/set-leader-keys-for-major-mode 'emacs-lisp-mode
     "gd" 'spacemacs/jump-to-definition)
+  (add-hook 'emacs-lisp-mode-hook (lambda () (flycheck-mode 1)))
 
   ;; autosave ------------------------------------------------------------------
   (auto-save-mode -1)
@@ -1019,7 +1020,8 @@ before packages are loaded."
 
 
   ;; git ----------------------------------------------------------------------
-  (setq browse-at-remote-remote-type-domains '(("github.com" .  "github")))
+  ;; (add-to-list 'browse-at-remote-remote-type-regexps '("^gitlab\\.gnome\\.org$" . "gitlab"))
+
   (setq magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
   (evil-define-key 'normal magit-diff-mode-map
     (kbd "RET") 'magit-diff-visit-worktree-file-other-window)
