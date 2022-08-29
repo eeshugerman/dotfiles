@@ -133,8 +133,9 @@ This function should only modify configuration layer settings."
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(doom-flatwhite-theme  ;; if these arent't listed here spacemacs
-                                    doom-henna-theme)     ;; prints a harmless error on startup. why??
+   dotspacemacs-excluded-packages '( ;; nonfatal error on startup if the themes aren't listed here. why?
+                                    doom-flatwhite-theme
+                                    doom-henna-theme)
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -646,13 +647,13 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
-  (add-to-list 'warning-suppress-types '(comp))
+  ;; (add-to-list 'warning-suppress-types '(comp))
 
   (if my/macos-flag
       (setq insert-directory-program "/usr/local/bin/gls"))
 
 
-  (setq
+  (setq-default
    ;; misc -- TODO: organize these
    c-c++-lsp-enable-semantic-highlight t
    ;; c-c++-lsp-enable-semantic-highlight 'overlay
@@ -859,14 +860,14 @@ before packages are loaded."
     "og" 'revert-buffer
     "ou" 'my/unescape-newlines)
 
-  (setq select-enable-clipboard nil
-        create-lockfiles nil
-        projectile-indexing-method 'hybrid
-        bidi-inhibit-bpa t
-        bidi-paragraph-direction 'left-to-right
-        completions-ignore-case t
-        diff-refine nil
-        flycheck-checker-error-threshold 1000)
+  (setq-default select-enable-clipboard nil
+                create-lockfiles nil
+                projectile-indexing-method 'hybrid
+                bidi-inhibit-bpa t
+                bidi-paragraph-direction 'left-to-right
+                completions-ignore-case t
+                diff-refine nil
+                flycheck-checker-error-threshold 1000)
 
   (let ((custom-file-path (file-truename "~/.spacemacs.d/custom.el")))
     (unless (file-exists-p custom-file-path)
@@ -903,7 +904,10 @@ before packages are loaded."
   ;; alternatively, switch to gg everywhere?
   (spacemacs/set-leader-keys-for-major-mode 'emacs-lisp-mode
     "gd" 'spacemacs/jump-to-definition)
-  (add-hook 'emacs-lisp-mode-hook (lambda () (flycheck-mode 1)))
+  (add-hook 'emacs-lisp-mode-hook
+            (lambda ()
+              (unless (string= buffer-file-name (f-expand "~/.spacemacs.d/init.el"))
+                (flycheck-mode 1))))
 
   ;; autosave ------------------------------------------------------------------
   (auto-save-mode -1)
@@ -1238,7 +1242,7 @@ before packages are loaded."
 
   ;; reduce modeline clutter
   (add-hook 'lsp-before-initialize-hook
-            (lambda () (defun lsp-eslint-status-handler (foo bar) t)))
+            (lambda () (defun lsp-eslint-status-handler (_ _) t)))
 
   (evil-define-key 'normal web-mode-map
     (kbd "zc") 'web-mode-fold-or-unfold
@@ -1491,7 +1495,7 @@ before packages are loaded."
 
 (defun my/toggle-frame-decorated ()
   "Useful because decoration breaks Rectangle stuff on OSX.
-TODO: messes with ivy-posframe background color? "
+TODO: messes with ivy-posframe background color?"
   (interactive)
   (if (frame-parameter nil 'undecorated)
       (set-frame-parameter nil 'undecorated nil)
