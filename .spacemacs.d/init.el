@@ -786,9 +786,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    writeroom-maximize-window nil
    writeroom-mode-line t
-   writeroom-global-effects nil)
-
-)
+   writeroom-global-effects nil))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -1494,9 +1492,7 @@ before packages are loaded."
   "Useful because decoration breaks Rectangle stuff on OSX.
 TODO: messes with ivy-posframe background color?"
   (interactive)
-  (if (frame-parameter nil 'undecorated)
-      (set-frame-parameter nil 'undecorated nil)
-    (set-frame-parameter nil 'undecorated t))
+  (set-frame-parameter nil 'undecorated (not (frame-parameter nil 'undecorated)))
   (toggle-frame-maximized)
   (toggle-frame-maximized)
   (posframe-delete-all) ;; some kind of bug
