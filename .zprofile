@@ -1,3 +1,9 @@
+if [ "$(yadm config --get local.class)" = "WORK" ]; then
+    DAY_JOB=true
+else
+    DAY_JOB=false
+fi
+
 if [ $DAY_JOB = true ]; then
     # added by Snowflake SnowSQL installer v1.2
     export PATH=/Applications/SnowSQL.app/Contents/MacOS:$PATH
