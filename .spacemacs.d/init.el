@@ -866,7 +866,7 @@ before packages are loaded."
         bidi-paragraph-direction 'left-to-right
         completions-ignore-case t
         diff-refine nil
-        flycheck-checker-error-threshold 1000)
+        flycheck-checker-error-threshold 2000)
 
   (let ((custom-file-path (file-truename "~/.spacemacs.d/custom.el")))
     (unless (file-exists-p custom-file-path)
