@@ -115,6 +115,7 @@ This function should only modify configuration layer settings."
      solaire-mode
      symex
      coterm
+     ;; flycheck-posframe
      ;; mini-frame
 
      ;; (dconf-dotfile
@@ -827,7 +828,16 @@ before packages are loaded."
   (use-package guix)
   (use-package solaire-mode :config (solaire-global-mode 1))
   (use-package symex)
+
+  ;; still a bit buggy. also, what's the best way to disable
+  ;; flycheck-pos-tip?
+  ;; (use-package flycheck-posframe
+  ;;   :hook (flycheck-mode . flycheck-posframe-mode)
+  ;;   :config (setq flycheck-display-errors-errors-delay 0.3
+  ;;                 flycheck-posframe-border-width 5))
+
   ;; (use-package dconf-dotfile)
+
   ;; not working :(
   ;; (use-package undo-hl
   ;;   :config
