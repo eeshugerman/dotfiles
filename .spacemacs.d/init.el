@@ -818,9 +818,7 @@ before packages are loaded."
     :group 'tree-sitter-hl-faces)
 
   ;; init standalone modes ----------------------------------------------------
-  (use-package diredfl
-    :defer t
-    :hook (dired-mode . diredfl-global-mode))
+  (use-package diredfl :config (diredfl-global-mode 1))
   (use-package beacon :config (beacon-mode 1))
   (use-package coterm :config (coterm-mode 1) (coterm-auto-char-mode 1))
   (use-package gcmh :config (gcmh-mode 1))
