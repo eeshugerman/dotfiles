@@ -1,12 +1,16 @@
 if [ "$(yadm config --get local.class)" = "WORK" ]; then
-    DAY_JOB=true
+    day_job=true
 else
-    DAY_JOB=false
+    day_job=false
 fi
 
-if [ $DAY_JOB = true ]; then
+if [ $day_job = true ]; then
     # added by Snowflake SnowSQL installer v1.2
-    export PATH=/Applications/SnowSQL.app/Contents/MacOS:$PATH
+    alias snowsql=/Applications/SnowSQL.app/Contents/MacOS/snowsql
+    export JAVA_HOME=/usr/local/Cellar/openjdk@11/11.0.12/libexec/openjdk.jdk/Contents/Home
+    # https://github.com/immuta/bodata/blob/master/README.md#getting-started
+    # TODO: this is cause of password prompt when opening shell? why didn't it used to do that?
+    sudo ifconfig lo0 alias 10.0.2.2
 else
     # i don't think this is necessary because the same thing is in /etc/profile.d/guix.sh
     # but the docs say to add it :shrug:
