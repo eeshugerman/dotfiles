@@ -854,7 +854,6 @@ before packages are loaded."
 
   (spacemacs/set-leader-keys
     ":"  'eval-expression
-    "of" 'my/echo-file-path
     "ow" 'eww
     "oc" 'comint-clear-buffer
     "og" 'revert-buffer
@@ -1136,13 +1135,21 @@ before packages are loaded."
     (set-face-attribute 'lsp-ui-sideline-global nil :slant 'italic))
 
   ;; doom-modeline -------------------------------------------------------------
-  (setq doom-modeline-buffer-file-name-style 'truncate-with-project
+  (setq doom-modeline-buffer-file-name-style nil
         doom-modeline-hud t
         doom-modeline-percent-position nil
         doom-modeline-buffer-encoding nil
         doom-modeline-bar-width my/border-width
         doom-modeline-irc t
         doom-modeline-persp-name nil)
+
+  (defun my/toggle-relative-path-in-modeline ()
+    (interactive)
+    (setq doom-modeline-buffer-file-name-style
+          (if doom-modeline-buffer-file-name-style
+              nil
+            'relative-from-project)))
+ (spacemacs/set-leader-keys "of" #'my/toggle-relative-path-in-modeline)
 
   (set-face-attribute 'doom-modeline-persp-name nil :inherit 'unspecified)
   (add-hook 'buffer-list-update-hook 'doom-modeline-redisplay)
