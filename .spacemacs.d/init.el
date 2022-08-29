@@ -37,9 +37,9 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(go
-     ;; gnome-shell ;; not in spacemacs repo, installed as local layer
+   '(
      ;; erc ;; broken last i checked
+     ;; gnome-shell ;; not in spacemacs repo, installed as local layer
      ansible
      auto-completion
      c-c++
@@ -51,6 +51,7 @@ This function should only modify configuration layer settings."
      emacs-lisp
      epub
      git
+     go
      graphviz
      groovy
      haskell
@@ -102,6 +103,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages
    '(
      ox-reveal
+     beacon
      dired-git-info
      diredfl
      direnv
@@ -112,8 +114,8 @@ This function should only modify configuration layer settings."
      pacfiles-mode
      solaire-mode
      symex
-     magit-delta
      coterm
+     ;; flycheck-posframe
      ;; mini-frame
 
      ;; (dconf-dotfile
@@ -133,8 +135,9 @@ This function should only modify configuration layer settings."
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(doom-flatwhite-theme  ;; if these arent't listed here spacemacs
-                                    doom-henna-theme)     ;; prints a harmless error on startup. why??
+   dotspacemacs-excluded-packages '( ;; nonfatal error on startup if the themes aren't listed here. why?
+                                    doom-flatwhite-theme
+                                    doom-henna-theme)
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -646,13 +649,10 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
-  (add-to-list 'warning-suppress-types '(comp))
-
   (if my/macos-flag
       (setq insert-directory-program "/usr/local/bin/gls"))
 
-
-  (setq
+  (setq-default
    ;; misc -- TODO: organize these
    c-c++-lsp-enable-semantic-highlight t
    ;; c-c++-lsp-enable-semantic-highlight 'overlay
@@ -666,6 +666,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    dap-debug-restart-keep-session nil
 
+   git-enable-magit-delta-plugin t
    groovy-backend 'lsp
    groovy-lsp-jar-path "~/util/groovy-language-server/build/libs/groovy-language-server-all.jar"
 
@@ -781,9 +782,11 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                                   html-mode
                                   scss-mode
                                   css-mode)
-   version-control-diff-tool 'diff-hl)
+   version-control-diff-tool 'diff-hl
 
-)
+   writeroom-maximize-window nil
+   writeroom-mode-line t
+   writeroom-global-effects nil))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -800,6 +803,8 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
+  (spacemacs/toggle-debug-on-error-on)
+
   ;; temp ---------------------------------------------------------------------
   ;; fixes js org blocks -- why??
   (defface tree-sitter-hl-face:punctuation
@@ -808,25 +813,30 @@ before packages are loaded."
     :group 'tree-sitter-hl-faces)
 
   ;; init standalone modes ----------------------------------------------------
-  (use-package diredfl
-    :defer t
-    :hook (dired-mode . diredfl-global-mode))
+  (use-package diredfl :config (diredfl-global-mode 1))
+  (use-package beacon :config (beacon-mode 1))
   (use-package coterm :config (coterm-mode 1) (coterm-auto-char-mode 1))
-
   (use-package gcmh :config (gcmh-mode 1))
   (use-package direnv :config (direnv-mode 1))
   (use-package guix)
   (use-package solaire-mode :config (solaire-global-mode 1))
   (use-package symex)
+
+  ;; still a bit buggy. also, what's the best way to disable flycheck-pos-tip?
+  ;; (use-package flycheck-posframe
+  ;;   :hook (flycheck-mode . flycheck-posframe-mode)
+  ;;   :config (setq flycheck-display-errors-errors-delay 0.3
+  ;;                 flycheck-posframe-border-width 5))
+
   ;; (use-package dconf-dotfile)
+
   ;; not working :(
   ;; (use-package undo-hl
   ;;   :config
   ;;   (add-to-list 'undo-hl-undo-commands evil-undo-function)
   ;;   (add-to-list 'undo-hl-undo-commands evil-redo-function))
 
-  ;; still needs lots of work
-  ;; doesn't work with pgtk
+  ;; still needs lots of work. doesn't work with pgtk.
   ;; (use-package mini-frame
   ;;   :config
   ;;   (ivy-posframe-mode -1)
@@ -842,13 +852,6 @@ before packages are loaded."
   ;;   :hook (dired-after-readin . dired-git-info-auto-enable))
 
 
-  ;; https://github.com/magit/magit/issues/2942#issuecomment-1026201640
-  ;; (use-package magit-delta
-  ;;   :after magit
-  ;;   :hook (magit-mode . magit-delta-mode))
-
-
-
   ;; misc/general --------------------------------------------------------------
   (server-start)
 
@@ -859,14 +862,14 @@ before packages are loaded."
     "og" 'revert-buffer
     "ou" 'my/unescape-newlines)
 
-  (setq select-enable-clipboard nil
-        create-lockfiles nil
-        projectile-indexing-method 'hybrid
-        bidi-inhibit-bpa t
-        bidi-paragraph-direction 'left-to-right
-        completions-ignore-case t
-        diff-refine nil
-        flycheck-checker-error-threshold 2000)
+  (setq-default select-enable-clipboard nil
+                create-lockfiles nil
+                projectile-indexing-method 'hybrid
+                bidi-inhibit-bpa t
+                bidi-paragraph-direction 'left-to-right
+                completions-ignore-case t
+                diff-refine nil
+                flycheck-checker-error-threshold 2000)
 
   (let ((custom-file-path (file-truename "~/.spacemacs.d/custom.el")))
     (unless (file-exists-p custom-file-path)
@@ -897,15 +900,15 @@ before packages are loaded."
   (dolist (hook '(hack-local-variables-hook
                   special-mode-hook
                   shell-mode-hook))
-          (add-hook hook (my/suppress-messages-hook 'spacemacs/toggle-truncate-lines-on)))
-  (add-hook 'hack-local-variables-hook (my/suppress-messages-hook 'spacemacs/toggle-truncate-lines-on))
-  (add-hook 'special-mode-hook (my/suppress-messages-hook 'spacemacs/toggle-truncate-lines-on))
+          (add-hook hook (my/suppress-messages-hook #'spacemacs/toggle-truncate-lines-on)))
 
   ;; emacs lisp ----------------------------------------------------------------
-  ;; alternatively, switch to gg everywhere?
   (spacemacs/set-leader-keys-for-major-mode 'emacs-lisp-mode
-    "gd" 'spacemacs/jump-to-definition)
-
+    "gd" #'spacemacs/jump-to-definition)
+  (add-hook 'emacs-lisp-mode-hook
+            (lambda ()
+              (unless (string= buffer-file-name (f-expand "~/.spacemacs.d/init.el"))
+                (flycheck-mode 1))))
 
   ;; autosave ------------------------------------------------------------------
   (auto-save-mode -1)
@@ -975,11 +978,8 @@ before packages are loaded."
     (if (projectile-project-p)
         (spacemacs/projectile-shell-pop)
       (spacemacs/default-pop-shell)))
-  (spacemacs/set-leader-keys "'" 'pop-shell-at-project-root-or-home)
+  (spacemacs/set-leader-keys "'" #'pop-shell-at-project-root-or-home)
 
-
-  ;; term -------------------------------------------------------------------------
-  (add-hook 'term-mode-hook (lambda () (term-line-mode)))
 
   ;; transient --------------------------------------------------------------------
   (with-eval-after-load 'transient
@@ -1000,10 +1000,10 @@ before packages are loaded."
 
 
   ;; python ------------------------------------------------------------------------
-  (add-hook 'python-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
+  (add-hook 'python-mode-hook #'spacemacs/toggle-fill-column-indicator-on)
 
   ;; ein ---
-  (add-hook 'ein:notebook-mode-hook 'spacemacs/toggle-fill-column-indicator-off)
+  (add-hook 'ein:notebook-mode-hook #'spacemacs/toggle-fill-column-indicator-off)
   (setq ein:output-area-inlined-images t)
 
 
@@ -1017,24 +1017,14 @@ before packages are loaded."
     (setq python-shell-interpreter "python3"
           python-shell-interpreter-args "-i"
           python-shell-completion-native-enable nil))
-  (setq dap-python-debugger 'debugpy) ; this should be the default at some point
 
 
   ;; git ----------------------------------------------------------------------
-  (setq browse-at-remote-remote-type-domains '(("github.com" .  "github")))
-  (setq magit-display-buffer-function 'magit-display-buffer-fullcolumn-most-v1)
-  (evil-define-key 'normal magit-diff-mode-map
-    (kbd "RET") 'magit-diff-visit-worktree-file-other-window)
+  ;; https://github.com/rmuslimov/browse-at-remote/pull/93
+  (with-eval-after-load 'browse-at-remote
+    (add-to-list 'browse-at-remote-remote-type-regexps '("^gitlab\\.gnome\\.org$" . "gitlab")))
 
-  ;; writeroom -----------------------------------------------------------------
-  (defvar writeroom-global-effects '()) ;; not sure why this hack is necessary
-  (use-package writeroom-mode
-    ;; :defer t ;; `writeroom-mode' isn't autoloaded :(
-    :custom
-    (writeroom-maximize-window nil)
-    (writeroom-mode-line t)
-    (writeroom-global-effects (delq 'writeroom-set-fullscreen
-                                    writeroom-global-effects)))
+  (setq magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
 
   ;; ivy/ivy-rich --------------------------------------------------------------
   (setq ivy-rich-parse-remote-buffer nil)
@@ -1068,6 +1058,8 @@ before packages are loaded."
   ;; themeing -----------------------------------------------------------------
   (defvar-local my/border-width 10)
 
+  (setq which-key-posframe-font "JetBrains Mono NL")
+
   ;; also called by gnome extension via emacsclient
   (defun my/load-theme (system-appearance)
     (mapc 'disable-theme custom-enabled-themes)
@@ -1075,18 +1067,20 @@ before packages are loaded."
       ('dark (load-theme (first dotspacemacs-themes) t))
       ('light (load-theme (second dotspacemacs-themes) t))))
 
+  ;; using emacs-plus integration for macos
   (when (boundp 'ns-system-appearance-change-functions)
     (add-hook 'ns-system-appearance-change-functions #'my/load-theme)
     (my/load-theme ns-system-appearance))
 
-  (toggle-menu-bar-mode-from-frame -1)
+  ;; for gnome, best we can do right now is check on startup
+  (unless my/macos-flag
+    (thread-first "gsettings get org.gnome.desktop.interface color-scheme"
+                  shell-command-to-string
+                  (string-trim "'" "'\n")
+                  (pcase ("default" 'light) ("prefer-dark" 'dark))
+                  (my/load-theme)))
 
-  ;; fringe ---
-  ;; hide arrows at window border for truncated lines -- not working
-  ;; (define-fringe-bitmap 'left-curly-arrow (make-vector 8 #b0))
-  ;; (define-fringe-bitmap 'right-curly-arrow (make-vector 8 #b0))
-  ;; (define-fringe-bitmap 'right-arrow (make-vector 8 #b0))
-  (fringe-mode (cons my/border-width my/border-width))
+  (toggle-menu-bar-mode-from-frame -1)
 
   ;; doom ---
   (doom-themes-org-config)
@@ -1096,6 +1090,8 @@ before packages are loaded."
   (doom-themes-treemacs-config)
 
   ;; borders, etc ---
+  (fringe-mode (cons my/border-width my/border-width))
+
   (setq window-divider-default-right-width 1
         window-divider-default-bottom-width 1)
   (menu-bar-bottom-and-right-window-divider)
@@ -1120,14 +1116,12 @@ before packages are loaded."
     (window-divider-mode 1)
     (doom-modeline-invalidate-huds))
 
-  (add-hook 'spacemacs-post-theme-change-hook 'my/do-theme-tweaks)
+  (add-hook 'spacemacs-post-theme-change-hook #'my/do-theme-tweaks)
   (my/do-theme-tweaks)
 
   (add-hook
    'terraform-mode-hook
    (lambda () (set-face-foreground 'terraform--resource-name-face "hot pink")))
-
-  (setq which-key-posframe-font "JetBrains Mono NL")
 
   (with-eval-after-load 'lsp-ui
     ;; (set-face-attribute 'lsp-ui-sideline-global nil :background (doom-color 'base1))
@@ -1152,13 +1146,13 @@ before packages are loaded."
  (spacemacs/set-leader-keys "of" #'my/toggle-relative-path-in-modeline)
 
   (set-face-attribute 'doom-modeline-persp-name nil :inherit 'unspecified)
-  (add-hook 'buffer-list-update-hook 'doom-modeline-redisplay)
+  (add-hook 'buffer-list-update-hook #'doom-modeline-redisplay)
   (defun doom-modeline-segment--major-mode () nil)
 
   ;; evil ------------------------------------------------------------------------
   ;; vi ---
   (setq evil-want-Y-yank-to-eol t)
-  (evil-define-key 'visual 'global (kbd "v") 'evil-visual-line)
+  (evil-define-key 'visual 'global (kbd "v") #'evil-visual-line)
   (evil-define-key 'motion 'global
     (kbd "V") (kbd "C-v $"))
 
@@ -1167,12 +1161,12 @@ before packages are loaded."
 
   ;; ivy ---
   (evil-define-key 'normal ivy-minibuffer-map
-    [return] 'exit-minibuffer
-    [escape] 'minibuffer-keyboard-quit)
+    [return] #'exit-minibuffer
+    [escape] #'minibuffer-keyboard-quit)
 
   (evil-define-key '(normal insert) ivy-minibuffer-map
-    (kbd "C-j") 'ivy-next-line
-    (kbd "C-k") 'ivy-previous-line)
+    (kbd "C-j") #'ivy-next-line
+    (kbd "C-k") #'ivy-previous-line)
 
   ;; workaround for what seems to be a bug:
   ;; C-j/C-k binding doesn't work until state is changed
@@ -1183,23 +1177,23 @@ before packages are loaded."
 
   ;; ex stuff ---
   ;; what about evil-ex-map? what does it do?
-  (dolist (my-keymap `(,evil-ex-completion-map ,evil-ex-search-keymap))
+  (dolist (my-keymap (list evil-ex-completion-map evil-ex-search-keymap))
     (evil-define-key* 'normal my-keymap
-      [escape] 'minibuffer-keyboard-quit)
+      [escape] #'minibuffer-keyboard-quit)
 
     (evil-define-key* '(normal insert) my-keymap
-      (kbd "C-j") 'next-history-element
-      (kbd "C-k") 'previous-history-element))
+      (kbd "C-j") #'next-history-element
+      (kbd "C-k") #'previous-history-element))
 
 
   ;; eval-expression, etc ---
   (evil-define-key 'normal minibuffer-local-map
-    [return] 'exit-minibuffer
-    [escape] 'minibuffer-keyboard-quit)
+    [return] #'exit-minibuffer
+    [escape] #'minibuffer-keyboard-quit)
 
   (evil-define-key '(normal insert) minibuffer-local-map
-    (kbd "C-j") 'next-history-element
-    (kbd "C-k") 'previous-history-element)
+    (kbd "C-j") #'next-history-element
+    (kbd "C-k") #'previous-history-element)
 
   ;; misc ---
   (evil-define-key 'normal 'global (kbd "C-,") #'evil-emacs-state)
@@ -1231,7 +1225,7 @@ before packages are loaded."
   (evil-define-key '(normal insert) vterm-mode-map
     (kbd "C-k") #'vterm-send-up
     (kbd "C-j") #'vterm-send-down)
-  (evil-define-key 'emacs vterm-mode-map (kbd "C-,") 'evil-normal-state)
+  (evil-define-key 'emacs vterm-mode-map (kbd "C-,") #'evil-normal-state)
 
   (setq vterm-max-scrollback 100000  ; maximum size supported
         vterm-min-window-width 65535 ; no suppress-hard-newline :(
@@ -1253,11 +1247,11 @@ before packages are loaded."
 
   ;; reduce modeline clutter
   (add-hook 'lsp-before-initialize-hook
-            (lambda () (defun lsp-eslint-status-handler (foo bar) t)))
+            (lambda () (defun lsp-eslint-status-handler (_ _) t)))
 
   (evil-define-key 'normal web-mode-map
-    (kbd "zc") 'web-mode-fold-or-unfold
-    (kbd "zo") 'web-mode-fold-or-unfold)
+    (kbd "zc") #'web-mode-fold-or-unfold
+    (kbd "zo") #'web-mode-fold-or-unfold)
 
 
   ;; css/scss ------------------------------------------------------------------------
@@ -1268,18 +1262,17 @@ before packages are loaded."
     (require 'ox-jira)
     (org-babel-do-load-languages 'org-babel-load-languages '((scheme . t)))
     (setq org-confirm-babel-evaluate nil
-          org-format-latex-options (plist-put org-format-latex-options :scale 1.2)
-          org-clock-auto-clockout-timer (* 60 15)))
+          org-format-latex-options (plist-put org-format-latex-options :scale 1.2)))
 
   (org-agenda-files (directory-files-recursively "~/org" "\.org$" nil))
 
-  (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") 'org-babel-execute-src-block)
+  (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") #'org-babel-execute-src-block)
 
-  (add-hook 'org-mode-hook 'spacemacs/toggle-line-numbers-off)  ;; doesn't work
+  (add-hook 'org-mode-hook #'spacemacs/toggle-line-numbers-off)  ;; doesn't work
 
   ;; scheme -------------------------------------------------------------------------
   (spacemacs/set-leader-keys-for-major-mode 'scheme-mode
-    "gd" 'spacemacs/jump-to-definition)
+    "gd" #'spacemacs/jump-to-definition)
   (add-hook 'scheme-mode-hook #'spacemacs/toggle-indent-guide-on)
   (setq geiser-repl-history-no-dups-p nil)
 
@@ -1296,7 +1289,7 @@ before packages are loaded."
   (defun my/magit-yadm ()
     (interactive)
     (magit-status "/yadm::"))
-  (spacemacs/set-leader-keys "oy" 'my/magit-yadm)
+  (spacemacs/set-leader-keys "oy" #'my/magit-yadm)
 
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
@@ -1342,9 +1335,9 @@ before packages are loaded."
     (interactive)
     (spacemacs/counsel-find-file "/docker:"))
 
-  (spacemacs/set-leader-keys "odf" 'my/docker-tramp-find-file)
-  (spacemacs/set-leader-keys "odb" 'docker-container-shell)
-  (spacemacs/set-leader-keys "odB" 'docker-container-shell-env)
+  (spacemacs/set-leader-keys "odf" #'my/docker-tramp-find-file)
+  (spacemacs/set-leader-keys "odb" #'docker-container-shell)
+  (spacemacs/set-leader-keys "odB" #'docker-container-shell-env)
 
   (setq docker-container-columns '((:name "Id" :width 16 :template "{{ json .ID }}" :sort nil :format nil)
                                    (:name "Image" :width 15 :template "{{ json .Image }}" :sort nil :format nil)
@@ -1365,10 +1358,10 @@ before packages are loaded."
 
   ;; symex --------------------------------------------------------------------
   (evil-define-key 'normal symex-mode-map
-    (kbd "<escape>") 'symex-mode-interface)
+    (kbd "<escape>") #'symex-mode-interface)
 
   (evil-define-key 'insert symex-mode-map
-    (kbd "<escape>") 'symex-mode-interface)
+    (kbd "<escape>") #'symex-mode-interface)
 
   (setq symex--user-evil-keyspec
         '(("j" . symex-go-up)
@@ -1430,7 +1423,7 @@ before packages are loaded."
                               "##politics"))
             ("gitter.im" . ("#syl20bnr/spacemacs")))))
 
-  (add-hook 'erc-track-minor-mode-hook 'erc-status-sidebar-open)
+  (add-hook 'erc-track-minor-mode-hook #'erc-status-sidebar-open)
 
   ;; highlight-indentation ----------------------------------------------------
   ;; this is off by default
@@ -1443,7 +1436,7 @@ before packages are loaded."
     (sp-local-pair 'minibuffer-pairs "'" nil :actions nil)
     (sp-local-pair 'minibuffer-pairs "`" nil :actions nil)
     (sp-update-local-pairs 'minibuffer-pairs))
-  (add-hook 'eval-expression-minibuffer-setup-hook 'my/minibuffer-fix-sp)
+  (add-hook 'eval-expression-minibuffer-setup-hook #'my/minibuffer-fix-sp)
 
   ;; tree-sitter ----------------------------------------------------------------
 
@@ -1469,10 +1462,10 @@ before packages are loaded."
   ;; piggyback on `spago repl` to make ,si (`purs repl`) work
   ;; why is `psci/arguments' void at startup?
   ;; (add-to-list 'psci/arguments ".spago/psci-support/**/*.purs")
-  (remove-hook 'purescript-mode-hook 'purescript-indentation-mode)
-  (add-hook 'purescript-mode-hook 'purescript-indentation-mode)
   (setq purescript-indent-offset 2)
-  )
+
+
+  (spacemacs/toggle-debug-on-error-off))
 
 ;; misc commands --------------------------------------------------------------
 (defun my/hide-dos-eol ()
@@ -1504,11 +1497,9 @@ before packages are loaded."
 
 (defun my/toggle-frame-decorated ()
   "Useful because decoration breaks Rectangle stuff on OSX.
-TODO: messes with ivy-posframe background color? "
+TODO: messes with ivy-posframe background color?"
   (interactive)
-  (if (frame-parameter nil 'undecorated)
-      (set-frame-parameter nil 'undecorated nil)
-    (set-frame-parameter nil 'undecorated t))
+  (set-frame-parameter nil 'undecorated (not (frame-parameter nil 'undecorated)))
   (toggle-frame-maximized)
   (toggle-frame-maximized)
   (posframe-delete-all) ;; some kind of bug
