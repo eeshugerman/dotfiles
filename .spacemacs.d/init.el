@@ -103,6 +103,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages
    '(
      ox-reveal
+     beacon
      dired-git-info
      diredfl
      direnv
@@ -819,6 +820,7 @@ before packages are loaded."
   (use-package diredfl
     :defer t
     :hook (dired-mode . diredfl-global-mode))
+  (use-package beacon :config (beacon-mode 1))
   (use-package coterm :config (coterm-mode 1) (coterm-auto-char-mode 1))
   (use-package gcmh :config (gcmh-mode 1))
   (use-package direnv :config (direnv-mode 1))
