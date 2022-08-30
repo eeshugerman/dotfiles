@@ -3,9 +3,10 @@
 ;; It must be stored in your home directory.
 
 (defconst my/macos-flag (eq system-type 'darwin))
-(defconst my/work-flag (let ((yadm-class (string-trim (shell-command-to-string
-                                                       "yadm config --get local.class"))))
-                         (string= yadm-class "WORK")))
+(defconst my/work-flag (thread-first "yadm config --get local.class"
+                                     shell-command-to-string
+                                     string-trim
+                                     (string= "WORK")))
 
 (defun dotspacemacs/layers ()
   "Layer configuration:
