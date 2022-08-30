@@ -1572,7 +1572,7 @@ TODO: messes with ivy-posframe background color?"
 ;; (add-hook 'markdown-mode 'my/toggle-prosey-on)
 ;; (add-hook 'org-mode 'my/toggle-prosey-on)
 
-;; hopefully has been fixed properly with `sudo launchctl limit maxfiles 1024 unlimited`
+;; hopefully has been fixed properly with `sudo launchctl limit maxfiles 2048 unlimited`
 ;; (still need to make that persistent with a launch agent tho)
 (defun my/fix-too-many-open-files ()
   (interactive)
