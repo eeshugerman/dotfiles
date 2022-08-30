@@ -110,7 +110,6 @@ This function should only modify configuration layer settings."
      fold-this
      gcmh
      guix
-     journalctl-mode
      pacfiles-mode
      solaire-mode
      symex
