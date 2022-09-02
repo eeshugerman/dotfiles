@@ -1267,6 +1267,9 @@ before packages are loaded."
     (kbd "zc") #'web-mode-fold-or-unfold
     (kbd "zo") #'web-mode-fold-or-unfold)
 
+  ;; typescript mode seems to work better than js2, at least w/r/t performance
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . typescript-mode))
+
 
   ;; css/scss ------------------------------------------------------------------------
   (setq css-fontify-colors nil)
