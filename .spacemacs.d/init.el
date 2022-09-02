@@ -957,11 +957,14 @@ before packages are loaded."
     (kbd (concat dotspacemacs-leader-key " b d")) 'comint-send-eof ;; doesn't work :(
     [return] 'comint-send-input)
 
+  (evil-define-key 'insert comint-mode-map
+    (kbd "C-r") 'comint-history-isearch-backward
+    (kbd "C-S-r") 'comint-history-isearch-backward-regexp)
+
   (evil-define-key 'normal ielm-map
     [return] 'ielm-return)
 
-  (setq comint-move-point-for-output nil ;; does this do anything?
-        comint-scroll-to-bottom-on-input t
+  (setq comint-scroll-to-bottom-on-input t
         ;; enable colors in shell
         ;; see also `ansi-color-for-comint-*'
         ;; breaks sql-interactive-mode tho :(
@@ -1025,6 +1028,17 @@ before packages are loaded."
     (add-to-list 'browse-at-remote-remote-type-regexps '("^gitlab\\.gnome\\.org$" . "gitlab")))
 
   (setq magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
+
+  (setq magit-delta-default-light-theme "Solarized (light)"
+        ;; magit-delta-default-dark-theme ??
+        magit-delta-hide-plus-minus-markers nil)
+
+
+  ;; syntax highlight removals, not just additions
+  (add-to-list 'magit-delta-delta-args "--minus-style='syntax auto'")
+  ;; don't refine hunks
+  (add-to-list 'magit-delta-delta-args "--minus-emph-style=minus-style")
+  (add-to-list 'magit-delta-delta-args "--plus-emph-style=plus-style")
 
   ;; ivy/ivy-rich --------------------------------------------------------------
   (setq ivy-rich-parse-remote-buffer nil)
@@ -1464,7 +1478,6 @@ before packages are loaded."
   ;; (add-to-list 'psci/arguments ".spago/psci-support/**/*.purs")
   (setq purescript-indent-offset 2)
 
-
   (spacemacs/toggle-debug-on-error-off))
 
 ;; misc commands --------------------------------------------------------------
@@ -1563,10 +1576,8 @@ TODO: messes with ivy-posframe background color?"
   (let ((default-directory "~/devel")
         (repo-name  (s-replace ".git" "" (car (last (split-string url "/"))))))
     (shell-command (format "git clone %s" url))
-    (persp-add-new repo-name) ;; how to swith to the new one?
-    ;; (spacemacs/layout-switch-to repo-name)
-    ;; (find-file (f-join repo-name "README.md")))
-  ))
+    (projectile-add-known-project (f-join default-directory repo-name)))
+  (message "done"))
 
 ;; (add-hook 'text-mode-hook 'my/toggle-prosey-on)
 ;; (add-hook 'markdown-mode 'my/toggle-prosey-on)
