@@ -1047,6 +1047,23 @@ before packages are loaded."
     )
 
   ;; ivy/ivy-rich --------------------------------------------------------------
+  ;; TODO: C-x C-a (ivy-toggle-ignore) not working?
+
+  (evil-define-key 'normal ivy-minibuffer-map
+    [return] #'exit-minibuffer
+    [escape] #'minibuffer-keyboard-quit)
+
+  (evil-define-key '(normal insert) ivy-minibuffer-map
+    (kbd "C-j") #'ivy-next-line
+    (kbd "C-k") #'ivy-previous-line)
+
+  ;; workaround for what seems to be a bug:
+  ;; C-j/C-k binding doesn't work until state is changed
+  (add-hook 'minibuffer-setup-hook (lambda ()
+                                     (evil-normal-state)
+                                     (evil-insert-state)
+                                     (move-end-of-line nil)))
+
   (setq ivy-rich-parse-remote-buffer nil)
 
   (let* ((switch-buffer-configs
@@ -1178,22 +1195,6 @@ before packages are loaded."
 
   ;; evil in ivy/minibuffer
   (setq evil-want-minibuffer t)
-
-  ;; ivy ---
-  (evil-define-key 'normal ivy-minibuffer-map
-    [return] #'exit-minibuffer
-    [escape] #'minibuffer-keyboard-quit)
-
-  (evil-define-key '(normal insert) ivy-minibuffer-map
-    (kbd "C-j") #'ivy-next-line
-    (kbd "C-k") #'ivy-previous-line)
-
-  ;; workaround for what seems to be a bug:
-  ;; C-j/C-k binding doesn't work until state is changed
-  (add-hook 'minibuffer-setup-hook (lambda ()
-                                     (evil-normal-state)
-                                     (evil-insert-state)
-                                     (move-end-of-line nil)))
 
   ;; ex stuff ---
   ;; what about evil-ex-map? what does it do?
@@ -1584,9 +1585,11 @@ TODO: messes with ivy-posframe background color?"
   (require 's)
   (let ((default-directory "~/devel")
         (repo-name  (s-replace ".git" "" (car (last (split-string url "/"))))))
+    (message "cloning...")
+    ;; TODO: make it async
     (shell-command (format "git clone %s" url))
     (projectile-add-known-project (f-join default-directory repo-name)))
-  (message "done"))
+  (message "git clone complete"))
 
 ;; (add-hook 'text-mode-hook 'my/toggle-prosey-on)
 ;; (add-hook 'markdown-mode 'my/toggle-prosey-on)
