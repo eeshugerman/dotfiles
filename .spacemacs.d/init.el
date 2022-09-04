@@ -70,7 +70,7 @@ This function should only modify configuration layer settings."
      nginx
      org
      posframe
-     prettier
+     ;; prettier
      purescript
      python
      ruby
@@ -882,8 +882,10 @@ before packages are loaded."
 
   (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
 
-  ;; (when my/macos-flag
-  ;;   (savehist-mode -1)) ;; performance issues?
+  (when my/macos-flag
+    ;; can be slow, resulting in periodic pauses
+    ;; maybe not just just a macos thing
+    (savehist-mode -1))
 
   (defmacro my/with-no-messages (&rest body)
     ;; `inhibit-message' still logs to *Messages* and (apprently?) clears previous message
@@ -923,10 +925,11 @@ before packages are loaded."
     (setq company-shell-modes '(eshell-mode)))
 
   ;; gcmh ------------------------------------------------------------------------
-  (setq gcmh-verbose nil
-        gcmh-low-cons-threshold (* 500 (expt 10 3))
-        gcmh-high-cons-threshold (* 500 (expt 10 6))
-        gcmh-idle-delay 5)
+  (setq gcmh-verbose t
+        ;; gcmh-low-cons-threshold (* 500 (expt 10 3))
+        ;; gcmh-high-cons-threshold (* 500 (expt 10 6))
+        ;; gcmh-idle-delay 5
+        )
 
   ;; dired -----------------------------------------------------------------------
   (defun my/dired-up-directory ()
@@ -1034,11 +1037,13 @@ before packages are loaded."
         magit-delta-hide-plus-minus-markers nil)
 
 
-  ;; syntax highlight removals, not just additions
-  (add-to-list 'magit-delta-delta-args "--minus-style='syntax auto'")
-  ;; don't refine hunks
-  (add-to-list 'magit-delta-delta-args "--minus-emph-style=minus-style")
-  (add-to-list 'magit-delta-delta-args "--plus-emph-style=plus-style")
+  (with-eval-after-load 'magit-delta
+    ;; syntax highlight removals, not just additions
+    (add-to-list 'magit-delta-delta-args "--minus-style='syntax auto'")
+    ;; don't refine hunks
+    (add-to-list 'magit-delta-delta-args "--minus-emph-style=minus-style")
+    (add-to-list 'magit-delta-delta-args "--plus-emph-style=plus-style")
+    )
 
   ;; ivy/ivy-rich --------------------------------------------------------------
   (setq ivy-rich-parse-remote-buffer nil)
