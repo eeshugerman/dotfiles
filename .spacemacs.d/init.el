@@ -1392,6 +1392,7 @@ before packages are loaded."
           ("C-k" . symex-descend-branch)
           ("M-j" . symex-goto-highest)
           ("M-k" . symex-goto-lowest)))
+  (add-to-list 'symex-lisp-modes 'lisp-data-mode)
   (symex-initialize)
 
   ;; erc ----------------------------------------------------------------------
