@@ -666,7 +666,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    dap-debug-restart-keep-session nil
 
-   git-enable-magit-delta-plugin t
+   ;; quite slow, unfortunately
+   git-enable-magit-delta-plugin nil
    groovy-backend 'lsp
    groovy-lsp-jar-path "~/util/groovy-language-server/build/libs/groovy-language-server-all.jar"
 
@@ -925,7 +926,7 @@ before packages are loaded."
     (setq company-shell-modes '(eshell-mode)))
 
   ;; gcmh ------------------------------------------------------------------------
-  (setq gcmh-verbose t
+  (setq gcmh-verbose nil
         ;; gcmh-low-cons-threshold (* 500 (expt 10 3))
         ;; gcmh-high-cons-threshold (* 500 (expt 10 6))
         ;; gcmh-idle-delay 5
@@ -967,7 +968,7 @@ before packages are loaded."
   (evil-define-key 'normal ielm-map
     [return] 'ielm-return)
 
-  (setq comint-scroll-to-bottom-on-input t
+  (setq comint-scroll-to-bottom-on-input nil
         ;; enable colors in shell
         ;; see also `ansi-color-for-comint-*'
         ;; breaks sql-interactive-mode tho :(
@@ -1589,11 +1590,20 @@ TODO: messes with ivy-posframe background color?"
 ;; (add-hook 'markdown-mode 'my/toggle-prosey-on)
 ;; (add-hook 'org-mode 'my/toggle-prosey-on)
 
-;; hopefully has been fixed properly with `sudo launchctl limit maxfiles 2048 unlimited`
-;; (still need to make that persistent with a launch agent tho)
 (defun my/fix-too-many-open-files ()
   (interactive)
   (maphash
    (lambda (key _value)
      (file-notify-rm-watch key))
    file-notify-descriptors))
+
+(defun my/toggle-bool (var)
+  (interactive "vvariable? ")
+  (cond ((equal (eval var) t)
+         (set var nil)
+         (message "%s is now nil" var))
+        ((equal (eval var) nil)
+         (message "nil")
+         (set var t)
+         (message "%s is now t" var))
+        (t (error "%s is not a bool" var))))
