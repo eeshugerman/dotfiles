@@ -1379,11 +1379,8 @@ before packages are loaded."
                               (origami-mode +1)))
 
   ;; symex --------------------------------------------------------------------
-  (evil-define-key 'normal symex-mode-map
-    (kbd "<escape>") #'symex-mode-interface)
-
-  (evil-define-key 'insert symex-mode-map
-    (kbd "<escape>") #'symex-mode-interface)
+  (evil-define-key '(normal insert) symex-mode-map
+    (kbd "S-<escape>") #'symex-mode-interface)
 
   (setq symex--user-evil-keyspec
         '(("j" . symex-go-up)
