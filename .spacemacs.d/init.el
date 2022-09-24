@@ -1092,6 +1092,19 @@ before packages are loaded."
     (dolist (config switch-buffer-configs)
       (plist-put config :columns my-columns-config)))
 
+  ;; fix "error code 2" counsel/ripgrep issue
+  ;; based on https://github.com/doomemacs/doomemacs/issues/3038#issuecomment-929996064 but without
+  ;; the doom macros
+  ;; TODO: upstream to spacemacs?
+  (with-eval-after-load 'counsel
+    (advice-add 'counsel-rg
+                :around
+                (lambda (func &rest args)
+                  (cl-flet ((filter-func (code) (if (= code 2) 0 code)))
+                    (unwind-protect
+                        (progn (advice-add 'process-exit-status :filter-return #'filter-func)
+                               (apply func args))
+                      (advice-remove 'process-exit-status #'filter-func))))))
   ;; themeing -----------------------------------------------------------------
   (defvar-local my/border-width 10)
 
@@ -1612,3 +1625,8 @@ TODO: messes with ivy-posframe background color?"
          (set var t)
          (message "%s is now t" var))
         (t (error "%s is not a bool" var))))
+
+(defun my/advice-unadvice (sym)
+  "Remove all advices from symbol SYM."
+  (interactive "aFunction symbol: ")
+  (advice-mapc (lambda (advice _props) (advice-remove sym advice)) sym))
