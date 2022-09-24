@@ -9,7 +9,7 @@ if [ $day_job = true ]; then
     alias snowsql=/Applications/SnowSQL.app/Contents/MacOS/snowsql
     export JAVA_HOME=/usr/local/Cellar/openjdk@11/11.0.12/libexec/openjdk.jdk/Contents/Home
     # https://github.com/immuta/bodata/blob/master/README.md#getting-started
-    # TODO: this is the cause of password prompt when opening a shell. why didn't it used to do that?
+    # TODO: is this still necessary? if not, remove from here, sudoers, and bodata readme
     sudo ifconfig lo0 alias 10.0.2.2
 else
     # i don't think this is necessary because the same thing is in /etc/profile.d/guix.sh
