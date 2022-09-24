@@ -1374,6 +1374,8 @@ before packages are loaded."
                                    (:name "Ports" :width 10 :template "{{ json .Ports }}" :sort nil :format nil)
                                    (:name "Command" :width 30 :template "{{ json .Command }}" :sort nil :format nil)))
 
+  (setq docker-pop-to-buffer-action '(display-buffer-same-window))
+
   ;; yaml ---------------------------------------------------------------------
   (add-hook 'yaml-mode-hook (lambda ()
                               (spacemacs/toggle-indent-guide-on)
