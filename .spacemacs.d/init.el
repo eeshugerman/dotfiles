@@ -906,6 +906,13 @@ before packages are loaded."
                   shell-mode-hook))
           (add-hook hook (my/suppress-messages-hook #'spacemacs/toggle-truncate-lines-on)))
 
+  ;; fix glitch in emacs 29
+  ;; seems to help but not always?
+  (add-hook 'special-mode-hook (lambda ()
+                                 (spacemacs/toggle-line-numbers-on)
+                                 (spacemacs/toggle-line-numbers-off)))
+
+
   ;; emacs lisp ----------------------------------------------------------------
   (spacemacs/set-leader-keys-for-major-mode 'emacs-lisp-mode
     "gd" #'spacemacs/jump-to-definition)
