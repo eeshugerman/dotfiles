@@ -882,6 +882,7 @@ before packages are loaded."
     (load (file-truename "~/.spacemacs.d/day-job.el") nil nil t))
 
   (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
+  (remove-hook 'diff-mode-hook 'whitespace-mode)
 
   (when my/macos-flag
     ;; can be slow, resulting in periodic pauses
