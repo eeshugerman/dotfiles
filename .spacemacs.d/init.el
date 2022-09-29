@@ -1530,15 +1530,6 @@ before packages are loaded."
   (interactive)
   (info (buffer-file-name)))
 
-(defun my/monitor-half-width ()
-  (interactive)
-  (set-frame-size (selected-frame) 945 1055 t))
-
-(defun my/monitor-half-width/4k ()
-  (interactive)
-  (set-frame-size (selected-frame) (- (/ 3840 2) 650) (- 2160 750) t))
-
-
 (defun my/toggle-frame-decorated ()
   "Useful because decoration breaks Rectangle stuff on OSX.
 TODO: messes with ivy-posframe background color?"
