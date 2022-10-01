@@ -1485,7 +1485,8 @@ before packages are loaded."
 
   ;; tree-sitter ----------------------------------------------------------------
 
-  (setq tree-sitter-debug-jump-buttons t tree-sitter-debug-highlight-jump-region t)
+  (setq tree-sitter-debug-jump-buttons t
+        tree-sitter-debug-highlight-jump-region t)
 
   ;; make more stuff foldable TODO: upstream these
   ;; TODO: add still more stuff: arrays, function calls
