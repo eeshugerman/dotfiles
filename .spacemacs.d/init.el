@@ -937,7 +937,8 @@ before packages are loaded."
   (setq gcmh-verbose nil
         ;; gcmh-low-cons-threshold (* 500 (expt 10 3))
         ;; gcmh-high-cons-threshold (* 500 (expt 10 6))
-        ;; gcmh-idle-delay 5
+        ;; gcmh-idle-delay 15
+        ;; gcmh-auto-idle-delay-factor 20
         )
 
   ;; dired -----------------------------------------------------------------------
@@ -994,6 +995,8 @@ before packages are loaded."
         (spacemacs/projectile-shell-pop)
       (spacemacs/default-pop-shell)))
   (spacemacs/set-leader-keys "'" #'pop-shell-at-project-root-or-home)
+
+  (add-hook 'shell-mode-hook #'(lambda () (setq comint-process-echoes t)))
 
 
   ;; transient --------------------------------------------------------------------
