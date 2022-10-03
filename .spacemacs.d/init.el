@@ -953,13 +953,9 @@ before packages are loaded."
 
   ;; undo --------------------------------------------------------------------
   ;; persistent undo ---
-  ;; https://github.com/syl20bnr/spacemacs/issues/774#issuecomment-77712618
-  ;; is slow?
-  (let ((undo-tree-cache-dir (concat spacemacs-cache-directory "undo")))
-    (unless (file-exists-p undo-tree-cache-dir)
-      (make-directory undo-tree-cache-dir))
-    (setq undo-tree-auto-save-history t
-          undo-tree-history-directory-alist `(("." . ,undo-tree-cache-dir))))
+  ;;  is slow!!
+  (setq undo-tree-auto-save-history nil)
+
   ;; granular history ---
   (setq evil-want-fine-undo t)
 
