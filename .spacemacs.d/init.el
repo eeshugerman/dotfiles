@@ -103,6 +103,7 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(
+     magit-delta
      ox-reveal
      beacon
      dired-git-info
