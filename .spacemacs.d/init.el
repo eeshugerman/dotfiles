@@ -936,10 +936,9 @@ before packages are loaded."
 
   ;; gcmh ------------------------------------------------------------------------
   (setq gcmh-verbose nil
-        ;; gcmh-low-cons-threshold (* 500 (expt 10 3))
-        ;; gcmh-high-cons-threshold (* 500 (expt 10 6))
-        ;; gcmh-idle-delay 15
-        ;; gcmh-auto-idle-delay-factor 20
+        gcmh-low-cons-threshold (expt 10 3)
+        gcmh-high-cons-threshold (expt 10 6)
+        gcmh-idle-delay 5
         )
 
   ;; dired -----------------------------------------------------------------------
