@@ -1048,7 +1048,6 @@ before packages are loaded."
         ;; magit-delta-default-dark-theme ??
         magit-delta-hide-plus-minus-markers nil)
 
-
   (with-eval-after-load 'magit-delta
     ;; syntax highlight removals, not just additions
     (add-to-list 'magit-delta-delta-args "--minus-style='syntax auto'")
@@ -1064,16 +1063,12 @@ before packages are loaded."
     [return] #'exit-minibuffer
     [escape] #'minibuffer-keyboard-quit)
 
-  (evil-define-key '(normal insert) ivy-minibuffer-map
+  (evil-define-key nil ivy-minibuffer-map
     (kbd "C-j") #'ivy-next-line
     (kbd "C-k") #'ivy-previous-line)
 
-  ;; workaround for what seems to be a bug:
-  ;; C-j/C-k binding doesn't work until state is changed
-  (add-hook 'minibuffer-setup-hook (lambda ()
-                                     (evil-normal-state)
-                                     (evil-insert-state)
-                                     (move-end-of-line nil)))
+  ;; unsure why this is necessary, but C-j/C-k doesn't work without it
+  (add-hook 'minibuffer-setup-hook 'evil-insert-state)
 
   (setq ivy-rich-parse-remote-buffer nil)
 
