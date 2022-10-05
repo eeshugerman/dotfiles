@@ -6,8 +6,21 @@ hs.hotkey.bind({'cmd', 'shift'}, 'H', function()
     hs.reload()
 end)
 
+
+-- doesn't work :(
+-- hs.hotkey.bind({}, 'capslock', function()
+--     hs.eventtap.keyStroke('escape')
+-- end)
+
+-- works, but catches capslock too because of macos prefs setting
+-- hs.hotkey.bind({}, 'escape', function()
+--     hs.hid.capslock.toggle()
+-- end)
+
+
 -- launch spotlight with just cmd
 -- based on https://github.com/Hammerspoon/hammerspoon/issues/1039#issuecomment-253374355
+-- still needs some work
 local spolightCmdModule = {}
 
 spolightCmdModule.eventwatcher1 = hs.eventtap.new({hs.eventtap.event.types.flagsChanged}, function(e)
