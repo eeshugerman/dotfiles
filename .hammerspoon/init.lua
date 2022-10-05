@@ -30,7 +30,7 @@ spolightCmdModule.eventwatcher1 = hs.eventtap.new({hs.eventtap.event.types.flags
     return false;
 end):start()
 
-spolightCmdModule.eventwatcher2 = hs.eventtap.new({hs.eventtap.event.types.keyDown}, function(e)
+spolightCmdModule.eventwatcher2 = hs.eventtap.new({'all'}, function(e)
     local flags = e:getFlags()
     if flags.cmd and spolightCmdModule.cmdWasPressed then
       spolightCmdModule.cmdShouldBeIgnored = true
