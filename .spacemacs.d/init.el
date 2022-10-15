@@ -116,6 +116,7 @@ This function should only modify configuration layer settings."
      solaire-mode
      symex
      coterm
+     minimap
      ;; flycheck-posframe
      ;; mini-frame
 
@@ -816,13 +817,14 @@ before packages are loaded."
 
   ;; init standalone modes ----------------------------------------------------
   (use-package diredfl :config (diredfl-global-mode 1))
-  (use-package beacon :config (beacon-mode 1))
+  ;; (use-package beacon :config (beacon-mode 1))
   (use-package coterm :config (coterm-mode 1) (coterm-auto-char-mode 1))
   (use-package gcmh :config (gcmh-mode 1))
   (use-package direnv :config (direnv-mode 1))
   (use-package guix)
   (use-package solaire-mode :config (solaire-global-mode 1))
   (use-package symex)
+  ;; (use-package minimap)
 
   ;; still a bit buggy. also, what's the best way to disable flycheck-pos-tip?
   ;; (use-package flycheck-posframe
@@ -927,6 +929,13 @@ before packages are loaded."
   (auto-save-visited-mode -1)
   (setq auto-save-timeout 5)
 
+  (defun my/save-buffer-if-visiting-file ()
+    (when buffer-file-name (save-buffer)))
+
+  (add-hook 'buffer-list-update-hook #'my/save-buffer-if-visiting-file)
+  (add-hook 'window-selection-change-functions #'my/save-buffer-if-visiting-file)
+  (add-hook 'focus-out-hook #'my/save-buffer-if-visiting-file)
+
   ;; company --------------------------------------------------------------------
   (setq company-selection-wrap-around t)
 
@@ -935,10 +944,10 @@ before packages are loaded."
     (setq company-shell-modes '(eshell-mode)))
 
   ;; gcmh ------------------------------------------------------------------------
-  (setq gcmh-verbose nil
+  (setq gcmh-verbose t
         gcmh-low-cons-threshold (expt 10 3)
-        gcmh-high-cons-threshold (expt 10 6)
-        gcmh-idle-delay 5
+        gcmh-high-cons-threshold (expt 10 7)
+        gcmh-idle-delay 10
         )
 
   ;; dired -----------------------------------------------------------------------
@@ -953,7 +962,11 @@ before packages are loaded."
   ;; undo --------------------------------------------------------------------
   ;; persistent undo ---
   ;;  is slow!!
-  (setq undo-tree-auto-save-history nil)
+  ;; (global-undo-tree-mode -1)
+  (setq undo-tree-auto-save-history nil
+        undo-tree-limit 160000
+        undo-limit 160000
+        undo-strong-limit 240000)
 
   ;; granular history ---
   (setq evil-want-fine-undo t)
@@ -1107,6 +1120,18 @@ before packages are loaded."
                         (progn (advice-add 'process-exit-status :filter-return #'filter-func)
                                (apply func args))
                       (advice-remove 'process-exit-status #'filter-func))))))
+
+  (cl-destructuring-bind (rg-exe . existing-args) counsel-rg-base-command
+    (let ((hidden-arg "--hidden")
+          (no-git-arg "--glob=!.git/")
+          new-args)
+       (unless (member hidden-arg existing-args)
+         (push hidden-arg new-args))
+       (unless (member no-git-arg existing-args)
+          (push no-git-arg new-args))
+       (setq counsel-rg-base-command (append (cons rg-exe new-args) existing-args))))
+
+
   ;; themeing -----------------------------------------------------------------
   (defvar-local my/border-width 10)
 
@@ -1187,7 +1212,9 @@ before packages are loaded."
         doom-modeline-buffer-encoding nil
         doom-modeline-bar-width my/border-width
         doom-modeline-irc t
-        doom-modeline-persp-name nil)
+        doom-modeline-persp-name nil
+        doom-modeline-buffer-state-icon t ;; want this, but slow ?
+        )
 
   (defun my/toggle-relative-path-in-modeline ()
     (interactive)
@@ -1291,6 +1318,8 @@ before packages are loaded."
 
   ;; typescript mode seems to work better than js2, at least w/r/t performance
   (add-to-list 'auto-mode-alist '("\\.js\\'" . typescript-mode))
+
+  (setq prettier-js-show-errors nil)
 
 
   ;; css/scss ------------------------------------------------------------------------
@@ -1477,8 +1506,10 @@ before packages are loaded."
     (sp-update-local-pairs 'minibuffer-pairs))
   (add-hook 'eval-expression-minibuffer-setup-hook #'my/minibuffer-fix-sp)
 
-  ;; tree-sitter ----------------------------------------------------------------
+  ;; treemacs -------------------------------------------------------------------
+  (add-hook 'treemacs-post-buffer-init-hook #'hl-line-mode)
 
+  ;; tree-sitter ----------------------------------------------------------------
   (setq tree-sitter-debug-jump-buttons t
         tree-sitter-debug-highlight-jump-region t)
 
@@ -1504,7 +1535,22 @@ before packages are loaded."
   ;; (add-to-list 'psci/arguments ".spago/psci-support/**/*.purs")
   (setq purescript-indent-offset 2)
 
-  (spacemacs/toggle-debug-on-error-off))
+  (spacemacs/toggle-debug-on-error-off)
+
+  ;; minimap ------------------------------------------------------------------
+  (setq minimap-window-location 'right
+        minimap-width-fraction 0.05
+        minimap-minimum-width 10
+        minimap-dedicated-window t
+        minimap-hide-fringes t
+        minimap-hide-scroll-bar t
+        minimap-always-recenter nil  ;; idk
+        minimap-recenter-type 'middle
+        minimap-display-semantic-overlays t
+        )
+
+  (add-hook 'minimap-mode-hook )
+  )
 
 ;; misc commands --------------------------------------------------------------
 (defun my/hide-dos-eol ()
