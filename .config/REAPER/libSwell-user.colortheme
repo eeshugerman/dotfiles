@@ -7,87 +7,87 @@ menubar_margin_width 6
 scrollbar_width 14
 scrollbar_min_thumb_height 4
 combo_height 20
-_3dface #abb1b1
-_3dshadow #dcdede
-_3dhilight #dcdede
-_3ddkshadow #dcdede
-button_bg #899698 ; defaults to _3dface
-button_text #1e2222
-button_text_disabled #586162
-button_shadow #6b6f6f
-button_hilight #6b6f6f
-checkbox_text #1e2222
-checkbox_text_disabled #6b7070
-checkbox_fg #161d1d
-checkbox_inter #466168
-checkbox_bg #dadede
-scrollbar #f8fafa
-scrollbar_fg #ffffff
-scrollbar_bg #dcdede
-edit_cursor #242b2b
-edit_bg #b5bbbb
-edit_bg_disabled #abb1b1
-edit_text #1e2222
-edit_text_disabled #6b7070
-edit_bg_sel #466168
+_3dface #333333
+_3dshadow #303030
+_3dhilight #303030
+_3ddkshadow #303030
+button_bg #292929 ; defaults to _3dface
+button_text #949494
+button_text_disabled #595959
+button_shadow #202020
+button_hilight #202020
+checkbox_text #949494
+checkbox_text_disabled #5e5e5e
+checkbox_fg #888888
+checkbox_inter #242424
+checkbox_bg #2b2b2b
+scrollbar #363636
+scrollbar_fg #5a5a5a
+scrollbar_bg #303030
+edit_cursor #969696
+edit_bg #303030
+edit_bg_disabled #333333
+edit_text #949494
+edit_text_disabled #5e5e5e
+edit_bg_sel #242424
 edit_text_sel #ffffff
-edit_hilight #6b6f6f ; defaults to _3dhilight
-edit_shadow #6b6f6f ; defaults to _3dshadow
-info_bk #dcdede
-info_text #242b2b
-menu_bg #dcdede ; defaults to _3dface
-menu_shadow #c1c3c3 ; defaults to _3dshadow
-menu_hilight #e4e6e6 ; defaults to _3dhilight
-menu_text #242b2b ; defaults to button_text
-menu_text_disabled #898d8d
-menu_bg_sel #466168 ; defaults to menu_text
+edit_hilight #202020 ; defaults to _3dhilight
+edit_shadow #202020 ; defaults to _3dshadow
+info_bk #303030
+info_text #969696
+menu_bg #303030 ; defaults to _3dface
+menu_shadow #2a2a2a ; defaults to _3dshadow
+menu_hilight #313131 ; defaults to _3dhilight
+menu_text #969696 ; defaults to button_text
+menu_text_disabled #5d5d5d
+menu_bg_sel #242424 ; defaults to menu_text
 menu_text_sel #ffffff ; defaults to menu_bg
-menu_scroll #f8fafa
-menu_scroll_arrow #161d1d ; defaults to _3dshadow
-menu_submenu_arrow #161d1d
+menu_scroll #363636
+menu_scroll_arrow #888888 ; defaults to _3dshadow
+menu_submenu_arrow #888888
 menubar_bg #333333 ; defaults to menu_bg
 menubar_text #747474 ; defaults to menu_text
-menubar_text_disabled #898d8d
-menubar_bg_sel #466168 ; defaults to menu_bg_sel
+menubar_text_disabled #5d5d5d
+menubar_bg_sel #242424 ; defaults to menu_bg_sel
 menubar_text_sel #ffffff ; defaults to menu_text_sel
-trackbar_track #dcdede
-trackbar_mark #dcdede
-trackbar_knob #466168
-progress #466168
-label_text #1e2222 ; defaults to button_text
-label_text_disabled #6b7070 ; defaults to button_text_disabled
-combo_text #242b2b ; defaults to button_text
-combo_text_disabled #898d8d ; defaults to button_text_disabled
-combo_bg #c8caca
-combo_bg2 #c8caca
-combo_shadow #c8caca
-combo_hilight #c8caca ; defaults to _3dhilight
-combo_arrow #161d1d
-combo_arrow_press #466168 ; defaults to _3dhilight
-listview_bg #dcdede
-listview_bg_sel #466168
-listview_text #242b2b
+trackbar_track #303030
+trackbar_mark #303030
+trackbar_knob #242424
+progress #242424
+label_text #949494 ; defaults to button_text
+label_text_disabled #5e5e5e ; defaults to button_text_disabled
+combo_text #969696 ; defaults to button_text
+combo_text_disabled #5d5d5d ; defaults to button_text_disabled
+combo_bg #2b2b2b
+combo_bg2 #2b2b2b
+combo_shadow #2b2b2b
+combo_hilight #2b2b2b ; defaults to _3dhilight
+combo_arrow #888888
+combo_arrow_press #242424 ; defaults to _3dhilight
+listview_bg #303030
+listview_bg_sel #242424
+listview_text #969696
 listview_text_sel #ffffff
 listview_bg_sel_inactive #E6E6E6
 listview_text_sel_inactive #1A1A1A
-listview_grid #b0b1b1 ; defaults to _3dhilight
-listview_hdr_arrow #161d1d
-listview_hdr_shadow #b0b1b1 ; defaults to _3dshadow
-listview_hdr_hilight #b0b1b1 ; defaults to _3dhilight
-listview_hdr_bg #f8fafa ; defaults to _3dface
-listview_hdr_text #242b2b ; defaults to button_text
-treeview_text #242b2b
-treeview_bg #dcdede
-treeview_bg_sel #466168
+listview_grid #262626 ; defaults to _3dhilight
+listview_hdr_arrow #888888
+listview_hdr_shadow #262626 ; defaults to _3dshadow
+listview_hdr_hilight #262626 ; defaults to _3dhilight
+listview_hdr_bg #363636 ; defaults to _3dface
+listview_hdr_text #969696 ; defaults to button_text
+treeview_text #969696
+treeview_bg #303030
+treeview_bg_sel #242424
 treeview_text_sel #ffffff
 treeview_bg_sel_inactive #E6E6E6
 treeview_text_sel_inactive #1A1A1A
-treeview_arrow #161d1d
-tab_shadow #dcdede
-tab_hilight #dcdede
-tab_text #1e2222
-focusrect #242b2b
-group_text #1e2222
-group_shadow #b1b8b8 ; defaults to _3dshadow
-group_hilight #969b9b ; defaults to _3dhilight
-focus_hilight #466168
+treeview_arrow #888888
+tab_shadow #303030
+tab_hilight #303030
+tab_text #949494
+focusrect #969696
+group_text #949494
+group_shadow #353535 ; defaults to _3dshadow
+group_hilight #2c2c2c ; defaults to _3dhilight
+focus_hilight #242424
