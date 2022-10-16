@@ -721,7 +721,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    ;; lsp-eslint-code-action-show-documentation nil
    lsp-eslint-warn-on-ignored-files t
 
-   lsp-eldoc-enable-hover nil
+   ;; lsp-eldoc-enable-hover nil
+   lsp-signature-render-documentation nil
+
    lsp-enable-indentation nil
    lsp-enable-on-type-formatting nil
    lsp-enable-symbol-highlighting t
