@@ -2,3 +2,5 @@ Data/
 Effects/
 **/*.wav
 **/*.png
+reaper-reginfo2.ini
+reaper-midihw-alsa.ini
