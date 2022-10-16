@@ -8,3 +8,6 @@ reaper-extstate.ini
 reaper-kb.in
 reaper-midihw-alsa.ini
 reaper-reginfo2.inii
+reaper-midihw-linux.ini
+reaper-recentfx.ini
+reaper-wndpos.ini
