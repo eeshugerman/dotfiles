@@ -1,6 +1,10 @@
+**/*.png
+**/*.wav
 Data/
 Effects/
-**/*.wav
-**/*.png
-reaper-reginfo2.ini
+ReaPack/cache/
+ReaPack/registry.db
+reaper-extstate.ini
+reaper-kb.in
 reaper-midihw-alsa.ini
+reaper-reginfo2.inii
