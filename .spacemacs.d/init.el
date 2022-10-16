@@ -1323,7 +1323,9 @@ before packages are loaded."
   ;; typescript mode seems to work better than js2, at least w/r/t performance
   (add-to-list 'auto-mode-alist '("\\.js\\'" . typescript-mode))
 
-  (setq prettier-js-show-errors nil)
+  (setq prettier-js-show-errors t)
+  (delete 'prettier-js-mode typescript-mode-hook)
+  (spacemacs/set-leader-keys-for-major-mode 'typescript-mode "==" #'prettier-js)
 
 
   ;; css/scss ------------------------------------------------------------------------
