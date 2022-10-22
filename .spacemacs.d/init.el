@@ -316,11 +316,11 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(doom-nord
-                         doom-nord-light
-
-                         spacemacs-dark
+   dotspacemacs-themes '(spacemacs-dark
                          spacemacs-light
+
+                         doom-nord
+                         doom-nord-light
 
                          doom-solarized-dark
                          doom-solarized-light
@@ -716,7 +716,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-peek-list-width 60
    lsp-ui-peek-always-show t
 
-   lsp-use-plists t
+   lsp-use-plists my/work-flag ;; TODO: set env var on linux
 
    ;; lsp-eslint-code-action-show-documentation nil
    lsp-eslint-warn-on-ignored-files t
@@ -764,7 +764,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    spell-checking-enable-by-default nil
 
-   tree-sitter-indent-enable t
+   tree-sitter-indent-enable nil
    tree-sitter-fold-enable t
    tree-sitter-fold-indicators-enable nil ;; cool but kind of slow
    tree-sitter-hl-enable-query-region-extension t
@@ -946,7 +946,7 @@ before packages are loaded."
     (setq company-shell-modes '(eshell-mode)))
 
   ;; gcmh ------------------------------------------------------------------------
-  (setq gcmh-verbose t
+  (setq gcmh-verbose nil
         gcmh-low-cons-threshold (expt 10 3)
         gcmh-high-cons-threshold (expt 10 7)
         gcmh-idle-delay 10
