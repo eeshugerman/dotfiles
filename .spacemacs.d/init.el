@@ -736,6 +736,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    org-adapt-indentation t
    org-enable-jira-support t
+   org-enable-verb-support t
 
 
    purescript-fmt-on-save t
@@ -1343,6 +1344,8 @@ before packages are loaded."
   (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") #'org-babel-execute-src-block)
 
   (add-hook 'org-mode-hook #'spacemacs/toggle-line-numbers-off)  ;; doesn't work
+  (add-hook 'org-mode-hook #'spacemacs/toggle-auto-fill-mode-on)
+  (add-hook 'org-mode-hook (lambda () (setq show-trailing-whitespace nil)))
 
   ;; scheme -------------------------------------------------------------------------
   (spacemacs/set-leader-keys-for-major-mode 'scheme-mode
@@ -1563,7 +1566,6 @@ before packages are loaded."
     "hf" #'lsp-ui-doc-focus-frame
     "hu" #'lsp-ui-doc-unfocus-frame)
 
-
   ;; ruby ---------------------------------------------------------------------
   ;; $ gem install solargraph installs the language server to ~/.local/share/ path
   (add-to-list 'exec-path (thread-first "gem env user_gemhome"
@@ -1571,6 +1573,8 @@ before packages are loaded."
                                         s-trim
                                         (f-join "bin")))
 
+  ;; verb ---------------------------------------------------------------------
+  (setq verb-auto-kill-response-buffers t)
   )
 
 ;; misc commands --------------------------------------------------------------
