@@ -23,39 +23,39 @@ end)
 
 -- launch spotlight with just cmd
 -- based on https://github.com/Hammerspoon/hammerspoon/issues/1039#issuecomment-253374355
-local spotlightCmdModule = {
-  cmdOnlyIsPressed = false,
-  otherModifierWasPressed = false
+local SpotlightCmd = {
+  cmdIsPressed = false,
+  somethingElseHappened = false,
+  reset = function(self)
+    self.cmdIsPressed = false
+    self.somethingElseHappened = false
+  end
 }
 
-spotlightCmdModule.eventwatcher1 = hs.eventtap.new({hs.eventtap.event.types.flagsChanged}, function(e)
+SpotlightCmd.eventwatcher1 = hs.eventtap.new({hs.eventtap.event.types.flagsChanged}, function(e)
     local flags = e:getFlags()
+    local anyOtherFlag = flags.alt or flags.shift or flags.ctrl or flags.fn
 
-    if flags.cmd and (flags.alt or flags.shift or flags.ctrl or flags.fn) then
-      spotlightCmdModule.otherModifierWasPressed = true
-      return false;
+    if flags.cmd and not anyOtherFlag then
+      SpotlightCmd.cmdIsPressed = true
     end
 
-    if flags.cmd and not (flags.alt or flags.shift or flags.ctrl or flags.fn) then
-      spotlightCmdModule.cmdOnlyIsPressed = true
-      return false;
+    if SpotlightCmd.cmdIsPressed and anyOtherFlag then
+      SpotlightCmd.somethingElseHappened = true
     end
 
-    if not flags.cmd and not (flags.alt or flags.shift or flags.ctrl or flags.fn) then
-      if spotlightCmdModule.cmdOnlyIsPressed and not spotlightCmdModule.otherModifierWasPressed then
-        hs.eventtap.keyStroke({'cmd'}, 'space')
-      end
-      spotlightCmdModule.cmdOnlyIsPressed = false
-      spotlightCmdModule.otherModifierWasPressed = false
-      return false;
+    if not flags.cmd and not anyOtherFlag and SpotlightCmd.cmdIsPressed and not SpotlightCmd.somethingElseHappened then
+      hs.eventtap.keyStroke({'cmd'}, 'space')
     end
 
+    if not flags.cmd then
+      SpotlightCmd:reset()
+    end
 end):start()
 
-spotlightCmdModule.eventwatcher2 = hs.eventtap.new({'all', hs.eventtap.event.types.flagsChanged}, function(e)
-    if spotlightCmdModule.cmdOnlyIsPressed then
-      spotlightCmdModule.cmdOnlyIsPressed = false
+SpotlightCmd.eventwatcher2 = hs.eventtap.new({'all', hs.eventtap.event.types.flagsChanged}, function(e)
+    if SpotlightCmd.cmdIsPressed then
+      SpotlightCmd.somethingElseHappened = true
     end
-    return false;
 end):start()
 
