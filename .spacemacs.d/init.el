@@ -931,7 +931,7 @@ before packages are loaded."
   (auto-save-visited-mode -1)
   (setq auto-save-timeout 5)
 
-  (defun my/save-buffer-if-visiting-file ()
+  (defun my/save-buffer-if-visiting-file (&rest _)
     (when buffer-file-name (save-buffer)))
 
   (add-hook 'buffer-list-update-hook #'my/save-buffer-if-visiting-file)
