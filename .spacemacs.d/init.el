@@ -63,6 +63,7 @@ This function should only modify configuration layer settings."
      ivy
      java
      javascript
+     julia
      markdown
      meson
      multiple-cursors
@@ -720,11 +721,10 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    lsp-use-plists my/work-flag ;; TODO: set env var on linux
 
-   ;; lsp-eslint-code-action-show-documentation nil
-   lsp-eslint-warn-on-ignored-files t
-
-   ;; lsp-eldoc-enable-hover nil
    lsp-signature-render-documentation nil
+   lsp-eldoc-enable-hover t
+
+   lsp-eslint-warn-on-ignored-files t
 
    lsp-enable-indentation nil
    lsp-enable-on-type-formatting nil
@@ -1326,6 +1326,7 @@ before packages are loaded."
 
   (setq prettier-js-show-errors t)
   (delete 'prettier-js-mode typescript-mode-hook)
+  (delete 'prettier-js-mode js2-mode-hook)
   (spacemacs/set-leader-keys-for-major-mode 'typescript-mode "==" #'prettier-js)
 
 
