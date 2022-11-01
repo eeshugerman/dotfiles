@@ -698,6 +698,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-doc-show-with-cursor t
    lsp-ui-doc-show-with-mouse nil
    lsp-ui-doc-use-childframe t
+   lsp-ui-doc-max-width 75
 
    lsp-ui-sideline-enable nil
    lsp-ui-sideline-diagnostic-max-line-length 90
@@ -1406,9 +1407,11 @@ before packages are loaded."
     (interactive)
     (spacemacs/counsel-find-file "/docker:"))
 
-  (spacemacs/set-leader-keys "odf" #'my/docker-tramp-find-file)
-  (spacemacs/set-leader-keys "odb" #'docker-container-shell)
-  (spacemacs/set-leader-keys "odB" #'docker-container-shell-env)
+  (spacemacs/set-leader-keys
+    ;; "od" "docker" ;; i thought this was supposed to work..?
+    "odf" #'my/docker-tramp-find-file
+    "odb" #'docker-container-shell
+    "odB" #'docker-container-shell-env)
 
   (setq docker-container-columns '((:name "Id" :width 16 :template "{{ json .ID }}" :sort nil :format nil)
                                    (:name "Image" :width 15 :template "{{ json .Image }}" :sort nil :format nil)
@@ -1552,7 +1555,12 @@ before packages are loaded."
         minimap-display-semantic-overlays t
         )
 
-  (add-hook 'minimap-mode-hook )
+  ;; lsp ---------------------------------------------------------------------
+  ;; TODO: upstream these
+  (spacemacs/set-leader-keys-for-minor-mode 'lsp-mode
+    "hf" #'lsp-ui-doc-focus-frame
+    "hu" #'lsp-ui-doc-unfocus-frame)
+
 
   ;; ruby ---------------------------------------------------------------------
   ;; $ gem install solargraph installs the language server to ~/.local/share/ path
