@@ -74,6 +74,7 @@ This function should only modify configuration layer settings."
      purescript
      python
      ruby
+     ruby-on-rails
      rust
      scheme
      shell
@@ -1552,6 +1553,14 @@ before packages are loaded."
         )
 
   (add-hook 'minimap-mode-hook )
+
+  ;; ruby ---------------------------------------------------------------------
+  ;; $ gem install solargraph installs the language server to ~/.local/share/ path
+  (add-to-list 'exec-path (thread-first "gem env user_gemhome"
+                                        shell-command-to-string
+                                        s-trim
+                                        (f-join "bin")))
+
   )
 
 ;; misc commands --------------------------------------------------------------

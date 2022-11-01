@@ -71,6 +71,11 @@ else
     source /usr/share/nvm/init-nvm.sh
 fi
 
+if [ "$(uname)" = "Linux" ]; then
+    source /opt/asdf-vm/asdf.sh
+fi
+
 # macos stuff
 export HOMEBREW_NO_AUTO_UPDATE=1
 alias fix-org-data-sync="launchctl unload -w Library/LaunchAgents/me.org-data-git-sync.plist && launchctl load -w Library/LaunchAgents/me.org-data-git-sync.plist"
+
