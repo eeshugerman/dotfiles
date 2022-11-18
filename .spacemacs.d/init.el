@@ -71,7 +71,7 @@ This function should only modify configuration layer settings."
      nginx
      org
      posframe
-     ;; prettier
+     prettier
      purescript
      python
      ruby
@@ -1332,10 +1332,9 @@ before packages are loaded."
   (add-to-list 'auto-mode-alist '("\\.js\\'" . typescript-mode))
 
   (setq prettier-js-show-errors t)
-  (delete 'prettier-js-mode typescript-mode-hook)
-  (delete 'prettier-js-mode js2-mode-hook)
-  (spacemacs/set-leader-keys-for-major-mode 'typescript-mode "==" #'prettier-js)
-
+  ;; this is weird, but seems to be the best way to disable everywhere
+  (add-hook 'prettier-js-mode-on-hook (lambda () (prettier-js-mode -1)))
+  (setq typescript-fmt-tool 'prettier)
 
   ;; css/scss ------------------------------------------------------------------------
   (setq css-fontify-colors nil)
