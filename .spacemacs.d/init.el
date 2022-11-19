@@ -112,6 +112,8 @@ This function should only modify configuration layer settings."
      diredfl
      direnv
      fold-this
+     flycheck-popup-tip
+     flycheck-posframe
      gcmh
      guix
      pacfiles-mode
@@ -119,7 +121,6 @@ This function should only modify configuration layer settings."
      symex
      coterm
      minimap
-     ;; flycheck-posframe
      ;; mini-frame
 
      ;; (dconf-dotfile
@@ -838,12 +839,6 @@ before packages are loaded."
   (use-package symex)
   ;; (use-package minimap)
 
-  ;; still a bit buggy. also, what's the best way to disable flycheck-pos-tip?
-  ;; (use-package flycheck-posframe
-  ;;   :hook (flycheck-mode . flycheck-posframe-mode)
-  ;;   :config (setq flycheck-display-errors-errors-delay 0.3
-  ;;                 flycheck-posframe-border-width 5))
-
   ;; (use-package dconf-dotfile)
 
   ;; not working :(
@@ -884,8 +879,7 @@ before packages are loaded."
                 bidi-inhibit-bpa t
                 bidi-paragraph-direction 'left-to-right
                 completions-ignore-case t
-                diff-refine nil
-                flycheck-checker-error-threshold 2000)
+                diff-refine nil)
 
   (let ((custom-file-path (file-truename "~/.spacemacs.d/custom.el")))
     (unless (file-exists-p custom-file-path)
@@ -954,6 +948,17 @@ before packages are loaded."
   (when my/macos-flag
     ;; disable in sh-mode
     (setq company-shell-modes '(eshell-mode)))
+
+  ;; flycheck ---------------------------------------------------------------------
+  (remove-hook 'flycheck-mode-hook 'flycheck-pos-tip-mode)
+  (add-hook 'flycheck-mode-hook 'flycheck-popup-tip-mode)
+  ;; (add-hook 'flycheck-mode-hook 'flycheck-posframe-mode)
+
+  (setq flycheck-checker-error-threshold 2000
+        flycheck-display-errors-function nil
+        flycheck-pos-tip-max-width 75)
+
+  ;; (flycheck-posframe-configure-pretty-defaults)
 
   ;; gcmh ------------------------------------------------------------------------
   (setq gcmh-verbose nil
