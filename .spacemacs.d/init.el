@@ -602,7 +602,7 @@ It should only modify the values of Spacemacs settings."
    ;; Color highlight trailing whitespace in all prog-mode and text-mode derived
    ;; modes such as c++-mode, python-mode, emacs-lisp, html-mode, rst-mode etc.
    ;; (default t)
-   dotspacemacs-show-trailing-whitespace t
+   dotspacemacs-show-trailing-whitespace (not my/work-flag)
 
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
@@ -706,7 +706,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-doc-show-with-cursor t
    lsp-ui-doc-show-with-mouse nil
    lsp-ui-doc-use-childframe t
-   lsp-ui-doc-max-width 75
+   lsp-ui-doc-max-width (if my/work-flag 90 75)
 
    lsp-ui-sideline-enable nil
    lsp-ui-sideline-diagnostic-max-line-length 90
