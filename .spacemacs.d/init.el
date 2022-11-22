@@ -951,8 +951,8 @@ before packages are loaded."
 
   ;; flycheck ---------------------------------------------------------------------
   (remove-hook 'flycheck-mode-hook 'flycheck-pos-tip-mode)
-  (add-hook 'flycheck-mode-hook 'flycheck-popup-tip-mode)
-  ;; (add-hook 'flycheck-mode-hook 'flycheck-posframe-mode)
+  ;; (add-hook 'flycheck-mode-hook 'flycheck-popup-tip-mode)
+  (add-hook 'flycheck-mode-hook 'flycheck-posframe-mode)
 
   (setq flycheck-checker-error-threshold 2000
         flycheck-display-errors-function nil
@@ -960,7 +960,18 @@ before packages are loaded."
         flycheck-posframe-border-use-error-face t
         flycheck-posframe-border-width 1)
 
-  ;; (flycheck-posframe-configure-pretty-defaults)
+  (flycheck-posframe-configure-pretty-defaults)
+
+  ;; https://github.com/doomemacs/doomemacs/issues/6416#issuecomment-1156164346
+  (defun flycheck-posframe-monitor-post-command ()
+    (when (not (flycheck-posframe-check-position))
+      (posframe-hide flycheck-posframe-buffer)))
+  (defun fix-flycheck-posframe-not-hide-immediately ()
+    (cond (flycheck-posframe-mode
+           (add-hook 'post-command-hook #'flycheck-posframe-monitor-post-command nil t))
+          ((not flycheck-posframe-mode)
+           (remove-hook 'post-command-hook #'flycheck-posframe-monitor-post-command t))))
+  (add-hook 'flycheck-posframe-mode-hook #'fix-flycheck-posframe-not-hide-immediately)
 
   ;; gcmh ------------------------------------------------------------------------
   (setq gcmh-verbose nil
