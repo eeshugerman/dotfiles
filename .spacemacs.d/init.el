@@ -956,7 +956,9 @@ before packages are loaded."
 
   (setq flycheck-checker-error-threshold 2000
         flycheck-display-errors-function nil
-        flycheck-pos-tip-max-width 75)
+        flycheck-pos-tip-max-width 75
+        flycheck-posframe-border-use-error-face t
+        flycheck-posframe-border-width 1)
 
   ;; (flycheck-posframe-configure-pretty-defaults)
 
