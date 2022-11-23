@@ -134,6 +134,7 @@ This function should only modify configuration layer settings."
      ;;  :location (recipe
      ;;             :fetcher github
      ;;             :repo "casouri/undo-hl"))
+     highlight-indent-guides
      )
 
    ;; A list of packages that cannot be updated.
@@ -837,6 +838,11 @@ before packages are loaded."
   (use-package guix)
   (use-package solaire-mode :config (solaire-global-mode 1))
   (use-package symex)
+  (use-package highlight-indent-guides
+    :init (setq highlight-indent-guides-method 'bitmap
+                ;; highlight-indent-guides-method 'character
+                highlight-indent-guides-responsive 'top)
+    :hook prog-mode)
   ;; (use-package minimap)
 
   ;; (use-package dconf-dotfile)
@@ -1330,7 +1336,6 @@ before packages are loaded."
     (require 'dap-node))
   (add-hook 'js2-mode-hook #'my/dap-node-enable)
   (add-hook 'typescript-mode-hook #'my/dap-node-enable)
-  (add-hook 'typescript-mode-hook #'spacemacs/toggle-indent-guide-on)
 
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
   (setenv "TSC_NONPOLLING_WATCHER" "true")
@@ -1375,7 +1380,6 @@ before packages are loaded."
   ;; scheme -------------------------------------------------------------------------
   (spacemacs/set-leader-keys-for-major-mode 'scheme-mode
     "gd" #'spacemacs/jump-to-definition)
-  (add-hook 'scheme-mode-hook #'spacemacs/toggle-indent-guide-on)
   (setq geiser-repl-history-no-dups-p nil)
 
   ;; yadm ------------------------------------------------------------------------
@@ -1458,9 +1462,7 @@ before packages are loaded."
   (setq docker-pop-to-buffer-action '(display-buffer-same-window))
 
   ;; yaml ---------------------------------------------------------------------
-  (add-hook 'yaml-mode-hook (lambda ()
-                              (spacemacs/toggle-indent-guide-on)
-                              (origami-mode +1)))
+  (add-hook 'yaml-mode-hook (lambda () (origami-mode +1)))
 
   ;; symex --------------------------------------------------------------------
   (evil-define-key '(normal insert) symex-mode-map
