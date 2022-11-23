@@ -844,9 +844,11 @@ before packages are loaded."
   (use-package solaire-mode :config (solaire-global-mode 1))
   (use-package symex)
   (use-package highlight-indent-guides
-    :init (setq highlight-indent-guides-method 'bitmap
-                ;; highlight-indent-guides-method 'character
-                highlight-indent-guides-responsive 'top)
+    :init (setq ;; highlight-indent-guides-method 'bitmap
+                highlight-indent-guides-method 'character
+                highlight-indent-guides-responsive 'top
+                highlight-indent-guides-auto-character-face-perc 40
+                highlight-indent-guides-auto-top-character-face-perc 80)
     :hook prog-mode)
   ;; (use-package minimap)
 
