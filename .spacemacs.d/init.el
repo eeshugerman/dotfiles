@@ -595,7 +595,7 @@ It should only modify the values of Spacemacs settings."
    ;; performance issues, instead of calculating the frame title by
    ;; `spacemacs/title-prepare' all the time.
    ;; (default "%I@%S")
-   dotspacemacs-frame-title-format "%I@%S"
+   dotspacemacs-frame-title-format nil
 
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
@@ -833,7 +833,12 @@ before packages are loaded."
   (use-package diredfl :config (diredfl-global-mode 1))
   ;; (use-package beacon :config (beacon-mode 1))
   (use-package coterm :config (coterm-mode 1) (coterm-auto-char-mode 1))
-  (use-package gcmh :config (gcmh-mode 1))
+  (use-package gcmh
+    :init (setq gcmh-verbose nil
+                gcmh-low-cons-threshold (expt 10 3)
+                gcmh-high-cons-threshold (expt 10 7)
+                gcmh-idle-delay 10)
+    :config (gcmh-mode 1))
   (use-package direnv :config (direnv-mode 1))
   (use-package guix)
   (use-package solaire-mode :config (solaire-global-mode 1))
@@ -923,14 +928,16 @@ before packages are loaded."
 
   ;; fix glitch in emacs 29
   ;; seems to help but not always?
-  (add-hook 'special-mode-hook (lambda ()
-                                 (spacemacs/toggle-line-numbers-on)
-                                 (spacemacs/toggle-line-numbers-off)))
+  ;; no longer necessary? testing...
+  ;; (add-hook 'special-mode-hook (lambda ()
+  ;;                                (spacemacs/toggle-line-numbers-on)
+  ;;                                (spacemacs/toggle-line-numbers-off)))
 
 
   ;; emacs lisp ----------------------------------------------------------------
   (spacemacs/set-leader-keys-for-major-mode 'emacs-lisp-mode
-    "gd" #'spacemacs/jump-to-definition)
+    "gd" #'spacemacs/jump-to-definition
+    "gr" #'xref-find-references)
   (add-hook 'emacs-lisp-mode-hook
             (lambda ()
               (unless (string= buffer-file-name (f-expand "~/.spacemacs.d/init.el"))
@@ -969,22 +976,21 @@ before packages are loaded."
   (flycheck-posframe-configure-pretty-defaults)
 
   ;; https://github.com/doomemacs/doomemacs/issues/6416#issuecomment-1156164346
-  (defun flycheck-posframe-monitor-post-command ()
-    (when (not (flycheck-posframe-check-position))
-      (posframe-hide flycheck-posframe-buffer)))
-  (defun fix-flycheck-posframe-not-hide-immediately ()
-    (cond (flycheck-posframe-mode
-           (add-hook 'post-command-hook #'flycheck-posframe-monitor-post-command nil t))
-          ((not flycheck-posframe-mode)
-           (remove-hook 'post-command-hook #'flycheck-posframe-monitor-post-command t))))
-  (add-hook 'flycheck-posframe-mode-hook #'fix-flycheck-posframe-not-hide-immediately)
+  (progn
+    (defun flycheck-posframe-monitor-post-command ()
+      (when (not (flycheck-posframe-check-position))
+        (posframe-hide flycheck-posframe-buffer)))
+
+    (defun fix-flycheck-posframe-not-hide-immediately ()
+      (cond (flycheck-posframe-mode
+             (add-hook 'post-command-hook #'flycheck-posframe-monitor-post-command nil t))
+            ((not flycheck-posframe-mode)
+             (remove-hook 'post-command-hook #'flycheck-posframe-monitor-post-command t))))
+
+    (add-hook 'flycheck-posframe-mode-hook #'fix-flycheck-posframe-not-hide-immediately))
 
   ;; gcmh ------------------------------------------------------------------------
-  (setq gcmh-verbose nil
-        gcmh-low-cons-threshold (expt 10 3)
-        gcmh-high-cons-threshold (expt 10 7)
-        gcmh-idle-delay 10
-        )
+  
 
   ;; dired -----------------------------------------------------------------------
   (defun my/dired-up-directory ()
@@ -1451,11 +1457,8 @@ before packages are loaded."
                                    (:name "Image" :width 15 :template "{{ json .Image }}" :sort nil :format nil)
                                    (:name "Names" :width 20 :template "{{ json .Names }}" :sort nil :format nil)
                                    (:name "Status" :width 20 :template "{{ json .Status }}" :sort nil :format nil)
-                                   (:name "Created" :width 23 :template "{{ json .CreatedAt }}" :sort nil :format
-                                          (lambda
-                                            (x)
-                                            (format-time-string "%F %T"
-                                                                (date-to-time x))))
+                                   (:name "Created" :width 23 :template "{{ json .CreatedAt }}" :sort nil
+                                          :format (lambda (x) (format-time-string "%F %T" (date-to-time x))))
                                    (:name "Ports" :width 10 :template "{{ json .Ports }}" :sort nil :format nil)
                                    (:name "Command" :width 30 :template "{{ json .Command }}" :sort nil :format nil)))
 
