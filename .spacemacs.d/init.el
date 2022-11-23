@@ -831,18 +831,26 @@ before packages are loaded."
 
   ;; init standalone modes ----------------------------------------------------
   (use-package diredfl :config (diredfl-global-mode 1))
+
   ;; (use-package beacon :config (beacon-mode 1))
+
   (use-package coterm :config (coterm-mode 1) (coterm-auto-char-mode 1))
+
   (use-package gcmh
     :init (setq gcmh-verbose nil
                 gcmh-low-cons-threshold (expt 10 3)
-                gcmh-high-cons-threshold (expt 10 7)
-                gcmh-idle-delay 10)
+                gcmh-high-cons-threshold (expt 10 8)
+                gcmh-idle-delay 15)
     :config (gcmh-mode 1))
+
   (use-package direnv :config (direnv-mode 1))
+
   (use-package guix)
+
   (use-package solaire-mode :config (solaire-global-mode 1))
+
   (use-package symex)
+
   (use-package highlight-indent-guides
     :init (setq ;; highlight-indent-guides-method 'bitmap
                 highlight-indent-guides-method 'character
@@ -993,8 +1001,6 @@ before packages are loaded."
 
     (add-hook 'flycheck-posframe-mode-hook #'fix-flycheck-posframe-not-hide-immediately))
 
-  ;; gcmh ------------------------------------------------------------------------
-  
 
   ;; dired -----------------------------------------------------------------------
   (defun my/dired-up-directory ()
@@ -1259,7 +1265,8 @@ before packages are loaded."
         doom-modeline-bar-width my/border-width
         doom-modeline-irc t
         doom-modeline-persp-name nil
-        doom-modeline-buffer-state-icon t ;; want this, but slow ?
+        ;; want this, but slows scrolling. todo: cake and eat it to?
+        doom-modeline-buffer-state-icon nil
         )
 
   (defun my/toggle-relative-path-in-modeline ()
