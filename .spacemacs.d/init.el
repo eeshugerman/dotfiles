@@ -890,7 +890,9 @@ before packages are loaded."
                 bidi-inhibit-bpa t
                 bidi-paragraph-direction 'left-to-right
                 completions-ignore-case t
-                diff-refine nil)
+                diff-refine nil
+                inhibit-compacting-font-caches t
+                jit-lock-defer-time 0)
 
   (let ((custom-file-path (file-truename "~/.spacemacs.d/custom.el")))
     (unless (file-exists-p custom-file-path)
