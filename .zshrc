@@ -75,7 +75,9 @@ if [ "$(uname)" = "Linux" ]; then
     source /opt/asdf-vm/asdf.sh
 fi
 
-# macos stuff
-export HOMEBREW_NO_AUTO_UPDATE=1
-alias fix-org-data-sync="launchctl unload -w Library/LaunchAgents/me.org-data-git-sync.plist && launchctl load -w Library/LaunchAgents/me.org-data-git-sync.plist"
-
+# misc macos stuff
+if [ "$(uname)" = "Darwin" ]; then
+    export HOMEBREW_NO_AUTO_UPDATE=1
+    alias fix-org-data-sync="launchctl unload -w Library/LaunchAgents/me.org-data-git-sync.plist && launchctl load -w Library/LaunchAgents/me.org-data-git-sync.plist"
+    alias fudns='sudo dscacheutil -flushcache; sleep 2; sudo killall -HUP mDNSResponder;'
+fi
