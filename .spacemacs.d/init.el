@@ -843,7 +843,9 @@ before packages are loaded."
                 gcmh-idle-delay 15)
     :config (gcmh-mode 1))
 
-  (use-package direnv :config (direnv-mode 1))
+  (use-package direnv
+    :init (setq direnv-always-show-summary nil)
+    :config (direnv-mode 1))
 
   (use-package guix)
 
