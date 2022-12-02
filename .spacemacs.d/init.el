@@ -703,7 +703,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-doc-enable t ;; slow w/ large files?
    lsp-ui-doc-include-signature t
    lsp-ui-doc-header nil
-   lsp-ui-doc-delay 1 ; seconds
+   lsp-ui-doc-delay 0.5 ; seconds
    lsp-ui-doc-alignment 'window
    lsp-ui-doc-show-with-cursor t
    lsp-ui-doc-show-with-mouse nil
@@ -904,7 +904,8 @@ before packages are loaded."
                 completions-ignore-case t
                 diff-refine nil
                 inhibit-compacting-font-caches t
-                jit-lock-defer-time 0)
+                jit-lock-defer-time 0
+                helpful-switch-buffer-function #'pop-to-buffer-same-window)
 
   (let ((custom-file-path (file-truename "~/.spacemacs.d/custom.el")))
     (unless (file-exists-p custom-file-path)
