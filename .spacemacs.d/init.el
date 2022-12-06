@@ -1101,11 +1101,7 @@ before packages are loaded."
           python-shell-completion-native-enable nil))
 
 
-  ;; git ----------------------------------------------------------------------
-  ;; https://github.com/rmuslimov/browse-at-remote/pull/93
-  (with-eval-after-load 'browse-at-remote
-    (add-to-list 'browse-at-remote-remote-type-regexps '("^gitlab\\.gnome\\.org$" . "gitlab")))
-
+  ;; [ma]git ----------------------------------------------------------------------
   (setq magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
 
   (setq magit-delta-default-light-theme "Solarized (light)"
