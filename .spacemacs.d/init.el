@@ -1330,9 +1330,9 @@ before packages are loaded."
     (add-to-list 'evil-evilified-state-modes mode))
 
   ;; default is just #'kill-window
-  ;; todo: do the same for some magit modes?
-  (evil-define-key '(normal motion) helpful-mode-map (kbd "q") #'kill-buffer-and-window)
-  (evil-define-key '(normal motion) magit-mode-map (kbd "q") #'kill-buffer-and-window)
+  ;; todo: do the same for more magit modes?
+  (evil-define-key '(normal motion) helpful-mode-map "q" #'kill-buffer-and-window)
+  (evil-define-key '(normal motion) magit-mode-map "q" #'kill-buffer-and-window)
 
   ;; make C-k work in ivy/insert (and elsewhere, probably)
   (evil-define-key 'insert 'global (kbd "C-k") nil)
