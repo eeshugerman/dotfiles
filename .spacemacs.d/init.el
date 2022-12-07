@@ -901,7 +901,7 @@ before packages are loaded."
                 projectile-indexing-method 'hybrid
                 bidi-inhibit-bpa t
                 bidi-paragraph-direction 'left-to-right
-                completions-ignore-case t
+                completion-ignore-case t
                 diff-refine nil
                 inhibit-compacting-font-caches t
                 jit-lock-defer-time 0
@@ -984,6 +984,11 @@ before packages are loaded."
 
   (setq flycheck-checker-error-threshold 2000
         flycheck-display-errors-function nil
+
+        ;; just set these in dir-locals?
+        ;; flycheck-error-list-minimum-level 'warning
+        ;; flycheck-navigation-minimum-level 'warning
+
         flycheck-pos-tip-max-width 75
         flycheck-posframe-border-use-error-face t
         flycheck-posframe-border-width 1)
@@ -1270,7 +1275,7 @@ before packages are loaded."
 
   (defun my/toggle-relative-path-in-modeline ()
     (interactive)
-    (setq doom-modeline-buffer-file-name-style
+    (setq-local doom-modeline-buffer-file-name-style
           (if doom-modeline-buffer-file-name-style
               nil
             'relative-from-project)))
