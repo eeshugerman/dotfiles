@@ -1741,3 +1741,15 @@ TODO: messes with ivy-posframe background color?"
   "Remove all advices from symbol SYM."
   (interactive "aFunction symbol: ")
   (advice-mapc (lambda (advice _props) (advice-remove sym advice)) sym))
+
+(defun my/sync-project-layout-buffers ()
+  (interactive)
+  (let ((persp-names
+         (seq-filter #'(lambda (dir-name) (not (string= dir-name dotspacemacs-default-layout-name)))
+                     (mapcar #'f-filename (persp-names-current-frame-fast-ordered))))
+        (project-name (projectile-project-name)))
+    (projectile-process-current-project-buffers-current
+     #'(lambda ()
+         (when (seq-contains-p persp-names project-name #'string=)
+           (message "adding buffer %s to layout %s" (buffer-name (current-buffer)) project-name)
+           (persp-add-buffer (current-buffer) (persp-get-by-name project-name)))))))
