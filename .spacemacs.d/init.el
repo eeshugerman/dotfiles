@@ -903,7 +903,8 @@ before packages are loaded."
                 jit-lock-defer-time 0
                 use-dialog-box nil
                 use-file-dialog nil
-                helpful-switch-buffer-function #'pop-to-buffer-same-window)
+                helpful-switch-buffer-function #'pop-to-buffer-same-window
+                tab-always-indent t)
 
   (let ((custom-file-path (file-truename "~/.spacemacs.d/custom.el")))
     (unless (file-exists-p custom-file-path)
