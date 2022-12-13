@@ -659,6 +659,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (if my/macos-flag
       (setq insert-directory-program "/usr/local/bin/gls"))
 
+  (add-to-list 'spacemacs-evil-collection-allowed-list 'proced)
+
   (setq-default
    ;; misc -- TODO: organize these
    c-c++-lsp-enable-semantic-highlight t
@@ -1606,6 +1608,8 @@ before packages are loaded."
   (spacemacs/set-leader-keys-for-minor-mode 'lsp-mode
     "hf" #'lsp-ui-doc-focus-frame
     "hu" #'lsp-ui-doc-unfocus-frame)
+
+  (put 'lsp-treemacs-errors-list 'disabled "Performance issues.")
 
   ;; ruby ---------------------------------------------------------------------
   ;; $ gem install solargraph installs the language server to ~/.local/share/ path
