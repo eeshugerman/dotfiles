@@ -905,6 +905,8 @@ before packages are loaded."
                 diff-refine nil
                 inhibit-compacting-font-caches t
                 jit-lock-defer-time 0
+                use-dialog-box nil
+                use-file-dialog nil
                 helpful-switch-buffer-function #'pop-to-buffer-same-window)
 
   (let ((custom-file-path (file-truename "~/.spacemacs.d/custom.el")))
