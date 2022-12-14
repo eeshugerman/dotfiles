@@ -659,7 +659,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (if my/macos-flag
       (setq insert-directory-program "/usr/local/bin/gls"))
 
-  (add-to-list 'spacemacs-evil-collection-allowed-list 'proced)
+  ;; TODO: how to do this without breaking stuff? also, upstream?
+  ;; (add-to-list 'spacemacs-evil-collection-allowed-list 'proced)
 
   (setq-default
    ;; misc -- TODO: organize these
