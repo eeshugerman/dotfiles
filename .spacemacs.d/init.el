@@ -964,7 +964,12 @@ before packages are loaded."
   (setq auto-save-timeout 5)
 
   (defun my/save-buffer-if-visiting-file (&rest _)
-    (when buffer-file-name (save-buffer)))
+    (when buffer-file-name
+      (cl-letf (((symbol-function 'y-or-n-p)
+                 (lambda (&rest _)
+                   (warn "Hit `y-or-n-p' override in `my/save-buffer-if-visiting-file'. Returning t.")
+                   t)))
+        (save-buffer))))
 
   (add-hook 'buffer-list-update-hook #'my/save-buffer-if-visiting-file)
   (add-hook 'window-selection-change-functions #'my/save-buffer-if-visiting-file)
