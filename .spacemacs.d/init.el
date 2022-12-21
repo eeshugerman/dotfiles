@@ -1627,6 +1627,11 @@ before packages are loaded."
 
   ;; verb ---------------------------------------------------------------------
   (setq verb-auto-kill-response-buffers t)
+
+  ;; treesit ------------------------------------------------------------------
+  (when (treesit-available-p)
+    ;; https://github.com/casouri/tree-sitter-module/releases
+    (setq treesit-extra-load-path (list (f-expand "~/.local/lib/libtree-sitter"))))
   )
 
 ;; misc commands --------------------------------------------------------------
