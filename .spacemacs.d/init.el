@@ -927,7 +927,7 @@ before packages are loaded."
   (defmacro my/with-no-messages (&rest body)
     ;; `inhibit-message' still logs to *Messages* and (apprently?) clears previous message
     ;; so instead...
-    `(cl-letf (((symbol-function 'message) (lambda (&rest args) nil)))
+    `(cl-letf (((symbol-function 'message) #'ignore))
        (progn ,@body)))
 
   (defun my/suppress-messages-advice (func &rest args)
@@ -1632,6 +1632,18 @@ before packages are loaded."
   (when (treesit-available-p)
     ;; https://github.com/casouri/tree-sitter-module/releases
     (setq treesit-extra-load-path (list (f-expand "~/.local/lib/libtree-sitter"))))
+
+  ;; rust ---------------------------------------------------------------------
+  ;; `rust--format-call' needs to kill the *rustfmt* buffer when it's done, but for
+  ;; some reason it does that with `kill-buffer-and-window', killing the buffer to
+  ;; be formatted as well. We don't want that.
+
+  (advice-add 'rust--format-call
+              :around (lambda (func &rest args)
+                        (cl-letf (((symbol-function 'kill-buffer-and-window) #'kill-buffer))
+                          (apply func args))))
+
+
   )
 
 ;; misc commands --------------------------------------------------------------
