@@ -838,6 +838,13 @@ before packages are loaded."
     "Face for punctuations."
     :group 'tree-sitter-hl-faces)
 
+  ;; TODO: try this if running into libgccjit.so / cctools / as error
+  ;; (advice-add 'comp--native-compile :around
+  ;;             (lambda (func &rest args)
+  ;;               (let ((exec-path (-filter (lambda (path) (not (string-prefix-p "/nix/" path)))
+  ;;                                         exec-path)))
+  ;;                 (funcall func args))))
+
   ;; init standalone modes ----------------------------------------------------
   (use-package diredfl :config (diredfl-global-mode 1))
 
