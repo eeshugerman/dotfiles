@@ -8,6 +8,18 @@
                                      string-trim
                                      (string= "WORK")))
 
+(defmacro my/with-no-messages (&rest body)
+  ;; `inhibit-message' still logs to *Messages* and (apprently?) clears previous message
+  ;; so instead...
+  `(cl-letf (((symbol-function 'message) #'ignore))
+     (progn ,@body)))
+
+(defun my/suppress-messages-advice (func &rest args)
+  (my/with-no-messages (apply func args)))
+
+(defun my/suppress-messages-hook (func)
+  (lambda () (my/with-no-messages (funcall func))))
+
 (defun dotspacemacs/layers ()
   "Layer configuration:
 This function should only modify configuration layer settings."
@@ -923,18 +935,6 @@ before packages are loaded."
     ;; can be slow, resulting in periodic pauses
     ;; maybe not just just a macos thing
     (savehist-mode -1))
-
-  (defmacro my/with-no-messages (&rest body)
-    ;; `inhibit-message' still logs to *Messages* and (apprently?) clears previous message
-    ;; so instead...
-    `(cl-letf (((symbol-function 'message) #'ignore))
-       (progn ,@body)))
-
-  (defun my/suppress-messages-advice (func &rest args)
-    (my/with-no-messages (apply func args)))
-
-  (defun my/suppress-messages-hook (func)
-    (lambda () (my/with-no-messages (funcall func))))
 
   (dolist (hook '(hack-local-variables-hook
                   special-mode-hook
