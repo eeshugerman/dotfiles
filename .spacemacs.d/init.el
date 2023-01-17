@@ -122,7 +122,7 @@ This function should only modify configuration layer settings."
      beacon
      dired-git-info
      diredfl
-     direnv
+     envrc
      fold-this
      flycheck-popup-tip
      flycheck-posframe
@@ -840,13 +840,6 @@ before packages are loaded."
     "Face for punctuations."
     :group 'tree-sitter-hl-faces)
 
-  ;; TODO: try this if running into libgccjit.so / cctools / as error
-  ;; (advice-add 'comp--native-compile :around
-  ;;             (lambda (func &rest args)
-  ;;               (let ((exec-path (-filter (lambda (path) (not (string-prefix-p "/nix/" path)))
-  ;;                                         exec-path)))
-  ;;                 (funcall func args))))
-
   ;; init standalone modes ----------------------------------------------------
   (use-package diredfl :config (diredfl-global-mode 1))
 
@@ -861,9 +854,8 @@ before packages are loaded."
                 gcmh-idle-delay 15)
     :config (gcmh-mode 1))
 
-  (use-package direnv
-    :init (setq direnv-always-show-summary nil)
-    :config (direnv-mode 1))
+  (use-package envrc
+    :config (envrc-global-mode))
 
   (use-package guix)
 
