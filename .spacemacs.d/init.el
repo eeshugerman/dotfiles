@@ -1581,6 +1581,7 @@ before packages are loaded."
     '((object . ts-fold-range-seq)
       (array . ts-fold-range-seq)
       (arguments . ts-fold-range-seq)
+      (formal_parameters . ts-fold-range-seq)
       (template_string . ts-fold-range-seq)
       (class_body . ts-fold-range-seq)))
 
