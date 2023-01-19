@@ -1575,21 +1575,25 @@ before packages are loaded."
   (setq tree-sitter-debug-jump-buttons t
         tree-sitter-debug-highlight-jump-region t)
 
-  ;; make more stuff foldable TODO: upstream these
-  ;; TODO: add still more stuff: arrays, function calls
-  (defun my/add-javascript-folds (alist)
-    (append '((object . ts-fold-range-seq)
-              (template_string . ts-fold-range-seq)
-              (class_body . ts-fold-range-seq))
-            alist))
+  ;; make more stuff foldable
+  ;; TODO: upstream these
+  (defvar my/extra-javascript-folds
+    '((object . ts-fold-range-seq)
+      (array . ts-fold-range-seq)
+      (arguments . ts-fold-range-seq)
+      (template_string . ts-fold-range-seq)
+      (class_body . ts-fold-range-seq)))
 
-  (defun my/add-typescript-folds (alist)
-    ;; not working :(
-    (append '((object_type . ts-fold-range-seq)) alist))
+  (defvar my/extra-typescript-folds
+    (append my/extra-javascript-folds
+            '((object_type . ts-fold-range-seq))))
 
-  (advice-add 'ts-fold-parsers-javascript :filter-return #'my/add-javascript-folds)
-  (advice-add 'ts-fold-parsers-typescript :filter-return #'my/add-typescript-folds)
+  (dolist (mode '(javascript-mode js-mode js2-mode js3-mode))
+    (dolist (item my/extra-javascript-folds)
+      (cl-pushnew item (alist-get mode ts-fold-range-alist))))
 
+  (dolist (item my/extra-typescript-folds)
+    (cl-pushnew item (alist-get 'typescript-mode ts-fold-range-alist)))
 
   ;; purescript ----------------------------------------------------------------
   ;; piggyback on `spago repl` to make ,si (`purs repl`) work
