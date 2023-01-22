@@ -796,10 +796,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    treemacs-use-filewatch-mode t
    treemacs-use-git-mode 'extended
    treemacs-use-follow-mode nil
-   ;; https://github.com/Alexander-Miller/cfrs/issues/4
-   treemacs-read-string-input (if (not my/macos-flag)
-                                  'from-minibuffer
-                                'from-child-frame)
+   ;; https://github.com/Alexander-Miller/cfrs/issues/4 is fixed but this is still buggy
+   treemacs-read-string-input (if (not my/macos-flag) 'from-minibuffer 'from-child-frame)
 
    unicode-fonts-enable-ligatures t
    unicode-fonts-less-feedback t
