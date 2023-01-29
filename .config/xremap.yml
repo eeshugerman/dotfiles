@@ -1,0 +1,22 @@
+keymap:
+  - name: Super as modifier, a bit like MacOS's Cmd (non-terminals)
+    application:
+      not: ['com.github.amezin.ddterm', 'gnome-terminal-server']
+    remap:
+      Super-c: C-c # copy
+      Super-v: C-v # paste
+      Super-a: C-a # select all
+      Super-t: C-t # new tab
+      Super-w: C-w # close tab
+
+  # TODO: per-app remap needs additional configuration, see
+  # - https://github.com/k0kubun/xremap/issues/166#issuecomment-1245333767
+  # - https://github.com/k0kubun/xremap#running-xremap-without-sudo
+  - name: Super as modifier, a bit like MacOS's Cmd (terminals)
+    application:
+      only: ['com.github.amezin.ddterm', 'gnome-terminal-server']
+    remap:
+      Super-c: C-Shift-c # copy
+      Super-v: C-Shift-v # paste
+      Super-t: C-Shift-t # new tab
+      Super-w: C-Shift-w # close tab
