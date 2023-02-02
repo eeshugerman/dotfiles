@@ -1,3 +1,6 @@
+# TODO: make this work with super/alt swap on laptop
+#   - maybe run a separate xremap process/configs for each `--device`?
+#   - maybe replace dock-connection-handler / xkb-options solution?
 keymap:
   - name: Super as modifier, a bit like MacOS's Cmd (non-terminals)
     application:
@@ -8,10 +11,8 @@ keymap:
       Super-a: C-a # select all
       Super-t: C-t # new tab
       Super-w: C-w # close tab
+      Super-z: C-z # undo
 
-  # TODO: per-app remap needs additional configuration, see
-  # - https://github.com/k0kubun/xremap/issues/166#issuecomment-1245333767
-  # - https://github.com/k0kubun/xremap#running-xremap-without-sudo
   - name: Super as modifier, a bit like MacOS's Cmd (terminals)
     application:
       only: ['com.github.amezin.ddterm', 'gnome-terminal-server']
@@ -20,3 +21,9 @@ keymap:
       Super-v: C-Shift-v # paste
       Super-t: C-Shift-t # new tab
       Super-w: C-Shift-w # close tab
+
+  # - name: Super-f find in Firefox (WIP)
+  #   application:
+  #     only: 'Firefox'
+  #   remap:
+  #     Super-f: [ALT-KEY_E, ALT-KEY_F]
