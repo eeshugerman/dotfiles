@@ -131,7 +131,6 @@ This function should only modify configuration layer settings."
      pacfiles-mode
      solaire-mode
      symex
-     coterm
      minimap
      ;; mini-frame
 
@@ -844,8 +843,6 @@ before packages are loaded."
   (use-package diredfl :config (diredfl-global-mode 1))
 
   ;; (use-package beacon :config (beacon-mode 1))
-
-  (use-package coterm :config (coterm-mode 1) (coterm-auto-char-mode 1))
 
   (use-package gcmh
     :init (setq gcmh-verbose nil
