@@ -860,13 +860,15 @@ before packages are loaded."
 
   (use-package symex)
 
-  (use-package highlight-indent-guides
-    :init (setq ;; highlight-indent-guides-method 'bitmap
-                highlight-indent-guides-method 'character
-                highlight-indent-guides-responsive 'top
-                highlight-indent-guides-auto-character-face-perc 40
-                highlight-indent-guides-auto-top-character-face-perc 80)
-    :hook prog-mode)
+  ;; doesn't play nice with ts-fold
+  ;; (use-package highlight-indent-guides
+  ;;   :init (setq ;; highlight-indent-guides-method 'bitmap
+  ;;               highlight-indent-guides-method 'character
+  ;;               highlight-indent-guides-responsive 'top
+  ;;               highlight-indent-guides-auto-character-face-perc 40
+  ;;               highlight-indent-guides-auto-top-character-face-perc 80)
+  ;;   :hook prog-mode
+  ;;   )
   ;; (use-package minimap)
 
   ;; (use-package dconf-dotfile)
@@ -969,7 +971,9 @@ before packages are loaded."
                    t)))
         (save-buffer))))
 
-  (add-hook 'buffer-list-update-hook #'my/save-buffer-if-visiting-file)
+  ;; something about this breaks `make-directory' (and other stuff?)
+  ;; error: `assq-delete-all: Lisp nesting exceeds ‘max-lisp-eval-depth’: 1601'
+  ;; (add-hook 'buffer-list-update-hook #'my/save-buffer-if-visiting-file)
   (add-hook 'window-selection-change-functions #'my/save-buffer-if-visiting-file)
   (add-hook 'focus-out-hook #'my/save-buffer-if-visiting-file)
 
@@ -1087,6 +1091,7 @@ before packages are loaded."
     (kbd "[[") 'Info-last
     (kbd "]]") 'Info-next
     (kbd "C-m") 'Info-goto-node)
+  (set-face-background 'info-isolated-quote 'unspecified)
 
 
   ;; python ------------------------------------------------------------------------

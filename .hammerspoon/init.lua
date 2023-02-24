@@ -23,6 +23,7 @@ end)
 
 -- launch spotlight with just cmd
 -- based on https://github.com/Hammerspoon/hammerspoon/issues/1039#issuecomment-253374355
+-- still a bit janky: spotlight pops up on cmd-c / cmd-v
 local SpotlightCmd = {
   cmdIsPressed = false,
   somethingElseHappened = false,
