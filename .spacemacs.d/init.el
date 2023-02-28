@@ -1621,8 +1621,9 @@ before packages are loaded."
   ;; lsp ---------------------------------------------------------------------
   ;; TODO: upstream these
   (spacemacs/set-leader-keys-for-minor-mode 'lsp-mode
-    "hf" #'lsp-ui-doc-focus-frame
-    "hu" #'lsp-ui-doc-unfocus-frame)
+    "hf" #'lsp-ui-doc-focus-frame)
+  (evil-define-key 'normal 'lsp-ui-doc-frame-mode
+    "q" #'lsp-ui-doc-unfocus-frame)
 
   (put 'lsp-treemacs-errors-list 'disabled "Performance issues.")
 
