@@ -1,6 +1,14 @@
 # TODO: make this work with super/alt swap on laptop
 #   - maybe run a separate xremap process/configs for each `--device`?
 #   - maybe replace dock-connection-handler / xkb-options solution?
+
+# TODO: builtin kb only
+modmap:
+  - name: Swap super and left-alt
+    remap:
+      ALT_L: SUPER_L
+      SUPER_L: ALT_L
+
 keymap:
   - name: Super as modifier, a bit like MacOS's Cmd (non-terminals)
     application:

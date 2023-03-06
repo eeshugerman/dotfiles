@@ -2,8 +2,10 @@
 Description=xremap
 
 [Service]
-# Restart=always
 ExecStart=xremap --device='AT Translated Set 2 keyboard,Logitech ERGO K860' --watch=device %h/.config/xremap.yml
+
+# Restart=always
+# Environment="RUST_LOG=debug"
 
 [Install]
 WantedBy=default.target
