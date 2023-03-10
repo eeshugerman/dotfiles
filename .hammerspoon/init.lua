@@ -23,7 +23,7 @@ end)
 
 -- launch spotlight with just cmd
 -- based on https://github.com/Hammerspoon/hammerspoon/issues/1039#issuecomment-253374355
--- still a bit janky: spotlight pops up on cmd-c / cmd-v
+-- NOTE: if spotlight pops up when it shouldn't, try a reboot (and OS update?)
 local SpotlightCmd = {
   cmdIsPressed = false,
   somethingElseHappened = false,
@@ -33,7 +33,7 @@ local SpotlightCmd = {
   end
 }
 
-SpotlightCmd.eventwatcher1 = hs.eventtap.new({hs.eventtap.event.types.flagsChanged}, function(e)
+eventwatcher1 = hs.eventtap.new({hs.eventtap.event.types.flagsChanged}, function(e)
     local flags = e:getFlags()
     local anyOtherFlag = flags.alt or flags.shift or flags.ctrl or flags.fn
 
@@ -54,7 +54,8 @@ SpotlightCmd.eventwatcher1 = hs.eventtap.new({hs.eventtap.event.types.flagsChang
     end
 end):start()
 
-SpotlightCmd.eventwatcher2 = hs.eventtap.new({'all', hs.eventtap.event.types.flagsChanged}, function(e)
+
+eventwatcher2 = hs.eventtap.new({'all', hs.eventtap.event.types.flagsChanged}, function(e)
     if SpotlightCmd.cmdIsPressed then
       SpotlightCmd.somethingElseHappened = true
     end
