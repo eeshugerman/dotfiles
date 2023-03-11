@@ -1640,10 +1640,22 @@ before packages are loaded."
 
   ;; ruby ---------------------------------------------------------------------
   ;; $ gem install solargraph installs the language server to ~/.local/share/ path
-  (add-to-list 'exec-path (thread-first "gem env user_gemhome"
-                                        shell-command-to-string
-                                        s-trim
-                                        (f-join "bin")))
+  (let ((ruby-user-bin-path
+         (thread-first "gem env user_gemhome"
+                       shell-command-to-string
+                       s-trim
+                       (f-join "bin"))))
+    (when (file-exists-p ruby-user-bin-path)
+      (add-to-list 'exec-path)))
+  (spacemacs/set-leader-keys-for-major-mode 'ruby-mode "= =" #'rubocopfmt)
+
+  ;; (setq rubocopfmt-use-bundler-when-possible nil)
+  ;; (defun my/set-rubocop-command ()
+  ;;     (setq-local rubocopfmt-rubocop-command
+  ;;                 (format "%s shell --manifest %s -- bundle exec rubocop"
+  ;;                         (executable-find "guix")
+  ;;                         (f-join (rubocop-project-root) "manifest.scm"))))
+  ;; (add-hook 'ruby-mode-hook #'my/set-rubocop-command)
 
   ;; verb ---------------------------------------------------------------------
   (setq verb-auto-kill-response-buffers t)
