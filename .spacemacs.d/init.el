@@ -146,6 +146,7 @@ This function should only modify configuration layer settings."
      ;;             :fetcher github
      ;;             :repo "casouri/undo-hl"))
      highlight-indent-guides
+     nix-mode
      )
 
    ;; A list of packages that cannot be updated.
@@ -1054,6 +1055,7 @@ before packages are loaded."
     [return] 'ielm-return)
 
   (setq comint-scroll-to-bottom-on-input nil
+        comint-scroll-to-bottom-on-output nil
         ;; enable colors in shell
         ;; see also `ansi-color-for-comint-*'
         ;; breaks sql-interactive-mode tho :(
