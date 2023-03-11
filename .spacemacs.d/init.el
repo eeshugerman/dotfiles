@@ -1362,33 +1362,44 @@ before packages are loaded."
         vterm-always-compile-module t
         vterm-clear-scrollback-when-clearing t)
 
-  ;; ts/js/web ---------------------------------------------------------------
-  (defun my/dap-node-enable ()
-    (require 'dap-node))
-  (add-hook 'js2-mode-hook #'my/dap-node-enable)
-  (add-hook 'typescript-mode-hook #'my/dap-node-enable)
+  ;; javascript/typescript ---------------------------------------------------
+
+  ;; typescript mode seems to work better than js2, at least w/r/t performance
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . typescript-mode))
+
+  (spacemacs/set-leader-keys-for-major-mode 'typescript-mode
+    (kbd "si") #'nodejs-repl)
 
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
   (setenv "TSC_NONPOLLING_WATCHER" "true")
 
-  (spacemacs/set-leader-keys-for-major-mode 'typescript-mode
-    (kbd "si") #'nodejs-repl)
+  (add-hook 'typescript-mode-hook (lambda () (require 'dap-node)))
+
+  ;; prettier --------------------------------------------------------------------
+  (setq typescript-fmt-tool 'prettier
+        prettier-js-show-errors t
+        prettier-js-command "npx"
+        prettier-js-args '("prettier"))
+
+  ;; don't format on save. can still call `prettier-js' ad-hoc or with ,==
+  ;; in typescript-mode (which is used for javascript as well).
+  ;; this is gross but seems to be the best way to disable everywhere.
+  (add-hook 'prettier-js-mode-on-hook (lambda () (prettier-js-mode -1)))
+
+  ;; eslint -----------------------------------------------------------------------
+
+  ;; NOTE: use `lsp-install-server' for eslint, but also eslint itself must be installed
+  ;; in the npm local workspace or globally. If using the local install, the lsp workspace
+  ;; root match (eg `bodata/service/`, not `bodata/`).
 
   ;; reduce modeline clutter
   (add-hook 'lsp-before-initialize-hook
             (lambda () (defun lsp-eslint-status-handler (_ _) t)))
 
+  ;; html -----------------------------------------------------------------------------
   (evil-define-key 'normal web-mode-map
     (kbd "zc") #'web-mode-fold-or-unfold
     (kbd "zo") #'web-mode-fold-or-unfold)
-
-  ;; typescript mode seems to work better than js2, at least w/r/t performance
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . typescript-mode))
-
-  (setq prettier-js-show-errors t)
-  ;; this is weird, but seems to be the best way to disable everywhere
-  (add-hook 'prettier-js-mode-on-hook (lambda () (prettier-js-mode -1)))
-  (setq typescript-fmt-tool 'prettier)
 
   ;; css/scss ------------------------------------------------------------------------
   (setq css-fontify-colors nil)
