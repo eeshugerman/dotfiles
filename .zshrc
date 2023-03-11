@@ -63,10 +63,6 @@ fi
 
 eval "$(direnv hook zsh)"
 
-if [ "$(uname)" = "Linux" ]; then
-    source /opt/asdf-vm/asdf.sh
-fi
-
 # misc macos stuff
 if [ "$(uname)" = "Darwin" ]; then
     export HOMEBREW_NO_AUTO_UPDATE=1
