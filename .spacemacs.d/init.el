@@ -1381,12 +1381,6 @@ before packages are loaded."
         prettier-js-command "npx"
         prettier-js-args '("prettier"))
 
-  ;; don't format on save. can still call `prettier-js' ad-hoc or with ,==
-  ;; in typescript-mode (which is used for javascript as well).
-  ;; this is gross but seems to be the best way to disable everywhere.
-  ;; TODO: lmao probably only need this because we add to hooks in day-job.el
-  (add-hook 'prettier-js-mode-on-hook (lambda () (prettier-js-mode -1)))
-
   ;; eslint -----------------------------------------------------------------------
 
   ;; NOTE: use `lsp-install-server' for eslint, but also eslint itself must be installed
