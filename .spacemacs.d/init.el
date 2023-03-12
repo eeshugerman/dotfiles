@@ -926,9 +926,6 @@ before packages are loaded."
     (customize-set-variable 'custom-file custom-file-path))
   (load custom-file)
 
-  (when my/work-flag
-    (load (file-truename "~/.spacemacs.d/day-job.el") nil nil t))
-
   (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
   (remove-hook 'diff-mode-hook 'whitespace-mode)
 
@@ -1653,7 +1650,10 @@ before packages are loaded."
                           (apply func args))))
 
 
-  )
+
+  ;; ==========================================================================
+  (when my/work-flag
+    (load (file-truename "~/.spacemacs.d/day-job.el") nil nil t)))
 
 ;; misc commands --------------------------------------------------------------
 (defun my/hide-dos-eol ()
