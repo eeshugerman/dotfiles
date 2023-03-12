@@ -789,7 +789,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    tree-sitter-indent-enable nil
    tree-sitter-fold-enable t
-   tree-sitter-fold-indicators-enable nil ;; cool but kind of slow
+   tree-sitter-fold-indicators-enable t
    tree-sitter-hl-enable-query-region-extension t
 
    treemacs-sorting 'alphabetic-asc
