@@ -897,6 +897,8 @@ before packages are loaded."
   ;; misc/general --------------------------------------------------------------
   (server-start)
 
+  (my/nix-profile-install)
+
   (spacemacs/set-leader-keys
     ":"  'eval-expression
     "ow" 'eww
@@ -1382,6 +1384,7 @@ before packages are loaded."
   ;; don't format on save. can still call `prettier-js' ad-hoc or with ,==
   ;; in typescript-mode (which is used for javascript as well).
   ;; this is gross but seems to be the best way to disable everywhere.
+  ;; TODO: lmao probably only need this because we add to hooks in day-job.el
   (add-hook 'prettier-js-mode-on-hook (lambda () (prettier-js-mode -1)))
 
   ;; eslint -----------------------------------------------------------------------
@@ -1812,13 +1815,33 @@ TODO: messes with ivy-posframe background color?"
 (defun my/nix-profile-install ()
   (interactive)
   (let* ((profile (f-expand "~/.nix-profiles/emacs-external-deps"))
-         (profile-bin (f-join profile "bin")))
+         (profile-bin (f-join profile "bin"))
+         (packages '(
+                     "nixpkgs#nodePackages.sql-formatter"
+                     "nixpkgs#nodePackages.typescript-language-server "
+                     "nixpkgs#nodePackages.vscode-html-languageserver-bin"
+                     ;; this provides html, css, json, eslint (but see note below re: eslint)
+                     "nixpkgs#nodePackages.vscode-langservers-extracted"
+                     "nixpkgs#nodejs" ;; not 100% sure this is needed
+                     "nixpkgs#vscode-extensions.angular.ng-template"
+                     )))
+
     (async-shell-command
-     (string-join `(,(format "nix profile install --profile %s" profile)
-                    "nixpkgs#nodePackages.typescript-language-server "
-                    "nixpkgs#vscode-extensions.angular.ng-template"
-                    "nixpkgs#nodePackages.sql-formatter")
-                  " ")
+     (format "nix profile install --profile %s %s" profile (string-join packages " "))
      "*nix profile install*")
+
     (add-to-list 'exec-path profile-bin)
-    (setenv "PATH" (format "%s:%s" profile-bin (getenv "PATH"))))))
+    (setenv "PATH" (format "%s:%s" profile-bin (getenv "PATH")))
+
+    ;; eslint from nix's vscode-langservers-extracted is not working -- see *eslint::stderr*.
+    ;; use lsp-install-server instead and leave this commented out to use the bin it installs
+    ;; (setq lsp-eslint-server-command '("vscode-eslint-language-server" "--stdio"))
+
+    (let* ((ng-extension-path (f-join profile "share/vscode/extensions/Angular.ng-template"))
+           (ng-server-path (f-join ng-extension-path "server/bin/ngserver"))
+           (ng-node-modules-path (f-join ng-extension-path "node_modules")))
+      (setq lsp-clients-angular-language-server-command
+            `("node" ,ng-server-path
+              "--ngProbeLocations" ,ng-node-modules-path
+              "--tsProbeLocations" ,ng-node-modules-path
+              "--stdio")))))
