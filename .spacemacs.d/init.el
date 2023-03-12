@@ -1793,6 +1793,8 @@ TODO: messes with ivy-posframe background color?"
          ;; could maybe declare these in a flake with `buildEnv`?
          ;; https://discourse.nixos.org/t/nix-profile-in-combination-with-declarative-package-management/21228/3
          (packages '(
+                     ;; TODO: "Couldn't find a working/matching GHC installation..."
+                     "nixpkgs#haskellPackages.haskell-language-server"
                      "nixpkgs#nodePackages.sql-formatter"
                      "nixpkgs#nodePackages.typescript-language-server "
                      "nixpkgs#nodePackages.vscode-html-languageserver-bin"
@@ -1802,10 +1804,9 @@ TODO: messes with ivy-posframe background color?"
                      "nixpkgs#vscode-extensions.angular.ng-template"
                      )))
 
-    ;; TODO: don't display the output buffer
     (make-directory profiles t)
-    (async-shell-command
-     (format "nix profile install --profile %s %s" profile (string-join packages " "))
+    (async-shell-command ;; TODO: don't display the output buffer
+     (format "set -x; nix -vv profile install --profile %s %s" profile (string-join packages " "))
      "*nix profile install*")
 
     (let ((profile-bin (f-join profile "bin")))
