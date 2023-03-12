@@ -1107,10 +1107,6 @@ before packages are loaded."
   ;; interpreter and tooling ---
   (setq python-shell-interpreter "ipython3")
   (when my/macos-flag
-    ;; TODO: experiment with a portable (Linux/MacOS) venv + exec-path
-    ;; solution for python dependencies (flake8, importmagic, etc)
-    (add-to-list 'exec-path "~/Library/Python/3.8/bin")
-    (add-to-list 'exec-path "~/Library/Python/3.9/bin")
     (setq python-shell-interpreter "python3"
           python-shell-interpreter-args "-i"
           python-shell-completion-native-enable nil))
@@ -1809,7 +1805,8 @@ TODO: messes with ivy-posframe background color?"
 (defun my/nix-profile-install ()
   (interactive)
   (let* ((profile (f-expand "~/.nix-profiles/emacs-external-deps"))
-         (profile-bin (f-join profile "bin"))
+         ;; could maybe declare these in a flake with `buildEnv`?
+         ;; https://discourse.nixos.org/t/nix-profile-in-combination-with-declarative-package-management/21228/3
          (packages '(
                      "nixpkgs#nodePackages.sql-formatter"
                      "nixpkgs#nodePackages.typescript-language-server "
@@ -1820,12 +1817,14 @@ TODO: messes with ivy-posframe background color?"
                      "nixpkgs#vscode-extensions.angular.ng-template"
                      )))
 
+    ;; TODO: don't display the output buffer
     (async-shell-command
      (format "nix profile install --profile %s %s" profile (string-join packages " "))
      "*nix profile install*")
 
-    (add-to-list 'exec-path profile-bin)
-    (setenv "PATH" (format "%s:%s" profile-bin (getenv "PATH")))
+    (let ((profile-bin (f-join profile "bin")))
+      (add-to-list 'exec-path profile-bin)
+      (setenv "PATH" (format "%s:%s" profile-bin (getenv "PATH"))))
 
     ;; eslint from nix's vscode-langservers-extracted is not working -- see *eslint::stderr*.
     ;; use lsp-install-server instead and leave this commented out to use the bin it installs
