@@ -3,6 +3,7 @@
 #   - maybe replace dock-connection-handler / xkb-options solution?
 
 # TODO: builtin kb only
+# TODO: not working with modifiers, eg Super-Shift-t, Super-a ?
 modmap:
   - name: Swap super and left-alt
     remap:
