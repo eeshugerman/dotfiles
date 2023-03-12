@@ -1804,7 +1804,8 @@ TODO: messes with ivy-posframe background color?"
 
 (defun my/nix-profile-install ()
   (interactive)
-  (let* ((profile (f-expand "~/.nix-profiles/emacs-external-deps"))
+  (let* ((profiles (f-expand "~/.nix-profiles"))
+         (profile (f-join profiles "emacs-external-deps"))
          ;; could maybe declare these in a flake with `buildEnv`?
          ;; https://discourse.nixos.org/t/nix-profile-in-combination-with-declarative-package-management/21228/3
          (packages '(
@@ -1818,6 +1819,7 @@ TODO: messes with ivy-posframe background color?"
                      )))
 
     ;; TODO: don't display the output buffer
+    (make-directory profiles t)
     (async-shell-command
      (format "nix profile install --profile %s %s" profile (string-join packages " "))
      "*nix profile install*")
