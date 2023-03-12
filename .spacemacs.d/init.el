@@ -1808,3 +1808,18 @@ TODO: messes with ivy-posframe background color?"
          (when (seq-contains-p persp-names project-name #'string=)
            (message "adding buffer %s to layout %s" (buffer-name (current-buffer)) project-name)
            (persp-add-buffer (current-buffer) (persp-get-by-name project-name)))))))
+
+(defun my/nix-profile-install ()
+  (interactive)
+  (let* ((profile (f-expand "~/.nix-profiles/emacs-external-deps"))
+         (profile-bin (f-join profile "bin")))
+    (async-shell-command
+     (format "nix profile install --profile %s \
+    nixpkgs#nodePackages.typescript-language-server \
+    nixpkgs#vscode-extensions.angular.ng-template \
+    nixpkgs#nodePackages.sql-formatter
+" profile)
+     "*nix profile install*")
+    (add-to-list 'exec-path profile-bin)
+    (setenv "PATH" (format "%s:%s" profile-bin (getenv "PATH")))
+    ))
