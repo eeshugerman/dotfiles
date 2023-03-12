@@ -1814,12 +1814,11 @@ TODO: messes with ivy-posframe background color?"
   (let* ((profile (f-expand "~/.nix-profiles/emacs-external-deps"))
          (profile-bin (f-join profile "bin")))
     (async-shell-command
-     (format "nix profile install --profile %s \
-    nixpkgs#nodePackages.typescript-language-server \
-    nixpkgs#vscode-extensions.angular.ng-template \
-    nixpkgs#nodePackages.sql-formatter
-" profile)
+     (string-join `(,(format "nix profile install --profile %s" profile)
+                    "nixpkgs#nodePackages.typescript-language-server "
+                    "nixpkgs#vscode-extensions.angular.ng-template"
+                    "nixpkgs#nodePackages.sql-formatter")
+                  " ")
      "*nix profile install*")
     (add-to-list 'exec-path profile-bin)
-    (setenv "PATH" (format "%s:%s" profile-bin (getenv "PATH")))
-    ))
+    (setenv "PATH" (format "%s:%s" profile-bin (getenv "PATH"))))))
