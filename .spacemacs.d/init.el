@@ -1630,6 +1630,7 @@ before packages are loaded."
 
   ;; ruby ---------------------------------------------------------------------
   (spacemacs/set-leader-keys-for-major-mode 'ruby-mode "= =" #'rubocopfmt)
+  (setq rubocopfmt-use-bundler-when-possible t)
 
   ;; verb ---------------------------------------------------------------------
   (setq verb-auto-kill-response-buffers t)
