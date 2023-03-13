@@ -1071,7 +1071,7 @@ before packages are loaded."
       (spacemacs/default-pop-shell)))
   (spacemacs/set-leader-keys "'" #'pop-shell-at-project-root-or-home)
 
-  (add-hook 'shell-mode-hook #'(lambda () (setq comint-process-echoes t)))
+  (add-hook 'shell-mode-hook (lambda () (setq comint-process-echoes t)))
 
 
   ;; transient --------------------------------------------------------------------
@@ -1775,14 +1775,14 @@ TODO: messes with ivy-posframe background color?"
 (defun my/sync-project-layout-buffers ()
   (interactive)
   (let ((persp-names
-         (seq-filter #'(lambda (dir-name) (not (string= dir-name dotspacemacs-default-layout-name)))
+         (seq-filter (lambda (dir-name) (not (string= dir-name dotspacemacs-default-layout-name)))
                      (mapcar #'f-filename (persp-names-current-frame-fast-ordered))))
         (project-name (projectile-project-name)))
     (projectile-process-current-project-buffers-current
-     #'(lambda ()
-         (when (seq-contains-p persp-names project-name #'string=)
-           (message "adding buffer %s to layout %s" (buffer-name (current-buffer)) project-name)
-           (persp-add-buffer (current-buffer) (persp-get-by-name project-name)))))))
+     (lambda ()
+       (when (seq-contains-p persp-names project-name #'string=)
+         (message "adding buffer %s to layout %s" (buffer-name (current-buffer)) project-name)
+         (persp-add-buffer (current-buffer) (persp-get-by-name project-name)))))))
 
 (defun my/install-external-deps ()
   (interactive)
