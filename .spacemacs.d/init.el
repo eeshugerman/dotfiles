@@ -1125,7 +1125,6 @@ before packages are loaded."
     )
 
   ;; ivy/ivy-rich --------------------------------------------------------------
-  ;; TODO: C-x C-a (ivy-toggle-ignore) not working?
 
   (evil-define-key 'normal ivy-minibuffer-map
     [return] #'exit-minibuffer
@@ -1181,15 +1180,13 @@ before packages are loaded."
                       (advice-remove 'process-exit-status #'filter-func))))))
 
   (cl-destructuring-bind (rg-exe . existing-args) counsel-rg-base-command
-    (let ((hidden-arg "--hidden")
-          (no-git-arg "--glob=!.git/")
-          new-args)
-       (unless (member hidden-arg existing-args)
-         (push hidden-arg new-args))
-       (unless (member no-git-arg existing-args)
-          (push no-git-arg new-args))
-       (setq counsel-rg-base-command (append (cons rg-exe new-args) existing-args))))
-
+    (let* ((wanted-args '("--hidden" "--glob=!.git/" "--no-ignore-vcs"))
+           (new-args (cl-reduce
+                      (lambda (acc arg)
+                        (if (member arg existing-args) acc (cons arg acc)))
+                      wanted-args
+                      :initial-value '())))
+      (setq counsel-rg-base-command (append (cons rg-exe new-args) existing-args))))
 
   ;; themeing -----------------------------------------------------------------
   (defvar-local my/border-width 10)
