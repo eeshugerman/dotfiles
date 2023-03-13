@@ -13,12 +13,13 @@
             # TODO: pyright, ripgrep, gls (on mac)
             pkgs.nodePackages.sql-formatter
             pkgs.nodePackages.typescript-language-server
-            pkgs.nodePackages.vscode-html-languageserver-bin
-            # provides html, css, json, eslint (but see note below re: eslint in my/install-external-deps)
+            pkgs.nodePackages.vscode-html-languageserver-bin # do we need this given the below?
+            # provides html, css, json, eslint (but see note re: eslint in my/install-external-deps)
             pkgs.nodePackages.vscode-langservers-extracted
             pkgs.nodejs #  not 100% sure this is needed
             pkgs.rubyPackages_3_0.solargraph
             pkgs.vscode-extensions.angular.ng-template
+            pkgs.nodePackages.pyright
           ];
         };
       });
