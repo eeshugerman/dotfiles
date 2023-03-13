@@ -897,7 +897,7 @@ before packages are loaded."
   ;; misc/general --------------------------------------------------------------
   (server-start)
 
-  (my/nix-profile-install)
+  (my/install-external-deps)
 
   (spacemacs/set-leader-keys
     ":"  'eval-expression
