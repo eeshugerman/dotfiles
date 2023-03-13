@@ -8,7 +8,7 @@
       let pkgs = nixpkgs.legacyPackages.${system};
       in {
         packages.default = pkgs.buildEnv {
-          name = "everything";
+          name = "emacs-external-deps-env";
           paths = [
             # TODO: pyright, ripgrep, gls (on mac)
             pkgs.nodePackages.sql-formatter

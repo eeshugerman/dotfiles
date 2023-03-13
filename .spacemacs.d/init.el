@@ -1788,14 +1788,21 @@ TODO: messes with ivy-posframe background color?"
   (interactive)
   (let* ((spacemacs-d-path (f-expand "~/.spacemacs.d"))
          (flake-path (f-join spacemacs-d-path "external-deps"))
-         (profile-path (f-join spacemacs-d-path ".nix-profile")))
+         (profile-path (f-join spacemacs-d-path ".nix-profile"))
+         (out-buffer "*nix profile install*"))
 
-    ;; install
+    ;; --- install ---
+
+    ;; avoid priority/conflict errors. is there a better way?
+    (when (file-exists-p profile-path) (delete-file profile-path t))
     (async-shell-command
      (format "set -x; nix -vv profile install --profile %s %s" profile-path flake-path)
-     "*nix profile install*")
+     out-buffer)
+    (pop-to-buffer out-buffer)
+    (evil-normal-state)
 
-    ;; config
+
+    ;; --- config ---
     (let ((profile-bin-path (f-join profile-path "bin")))
       (add-to-list 'exec-path profile-bin-path)
       (setenv "PATH" (format "%s:%s" profile-bin-path (getenv "PATH"))))
