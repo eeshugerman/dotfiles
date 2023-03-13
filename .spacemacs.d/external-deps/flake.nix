@@ -16,7 +16,7 @@
             pkgs.nodePackages.vscode-html-languageserver-bin
             # provides html, css, json, eslint (but see note below re: eslint in my/install-external-deps)
             pkgs.nodePackages.vscode-langservers-extracted
-            pkgs.nodejs #  not 100% sure this is neede
+            pkgs.nodejs #  not 100% sure this is needed
             pkgs.rubyPackages_3_0.solargraph
             pkgs.vscode-extensions.angular.ng-template
           ];
