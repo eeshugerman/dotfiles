@@ -18,6 +18,7 @@
           nodejs = pkgs.nodejs; #  not 100% sure this is needed
           solargraph = pkgs.rubyPackages_3_0.solargraph;
           ng-template = pkgs.vscode-extensions.angular.ng-template;
+
           default = pkgs.buildEnv {
             name = "everything";
             paths = builtins.attrValues (

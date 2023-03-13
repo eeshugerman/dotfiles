@@ -1793,7 +1793,7 @@ TODO: messes with ivy-posframe background color?"
     ;; install
     (async-shell-command
      (format "set -x; nix -vv profile install --profile %s %s" profile-path flake-path)
-     "*nix profile install")
+     "*nix profile install*")
 
     ;; config
     (let ((profile-bin-path (f-join profile-path "bin")))
@@ -1808,7 +1808,7 @@ TODO: messes with ivy-posframe background color?"
            (ng-server-path (f-join ng-extension-path "server/bin/ngserver"))
            (ng-node-modules-path (f-join ng-extension-path "node_modules")))
       (setq lsp-clients-angular-language-server-command
-            `("node" ,ng-server-path
-              "--ngProbeLocations" ,ng-node-modules-path
-              "--tsProbeLocations" ,ng-node-modules-path
-              "--stdio")))))
+            (list "node" ng-server-path
+                  "--ngProbeLocations" ng-node-modules-path
+                  "--tsProbeLocations" ng-node-modules-path
+                  "--stdio")))))
