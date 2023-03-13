@@ -1786,38 +1786,27 @@ TODO: messes with ivy-posframe background color?"
            (message "adding buffer %s to layout %s" (buffer-name (current-buffer)) project-name)
            (persp-add-buffer (current-buffer) (persp-get-by-name project-name)))))))
 
-(defun my/nix-profile-install ()
+(defun my/install-external-deps ()
   (interactive)
-  (let* ((profiles (f-expand "~/.nix-profiles"))
-         (profile (f-join profiles "emacs-external-deps"))
-         ;; could maybe declare these in a flake with `buildEnv`?
-         ;; https://discourse.nixos.org/t/nix-profile-in-combination-with-declarative-package-management/21228/3
-         (packages '(
-                     ;; TODO: "Couldn't find a working/matching GHC installation..."
-                     "nixpkgs#haskellPackages.haskell-language-server"
-                     "nixpkgs#nodePackages.sql-formatter"
-                     "nixpkgs#nodePackages.typescript-language-server "
-                     "nixpkgs#nodePackages.vscode-html-languageserver-bin"
-                     ;; this provides html, css, json, eslint (but see note below re: eslint)
-                     "nixpkgs#nodePackages.vscode-langservers-extracted"
-                     "nixpkgs#nodejs" ;; not 100% sure this is needed
-                     "nixpkgs#vscode-extensions.angular.ng-template"
-                     )))
+  (let* ((spacemacs-d-path (f-expand "~/.spacemacs.d"))
+         (flake-path (f-join spacemacs-d-path "external-deps"))
+         (profile-path (f-join spacemacs-d-path ".nix-profile")))
 
-    (make-directory profiles t)
-    (async-shell-command ;; TODO: don't display the output buffer
-     (format "set -x; nix -vv profile install --profile %s %s" profile (string-join packages " "))
-     "*nix profile install*")
+    ;; install
+    (async-shell-command
+     (format "set -x; nix -vv profile install --profile %s %s" profile-path flake-path)
+     "*nix profile install")
 
-    (let ((profile-bin (f-join profile "bin")))
-      (add-to-list 'exec-path profile-bin)
-      (setenv "PATH" (format "%s:%s" profile-bin (getenv "PATH"))))
+    ;; config
+    (let ((profile-bin-path (f-join profile-path "bin")))
+      (add-to-list 'exec-path profile-bin-path)
+      (setenv "PATH" (format "%s:%s" profile-bin-path (getenv "PATH"))))
 
     ;; eslint from nix's vscode-langservers-extracted is not working -- see *eslint::stderr*.
     ;; use lsp-install-server instead and leave this commented out to use the bin it installs
     ;; (setq lsp-eslint-server-command '("vscode-eslint-language-server" "--stdio"))
 
-    (let* ((ng-extension-path (f-join profile "share/vscode/extensions/Angular.ng-template"))
+    (let* ((ng-extension-path (f-join profile-path "share/vscode/extensions/Angular.ng-template"))
            (ng-server-path (f-join ng-extension-path "server/bin/ngserver"))
            (ng-node-modules-path (f-join ng-extension-path "node_modules")))
       (setq lsp-clients-angular-language-server-command

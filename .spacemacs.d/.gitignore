@@ -1,3 +1,5 @@
 # for yadm
+*.elc
 custom.el
 .spacemacs.env
+.nix-profile*
