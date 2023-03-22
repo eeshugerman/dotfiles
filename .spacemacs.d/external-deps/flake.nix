@@ -10,7 +10,7 @@
         packages.default = pkgs.buildEnv {
           name = "emacs-external-deps-env";
           paths = [
-            # TODO: pyright, ripgrep, gls (on mac)
+            # TODO: clang ls, pyright, ripgrep, gls (on mac)
             pkgs.nodePackages.sql-formatter
             pkgs.nodePackages.typescript-language-server
             pkgs.nodePackages.vscode-html-languageserver-bin # do we need this given the below?

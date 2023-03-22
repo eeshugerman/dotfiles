@@ -76,11 +76,13 @@ This function should only modify configuration layer settings."
      java
      javascript
      julia
+     kubernetes
      markdown
      meson
      multiple-cursors
      nav-flash
      nginx
+     nixos
      org
      posframe
      prettier
@@ -146,7 +148,6 @@ This function should only modify configuration layer settings."
      ;;             :fetcher github
      ;;             :repo "casouri/undo-hl"))
      highlight-indent-guides
-     nix-mode
      )
 
    ;; A list of packages that cannot be updated.
@@ -829,6 +830,9 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
+  (with-current-buffer spacemacs-buffer-name
+    (spacemacs/toggle-truncate-lines-on))
+
   (spacemacs/toggle-debug-on-error-on)
 
   ;; temp ---------------------------------------------------------------------
@@ -1051,14 +1055,15 @@ before packages are loaded."
   (evil-define-key 'normal ielm-map
     [return] 'ielm-return)
 
-  (setq comint-scroll-to-bottom-on-input nil
-        comint-scroll-to-bottom-on-output nil
-        ;; enable colors in shell
+  (setq-default comint-scroll-to-bottom-on-input nil
+                comint-scroll-to-bottom-on-output nil)
+
+  (setq ;; enable colors in shell
         ;; see also `ansi-color-for-comint-*'
         ;; breaks sql-interactive-mode tho :(
         ;; TODO: how to enable for shell-mode but not sql-interactive-mode?
         ;; comint-terminfo-terminal "dumb-emacs-ansi"
-        )
+   )
 
   ;; shell (comint) --------------------------------------------------------------------
   (setq shell-pop-autocd-to-working-dir nil
@@ -1180,7 +1185,12 @@ before packages are loaded."
                       (advice-remove 'process-exit-status #'filter-func))))))
 
   (cl-destructuring-bind (rg-exe . existing-args) counsel-rg-base-command
-    (let* ((wanted-args '("--hidden" "--glob=!.git/" "--no-ignore-vcs"))
+    (let* ((wanted-args '("--hidden"
+                          "--no-ignore-vcs"
+                          "--glob=!.git/"
+                          "--glob=!.venv/"
+                          "--glob=!node_modules/"
+                          ))
            (new-args (cl-reduce
                       (lambda (acc arg)
                         (if (member arg existing-args) acc (cons arg acc)))
@@ -1459,9 +1469,8 @@ before packages are loaded."
 
 
   ;; sql -------------------------------------------------------------------
-  (setq sqlfmt-executable "sql-formatter") ;; npm install sql-formatter
-  (setq sqlfmt-options nil)
-
+  (setq sqlfmt-executable "sql-formatter"
+        sqlfmt-options nil)
 
   ;; docker -------------------------------------------------------------------
   (defun my/docker-tramp-find-file ()
@@ -1633,6 +1642,7 @@ before packages are loaded."
   (setq verb-auto-kill-response-buffers t)
 
   ;; treesit ------------------------------------------------------------------
+  ;; TODO: install with nix instead
   (when (treesit-available-p)
     ;; https://github.com/casouri/tree-sitter-module/releases
     (setq treesit-extra-load-path (list (f-expand "~/.local/lib/libtree-sitter"))))
@@ -1647,6 +1657,9 @@ before packages are loaded."
                         (cl-letf (((symbol-function 'kill-buffer-and-window) #'kill-buffer))
                           (apply func args))))
 
+  ;; text ---------------------------------------------------------------------
+  (add-hook 'text-mode-hook #'spacemacs/toggle-spelling-checking-on)
+  (add-hook 'yaml-mode-hook #'spacemacs/toggle-spelling-checking-off)
 
 
   ;; ==========================================================================
