@@ -1186,17 +1186,25 @@ before packages are loaded."
 
   (cl-destructuring-bind (rg-exe . existing-args) counsel-rg-base-command
     (let* ((wanted-args '("--hidden"
-                          "--no-ignore-vcs"
                           "--glob=!.git/"
                           "--glob=!.venv/"
                           "--glob=!node_modules/"
                           ))
-           (new-args (cl-reduce
-                      (lambda (acc arg)
-                        (if (member arg existing-args) acc (cons arg acc)))
-                      wanted-args
-                      :initial-value '())))
+           (new-args (seq-filter (lambda (arg) (not (member arg existing-args)))
+                                 wanted-args)))
       (setq counsel-rg-base-command (append (cons rg-exe new-args) existing-args))))
+
+  (defun my/toggle-counsel-rg-ignore-vcs ()
+    (interactive)
+    (let ((flag "--no-ignore-vcs"))
+      (if (member flag counsel-rg-base-command)
+          (progn
+            (setq counsel-rg-base-command (remove flag counsel-rg-base-command ))
+            (message "excluding .gitignore matches"))
+        (setq counsel-rg-base-command
+              (cl-destructuring-bind (rg-exe . args) counsel-rg-base-command
+                (cons rg-exe (cons flag args))))
+        (message "including .gitignore"))))
 
   ;; themeing -----------------------------------------------------------------
   (defvar-local my/border-width 10)
