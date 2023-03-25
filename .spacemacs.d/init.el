@@ -1145,7 +1145,7 @@ before packages are loaded."
   (setq ivy-rich-parse-remote-buffer nil)
 
   (let* ((switch-buffer-configs
-          (mapcar (lambda (func)
+          (seq-map (lambda (func)
                     (plist-get ivy-rich-display-transformers-list func))
                   '(ivy-switch-buffer
                     ivy-switch-buffer-other-window
@@ -1190,8 +1190,7 @@ before packages are loaded."
                           "--glob=!.venv/"
                           "--glob=!node_modules/"
                           ))
-           (new-args (seq-filter (lambda (arg) (not (member arg existing-args)))
-                                 wanted-args)))
+           (new-args (seq-difference wanted-args existing-args)))
       (setq counsel-rg-base-command (append (cons rg-exe new-args) existing-args))))
 
   (defun my/toggle-counsel-rg-ignore-vcs ()
@@ -1797,7 +1796,7 @@ TODO: messes with ivy-posframe background color?"
   (interactive)
   (let ((persp-names
          (seq-filter (lambda (dir-name) (not (string= dir-name dotspacemacs-default-layout-name)))
-                     (mapcar #'f-filename (persp-names-current-frame-fast-ordered))))
+                     (seq-map #'f-filename (persp-names-current-frame-fast-ordered))))
         (project-name (projectile-project-name)))
     (projectile-process-current-project-buffers-current
      (lambda ()
