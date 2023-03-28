@@ -1069,6 +1069,18 @@ before packages are loaded."
   (setq shell-pop-autocd-to-working-dir nil
         shell-completion-execonly nil)
 
+  (defun my/fix-multiline-zsh-history-items (&rest args)
+    (when (equal shell--start-prog "zsh")
+      ;; comint-input-ring-separator is set by `shell-mode'
+      (setq-local comint-input-ring-separator (concat "\n" comint-input-ring-file-prefix))
+      (comint-read-input-ring)
+      (let* ((current-ring (ring-elements comint-input-ring))
+             (new-ring (seq-map (lambda (item) (string-replace "\\\\\n" "\\\n" item))
+                                current-ring)))
+        (setq-local comint-input-ring (ring-convert-sequence-to-ring new-ring)))))
+  ;; can't do this in shell-mode-hook because `comint-read-input-ring' runs before that
+  (advice-add 'shell-mode :after #'my/fix-multiline-zsh-history-items)
+
   (defun pop-shell-at-project-root-or-home ()
     (interactive)
     (if (projectile-project-p)
