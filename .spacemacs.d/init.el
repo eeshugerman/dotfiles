@@ -1058,14 +1058,15 @@ before packages are loaded."
   (setq-default comint-scroll-to-bottom-on-input nil
                 comint-scroll-to-bottom-on-output nil)
 
-  (setq ;; enable colors in shell
-        ;; see also `ansi-color-for-comint-*'
-        ;; breaks sql-interactive-mode tho :(
-        ;; TODO: how to enable for shell-mode but not sql-interactive-mode?
-        ;; comint-terminfo-terminal "dumb-emacs-ansi"
-   )
+  ;; spacemacs only binds this in shell-mode-map ;; TODO: upstream
+  (evil-define-key 'normal comint-mode-map ",H" #'counsel-shell-history)
 
-  ;; shell (comint) --------------------------------------------------------------------
+  ;; doesn't work because comint-input-ring-separator is only used for reading
+  ;; from history files
+  ;; (add-hook 'sql-interactive-mode-hook
+  ;;           (lambda () (setq-local comint-input-ring-separator ";\n")))
+
+  ;; shell ---
   (setq shell-pop-autocd-to-working-dir nil
         shell-completion-execonly nil)
 
@@ -1088,7 +1089,11 @@ before packages are loaded."
       (spacemacs/default-pop-shell)))
   (spacemacs/set-leader-keys "'" #'pop-shell-at-project-root-or-home)
 
-  (add-hook 'shell-mode-hook (lambda () (setq comint-process-echoes t)))
+  (add-hook 'shell-mode-hook (lambda () (setq-local comint-process-echoes t)))
+
+  ;; enable colors in shell without breaking sql-interactive-mode. untested.
+  ;; (add-hook 'shell-mode-hook
+  ;;           (lambda () (setq-local comint-terminfo-terminal "dumb-emacs-ansi")))
 
 
   ;; transient --------------------------------------------------------------------
