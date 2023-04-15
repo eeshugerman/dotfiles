@@ -1,11 +1,10 @@
-# TODO: make this work with super/alt swap on laptop
-#   - maybe run a separate xremap process/configs for each `--device`?
-#   - maybe replace dock-connection-handler / xkb-options solution?
-
-# TODO: builtin kb only
 # TODO: not working with modifiers, eg Super-Shift-t, Super-a ?
 modmap:
   - name: Swap super and left-alt
+    # TODO: implement this
+    # https://github.com/k0kubun/xremap/issues/201#issuecomment-1414135214
+    # device:
+    #   only: 'AT Translated Set 2 keyboard'
     remap:
       ALT_L: SUPER_L
       SUPER_L: ALT_L
