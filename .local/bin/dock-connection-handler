@@ -5,8 +5,9 @@ import subprocess
 import logging as log
 from gi.repository import Gio, GLib
 
-# TODO: improve xremap so this hack is unnecessary
-# https://github.com/k0kubun/xremap/issues/201#issuecomment-1414135214
+# TODO: improve xremap so this entire hack can be removed
+#   https://github.com/k0kubun/xremap/issues/201#issuecomment-1414135214
+# And/or, in the meantime, run two xremap processess
 
 log.basicConfig(level=log.INFO)
 

@@ -1,13 +1,14 @@
+
+# TODO: implement device.only/device.not so we can replace dock-connection-handler
+#   https://github.com/k0kubun/xremap/issues/201#issuecomment-1414135214
 # TODO: not working with modifiers, eg Super-Shift-t, Super-a ?
-modmap:
-  - name: Swap super and left-alt
-    # TODO: implement this
-    # https://github.com/k0kubun/xremap/issues/201#issuecomment-1414135214
-    # device:
-    #   only: 'AT Translated Set 2 keyboard'
-    remap:
-      ALT_L: SUPER_L
-      SUPER_L: ALT_L
+# modmap:
+#   - name: Swap super and left-alt
+#     device:
+#       only: 'AT Translated Set 2 keyboard'
+#     remap:
+#       ALT_L: SUPER_L
+#       SUPER_L: ALT_L
 
 keymap:
   - name: Super as modifier, a bit like MacOS's Cmd (non-terminals)
