@@ -5,6 +5,9 @@ import subprocess
 import logging as log
 from gi.repository import Gio, GLib
 
+# TODO: improve xremap so this hack is unnecessary
+# https://github.com/k0kubun/xremap/issues/201#issuecomment-1414135214
+
 log.basicConfig(level=log.INFO)
 
 INPUT_SOURCES_DCONF_SCHEMA = 'org.gnome.desktop.input-sources'
@@ -20,17 +23,17 @@ swap_alt_win: bool = SWAP_ALT_WIN_DCONF_DATUM in xkb_options
 
 log.debug('docked: %s, swap_alt_win: %s', docked, swap_alt_win)
 
-if docked and swap_alt_win:
-    log.info(f'Dock detected. Disabling {SWAP_ALT_WIN_DCONF_DATUM}...')
-    settings.set_value(
-        XKB_OPTIONS_DCONF_KEY,
-        GLib.Variant('as', [opt for opt in xkb_options if opt != SWAP_ALT_WIN_DCONF_DATUM])
-    )
-elif not docked and not swap_alt_win:
-    log.info(f'No dock detected. Enabling {SWAP_ALT_WIN_DCONF_DATUM}')
+if docked and not swap_alt_win:
+    log.info(f'Dock detected. Enabling {SWAP_ALT_WIN_DCONF_DATUM}...')
     settings.set_value(
         XKB_OPTIONS_DCONF_KEY,
         GLib.Variant('as', xkb_options + [SWAP_ALT_WIN_DCONF_DATUM])
+    )
+elif not docked and swap_alt_win:
+    log.info(f'No dock detected. Disabling {SWAP_ALT_WIN_DCONF_DATUM}')
+    settings.set_value(
+        XKB_OPTIONS_DCONF_KEY,
+        GLib.Variant('as', [opt for opt in xkb_options if opt != SWAP_ALT_WIN_DCONF_DATUM])
     )
 else:
     log.debug('Nothing to do.')
