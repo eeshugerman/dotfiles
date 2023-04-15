@@ -136,10 +136,10 @@ This function should only modify configuration layer settings."
      minimap
      ;; mini-frame
 
-     ;; (dconf-dotfile
-     ;;  :location (recipe
-     ;;             :fetcher file
-     ;;             :path "~/devel/dconf-dotfile/dconf-dotfile.el"))
+     (dconf-dotfile
+      :location (recipe
+                 :fetcher github
+                 :repo "eeshugerman/dconf-dotfile.el"))
      ;; (tree-sitter-langs
      ;;  :location (recipe :fetcher local)
      ;;
@@ -874,7 +874,7 @@ before packages are loaded."
   ;;   )
   ;; (use-package minimap)
 
-  ;; (use-package dconf-dotfile)
+  (use-package dconf-dotfile)
 
   ;; not working :(
   ;; (use-package undo-hl
