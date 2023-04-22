@@ -1225,8 +1225,6 @@ before packages are loaded."
   ;; themeing -----------------------------------------------------------------
   (defvar-local my/border-width 10)
 
-  (setq which-key-posframe-font "JetBrains Mono NL")
-
   ;; also called by gnome extension via emacsclient
   (defun my/load-theme (system-appearance)
     (mapc 'disable-theme custom-enabled-themes)
