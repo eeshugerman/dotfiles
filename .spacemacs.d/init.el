@@ -1205,8 +1205,7 @@ before packages are loaded."
     (let* ((wanted-args '("--hidden"
                           "--glob=!.git/"
                           "--glob=!.venv/"
-                          "--glob=!node_modules/"
-                          ))
+                          "--glob=!node_modules/"))
            (new-args (seq-difference wanted-args existing-args)))
       (setq counsel-rg-base-command (append (cons rg-exe new-args) existing-args))))
 
@@ -1640,12 +1639,13 @@ before packages are loaded."
         minimap-width-fraction 0.05
         minimap-minimum-width 10
         minimap-dedicated-window t
-        minimap-hide-fringes t
         minimap-hide-scroll-bar t
         minimap-always-recenter nil  ;; idk
-        minimap-recenter-type 'middle
-        minimap-display-semantic-overlays t
-        )
+        minimap-recenter-type 'middle)
+
+  ;; hide fringe/glyph junk. not really sure why this works
+  (add-hook 'minimap-mode-hook (lambda () (set-window-fringes (minimap-get-window) 1 1)))
+
 
   ;; lsp ---------------------------------------------------------------------
   ;; TODO: upstream these
@@ -1827,7 +1827,6 @@ TODO: messes with ivy-posframe background color?"
          (out-buffer "*nix profile install*"))
 
     ;; --- install ---
-
     ;; avoid priority/conflict errors. is there a better way?
     (when (file-exists-p profile-path) (delete-file profile-path t))
     (async-shell-command
