@@ -991,7 +991,7 @@ before packages are loaded."
   ;; (add-hook 'flycheck-mode-hook 'flycheck-popup-tip-mode)
   (add-hook 'flycheck-mode-hook 'flycheck-posframe-mode)
 
-  (setq flycheck-checker-error-threshold 2000
+  (setq flycheck-checker-error-threshold 3000
         flycheck-display-errors-function nil
 
         ;; just set these in dir-locals?
@@ -1070,14 +1070,13 @@ before packages are loaded."
   (setq shell-pop-autocd-to-working-dir nil
         shell-completion-execonly nil)
 
+  ;; TODO: upstream to shell.el (the separator part at least -- maybe not the string-replace hack)
   (defun my/fix-multiline-zsh-history-items (&rest args)
     (when (equal shell--start-prog "zsh")
-      ;; comint-input-ring-separator is set by `shell-mode'
       (setq-local comint-input-ring-separator (concat "\n" comint-input-ring-file-prefix))
       (comint-read-input-ring)
-      (let* ((current-ring (ring-elements comint-input-ring))
-             (new-ring (seq-map (lambda (item) (string-replace "\\\\\n" "\\\n" item))
-                                current-ring)))
+      (let* ((old-ring (ring-elements comint-input-ring))
+             (new-ring (seq-map (lambda (item) (string-replace "\\\\\n" "\\\n" item)) old-ring)))
         (setq-local comint-input-ring (ring-convert-sequence-to-ring new-ring)))))
   ;; can't do this in shell-mode-hook because `comint-read-input-ring' runs before that
   (advice-add 'shell-mode :after #'my/fix-multiline-zsh-history-items)
@@ -1530,6 +1529,7 @@ before packages are loaded."
           ("M-j" . symex-goto-highest)
           ("M-k" . symex-goto-lowest)))
   (add-to-list 'symex-lisp-modes 'lisp-data-mode)
+  (add-to-list 'symex-lisp-modes 'ielm-mode)
   (symex-initialize)
 
   ;; erc ----------------------------------------------------------------------
@@ -1606,6 +1606,7 @@ before packages are loaded."
         tree-sitter-debug-highlight-jump-region t)
 
   ;; make more stuff foldable
+  ;; TODO: switch/case
   ;; TODO: upstream these
   (defvar my/extra-javascript-folds
     '((object . ts-fold-range-seq)
@@ -1635,6 +1636,7 @@ before packages are loaded."
   (spacemacs/toggle-debug-on-error-off)
 
   ;; minimap ------------------------------------------------------------------
+  ;; TODO: try out https://github.com/zk-phi/sublimity#sublimity-map-minimap-experimental
   (setq minimap-window-location 'right
         minimap-width-fraction 0.05
         minimap-minimum-width 10
@@ -1682,6 +1684,12 @@ before packages are loaded."
   ;; text ---------------------------------------------------------------------
   (add-hook 'text-mode-hook #'spacemacs/toggle-spelling-checking-on)
   (add-hook 'yaml-mode-hook #'spacemacs/toggle-spelling-checking-off)
+
+  ;; woman ---------------------------------------------------------------------
+  ;; TODO: make woman less weird about windows
+
+  ;; ffap ----------------------------------------------------------------------
+  ;; TODO: advise to prefix relative paths with (projectile-project-root)
 
 
   ;; ==========================================================================
