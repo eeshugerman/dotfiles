@@ -148,6 +148,8 @@ This function should only modify configuration layer settings."
      ;;             :fetcher github
      ;;             :repo "casouri/undo-hl"))
      highlight-indent-guides
+
+     nerd-icons ;; for doom-modeline -- should be a dep?
      )
 
    ;; A list of packages that cannot be updated.
@@ -1292,7 +1294,7 @@ before packages are loaded."
     (set-face-attribute 'lsp-ui-sideline-global nil :slant 'italic))
 
   ;; doom-modeline -------------------------------------------------------------
-  (setq doom-modeline-buffer-file-name-style nil
+  (setq doom-modeline-buffer-file-name-style 'relative-from-project
         doom-modeline-hud t
         doom-modeline-percent-position nil
         doom-modeline-buffer-encoding nil
@@ -1300,8 +1302,7 @@ before packages are loaded."
         doom-modeline-irc t
         doom-modeline-persp-name nil
         ;; want this, but slows scrolling. todo: cake and eat it to?
-        doom-modeline-buffer-state-icon nil
-        )
+        doom-modeline-buffer-state-icon nil)
 
   (defun my/toggle-relative-path-in-modeline ()
     (interactive)
@@ -1309,10 +1310,9 @@ before packages are loaded."
           (if doom-modeline-buffer-file-name-style
               nil
             'relative-from-project)))
- (spacemacs/set-leader-keys "of" #'my/toggle-relative-path-in-modeline)
+  (spacemacs/set-leader-keys "of" #'my/toggle-relative-path-in-modeline)
 
   (set-face-attribute 'doom-modeline-persp-name nil :inherit 'unspecified)
-  (add-hook 'buffer-list-update-hook #'doom-modeline-redisplay)
   (defun doom-modeline-segment--major-mode () nil)
 
   ;; evil ------------------------------------------------------------------------
