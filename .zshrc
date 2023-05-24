@@ -41,6 +41,7 @@ KEYTIMEOUT=1  # 10ms
 if [ "$(uname)" = "Darwin" ]; then
     alias cbcopy="pbcopy"
     alias cbpaste="pbpaste"
+	alias upgrade-emacs="brew update && brew uninstall emacs-plus@29 && brew install emacs-plus@29 --with-poll --with-native-comp"
 else
     alias open="xdg-open"
     alias cbcopy="xclip -in -selection clipboard"
