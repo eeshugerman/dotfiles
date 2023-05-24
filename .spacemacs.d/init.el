@@ -119,7 +119,6 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(
-     magit-delta
      ox-reveal
      beacon
      dired-git-info
@@ -693,8 +692,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    dap-debug-restart-keep-session nil
 
-   ;; quite slow, unfortunately
-   git-enable-magit-delta-plugin nil
+   git-enable-magit-delta-plugin nil ;; quite slow, unfortunately
+   git-enable-magit-todos-plugin nil ;; can this be configured to show todos in the diff from master only?
+
    groovy-backend 'lsp
    groovy-lsp-jar-path "~/util/groovy-language-server/build/libs/groovy-language-server-all.jar"
 
@@ -899,7 +899,6 @@ before packages are loaded."
   ;; (use-package dired-git-info
   ;;   :hook (dired-after-readin . dired-git-info-auto-enable))
 
-
   ;; misc/general --------------------------------------------------------------
   (server-start)
 
@@ -969,17 +968,14 @@ before packages are loaded."
 
   (defun my/save-buffer-if-visiting-file (&rest _)
     (when buffer-file-name
-      (cl-letf (((symbol-function 'y-or-n-p)
-                 (lambda (&rest _)
-                   (warn "Hit `y-or-n-p' override in `my/save-buffer-if-visiting-file'. Returning t.")
-                   t)))
-        (save-buffer))))
+      (save-buffer)))
 
-  ;; something about this breaks `make-directory' (and other stuff?)
-  ;; error: `assq-delete-all: Lisp nesting exceeds ‘max-lisp-eval-depth’: 1601'
-  ;; (add-hook 'buffer-list-update-hook #'my/save-buffer-if-visiting-file)
+
   (add-hook 'window-selection-change-functions #'my/save-buffer-if-visiting-file)
   (add-hook 'focus-out-hook #'my/save-buffer-if-visiting-file)
+  (let ((switch-buffer-funcs '(spacemacs/alternate-buffer ivy-switch-buffer)))
+    (dolist (func switch-buffer-funcs)
+      (advice-add func :before #'my/save-buffer-if-visiting-file)))
 
   ;; company --------------------------------------------------------------------
   (setq company-selection-wrap-around t)
@@ -1071,6 +1067,8 @@ before packages are loaded."
   ;; shell ---
   (setq shell-pop-autocd-to-working-dir nil
         shell-completion-execonly nil)
+
+  (add-hook 'comint-mode-hook (lambda () (hl-line-mode 1)))
 
   ;; TODO: upstream to shell.el (the separator part at least -- maybe not the string-replace hack)
   (defun my/fix-multiline-zsh-history-items (&rest args)
@@ -1179,7 +1177,7 @@ before packages are loaded."
             (ivy-rich-switch-buffer-major-mode
              (:width 20 :face warning))
             (ivy-rich-switch-buffer-project
-             (:width 40 :face success))
+             (:width 25 :face success))
             (ivy-rich-switch-buffer-path
              (:width (lambda (x)
                        (ivy-rich-switch-buffer-shorten-path
@@ -1362,7 +1360,8 @@ before packages are loaded."
 
   ;; default is just #'kill-window
   ;; todo: do the same for more magit modes?
-  (evil-define-key '(normal motion) helpful-mode-map "q" #'kill-buffer-and-window)
+  (evil-define-key nil helpful-mode-map "q" #'kill-buffer-and-window)
+  (evil-define-key nil help-mode-map "q" #'kill-buffer-and-window)
   (evil-define-key '(normal motion) magit-mode-map "q" #'kill-buffer-and-window)
 
   ;; make C-k work in ivy/insert (and elsewhere, probably)
@@ -1657,6 +1656,7 @@ before packages are loaded."
     "q" #'lsp-ui-doc-unfocus-frame)
 
   (put 'lsp-treemacs-errors-list 'disabled "Performance issues.")
+  (put 'dap-tooltip-mode 'disabled "Performance issues.")
 
   ;; ruby ---------------------------------------------------------------------
   (spacemacs/set-leader-keys-for-major-mode 'ruby-mode "= =" #'rubocopfmt)
@@ -1690,6 +1690,9 @@ before packages are loaded."
 
   ;; ffap ----------------------------------------------------------------------
   ;; TODO: advise to prefix relative paths with (projectile-project-root)
+
+  ;; compilation-mode -------------------------------------------------------------
+  ;; TODO: don't be weird about windows
 
 
   ;; ==========================================================================
