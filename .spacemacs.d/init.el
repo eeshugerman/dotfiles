@@ -614,7 +614,7 @@ It should only modify the values of Spacemacs settings."
    ;; Color highlight trailing whitespace in all prog-mode and text-mode derived
    ;; modes such as c++-mode, python-mode, emacs-lisp, html-mode, rst-mode etc.
    ;; (default t)
-   dotspacemacs-show-trailing-whitespace (not my/work-flag)
+   dotspacemacs-show-trailing-whitespace t
 
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
@@ -944,14 +944,6 @@ before packages are loaded."
                   shell-mode-hook))
           (add-hook hook (my/suppress-messages-hook #'spacemacs/toggle-truncate-lines-on)))
 
-  ;; fix glitch in emacs 29
-  ;; seems to help but not always?
-  ;; no longer necessary? testing...
-  ;; (add-hook 'special-mode-hook (lambda ()
-  ;;                                (spacemacs/toggle-line-numbers-on)
-  ;;                                (spacemacs/toggle-line-numbers-off)))
-
-
   ;; emacs lisp ----------------------------------------------------------------
   (spacemacs/set-leader-keys-for-major-mode 'emacs-lisp-mode
     "gd" #'spacemacs/jump-to-definition
@@ -991,10 +983,6 @@ before packages are loaded."
 
   (setq flycheck-checker-error-threshold 3000
         flycheck-display-errors-function nil
-
-        ;; just set these in dir-locals?
-        ;; flycheck-error-list-minimum-level 'warning
-        ;; flycheck-navigation-minimum-level 'warning
 
         flycheck-pos-tip-max-width 75
         flycheck-posframe-border-use-error-face t
@@ -1286,11 +1274,6 @@ before packages are loaded."
    'terraform-mode-hook
    (lambda () (set-face-foreground 'terraform--resource-name-face "hot pink")))
 
-  (with-eval-after-load 'lsp-ui
-    ;; (set-face-attribute 'lsp-ui-sideline-global nil :background (doom-color 'base1))
-    (set-face-attribute 'lsp-ui-sideline-global nil :weight 'light)
-    (set-face-attribute 'lsp-ui-sideline-global nil :slant 'italic))
-
   ;; doom-modeline -------------------------------------------------------------
   (setq doom-modeline-buffer-file-name-style 'relative-from-project
         doom-modeline-hud t
@@ -1533,31 +1516,22 @@ before packages are loaded."
 
   ;; erc ----------------------------------------------------------------------
   (setq erc-autojoin-timing 'connect
-
         erc-enable-notifications t
-
         erc-fill-function 'erc-fill-static
         erc-fill-static-center 22
-
         erc-hide-list '("JOIN" "PART" "QUIT")
-
         erc-lurker-hide-list '("JOIN" "PART" "QUIT")
         erc-lurker-threshold-time 43200
-
         erc-prompt-for-nickserv-password nil
-
         erc-server-reconnect-attempts 5
         erc-server-reconnect-timeout 3
-
         erc-status-sidebar-width 25
-
         erc-track-exclude-server-buffer t
         erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
                                   "324" "329" "332" "333" "353" "477")
         erc-track-position-in-mode-line nil
         erc-track-shorten-function nil
         erc-track-showcount t
-
         erc-server-list
         (if my/work-flag
             '()
