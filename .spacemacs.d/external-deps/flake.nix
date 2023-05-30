@@ -17,8 +17,10 @@
             # - ripgrep
             # - libvterm
             # - libgccjit
-            # - fonts: nerd, all-the-icons, others?
+            # - fonts: all-the-icons, others?
             # - gls (mac only)
+
+            # pkgs.nerdfonts # didn't seem to work :/ also is slow
             pkgs.nodePackages.sql-formatter
             pkgs.nodePackages.typescript-language-server
             pkgs.nodePackages.vscode-html-languageserver-bin # do we need this given the below?

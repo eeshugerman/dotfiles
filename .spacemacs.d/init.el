@@ -1808,6 +1808,7 @@ TODO: messes with ivy-posframe background color?"
   (interactive)
   (let* ((spacemacs-d-path (f-expand "~/.spacemacs.d"))
          (flake-path (f-join spacemacs-d-path "external-deps"))
+         ;; todo: move to subdir
          (profile-path (f-join spacemacs-d-path ".nix-profile"))
          (out-buffer "*nix profile install*"))
 
