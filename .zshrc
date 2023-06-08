@@ -69,4 +69,5 @@ if [ "$(uname)" = "Darwin" ]; then
     export HOMEBREW_NO_AUTO_UPDATE=1
     alias fix-org-data-sync="launchctl unload -w Library/LaunchAgents/me.org-data-git-sync.plist && launchctl load -w Library/LaunchAgents/me.org-data-git-sync.plist"
     alias fudns='sudo dscacheutil -flushcache; sleep 2; sudo killall -HUP mDNSResponder;'
+    source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' # works for multi-user only
 fi
