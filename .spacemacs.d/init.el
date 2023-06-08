@@ -133,6 +133,7 @@ This function should only modify configuration layer settings."
      solaire-mode
      symex
      minimap
+     mustache-mode
      ;; mini-frame
 
      (dconf-dotfile
@@ -149,6 +150,12 @@ This function should only modify configuration layer settings."
      highlight-indent-guides
 
      nerd-icons ;; for doom-modeline -- should be a dep?
+
+     (prisma-mode
+      :location (recipe
+                 :fetcher github
+                 :repo "pimeys/emacs-prisma-mode"))
+
      )
 
    ;; A list of packages that cannot be updated.
@@ -675,8 +682,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (if my/macos-flag
       (setq insert-directory-program "/usr/local/bin/gls"))
 
-  ;; TODO: how to do this without breaking stuff? also, upstream?
-  ;; (add-to-list 'spacemacs-evil-collection-allowed-list 'proced)
 
   (setq-default
    ;; misc -- TODO: organize these
@@ -711,6 +716,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    js2-include-node-externs t
 
    lsp-clients-typescript-max-ts-server-memory 4096
+   lsp-debounce-full-sync-notifications-interval 3.0
    lsp-eslint-enable t ;; note: not in on npm, use `lsp-install-server'
    lsp-idle-delay 0.2
 
@@ -792,7 +798,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    tree-sitter-indent-enable nil
    tree-sitter-fold-enable t
-   tree-sitter-fold-indicators-enable t
+   tree-sitter-fold-indicators-enable nil ;; would rather disable in dir-locals but have not had luck with that
    tree-sitter-hl-enable-query-region-extension t
 
    treemacs-sorting 'alphabetic-asc
@@ -864,6 +870,8 @@ before packages are loaded."
   (use-package solaire-mode :config (solaire-global-mode 1))
 
   (use-package symex)
+
+  (use-package prisma-mode)
 
   ;; doesn't play nice with ts-fold
   ;; (use-package highlight-indent-guides
@@ -1015,13 +1023,8 @@ before packages are loaded."
     "u" 'my/dired-up-directory)
 
   ;; undo --------------------------------------------------------------------
-  ;; persistent undo ---
-  ;;  is slow!!
-  ;; (global-undo-tree-mode -1)
-  (setq undo-tree-auto-save-history nil
-        undo-tree-limit 160000
-        undo-limit 160000
-        undo-strong-limit 240000)
+  (global-undo-tree-mode -1) ;; cool but slow sometimes (magit and/or gc related?)
+  (setopt evil-undo-system 'undo-redo)
 
   ;; granular history ---
   (setq evil-want-fine-undo t)
@@ -1464,10 +1467,11 @@ before packages are loaded."
       (add-hook 'sh-mode-hook (lambda () (company-mode -1))))
 
   ;; proced -------------------------------------------------------------------
-  ;; maybe should go in user-init?
   ;; pcpu and pmem don't work on mac
   (setq-default proced-format '(pid user start pcpu pmem comm args)
                 proced-filter 'all)
+  (add-hook 'proced-mode-hook (lambda () (evil-motion-state +1)))
+  (evil-define-key 'motion proced-mode-map (kbd "C-c k")  #'proced-send-signal)
 
 
   ;; sql -------------------------------------------------------------------
