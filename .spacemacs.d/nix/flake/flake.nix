@@ -30,6 +30,7 @@
             pkgs.rubyPackages_3_0.solargraph
             pkgs.vscode-extensions.angular.ng-template
             pkgs.nodePackages.pyright
+
           ];
         };
       });

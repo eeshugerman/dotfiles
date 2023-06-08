@@ -2,4 +2,4 @@
 *.elc
 custom.el
 .spacemacs.env
-.nix-profile*
+nix/profile*
