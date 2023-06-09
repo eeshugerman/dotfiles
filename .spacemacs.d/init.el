@@ -156,6 +156,12 @@ This function should only modify configuration layer settings."
                  :fetcher github
                  :repo "pimeys/emacs-prisma-mode"))
 
+     (dogears
+      :location (recipe
+                 :fetcher github
+                 :repo "alphapapa/dogears.el"
+                 :files (:defaults (:exclude "helm-dogears.el"))))
+
      )
 
    ;; A list of packages that cannot be updated.
@@ -873,6 +879,20 @@ before packages are loaded."
 
   (use-package prisma-mode)
 
+  (use-package dogears
+    :init
+    (dolist (func '(xref-find-definitions xref-find-references))
+      (add-to-list 'dogears-functions func))
+    :config
+    (evil-define-key 'motion dogears-list-mode-map "d" #'dogears-list-delete)
+    (dogears-mode +1)
+    (spacemacs/declare-prefix "oe" "dogears")
+    (spacemacs/set-leader-keys
+      "oef" #'dogears-forward
+      "oeb" #'dogears-back
+      "oeg" #'dogears-go
+      "oel" #'dogears-list))
+
   ;; doesn't play nice with ts-fold
   ;; (use-package highlight-indent-guides
   ;;   :init (setq ;; highlight-indent-guides-method 'bitmap
@@ -1483,8 +1503,8 @@ before packages are loaded."
     (interactive)
     (spacemacs/counsel-find-file "/docker:"))
 
+  (spacemacs/declare-prefix "od" "docker")
   (spacemacs/set-leader-keys
-    ;; "od" "docker" ;; i thought this was supposed to work..?
     "odf" #'my/docker-tramp-find-file
     "odb" #'docker-container-shell
     "odB" #'docker-container-shell-env)
