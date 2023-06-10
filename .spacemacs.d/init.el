@@ -880,10 +880,9 @@ before packages are loaded."
   (use-package prisma-mode)
 
   (use-package dogears
-    :init
+    :config
     (dolist (func '(xref-find-definitions xref-find-references))
       (add-to-list 'dogears-functions func))
-    :config
     (evil-define-key 'motion dogears-list-mode-map "d" #'dogears-list-delete)
     (dogears-mode +1)
     (spacemacs/declare-prefix "oe" "dogears")
