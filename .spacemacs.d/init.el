@@ -723,6 +723,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    lsp-clients-typescript-max-ts-server-memory 4096
    lsp-debounce-full-sync-notifications-interval 3.0
+   lsp-enable-dap-auto-configure nil ;; performance issues. we also do (dap-auto-configure-mode -1) below for good measure
    lsp-eslint-enable t ;; note: not in on npm, use `lsp-install-server'
    lsp-idle-delay 0.2
 
@@ -1030,6 +1031,10 @@ before packages are loaded."
              (remove-hook 'post-command-hook #'flycheck-posframe-monitor-post-command t))))
 
     (add-hook 'flycheck-posframe-mode-hook #'fix-flycheck-posframe-not-hide-immediately))
+
+  ;; contributes to slowness when switching branches according to cpu profiler
+  (when my/work-flag
+    (defun flycheck-haskell-configure ()))
 
 
   ;; dired -----------------------------------------------------------------------
@@ -1653,7 +1658,8 @@ before packages are loaded."
     "q" #'lsp-ui-doc-unfocus-frame)
 
   (put 'lsp-treemacs-errors-list 'disabled "Performance issues.")
-  (put 'dap-tooltip-mode 'disabled "Performance issues.")
+  (dap-auto-configure-mode -1) ;; performance issues
+                               ;; maybe unnecessary on top of (setq lsp-enable-dap-auto-configure nil)
 
   ;; ruby ---------------------------------------------------------------------
   (spacemacs/set-leader-keys-for-major-mode 'ruby-mode "= =" #'rubocopfmt)
