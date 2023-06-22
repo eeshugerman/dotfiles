@@ -972,6 +972,8 @@ before packages are loaded."
                   shell-mode-hook))
           (add-hook hook (my/suppress-messages-hook #'spacemacs/toggle-truncate-lines-on)))
 
+  (add-to-list 'auto-mode-alist
+               `(,(rx "tmp_github.com_" (repeat 8 alphanumeric) ".txt" string-end) . markdown-mode))
   ;; emacs lisp ----------------------------------------------------------------
   (spacemacs/set-leader-keys-for-major-mode 'emacs-lisp-mode
     "gd" #'spacemacs/jump-to-definition
@@ -1115,7 +1117,7 @@ before packages are loaded."
     (define-key transient-map (kbd "<escape>") 'transient-quit-one))
 
   ;; xml ---------------------------------------------------------------------------
-  (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
+  (add-to-list 'auto-mode-alist `(,(rx ".xml" string-end) . nxml-mode))
   (add-hook 'nxml-mode-hook 'origami-mode)
   (setq nxml-child-indent 2
         nxml-attribute-indent 2)
@@ -1394,7 +1396,7 @@ before packages are loaded."
   ;; javascript/typescript ---------------------------------------------------
 
   ;; typescript mode seems to work better than js2, at least w/r/t performance
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . typescript-mode))
+  (add-to-list 'auto-mode-alist `(,(rx ".js" string-end) . typescript-mode))
 
   (spacemacs/set-leader-keys-for-major-mode 'typescript-mode
     (kbd "si") #'nodejs-repl)
