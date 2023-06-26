@@ -156,11 +156,6 @@ This function should only modify configuration layer settings."
                  :fetcher github
                  :repo "pimeys/emacs-prisma-mode"))
 
-     (dogears
-      :location (recipe
-                 :fetcher github
-                 :repo "alphapapa/dogears.el"
-                 :files (:defaults (:exclude "helm-dogears.el"))))
 
      )
 
@@ -879,19 +874,6 @@ before packages are loaded."
   (use-package symex)
 
   (use-package prisma-mode)
-
-  (use-package dogears
-    :config
-    (dolist (func '(xref-find-definitions xref-find-references))
-      (add-to-list 'dogears-functions func))
-    (evil-define-key 'motion dogears-list-mode-map "d" #'dogears-list-delete)
-    (dogears-mode +1)
-    (spacemacs/declare-prefix "oe" "dogears")
-    (spacemacs/set-leader-keys
-      "oef" #'dogears-forward
-      "oeb" #'dogears-back
-      "oeg" #'dogears-go
-      "oel" #'dogears-list))
 
   ;; doesn't play nice with ts-fold
   ;; (use-package highlight-indent-guides
