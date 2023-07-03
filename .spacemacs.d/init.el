@@ -698,7 +698,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    dap-debug-restart-keep-session nil
 
-   git-enable-magit-delta-plugin nil ;; quite slow, unfortunately
+   git-enable-magit-delta-plugin t
    git-enable-magit-todos-plugin nil ;; can this be configured to show todos in the diff from master only?
 
    groovy-backend 'lsp
@@ -1131,6 +1131,15 @@ before packages are loaded."
 
   ;; [ma]git ----------------------------------------------------------------------
   (setq magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
+
+  ;; -- delta
+  ;; slow, so leave off and toggle on as needed https://github.com/dandavison/magit-delta/issues/9#issuecomment-1610136282
+  (remove-hook 'magit-mode-hook 'magit-delta-mode)
+
+  (defun my/toggle-magit-delta ()
+    (interactive)
+    (call-interactively 'magit-delta-mode)
+    (magit-refresh))
 
   (setq magit-delta-default-light-theme "Solarized (light)"
         ;; magit-delta-default-dark-theme ??
