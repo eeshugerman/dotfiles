@@ -7,6 +7,7 @@ modmap:
       ALT_L: SUPER_L
       SUPER_L: ALT_L
 
+# application filters not working?
 keymap:
   - name: Super as modifier, a bit like MacOS's Cmd (non-terminals)
     application:
@@ -15,9 +16,14 @@ keymap:
       Super-c: C-c # copy
       Super-v: C-v # paste
       Super-a: C-a # select all
-      Super-t: C-t # new tab -- TODO: messing with Cmd-Shift-t for theme toggle ?
+      Super-t: C-t # new tab
       Super-w: C-w # close tab
       Super-z: C-z # undo
+
+      Super-Shift-c: Super-Shift-c # unclobber (pano)
+      Super-Shift-v: Super-Shift-v # unclobber (unused currently, but may switch pano)
+      Super-Shift-t: Super-shift-t # unclobber (theme toggle)
+
 
   - name: Super as modifier, a bit like MacOS's Cmd (terminals)
     application:
@@ -27,6 +33,10 @@ keymap:
       Super-v: C-Shift-v # paste
       Super-t: C-Shift-t # new tab
       Super-w: C-Shift-w # close tab
+
+      Super-Shift-c: Super-Shift-c # unclobber (pano)
+      Super-Shift-v: Super-Shift-v # unclobber (unused currently, but may switch pano)
+      Super-Shift-t: Super-shift-t # unclobber (theme toggle)
 
   # - name: Super-f find in Firefox (WIP)
   #   application:
