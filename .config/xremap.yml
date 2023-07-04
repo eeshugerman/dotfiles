@@ -1,4 +1,3 @@
-# TODO: not working with modifiers, eg Super-Shift-t, Super-a ?
 modmap:
   - name: Swap super and left-alt
     device:
@@ -7,7 +6,8 @@ modmap:
       ALT_L: SUPER_L
       SUPER_L: ALT_L
 
-# application filters not working?
+# NOTE: If application filters aren't working, make sure xremap was built
+# with `--features gnome` and Shell extension is enabled.
 keymap:
   - name: Super as modifier, a bit like MacOS's Cmd (non-terminals)
     application:
@@ -38,8 +38,8 @@ keymap:
       Super-Shift-v: Super-Shift-v # unclobber (unused currently, but may switch pano)
       Super-Shift-t: Super-shift-t # unclobber (theme toggle)
 
-  # - name: Super-f find in Firefox (WIP)
-  #   application:
-  #     only: 'Firefox'
-  #   remap:
-  #     Super-f: [ALT-KEY_E, ALT-KEY_F]
+  - name: Super-f find in Firefox
+    application:
+      only: ['Firefox', 'firefoxdeveloperedition']
+    remap:
+      Super-f: [ALT-KEY_E, ALT-KEY_F]
