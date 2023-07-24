@@ -955,6 +955,7 @@ before packages are loaded."
           (add-hook hook (my/suppress-messages-hook #'spacemacs/toggle-truncate-lines-on)))
 
   (add-to-list 'auto-mode-alist
+               ;; TODO: define custom mode extending markdown-mode with ",c" bound to save and kill
                `(,(rx "tmp_github.com_" (repeat 8 alphanumeric) ".txt" string-end) . markdown-mode))
   ;; emacs lisp ----------------------------------------------------------------
   (spacemacs/set-leader-keys-for-major-mode 'emacs-lisp-mode
