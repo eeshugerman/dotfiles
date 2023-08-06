@@ -118,6 +118,8 @@ This function should only modify configuration layer settings."
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
+   ;; for :location format, see https://github.com/melpa/melpa/#recipe-format
+   ;; may need to delete package dir in ~/.emacs.d/elpa to replace
    '(
      ox-reveal
      beacon
@@ -135,6 +137,8 @@ This function should only modify configuration layer settings."
      minimap
      mustache-mode
      ;; mini-frame
+
+
 
      (dconf-dotfile
       :location (recipe
@@ -155,6 +159,12 @@ This function should only modify configuration layer settings."
       :location (recipe
                  :fetcher github
                  :repo "pimeys/emacs-prisma-mode"))
+
+     (dap-mode
+      :location (recipe
+                 :fetcher github
+                 :repo "jeff-phil/dap-mode-PR"
+                 :branch "vscode-js-debug-feature"))
 
 
      )
@@ -1396,7 +1406,11 @@ before packages are loaded."
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
   (setenv "TSC_NONPOLLING_WATCHER" "true")
 
-  (add-hook 'typescript-mode-hook (lambda () (require 'dap-node)))
+  ;; (setq dap-js-debug-program `("node" ,(expand-file-name "~/Downloads/dist/src/dapDebugServer.js")))
+  ;; (add-hook 'typescript-mode-hook (lambda () (require 'dap-js)))
+
+  ;; for testing https://github.com/emacs-lsp/dap-mode/pull/736 :
+  (add-hook 'typescript-mode-hook (lambda () (require 'dap-js-debug)))
 
   ;; prettier --------------------------------------------------------------------
   (setq typescript-fmt-tool 'prettier
