@@ -1162,17 +1162,42 @@ before packages are loaded."
     (call-interactively 'magit-delta-mode)
     (magit-refresh))
 
-  (setq magit-delta-default-light-theme "Solarized (light)"
-        ;; magit-delta-default-dark-theme ??
-        magit-delta-hide-plus-minus-markers nil)
-
+  (setq magit-delta-hide-plus-minus-markers t)
   (with-eval-after-load 'magit-delta
     ;; syntax highlight removals, not just additions
     (add-to-list 'magit-delta-delta-args "--minus-style='syntax auto'")
     ;; don't refine hunks
     (add-to-list 'magit-delta-delta-args "--minus-emph-style=minus-style")
-    (add-to-list 'magit-delta-delta-args "--plus-emph-style=plus-style")
-    )
+    (add-to-list 'magit-delta-delta-args "--plus-emph-style=plus-style"))
+
+  ;; mismatched background issue
+  ;; from https://github.com/dandavison/magit-delta/issues/6#issuecomment-808824398
+  ;; todo: automate dark/light
+
+  ;; for delta's github light (github is the default):
+  ;; (with-eval-after-load 'magit-delta
+  ;;   (set-face-attribute 'magit-diff-added-highlight nil :background "#d0ffd0")
+  ;;   (set-face-attribute 'magit-diff-added nil :background "#d0ffd0")
+  ;;   (set-face-attribute 'magit-diff-removed-highlight nil :background "#ffe0e0")
+  ;;   (set-face-attribute 'magit-diff-removed nil :background "#ffe0e0"))
+
+  ;; for delta's github dark:
+  (with-eval-after-load 'magit-delta
+    (set-face-attribute 'magit-diff-added-highlight nil :background "#002800")
+    (set-face-attribute 'magit-diff-added nil :background "#002800")
+    (set-face-attribute 'magit-diff-removed-highlight nil :background "#3f0001")
+    (set-face-attribute 'magit-diff-removed nil :background  "#3f0001"))
+
+  ;; wonder what this does ?
+  (add-hook 'magit-delta-mode-hook
+            (lambda ()
+              (setq face-remapping-alist
+                    (seq-difference face-remapping-alist
+                                    '((magit-diff-removed . default)
+                                      (magit-diff-removed-highlight . default)
+                                      (magit-diff-added . default)
+                                      (magit-diff-added-highlight . default))))))
+
 
   ;; ivy/ivy-rich --------------------------------------------------------------
 
