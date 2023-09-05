@@ -18,7 +18,7 @@ if [ $(uname) = "Darwin" ]; then
     launchctl load "$HOME/Library/LaunchAgents/*"
     launchctl start "$HOME/Library/LaunchAgents/*"
 else
-    dconf load / < "$HOME/.config/dconf.ini"
+    dconf load / < "$HOME/.config/dconf-user.conf"
 fi
 
 GPG_TTY=$(tty) yadm decrypt
