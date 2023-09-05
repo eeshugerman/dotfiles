@@ -101,7 +101,12 @@
       emacs29
       firefox-devedition
       git
-      tridactyl-native
+      # gnomeExtensions.ddterm incompatible with v44, using build from github for now
+      gnomeExtensions.night-theme-switcher
+      gnomeExtensions.pano
+      gnomeExtensions.xremap
+      jetbrains-mono
+      tridactyl-native # don't know how to make this work :(
       vim
       yadm
       zsh
