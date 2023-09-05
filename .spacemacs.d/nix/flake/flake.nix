@@ -21,6 +21,7 @@
             # - gls (mac only)
 
             # pkgs.nerdfonts # didn't seem to work :/ also is slow
+            pkgs.nixfmt
             pkgs.nodePackages.bash-language-server # configuration needed?
             pkgs.nodePackages.pyright
             pkgs.nodePackages.sql-formatter
@@ -30,7 +31,6 @@
             pkgs.nodejs #  not 100% sure this is needed
             pkgs.rubyPackages_3_0.solargraph
             pkgs.vscode-extensions.angular.ng-template
-
           ];
         };
       });
