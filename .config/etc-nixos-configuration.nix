@@ -96,14 +96,15 @@
     extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.zsh;
     packages = with pkgs; [
-      firefox-devedition
-      git
-      vim
-      emacs29
-      zsh
-      yadm
       bitwarden
       direnv
+      emacs29
+      firefox-devedition
+      git
+      tridactyl-native
+      vim
+      yadm
+      zsh
     ];
   };
 
