@@ -168,4 +168,20 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
 
+
+
+  # for night-theme-switcher issue https://github.com/NixOS/nixpkgs/issues/253295
+  # from https://github.com/NixOS/nixpkgs/issues/228504#issuecomment-1678734236
+  nixpkgs.overlays =
+    let
+      nixos-unstable = fetchTarball "https://github.com/nixos/nixpkgs/archive/nixos-unstable.tar.gz";
+    in [
+    (self: super: {
+      inherit (import nixos-unstable {
+        config = config.nixpkgs.config;
+      }) gnomeExtensions;
+    })
+  ];
+
+
 }
