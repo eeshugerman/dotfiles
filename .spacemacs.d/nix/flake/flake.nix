@@ -9,7 +9,7 @@
       in {
         packages.default = pkgs.buildEnv {
           name = "emacs-external-deps-env";
-          paths = [
+          paths = with pkgs; [
             # TODO:
             # - treesitter modules
             # - clang ls
@@ -21,16 +21,16 @@
             # - gls (mac only)
 
             # pkgs.nerdfonts # didn't seem to work :/ also is slow
-            pkgs.nixfmt
-            pkgs.nodePackages.bash-language-server # configuration needed?
-            pkgs.nodePackages.pyright
-            pkgs.nodePackages.sql-formatter
-            pkgs.nodePackages.typescript-language-server
-            pkgs.nodePackages.vscode-html-languageserver-bin # do we need this given the below?
-            pkgs.nodePackages.vscode-langservers-extracted # provides html, css, json, eslint (but see note re: eslint in my/install-external-deps)
-            pkgs.nodejs #  not 100% sure this is needed
-            pkgs.rubyPackages_3_0.solargraph
-            pkgs.vscode-extensions.angular.ng-template
+            nixfmt
+            nodePackages.bash-language-server # configuration needed?
+            nodePackages.pyright
+            nodePackages.sql-formatter
+            nodePackages.typescript-language-server
+            nodePackages.vscode-html-languageserver-bin # do we need this given the below?
+            nodePackages.vscode-langservers-extracted # provides html, css, json, eslint (but see note re: eslint in my/install-external-deps)
+            nodejs #  not 100% sure this is needed
+            rubyPackages_3_0.solargraph
+            vscode-extensions.angular.ng-template
           ];
         };
       });
