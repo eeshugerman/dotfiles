@@ -7,23 +7,22 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      /etc/nixos/hardware-configuration.nix
-    ];
+  imports = [ # Include the results of the hardware scan.
+    /etc/nixos/hardware-configuration.nix
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Setup keyfile
-  boot.initrd.secrets = {
-    "/crypto_keyfile.bin" = null;
-  };
+  boot.initrd.secrets = { "/crypto_keyfile.bin" = null; };
 
   # Enable swap on luks
-  boot.initrd.luks.devices."luks-26938550-263d-4e74-a805-00fc144bebc9".device = "/dev/disk/by-uuid/26938550-263d-4e74-a805-00fc144bebc9";
-  boot.initrd.luks.devices."luks-26938550-263d-4e74-a805-00fc144bebc9".keyFile = "/crypto_keyfile.bin";
+  boot.initrd.luks.devices."luks-26938550-263d-4e74-a805-00fc144bebc9".device =
+    "/dev/disk/by-uuid/26938550-263d-4e74-a805-00fc144bebc9";
+  boot.initrd.luks.devices."luks-26938550-263d-4e74-a805-00fc144bebc9".keyFile =
+    "/crypto_keyfile.bin";
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -89,6 +88,16 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
+  # not working? https://nixos.wiki/wiki/Firefox (end of page, maybe nix-env note applies?)
+  nixpkgs.config.firefox-devedition.enableTridactylNative = true;
+
+  # programs.firefox = {
+  #   enable = true;
+  #   package = pkgs.firefox-devedition;
+  #   # doesn't work :(
+  #   nativeMessagingHosts.tridactyl = true;
+  # };
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.elliott = {
     isNormalUser = true;
@@ -99,14 +108,21 @@
       bitwarden
       direnv
       emacs29
+      # https://discourse.nixos.org/t/how-to-wrap-firefox-with-apulse/7004/5
+      # https://discourse.nixos.org/t/whats-the-differenct-between-nixpkgs-config-firefox-and-nixpkgs-overlays-for-firefox/20659
+      # https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/networking/browsers/firefox/wrapper.nix
+      # (firefox-devedition.override (old: { cfg = { enableTridactylNative = true; }; }))
       firefox-devedition
       git
-      # gnomeExtensions.ddterm incompatible with v44, using build from github for now
+      gnomeExtensions.ddterm # no release for v44, using build from github for now (which isn't working)
+      # gnomeExtensions.drop-down-terminal # incompatible with gnome 44
       gnomeExtensions.night-theme-switcher
       gnomeExtensions.pano
-      gnomeExtensions.xremap
+      gnomeExtensions.xremap # not seen by daemon?
       jetbrains-mono
-      tridactyl-native # don't know how to make this work :(
+      # not sure if this should be necessary in addition to setting enableTridactylNative below
+      tridactyl-native
+      unzip
       vim
       yadm
       zsh
@@ -116,7 +132,8 @@
   systemd.services.xremap = {
     description = "xremap daemon";
     serviceConfig = {
-      ExecStart = "/home/elliott/devel/xremap/target/release/xremap --device='AT Translated Set 2 keyboard,Logitech ERGO K860' --watch=device /home/elliott/.config/xremap.yml";
+      ExecStart =
+        "/home/elliott/devel/xremap/target/release/xremap --device='AT Translated Set 2 keyboard,Logitech ERGO K860' --watch=device /home/elliott/.config/xremap.yml";
     };
     wantedBy = [ "default.target" ];
   };
@@ -134,10 +151,11 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
-  ];
+  environment.systemPackages = with pkgs;
+    [
+      #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+      #  wget
+    ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -153,7 +171,7 @@
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
-  
+
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
@@ -168,20 +186,16 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
 
-
-
   # for night-theme-switcher issue https://github.com/NixOS/nixpkgs/issues/253295
   # from https://github.com/NixOS/nixpkgs/issues/228504#issuecomment-1678734236
-  nixpkgs.overlays =
-    let
-      nixos-unstable = fetchTarball "https://github.com/nixos/nixpkgs/archive/nixos-unstable.tar.gz";
-    in [
+  nixpkgs.overlays = let
+    nixos-unstable = fetchTarball
+      "https://github.com/nixos/nixpkgs/archive/nixos-unstable.tar.gz";
+  in [
     (self: super: {
-      inherit (import nixos-unstable {
-        config = config.nixpkgs.config;
-      }) gnomeExtensions;
+      inherit (import nixos-unstable { config = config.nixpkgs.config; })
+        gnomeExtensions;
     })
   ];
-
 
 }
