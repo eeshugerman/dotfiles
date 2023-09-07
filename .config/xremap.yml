@@ -11,7 +11,7 @@ modmap:
 keymap:
   - name: Super as modifier, a bit like MacOS's Cmd (non-terminals)
     application:
-      not: ['com.github.amezin.ddterm', 'gnome-terminal-server']
+      not: ['com.github.amezin.ddterm', 'gnome-terminal-server', 'org.gnome.Console']
     remap:
       Super-c: C-c # copy
       Super-v: C-v # paste
@@ -27,7 +27,7 @@ keymap:
 
   - name: Super as modifier, a bit like MacOS's Cmd (terminals)
     application:
-      only: ['com.github.amezin.ddterm', 'gnome-terminal-server']
+      only: ['com.github.amezin.ddterm', 'gnome-terminal-server', 'org.gnome.Console']
     remap:
       Super-c: C-Shift-c # copy
       Super-v: C-Shift-v # paste
