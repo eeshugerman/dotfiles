@@ -88,6 +88,8 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
   # not working? https://nixos.wiki/wiki/Firefox (end of page, maybe nix-env note applies?)
   nixpkgs.config.firefox-devedition.enableTridactylNative = true;
 
@@ -118,7 +120,7 @@
       # gnomeExtensions.drop-down-terminal # incompatible with gnome 44
       gnomeExtensions.night-theme-switcher
       gnomeExtensions.pano
-      gnomeExtensions.xremap # not seen by daemon?
+      gnomeExtensions.xremap # not seen by daemon? TODO: try https://github.com/xremap/nix-flake/
       jetbrains-mono
       # not sure if this should be necessary in addition to setting enableTridactylNative below
       tridactyl-native
