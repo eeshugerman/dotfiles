@@ -100,15 +100,13 @@
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  # not working? https://nixos.wiki/wiki/Firefox (end of page, maybe nix-env note applies?)
-  nixpkgs.config.firefox-devedition.enableTridactylNative = true;
-
-  # programs.firefox = {
-  #   enable = true;
-  #   package = pkgs.firefox-devedition;
-  #   # doesn't work :(
-  #   nativeMessagingHosts.tridactyl = true;
-  # };
+  programs.firefox = {
+    enable = true;
+    package = pkgs.firefox-devedition;
+    # doesn't work :( even on unstable which is weird bc it
+    # was recently added: https://github.com/danth/nixpkgs/blob/master/nixos/modules/programs/firefox.nix#L201
+    nativeMessagingHosts.tridactyl = true;
+  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.elliott = {
@@ -120,20 +118,14 @@
       bitwarden
       direnv
       emacs29
-      # https://discourse.nixos.org/t/how-to-wrap-firefox-with-apulse/7004/5
-      # https://discourse.nixos.org/t/whats-the-differenct-between-nixpkgs-config-firefox-and-nixpkgs-overlays-for-firefox/20659
-      # https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/networking/browsers/firefox/wrapper.nix
-      # (firefox-devedition.override (old: { cfg = { enableTridactylNative = true; }; }))
-      firefox-devedition
       git
       gnomeExtensions.ddterm # no release for v44, using build from github for now (which isn't working)
-      # gnomeExtensions.drop-down-terminal # incompatible with gnome 44
       gnomeExtensions.night-theme-switcher
       gnomeExtensions.pano
       gnomeExtensions.xremap
       jetbrains-mono
-      # not sure if this should be necessary in addition to setting enableTridactylNative below
-      tridactyl-native
+      # not sure if this should be necessary in addition to the module stuff
+      # tridactyl-native
       unzip
       vim
       yadm
