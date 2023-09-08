@@ -130,6 +130,7 @@
       # gnomeExtensions.drop-down-terminal # incompatible with gnome 44
       gnomeExtensions.night-theme-switcher
       gnomeExtensions.pano
+      gnomeExtensions.xremap
       jetbrains-mono
       # not sure if this should be necessary in addition to setting enableTridactylNative below
       tridactyl-native
