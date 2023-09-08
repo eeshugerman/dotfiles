@@ -1,7 +1,8 @@
 modmap:
   - name: Swap super and left-alt
-    device:
-      only: 'AT Translated Set 2 keyboard'
+    # TODO: get device-aware-config branch working with nix-flake module 
+    # device:
+    #   only: 'AT Translated Set 2 keyboard'
     remap:
       ALT_L: SUPER_L
       SUPER_L: ALT_L

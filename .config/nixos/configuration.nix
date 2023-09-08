@@ -4,13 +4,22 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, xremap-flake, ... }:
+{ config, pkgs, ... }:
 
 {
   imports = [
     # Include the results of the hardware scan.
     /etc/nixos/hardware-configuration.nix
   ];
+
+  # TODO: use device-aware-config branch?
+  services.xremap = {
+    withGnome = true;
+    serviceMode = "user";
+    userName = "elliott";
+    # deviceName = "AT Translated Set 2 keyboard";
+    yamlConfig = builtins.readFile /home/elliott/.config/xremap.yml;
+  };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -121,7 +130,6 @@
       # gnomeExtensions.drop-down-terminal # incompatible with gnome 44
       gnomeExtensions.night-theme-switcher
       gnomeExtensions.pano
-      gnomeExtensions.xremap # not seen by daemon? TODO: try https://github.com/xremap/nix-flake/
       jetbrains-mono
       # not sure if this should be necessary in addition to setting enableTridactylNative below
       tridactyl-native
@@ -130,15 +138,6 @@
       yadm
       zsh
     ];
-  };
-
-  systemd.services.xremap = {
-    description = "xremap daemon";
-    serviceConfig = {
-      ExecStart =
-        "/home/elliott/devel/xremap/target/release/xremap --device='AT Translated Set 2 keyboard,Logitech ERGO K860' --watch=device /home/elliott/.config/xremap.yml";
-    };
-    wantedBy = [ "default.target" ];
   };
 
   # Enable automatic login for the user.
