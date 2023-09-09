@@ -1,4 +1,4 @@
-# sudo nixos-rebuild switch --impure --flake ~/.config/nixos#dell9560
+# sudo nixos-rebuild switch --impure --flake ~/.config/nixos
 
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
@@ -34,7 +34,7 @@
   boot.initrd.luks.devices."luks-26938550-263d-4e74-a805-00fc144bebc9".keyFile =
     "/crypto_keyfile.bin";
 
-  networking.hostName = "nixos-dell9560"; # Define your hostname.
+  networking.hostName = "dell9560"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary

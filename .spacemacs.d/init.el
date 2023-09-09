@@ -1465,7 +1465,7 @@ before packages are loaded."
   ;; (setq tramp-persistency-file-name nil)
 
   ;; for yadm method -- tell tramp where to find stuff in nixos box
-  (add-to-list 'tramp-remote-path "/etc/profiles/per-user/elliott/bin")
+  (add-to-list 'tramp-remote-path (format "/etc/profiles/per-user/%s/bin" (user-login-name)))
 
   (add-to-list 'tramp-methods
                '("yadm"
