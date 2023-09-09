@@ -1,0 +1,10 @@
+- [ ] get magit working with yadm
+- [ ] gnome
+  - [ ] extensions 
+    - [ ] ddterm (build from master for 44 compat)
+    - [ ] overview key nav fix https://gitlab.gnome.org/nre/overview-key-navigation-fix-5345
+  - [ ] emacs/emacsclient icons
+- [ ] firefox
+  - [ ] tridactyl native
+  - [ ] scroll speed
+  - [ ] theme
