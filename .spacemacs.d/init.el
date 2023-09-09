@@ -1458,6 +1458,15 @@ before packages are loaded."
 
   ;; yadm ------------------------------------------------------------------------
   (require 'tramp)
+
+  ;; for debugging
+  ;; (setq tramp-verbose 10)
+  ;; (tramp-cleanup-all-connections)
+  ;; (setq tramp-persistency-file-name nil)
+
+  ;; for yadm method -- tell tramp where to find stuff in nixos box
+  (add-to-list 'tramp-remote-path "/etc/profiles/per-user/elliott/bin")
+
   (add-to-list 'tramp-methods
                '("yadm"
                  (tramp-login-program "yadm")

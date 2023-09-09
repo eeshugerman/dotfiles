@@ -1,4 +1,5 @@
-- [ ] get magit working with yadm
+- [X] emacs
+  - [X] get magit working with yadm
 - [ ] gnome
   - [ ] extensions 
     - [ ] ddterm (build from master for 44 compat)
@@ -7,4 +8,5 @@
 - [ ] firefox
   - [ ] tridactyl native
   - [ ] scroll speed
+  - [ ] scroll wheel direction
   - [ ] theme
