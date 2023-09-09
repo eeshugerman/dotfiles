@@ -22,6 +22,7 @@
 
             # pkgs.nerdfonts # didn't seem to work :/ also is slow
             nixfmt
+            rnix-lsp
             nodePackages.bash-language-server # configuration needed?
             nodePackages.pyright
             nodePackages.sql-formatter

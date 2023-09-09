@@ -138,6 +138,12 @@ This function should only modify configuration layer settings."
      mustache-mode
      ;; mini-frame
 
+     ;; not available on melpa for some reason
+     (ivy-nixos-options
+      :location (recipe
+                 :fetcher github
+                 :repo "travisbhartwell/nix-emacs"))
+
 
 
      (dconf-dotfile
@@ -774,6 +780,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-headerline-breadcrumb-enable t
    lsp-headerline-breadcrumb-segments '(symbols)
 
+   nix-backend 'lsp
 
    org-adapt-indentation t
    org-enable-jira-support t
@@ -918,6 +925,9 @@ before packages are loaded."
   ;; spacing issues
   ;; (use-package dired-git-info
   ;;   :hook (dired-after-readin . dired-git-info-auto-enable))
+
+  ;; defer/autoload seems to be broken?
+  (use-package ivy-nixos-options)
 
   ;; misc/general --------------------------------------------------------------
   (server-start)
