@@ -299,11 +299,11 @@
     "xremap": {
       "flake": false,
       "locked": {
-        "lastModified": 1691045319,
-        "narHash": "sha256-l4erKAbf3dzxOQpzl7eIvGgQrzEsZYOGswVbz4Zh90g=",
-        "owner": "k0kubun",
+        "lastModified": 1693061624,
+        "narHash": "sha256-Yexj7FA1Wpld489/4rI8obNXh6fMKWufDIQsXfchaM0=",
+        "owner": "eeshugerman",
         "repo": "xremap",
-        "rev": "87b55b24850be814d4941900ea3dfeae4110c44c",
+        "rev": "ae41894c572b867288a6988f5665cd9e1f481f8e",
         "type": "github"
       },
       "original": {
