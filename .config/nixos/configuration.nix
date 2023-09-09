@@ -12,12 +12,11 @@
     /etc/nixos/hardware-configuration.nix
   ];
 
-  # TODO: use device-aware-config branch?
   services.xremap = {
     withGnome = true;
     serviceMode = "user";
     userName = "elliott";
-    # deviceName = "AT Translated Set 2 keyboard,Logitech ERGO K860"
+    deviceName = "AT Translated Set 2 keyboard,Logitech ERGO K860";
     watch = true;
     yamlConfig = builtins.readFile /home/elliott/.config/xremap.yml;
   };
@@ -124,7 +123,7 @@
       gnomeExtensions.ddterm # no release for v44, using build from github for now (which isn't working)
       gnomeExtensions.night-theme-switcher
       gnomeExtensions.pano
-      gnomeExtensions.xremap
+      gnomeExtensions.xremap # needed in addition to the module
       jetbrains-mono
       # not sure if this should be necessary in addition to the module stuff
       # tridactyl-native
