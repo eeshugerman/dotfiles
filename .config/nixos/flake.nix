@@ -1,4 +1,4 @@
-# sudo nixos-rebuild switch --impure --flake ~/.config/nixos#
+# sudo nixos-rebuild switch --impure --flake ~/.config/nixos#dell9560
 {
   description = "My NixOS configuration flake";
   inputs = {
@@ -9,8 +9,7 @@
   outputs = { self, nixpkgs, xremap-flake, ... }:
     let system = "x86_64-linux";
     in {
-      # must match hostname (nixos)?
-      nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.dell9560 = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
           ./configuration.nix

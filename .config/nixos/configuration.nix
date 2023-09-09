@@ -1,4 +1,4 @@
-# sudo nixos-rebuild switch --impure --flake ~/.config/nixos#
+# sudo nixos-rebuild switch --impure --flake ~/.config/nixos#dell9560
 
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
@@ -35,7 +35,7 @@
   boot.initrd.luks.devices."luks-26938550-263d-4e74-a805-00fc144bebc9".keyFile =
     "/crypto_keyfile.bin";
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "nixos-dell9560"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -118,6 +118,7 @@
     packages = with pkgs; [
       bitwarden
       direnv
+      dmidecode
       emacs29
       git
       gnomeExtensions.ddterm # no release for v44, using build from github for now (which isn't working)
