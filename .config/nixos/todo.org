@@ -9,4 +9,5 @@
 - [ ] firefox
   - [ ] tridactyl native
   - [ ] scroll speed
+  - [ ] "auto" scroll
   - [ ] theme

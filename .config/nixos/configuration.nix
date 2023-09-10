@@ -104,7 +104,7 @@
     enable = true;
     package = pkgs.firefox-devedition;
     # doesn't work :( even on unstable which is weird bc it
-    # was recently added: https://github.com/danth/nixpkgs/blob/master/nixos/modules/programs/firefox.nix#L201
+    # was recently added: https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/programs/firefox.nix#L201
     nativeMessagingHosts.tridactyl = true;
   };
 
@@ -120,6 +120,7 @@
       dmidecode
       emacs29
       git
+      gnome.gnome-tweaks
       gnomeExtensions.ddterm # no release for v44, using build from github for now (which isn't working)
       gnomeExtensions.night-theme-switcher
       gnomeExtensions.pano
@@ -149,6 +150,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs;
     [
+      # tridactyl-native
       #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
       #  wget
     ];

@@ -4,6 +4,8 @@
   inputs = {
     # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
+    # nixpkgs.url = "path:/home/elliott/devel/nixpkgs";
+
     xremap-flake.url = "github:xremap/nix-flake";
   };
   outputs = { self, nixpkgs, xremap-flake, ... }:
