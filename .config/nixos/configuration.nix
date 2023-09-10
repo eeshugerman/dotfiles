@@ -103,8 +103,6 @@
   programs.firefox = {
     enable = true;
     package = pkgs.firefox-devedition;
-    # doesn't work :( even on unstable which is weird bc it
-    # was recently added: https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/programs/firefox.nix#L201
     nativeMessagingHosts.tridactyl = true;
   };
 
@@ -126,8 +124,6 @@
       gnomeExtensions.pano
       gnomeExtensions.xremap # needed in addition to the module
       jetbrains-mono
-      # not sure if this should be necessary in addition to the module stuff
-      # tridactyl-native
       unzip
       vim
       yadm
@@ -150,7 +146,6 @@
   # $ nix search wget
   environment.systemPackages = with pkgs;
     [
-      # tridactyl-native
       #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
       #  wget
     ];
