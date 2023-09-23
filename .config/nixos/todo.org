@@ -6,8 +6,10 @@
   - [ ] extensions 
     - [ ] ddterm (build from master for 44 compat)
     - [ ] overview key nav fix https://gitlab.gnome.org/nre/overview-key-navigation-fix-5345
+  - [ ] font
 - [-] firefox
   - [X] tridactyl native
+  - [ ] C-i (editor) doesn't work
   - [ ] scroll speed
   - [ ] "auto" scroll
   - [ ] theme

@@ -104,6 +104,12 @@
     enable = true;
     package = pkgs.firefox-devedition;
     nativeMessagingHosts.tridactyl = true;
+    preferences = {
+      # https://bugzilla.mozilla.org/show_bug.cgi?id=1752862
+      # not working. try moving ~/.mozilla?
+      "apz.gtk.pangesture.delta_mode" = 2;
+      "apz.gtk.pangesture.pixel_delta_mode_multiplier" = 25;
+    };
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -116,6 +122,7 @@
       bitwarden
       direnv
       dmidecode
+      docker
       emacs29
       git
       gnome.gnome-tweaks

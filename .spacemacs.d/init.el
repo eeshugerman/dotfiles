@@ -182,7 +182,6 @@ This function should only modify configuration layer settings."
    dotspacemacs-excluded-packages '( ;; nonfatal error on startup if the themes aren't listed here. why?
                                     doom-flatwhite-theme
                                     doom-henna-theme
-                                    forge ;; emacsql/sqlite issues on 29 https://github.com/magit/forge/issues/535
                                     )
 
    ;; Defines the behaviour of Spacemacs when installing packages.
