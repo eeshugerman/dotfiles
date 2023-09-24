@@ -7,8 +7,12 @@
     # nixpkgs.url = "path:/home/elliott/devel/nixpkgs";
 
     xremap-flake.url = "github:xremap/nix-flake";
+
+    # https://nix-community.github.io/home-manager/index.html#sec-flakes-nixos-module
+    home-manager.url = "github:nix-community/home-manager/release-23.05";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
-  outputs = { self, nixpkgs, xremap-flake, ... }:
+  outputs = { self, nixpkgs, xremap-flake, home-manager, ... }:
     let system = "x86_64-linux";
     in {
       # must either match hostname or use #foo to specify in nixos-rebuild command
@@ -17,6 +21,13 @@
         modules = [
           ./configuration.nix
           xremap-flake.nixosModules.default
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.elliott = import ./home.nix;
+
+          }
         ];
       };
     };

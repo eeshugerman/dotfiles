@@ -1,3 +1,5 @@
+- [ ] nixos
+  - [ ] fewer images in systemd-boot screen
 - [X] emacs
   - [X] get magit working with yadm
 - [-] gnome
