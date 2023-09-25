@@ -16,6 +16,7 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  # TODO: Maybe take another stab at managing profiles with plain yadm so home manager is not needed
   programs.firefox = {
     enable = true;
     package = pkgs.firefox-devedition.override {
