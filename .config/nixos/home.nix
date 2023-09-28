@@ -22,7 +22,6 @@
     package = pkgs.firefox-devedition.override {
       cfg = { enableTridactylNative = true; };
     };
-    # NOTE: Need to select this profile on first use (hint: right-click on Firefox icon)
     profiles.elliott = {
       id = 0;
       name = "elliott";
@@ -38,5 +37,8 @@
         "apz.gtk.pangesture.pixel_delta_mode_multiplier" = 25;
       };
     };
+    # workaround for dev edition profile weirdness
+    # https://www.reddit.com/r/firefox/comments/4uhkwq/how_do_i_get_dev_edition_to_use_my_profile_by/d5pve4b
+    profiles."ignore-dev-edition-profile" = { id = 1; };
   };
 }
