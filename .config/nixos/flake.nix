@@ -6,6 +6,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
     # nixpkgs.url = "path:/home/elliott/devel/nixpkgs";
 
+    # nix flake lock --override-input xremap-flake/xremap 'github:eeshugerman/xremap?ref=device-aware-config'
     xremap-flake.url = "github:xremap/nix-flake";
 
     # https://nix-community.github.io/home-manager/index.html#sec-flakes-nixos-module
