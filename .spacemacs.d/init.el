@@ -89,7 +89,6 @@ This function should only modify configuration layer settings."
      purescript
      python
      ruby
-     ruby-on-rails
      rust
      scheme
      shell
@@ -1074,7 +1073,8 @@ before packages are loaded."
     [return] 'ielm-return)
 
   (setq-default comint-scroll-to-bottom-on-input nil
-                comint-scroll-to-bottom-on-output nil)
+                comint-scroll-to-bottom-on-output nil
+                comint-input-ignoredups t)
 
   ;; spacemacs only binds this in shell-mode-map ;; TODO: upstream
   (evil-define-key 'normal comint-mode-map ",H" #'counsel-shell-history)
@@ -1151,6 +1151,7 @@ before packages are loaded."
 
 
   ;; [ma]git ----------------------------------------------------------------------
+  ;; TODO: don't do full column, just use current window
   (setq magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
 
   ;; -- delta
@@ -1172,7 +1173,7 @@ before packages are loaded."
 
   ;; mismatched background issue
   ;; from https://github.com/dandavison/magit-delta/issues/6#issuecomment-808824398
-  ;; todo: automate dark/light
+  ;; todo: automate dark/light, merge conflict regions
 
   ;; for delta's github light (github is the default):
   ;; (with-eval-after-load 'magit-delta
@@ -1810,26 +1811,28 @@ TODO: messes with ivy-posframe background color?"
 
 (defun my/toggle-prosey-on ()
   (interactive)
+  (toggle-word-wrap +1)
+  (visual-line-mode +1)
+  ;; (hl-line-mode -1)
   (spacemacs/toggle-line-numbers-off) ;; doesn't always work?
   (spacemacs/toggle-relative-line-numbers-off)
   (spacemacs/toggle-truncate-lines-off)
   (spacemacs/toggle-spelling-checking-on)
-  ;; (hl-line-mode -1)
   ;; (unless writeroom-mode
   ;;   (spacemacs/toggle-centered-buffer))
-  (visual-line-mode +1)
   (setq my/prosey t))
 
 (defun my/toggle-prosey-off ()
   (interactive)
+  (toggle-word-wrap -1)
+  (visual-line-mode -1)
+  ;; (hl-line-mode +1)
   (spacemacs/toggle-line-numbers-on)
   (spacemacs/toggle-relative-line-numbers-on)
   (spacemacs/toggle-truncate-lines-on)
   (spacemacs/toggle-spelling-checking-off)
-  ;; (hl-line-mode +1)
   ;; (when writeroom-mode
   ;;   (speacemacs/toggle-centered-buffer))
-  (visual-line-mode -1)
   (setq my/prosey nil))
 
 (defun my/toggle-prosey ()
