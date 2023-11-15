@@ -19,6 +19,7 @@
             # - libgccjit
             # - fonts: all-the-icons, others?
             # - gls (mac only)
+            # - vscode-js-debug -- currently using (dap-js-setup)
 
             # pkgs.nerdfonts # didn't seem to work :/ also is slow
             ispell
