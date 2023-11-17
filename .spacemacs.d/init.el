@@ -1755,8 +1755,89 @@ before packages are loaded."
 
 
   ;; ==========================================================================
+
+  ;; snowflake sql support (wip)
   (when my/work-flag
-    (load (file-truename "~/.spacemacs.d/day-job.el") nil nil t)))
+    (load (file-truename "~/.spacemacs.d/day-job.el") nil nil t))
+
+  (sql-add-product 'snowflake "Snowflake" '(:free-software nil))
+
+  ;; 2) Define font lock settings.  All ANSI keywords will be
+  ;;    highlighted automatically, so only product specific keywords
+  ;;    need to be defined here.
+  ;; (defvar my-sql-mode-snowflake-font-lock-keywords
+  ;;   '(("\\b\\(red\\|orange\\|yellow\\)\\b" . font-lock-keyword-face))
+  ;;   "Snowflake SQL keywords used by font-lock.")
+  ;; (sql-set-product-feature 'snowflake :font-lock 'my-sql-mode-snowflake-font-lock-keywords)
+
+  ;; ;; 3) Define any special syntax characters including comments and
+  ;; ;;    identifier characters.
+  ;; (sql-set-product-feature 'snowflake
+  ;;                          :syntax-alist ((?# . "_")))
+
+  (defcustom my-sql-snowflake-program "snowsql"
+    "Command to start snowsql by Snowflake."
+    :type 'file
+    :group 'SQL)
+  
+  (sql-set-product-feature 'snowflake
+                           :sqli-program 'my-sql-snowflake-program)
+  (sql-set-product-feature 'snowflake
+                           :prompt-regexp (rx line-start (zero-or-more not-newline) ">"))
+
+  (defun my-sql-snowflake-input-filter (str)
+    "Strip out linefeed chars."
+    (string-replace "\n" " " str))
+  (sql-set-product-feature 'snowflake
+                           :input-filter 'my-sql-snowflake-input-filter)
+
+  ;; (sql-set-product-feature 'snowflake :prompt-length 7)
+
+
+  (defcustom my-sql-snowflake-login-params '(user password server database account)
+    "Login parameters to needed to connect to Snowflake."
+    :type 'sql-login-params
+    :group 'SQL)
+
+  (sql-set-product-feature 'snowflake
+                           :sqli-login 'my-sql-snowflake-login-params)
+
+  (defcustom my-sql-snowflake-options
+    '("--option" "auto_completion=false"
+      "--option" "friendly=false"
+      "--option" "progress_bar=false"
+      "--option" "wrap=false")
+    "List of additional options for `sql-snowflake-program'."
+    :type '(repeat string)
+    :group 'SQL)
+
+  (sql-set-product-feature 'snowflake
+                           :sqli-options 'my-sql-snowflake-options)
+
+  (defun my-sql-comint-snowflake (product options &optional buf-name)
+    "Connect to Snowflake in a comint buffer."
+    (let ((params
+           (append
+            (if (not (string= "" sql-user))
+                (list "--username" sql-user))
+            ;; TODO: make password work better
+            (if (not (string= "" sql-password))
+                '())
+            (if (not (string= "" sql-database))
+                (list "--dbname" sql-database))
+            (if (not (string= "" sql-server))
+                (list "--host" sql-server))
+            (if (not (string= "" sql-account))
+                (list "--accountname" sql-account))
+            options)))
+      (sql-comint product params buf-name)))
+
+  (sql-set-product-feature 'snowflake
+                           :sqli-comint-func 'my-sql-comint-snowflake)
+
+  )
+
+;; ==========================================================================
 
 ;; misc commands --------------------------------------------------------------
 (defun my/hide-dos-eol ()
