@@ -125,6 +125,7 @@ This function should only modify configuration layer settings."
      beacon
      dired-git-info
      diredfl
+     eat
      envrc
      fold-this
      flycheck-popup-tip
@@ -1386,6 +1387,9 @@ before packages are loaded."
   (evil-define-key nil helpful-mode-map "q" #'kill-buffer-and-window)
   (evil-define-key nil help-mode-map "q" #'kill-buffer-and-window)
   (evil-define-key '(normal motion) magit-mode-map "q" #'kill-buffer-and-window)
+
+  ;; experimenting...
+  (evil-define-key nil special-mode-map "q" #'kill-buffer-and-window)
 
   ;; make C-k work in ivy/insert (and elsewhere, probably)
   (evil-define-key 'insert 'global (kbd "C-k") nil)

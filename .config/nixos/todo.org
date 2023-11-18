@@ -12,6 +12,6 @@
 - [-] firefox
   - [X] tridactyl native
   - [ ] C-i (editor) doesn't work
-  - [ ] scroll speed
+  - [x] scroll speed
   - [ ] "auto" scroll
-  - [ ] theme
+  - [ ] theme?

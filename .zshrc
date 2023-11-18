@@ -46,6 +46,8 @@ else
     alias open="xdg-open"
     alias cbcopy="xclip -in -selection clipboard"
     alias cbpaste="xclip -out -selection clipboard"
+    alias sudo="sudo " # https://askubuntu.com/a/22043
+    alias my-nixos-rebuild="sudo nixos-rebuild switch --impure --flake ~/.config/nixos"
 fi
 
 alias dconf-dump="dconf dump / | vim -R -c 'set ft=dosini'"
@@ -53,8 +55,12 @@ alias dconf-edit="vim $HOME/.config/dconf-user.conf"
 alias dconf-load="dconf load / < $HOME/.config/dconf-user.conf"
 
 
-function sync-to-kodi {
+function rsync-to-kodi {
     rsync --recursive --verbose --progress $1 kodi:/storage/tvshows
+}
+
+function rsync-backup {
+    rsync --archive --recursive --verbose --progress $1 $2
 }
 
 # https://github.com/TheLocehiliosan/yadm/issues/33

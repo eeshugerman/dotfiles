@@ -44,6 +44,12 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  networking.extraHosts =
+    ''
+      192.168.1.1 router.home
+      192.168.1.3 kodi.home
+    '';
+
   # Set your time zone.
   time.timeZone = "America/New_York";
 
@@ -111,6 +117,7 @@
       direnv
       dmidecode
       docker
+      chromium
       emacs29
       git
       gnome.gnome-tweaks
@@ -119,6 +126,7 @@
       gnomeExtensions.pano
       gnomeExtensions.xremap # needed in addition to the module
       jetbrains-mono
+      powertop
       unzip
       vim
       yadm
@@ -161,7 +169,7 @@
   # services.openssh.enable = true;
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [ 9222 ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
