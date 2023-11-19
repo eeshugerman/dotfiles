@@ -1791,7 +1791,18 @@ before packages are loaded."
   (sql-set-product-feature 'snowflake
                            :input-filter 'my-sql-snowflake-input-filter)
 
-  ;; (sql-set-product-feature 'snowflake :prompt-length 7)
+  ;; TODO: do these buffer/mode-locally in hook
+  (defun my-sql-snowflake-remove-junk (output-string)
+    (thread-last output-string
+                 (replace-regexp-in-string (rx (= 7 "\r\n")) "")
+                 (replace-regexp-in-string (rx (= 80 space) "\r\r") "")))
+  (add-to-list 'comint-preoutput-filter-functions #'my-sql-snowflake-remove-junk)
+  ;; snowsql truncates output to terminal width, but we don't want it to.
+  ;; comint sets terminal width based on window-width.
+  (defun my/override-window-width (func &rest args)
+    (cl-letf (((symbol-function 'window-width) (lambda () (expt 10 4))))
+      (apply func args)))
+  (advice-add 'comint-term-environment :around #'my/override-window-width)
 
 
   (defcustom my-sql-snowflake-login-params '(user password server database account)
@@ -1820,9 +1831,6 @@ before packages are loaded."
            (append
             (if (not (string= "" sql-user))
                 (list "--username" sql-user))
-            ;; TODO: make password work better
-            (if (not (string= "" sql-password))
-                '())
             (if (not (string= "" sql-database))
                 (list "--dbname" sql-database))
             (if (not (string= "" sql-server))
@@ -1830,7 +1838,8 @@ before packages are loaded."
             (if (not (string= "" sql-account))
                 (list "--accountname" sql-account))
             options)))
-      (sql-comint product params buf-name)))
+      (with-environment-variables (("SNOWSQL_PWD" sql-password))
+        (sql-comint product params buf-name))))
 
   (sql-set-product-feature 'snowflake
                            :sqli-comint-func 'my-sql-comint-snowflake)
@@ -2007,3 +2016,6 @@ TODO: messes with ivy-posframe background color?"
                   "--ngProbeLocations" ng-node-modules-path
                   "--tsProbeLocations" ng-node-modules-path
                   "--stdio")))))
+
+(defun my/1password-read (url)
+  (string-trim (shell-command-to-string (format "op read '%s'" url))))
