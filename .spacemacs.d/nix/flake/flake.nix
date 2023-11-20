@@ -32,7 +32,7 @@
             nodePackages.vscode-langservers-extracted # provides html, css, json, eslint (but see note re: eslint in my/install-external-deps)
             nodePackages.yaml-language-server
             nodejs # not 100% sure this is needed
-            rnix-lsp
+            # rnix-lsp
             shfmt
             vscode-extensions.angular.ng-template
           ];
