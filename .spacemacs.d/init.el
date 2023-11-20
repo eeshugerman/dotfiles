@@ -121,16 +121,19 @@ This function should only modify configuration layer settings."
    ;; may need to delete package dir in ~/.emacs.d/elpa to replace
    '(
      ox-reveal
+     ox-pandoc
      beacon
      dired-git-info
      diredfl
-     eat
+     ;; eat
+     ;; coterm
      envrc
      fold-this
      flycheck-popup-tip
      flycheck-posframe
      gcmh
      guix
+     just-mode
      pacfiles-mode
      solaire-mode
      symex
@@ -166,12 +169,16 @@ This function should only modify configuration layer settings."
                  :fetcher github
                  :repo "pimeys/emacs-prisma-mode"))
 
+     ;; (dap-mode
+     ;;  :location (recipe
+     ;;             :fetcher github
+     ;;             :repo "jeff-phil/dap-mode-PR"
+     ;;             :branch "vscode-js-debug-feature"))
      (dap-mode
       :location (recipe
                  :fetcher github
-                 :repo "jeff-phil/dap-mode-PR"
-                 :branch "vscode-js-debug-feature"))
-
+                 :repo "emacs-lsp/dap-mode"
+                 :commit "755845ae053bbfdd3f7b3dca13efa4be480370b5"))
 
      )
 
@@ -637,7 +644,7 @@ It should only modify the values of Spacemacs settings."
    ;; Color highlight trailing whitespace in all prog-mode and text-mode derived
    ;; modes such as c++-mode, python-mode, emacs-lisp, html-mode, rst-mode etc.
    ;; (default t)
-   dotspacemacs-show-trailing-whitespace t
+   dotspacemacs-show-trailing-whitespace (not my/work-flag)
 
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
@@ -1449,7 +1456,7 @@ before packages are loaded."
   ;; (add-hook 'typescript-mode-hook (lambda () (require 'dap-js)))
 
   ;; for testing https://github.com/emacs-lsp/dap-mode/pull/736 :
-  (add-hook 'typescript-mode-hook (lambda () (require 'dap-js-debug)))
+  ;; (add-hook 'typescript-mode-hook (lambda () (require 'dap-js-debug)))
 
   ;; prettier --------------------------------------------------------------------
   (setq typescript-fmt-tool 'prettier
@@ -1930,6 +1937,15 @@ TODO: messes with ivy-posframe background color?"
   (if my/prosey
     (my/toggle-prosey-off)
     (my/toggle-prosey-on)))
+
+(defun my/create-new-project (dir)
+  (interactive "sdirectory name? ")
+  (let ((path (f-join "~/devel" dir)))
+    (make-empty-file (f-join path "README.md") t)
+    (let ((default-directory path))
+      (shell-command "git init"))
+    (projectile-add-known-project path)
+    ))
 
 (defun my/clone-new-project (url)
   (interactive "surl? ")
