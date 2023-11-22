@@ -1764,9 +1764,10 @@ before packages are loaded."
 
 
   ;; ==========================================================================
-  ;; snowflake sql support (wip)
+  ;; snowflake sql support
 
   (require 'sql)
+
   (defcustom my-sql-snowflake-program "snowsql"
     "Command to start snowsql by Snowflake."
     :type 'file
@@ -1786,21 +1787,21 @@ before packages are loaded."
     :type '(repeat string)
     :group 'SQL)
 
+
   (defun my-sql-comint-snowflake (product options &optional buf-name)
     "Connect to Snowflake in a comint buffer."
-    (let ((params
-           (append
-            (if (not (string= "" sql-user))
-                (list "--username" sql-user))
-            (if (not (string= "" sql-database))
-                (list "--dbname" sql-database))
-            (if (not (string= "" sql-server))
-                (list "--host" sql-server))
-            (if (not (string= "" sql-account))
-                (list "--accountname" sql-account))
-            (if (and (boundp 'sql-warehouse) (not (string= "" sql-warehouse)))
-                (list "--warehouse" sql-warehouse))
-            options)))
+    (let ((params (append
+                   (if (not (string= "" sql-user))
+                       (list "--username" sql-user))
+                   (if (not (string= "" sql-database))
+                       (list "--dbname" sql-database))
+                   (if (not (string= "" sql-server))
+                       (list "--host" sql-server))
+                   (if (not (string= "" sql-account))
+                       (list "--accountname" sql-account))
+                   (if (and (boundp 'sql-warehouse) (not (string= "" sql-warehouse)))
+                       (list "--warehouse" sql-warehouse))
+                   options)))
       (with-environment-variables (("SNOWSQL_PWD" sql-password))
         (sql-comint product params buf-name))))
 
@@ -1810,7 +1811,7 @@ before packages are loaded."
                    :prompt-regexp (rx line-start (zero-or-more not-newline) ">")
                    :sqli-login 'my-sql-snowflake-login-params
                    :sqli-options 'my-sql-snowflake-options
-                   :sqli-comint-func 'my-sql-comint-snowflake
+                   :sqli-comint-func #'my-sql-comint-snowflake
                    )
 
   (defun my-sql-snowflake-remove-junk (output-string)
@@ -1830,6 +1831,7 @@ before packages are loaded."
   (add-to-list 'comint-preoutput-filter-functions #'my-sql-snowflake-remove-junk)
   (advice-add 'comint-term-environment :around #'my/override-window-width)
 
+
   ;; 2) Define font lock settings.  All ANSI keywords will be
   ;;    highlighted automatically, so only product specific keywords
   ;;    need to be defined here.
@@ -1843,7 +1845,49 @@ before packages are loaded."
   ;; (sql-set-product-feature 'snowflake
   ;;                          :syntax-alist ((?# . "_")))
 
-  
+  ;; ==========================================================================
+  ;; databricks sql support (wip)
+
+  (defcustom my-sql-databricks-program "dbsqlcli"
+    "Command to start dbsqlcli by Databricks."
+    :type 'file
+    :group 'SQL)
+
+  (defcustom my-sql-databricks-login-params '(server http-path access-token)
+    "Login parameters to needed to connect to Databricks SQL."
+    :type 'sql-login-params
+    :group 'SQL)
+
+  (defcustom my-sql-databricks-options
+    '()
+    "List of additional options for `sql-snowflake-program'."
+    :type '(repeat string)
+    :group 'SQL)
+
+  (defun my-sql-comint-databricks (product options &optional buf-name)
+    "Connect to Databricks SQL in a comint buffer."
+    (let ((params (append
+                   (if (not (string= "" sql-server))
+                       (list "--hostname" sql-server))
+                   (if (not (string= "" sql-http-path))
+                       (list "--http-path" sql-http-path))
+                   (if (not (string= "" sql-access-token))
+                       (list "--access-token" sql-access-token))
+                   options)))
+
+      (sql-comint product params buf-name)
+      (with-current-buffer buf-name
+        (process-send-string (current-buffer) "nopager;\n"))
+      ))
+
+  (sql-add-product 'databricks "Databricks"
+                   :free-software nil
+                   :sqli-program 'my-sql-databricks-program
+                   :prompt-regexp (rx line-start (zero-or-more not-newline) ">")
+                   :sqli-login 'my-sql-databricks-login-params
+                   :sqli-options 'my-sql-databricks-options
+                   :sqli-comint-func #'my-sql-comint-databricks)
+
   ;; ==========================================================================
 
   (when my/work-flag
@@ -2031,5 +2075,8 @@ TODO: messes with ivy-posframe background color?"
                   "--tsProbeLocations" ng-node-modules-path
                   "--stdio")))))
 
+;; TODO: annoying auth is needed on each call. what can we do about this?
+;; seems it wouldn't happen if called in process somehow:
+;; https://1password.community/discussion/138627/cli-keeps-prompting-for-authentication
 (defun my/1password-read (url)
   (string-trim (shell-command-to-string (format "op read '%s'" url))))
