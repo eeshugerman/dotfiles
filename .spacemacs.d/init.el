@@ -180,6 +180,9 @@ This function should only modify configuration layer settings."
                  :repo "emacs-lsp/dap-mode"
                  :commit "755845ae053bbfdd3f7b3dca13efa4be480370b5"))
 
+     (sql-snowflake
+      :location "~/devel/sql-snowflake.el")
+
      )
 
    ;; A list of packages that cannot be updated.
@@ -910,6 +913,8 @@ before packages are loaded."
   ;; (use-package minimap)
 
   (use-package dconf-dotfile)
+
+  (use-package sql-snowflake)
 
   ;; not working :(
   ;; (use-package undo-hl
@@ -1766,84 +1771,6 @@ before packages are loaded."
   ;; ==========================================================================
   ;; snowflake sql support
 
-  (require 'sql)
-
-  (defcustom my-sql-snowflake-program "snowsql"
-    "Command to start snowsql by Snowflake."
-    :type 'file
-    :group 'SQL)
-
-  (defcustom my-sql-snowflake-login-params '(user password server database account warehouse)
-    "Login parameters to needed to connect to Snowflake."
-    :type 'sql-login-params
-    :group 'SQL)
-
-  (defcustom my-sql-snowflake-options
-    '("--option" "auto_completion=false"
-      "--option" "friendly=false"
-      "--option" "progress_bar=false"
-      "--option" "wrap=false")
-    "List of additional options for `sql-snowflake-program'."
-    :type '(repeat string)
-    :group 'SQL)
-
-
-  (defun my-sql-comint-snowflake (product options &optional buf-name)
-    "Connect to Snowflake in a comint buffer."
-    (let ((params (append
-                   (if (not (string= "" sql-user))
-                       (list "--username" sql-user))
-                   (if (not (string= "" sql-database))
-                       (list "--dbname" sql-database))
-                   (if (not (string= "" sql-server))
-                       (list "--host" sql-server))
-                   (if (not (string= "" sql-account))
-                       (list "--accountname" sql-account))
-                   (if (and (boundp 'sql-warehouse) (not (string= "" sql-warehouse)))
-                       (list "--warehouse" sql-warehouse))
-                   options)))
-      (with-environment-variables (("SNOWSQL_PWD" sql-password))
-        (sql-comint product params buf-name))))
-
-  (sql-add-product 'snowflake "Snowflake"
-                   :free-software nil
-                   :sqli-program 'my-sql-snowflake-program
-                   :prompt-regexp (rx line-start (zero-or-more not-newline) ">")
-                   :sqli-login 'my-sql-snowflake-login-params
-                   :sqli-options 'my-sql-snowflake-options
-                   :sqli-comint-func #'my-sql-comint-snowflake
-                   )
-
-  (defun my-sql-snowflake-remove-junk (output-string)
-    (thread-last output-string
-                 (replace-regexp-in-string (rx (= 7 "\r\n")) "")
-                 (replace-regexp-in-string (rx (= 80 space) "\r\r") "")))
-
-  ;; snowsql truncates output to terminal width, but we don't want it to.
-  ;; comint sets terminal width based on window-width.
-  (defun my/override-window-width (func &rest args)
-    (cl-letf (((symbol-function 'window-width) (lambda () (expt 10 4))))
-      (apply func args)))
-
-
-  ;; TODO: do these buffer/mode-locally in hook
-  ;;   should be able to use `sql-interactive-mode-hook', checking `sql-product' in the hook thunk
-  (add-to-list 'comint-preoutput-filter-functions #'my-sql-snowflake-remove-junk)
-  (advice-add 'comint-term-environment :around #'my/override-window-width)
-
-
-  ;; 2) Define font lock settings.  All ANSI keywords will be
-  ;;    highlighted automatically, so only product specific keywords
-  ;;    need to be defined here.
-  ;; (defvar my-sql-mode-snowflake-font-lock-keywords
-  ;;   '(("\\b\\(red\\|orange\\|yellow\\)\\b" . font-lock-keyword-face))
-  ;;   "Snowflake SQL keywords used by font-lock.")
-  ;; (sql-set-product-feature 'snowflake :font-lock 'my-sql-mode-snowflake-font-lock-keywords)
-
-  ;; ;; 3) Define any special syntax characters including comments and
-  ;; ;;    identifier characters.
-  ;; (sql-set-product-feature 'snowflake
-  ;;                          :syntax-alist ((?# . "_")))
 
   ;; ==========================================================================
   ;; databricks sql support (wip)
