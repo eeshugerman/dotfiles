@@ -119,7 +119,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages
    ;; for :location format, see https://github.com/melpa/melpa/#recipe-format
    ;; may need to delete package dir in ~/.emacs.d/elpa to replace
-   '(
+   `(
      ox-reveal
      ox-pandoc
      beacon
@@ -180,8 +180,10 @@ This function should only modify configuration layer settings."
                  :repo "emacs-lsp/dap-mode"
                  :commit "755845ae053bbfdd3f7b3dca13efa4be480370b5"))
 
-     (sql-snowflake
-      :location "~/devel/sql-snowflake.el")
+     ,@(if my/work-flag
+            '((sql-snowflake :location "~/devel/sql-snowflake.el")
+              (sql-databricks :location "~/devel/sql-databricks.el"))
+          '())
 
      )
 
