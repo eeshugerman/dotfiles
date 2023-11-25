@@ -133,7 +133,7 @@
         dmidecode
         docker
         chromium
-        emacs29
+        emacs29-pgtk
         git
         gnome.gnome-tweaks
         gnomeExtensions.ddterm # no release for v44, using build from github for now (which isn't working)

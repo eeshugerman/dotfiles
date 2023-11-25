@@ -1,7 +1,8 @@
 - [X] nixos
   - [X] fewer images in systemd-boot screen
-- [X] emacs
+- [-] emacs
   - [X] get magit working with yadm
+  - [ ] pgtk
 - [-] gnome
   - [X] scroll wheel direction
   - [ ] emacs/emacsclient icons
