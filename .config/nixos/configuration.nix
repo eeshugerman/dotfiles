@@ -44,11 +44,10 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
-  networking.extraHosts =
-    ''
-      192.168.1.1 router.home
-      192.168.1.3 kodi.home
-    '';
+  networking.extraHosts = ''
+    192.168.1.1 router.home
+    192.168.1.3 kodi.home
+  '';
 
   # Set your time zone.
   time.timeZone = "America/New_York";
@@ -112,26 +111,41 @@
     description = "Elliott Shugerman";
     extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.zsh;
-    packages = with pkgs; [
-      bitwarden
-      direnv
-      dmidecode
-      docker
-      chromium
-      emacs29
-      git
-      gnome.gnome-tweaks
-      gnomeExtensions.ddterm # no release for v44, using build from github for now (which isn't working)
-      gnomeExtensions.night-theme-switcher
-      gnomeExtensions.pano
-      gnomeExtensions.xremap # needed in addition to the module
-      jetbrains-mono
-      powertop
-      unzip
-      vim
-      yadm
-      zsh
-    ];
+    packages = let
+      # TODO: should this be flake input instead? or something?
+      nixosUnstable = fetchGit {
+        url = "https://github.com/nixos/nixpkgs";
+        # just before gnome 45 PR
+        rev = "489d27a23593088f2e2c1ce99ac5b98816996375";
+      };
+      pkgsUnstable =
+        (import nixosUnstable { config = config.nixpkgs.config; }).pkgs;
+      selectedPkgsUnstable = with pkgsUnstable;
+        [
+          # see https://github.com/NixOS/nixpkgs/issues/253295
+          gnomeExtensions.night-theme-switcher
+        ];
+      selectedPkgsStable = with pkgs; [
+        bitwarden
+        direnv
+        dmidecode
+        docker
+        chromium
+        emacs29
+        git
+        gnome.gnome-tweaks
+        gnomeExtensions.ddterm # no release for v44, using build from github for now (which isn't working)
+        gnomeExtensions.pano
+        gnomeExtensions.xremap # needed in addition to the module
+        jetbrains-mono
+        powertop
+        ripgrep
+        unzip
+        vim
+        yadm
+        zsh
+      ];
+    in selectedPkgsUnstable ++ selectedPkgsStable;
   };
 
   # Enable automatic login for the user.
@@ -181,17 +195,5 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
-
-  # for night-theme-switcher issue https://github.com/NixOS/nixpkgs/issues/253295
-  # from https://github.com/NixOS/nixpkgs/issues/228504#issuecomment-1678734236
-  nixpkgs.overlays = let
-    nixos-unstable = fetchTarball
-      "https://github.com/nixos/nixpkgs/archive/nixos-unstable.tar.gz";
-  in [
-    (self: super: {
-      inherit (import nixos-unstable { config = config.nixpkgs.config; })
-        gnomeExtensions;
-    })
-  ];
 
 }
