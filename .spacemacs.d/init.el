@@ -916,7 +916,7 @@ before packages are loaded."
 
   (use-package dconf-dotfile)
 
-  (use-package sql-snowflake)
+  (use-package sql-snowflake :if my/work-flag)
 
   ;; not working :(
   ;; (use-package undo-hl
