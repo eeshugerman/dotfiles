@@ -33,6 +33,7 @@
             nodePackages.yaml-language-server
             nodejs # not 100% sure this is needed
             # rnix-lsp
+            rust-analyzer
             shfmt
             vscode-extensions.angular.ng-template
           ];
