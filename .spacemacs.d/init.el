@@ -945,8 +945,6 @@ before packages are loaded."
   ;; misc/general --------------------------------------------------------------
   (server-start)
 
-  (my/install-external-deps)
-
   (spacemacs/set-leader-keys
     ":"  'eval-expression
     "ow" 'eww
