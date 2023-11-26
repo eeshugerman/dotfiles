@@ -3,6 +3,7 @@
 - [-] emacs
   - [X] get magit working with yadm
   - [X] pgtk
+  - [ ] shell is bash?
 - [-] gnome
   - [X] scroll wheel direction
   - [ ] emacs/emacsclient icons

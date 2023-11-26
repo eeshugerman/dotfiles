@@ -40,6 +40,6 @@ keymap:
 
   - name: Super-f find in Firefox
     application:
-      only: ['Firefox', 'firefoxdeveloperedition']
+      only: ['Firefox', 'firefoxdeveloperedition', 'firefox']
     remap:
       Super-f: [ALT-KEY_E, ALT-KEY_F]

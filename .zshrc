@@ -47,6 +47,7 @@ else
     alias cbcopy="xclip -in -selection clipboard"
     alias cbpaste="xclip -out -selection clipboard"
     alias sudo="sudo " # https://askubuntu.com/a/22043
+    alias my-nixos-update="nix flake update --override-input xremap-flake/xremap 'github:eeshugerman/xremap?ref=device-aware-config'"
     alias my-nixos-rebuild="sudo nixos-rebuild switch --impure --flake ~/.config/nixos"
 fi
 

@@ -34,7 +34,7 @@
         # These only work with home manager, not the vanilla firefox nixos module,
         # because the latter uses policies which only works for certain prefs.
         "apz.gtk.pangesture.delta_mode" = 2;
-        "apz.gtk.pangesture.pixel_delta_mode_multiplier" = 25;
+        "apz.gtk.pangesture.pixel_delta_mode_multiplier" = 20;
       };
     };
     # workaround for dev edition profile weirdness
