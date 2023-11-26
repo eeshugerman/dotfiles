@@ -2,7 +2,7 @@
   - [X] fewer images in systemd-boot screen
 - [-] emacs
   - [X] get magit working with yadm
-  - [ ] pgtk
+  - [X] pgtk
 - [-] gnome
   - [X] scroll wheel direction
   - [ ] emacs/emacsclient icons
