@@ -182,7 +182,8 @@ This function should only modify configuration layer settings."
 
      ,@(if my/work-flag
             '((sql-snowflake :location "~/devel/sql-snowflake.el")
-              (sql-databricks :location "~/devel/sql-databricks.el"))
+              (sql-databricks :location "~/devel/sql-databricks.el")
+              sql-trino)
           '())
 
      )
@@ -924,6 +925,7 @@ before packages are loaded."
 
   (use-package sql-snowflake :if my/work-flag)
   (use-package sql-databricks :if my/work-flag)
+  (use-package sql-trino :if my/work-flag)
 
   ;; not working :(
   ;; (use-package undo-hl
