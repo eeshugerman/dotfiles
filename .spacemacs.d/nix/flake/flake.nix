@@ -27,6 +27,7 @@
             nodePackages.bash-language-server
             nodePackages.pyright
             nodePackages.sql-formatter
+            nodePackages.typescript
             nodePackages.typescript-language-server
             nodePackages.vscode-html-languageserver-bin # do we need this given the below?
             nodePackages.vscode-langservers-extracted # provides html, css, json, eslint (but see note re: eslint in my/install-external-deps)

@@ -125,7 +125,7 @@ This function should only modify configuration layer settings."
      beacon
      dired-git-info
      diredfl
-     ;; eat
+     eat
      ;; coterm
      envrc
      fold-this

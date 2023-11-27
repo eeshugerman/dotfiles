@@ -81,5 +81,7 @@ if [ "$(uname)" = "Darwin" ]; then
     export HOMEBREW_NO_AUTO_UPDATE=1
     alias fix-org-data-sync="launchctl unload -w Library/LaunchAgents/me.org-data-git-sync.plist && launchctl load -w Library/LaunchAgents/me.org-data-git-sync.plist"
     alias fudns='sudo dscacheutil -flushcache; sleep 2; sudo killall -HUP mDNSResponder;'
+    # i think this is added by the multi-user nix installer
+    # it adds ~/.nix-profile to PATH (plus does other stuff, presumably)
     source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
 fi
