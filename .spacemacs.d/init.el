@@ -1960,5 +1960,6 @@ TODO: messes with ivy-posframe background color?"
 ;; TODO: annoying auth is needed on each call. what can we do about this?
 ;; seems it wouldn't happen if called in process somehow:
 ;; https://1password.community/discussion/138627/cli-keeps-prompting-for-authentication
+;; or can turn off app integration and use `op signing', but then master password is required
 (defun my/1password-read (url)
   (string-trim (shell-command-to-string (format "op read '%s'" url))))
