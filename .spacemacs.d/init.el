@@ -917,6 +917,7 @@ before packages are loaded."
   (use-package dconf-dotfile)
 
   (use-package sql-snowflake :if my/work-flag)
+  (use-package sql-databricks :if my/work-flag)
 
   ;; not working :(
   ;; (use-package undo-hl
@@ -1765,57 +1766,8 @@ before packages are loaded."
   ;; compilation-mode -------------------------------------------------------------
   ;; TODO: don't be weird about windows
 
-
-
-
   ;; ==========================================================================
-  ;; snowflake sql support
 
-
-  ;; ==========================================================================
-  ;; databricks sql support (wip)
-
-  (defcustom my-sql-databricks-program "dbsqlcli"
-    "Command to start dbsqlcli by Databricks."
-    :type 'file
-    :group 'SQL)
-
-  (defcustom my-sql-databricks-login-params '(server http-path access-token)
-    "Login parameters to needed to connect to Databricks SQL."
-    :type 'sql-login-params
-    :group 'SQL)
-
-  (defcustom my-sql-databricks-options
-    '()
-    "List of additional options for `sql-snowflake-program'."
-    :type '(repeat string)
-    :group 'SQL)
-
-  (defun my-sql-comint-databricks (product options &optional buf-name)
-    "Connect to Databricks SQL in a comint buffer."
-    (let ((params (append
-                   (if (not (string= "" sql-server))
-                       (list "--hostname" sql-server))
-                   (if (not (string= "" sql-http-path))
-                       (list "--http-path" sql-http-path))
-                   (if (not (string= "" sql-access-token))
-                       (list "--access-token" sql-access-token))
-                   options)))
-
-      (sql-comint product params buf-name)
-      (with-current-buffer buf-name
-        (process-send-string (current-buffer) "nopager;\n"))
-      ))
-
-  (sql-add-product 'databricks "Databricks"
-                   :free-software nil
-                   :sqli-program 'my-sql-databricks-program
-                   :prompt-regexp (rx line-start (zero-or-more not-newline) ">")
-                   :sqli-login 'my-sql-databricks-login-params
-                   :sqli-options 'my-sql-databricks-options
-                   :sqli-comint-func #'my-sql-comint-databricks)
-
-  ;; ==========================================================================
 
   (when my/work-flag
     (load (file-truename "~/.spacemacs.d/day-job.el") nil nil t))
