@@ -697,6 +697,9 @@ This function defines the environment variables for your Emacs session. By
 default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
+
+  ;; TODO: try getting rid of this (as the file header suggests). It causes
+  ;; occasional problems.
   (spacemacs/load-spacemacs-env)
 )
 
@@ -709,7 +712,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   (if my/macos-flag
       (setq insert-directory-program "/usr/local/bin/gls"))
-
 
   (setq-default
    ;; misc -- TODO: organize these
@@ -833,7 +835,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    treemacs-sorting 'alphabetic-asc
    treemacs-use-filewatch-mode t
-   treemacs-use-git-mode 'extended
+   treemacs-use-git-mode 'deferred
+   treemacs-deferred-git-apply-delay 0.25
    treemacs-use-follow-mode nil
    ;; https://github.com/Alexander-Miller/cfrs/issues/4 is fixed but this is still buggy
    treemacs-read-string-input (if (not my/macos-flag) 'from-minibuffer 'from-child-frame)
@@ -868,10 +871,13 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
+  (spacemacs/toggle-debug-on-error-on)
+
+  (my/install-external-deps)
+
   (with-current-buffer spacemacs-buffer-name
     (spacemacs/toggle-truncate-lines-on))
 
-  (spacemacs/toggle-debug-on-error-on)
 
   ;; temp ---------------------------------------------------------------------
   ;; fixes js org blocks -- why??
@@ -1114,12 +1120,12 @@ before packages are loaded."
   ;; can't do this in shell-mode-hook because `comint-read-input-ring' runs before that
   (advice-add 'shell-mode :after #'my/fix-multiline-zsh-history-items)
 
-  (defun pop-shell-at-project-root-or-home ()
+  (defun my/pop-shell-at-project-root-or-home ()
     (interactive)
     (if (projectile-project-p)
         (spacemacs/projectile-shell-pop)
       (spacemacs/default-pop-shell)))
-  (spacemacs/set-leader-keys "'" #'pop-shell-at-project-root-or-home)
+  (spacemacs/set-leader-keys "'" #'my/pop-shell-at-project-root-or-home)
 
   (add-hook 'shell-mode-hook (lambda () (setq-local comint-process-echoes t)))
 
@@ -1768,11 +1774,8 @@ before packages are loaded."
 
   ;; ==========================================================================
 
-
   (when my/work-flag
-    (load (file-truename "~/.spacemacs.d/day-job.el") nil nil t))
-
-  )
+    (load (file-truename "~/.spacemacs.d/day-job.el") nil nil t)))
 
 ;; ==========================================================================
 

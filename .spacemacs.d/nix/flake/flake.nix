@@ -24,7 +24,7 @@
             # pkgs.nerdfonts # didn't seem to work :/ also is slow
             ispell
             nixfmt
-            nodePackages.bash-language-server # configuration needed?
+            nodePackages.bash-language-server
             nodePackages.pyright
             nodePackages.sql-formatter
             nodePackages.typescript-language-server
@@ -32,10 +32,13 @@
             nodePackages.vscode-langservers-extracted # provides html, css, json, eslint (but see note re: eslint in my/install-external-deps)
             nodePackages.yaml-language-server
             nodejs # not 100% sure this is needed
+            python312 # for treemacs-use-git-mode 'extended or 'deferred
             # rnix-lsp
             rust-analyzer
             shfmt
             vscode-extensions.angular.ng-template
+            # for yaml-ts-mode, but not working, more config needed probably
+            tree-sitter-grammars.tree-sitter-yaml
           ];
         };
       });
