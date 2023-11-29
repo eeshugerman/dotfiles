@@ -39,7 +39,8 @@
             shfmt
             vscode-extensions.angular.ng-template
             # for yaml-ts-mode, but not working, more config needed probably
-            tree-sitter-grammars.tree-sitter-yaml
+            # tree-sitter-grammars.tree-sitter-yaml
+            (tree-sitter.withPlugins (p: [ p.tree-sitter-yaml ]))
           ];
         };
       });

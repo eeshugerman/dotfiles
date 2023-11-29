@@ -1602,7 +1602,8 @@ before packages are loaded."
   (setq docker-pop-to-buffer-action '(display-buffer-same-window))
 
   ;; yaml ---------------------------------------------------------------------
-  (add-hook 'yaml-mode-hook (lambda () (origami-mode +1)))
+  (add-to-list 'major-mode-remap-alist '(yaml-mode . yaml-ts-mode))
+  (add-hook 'yaml-ts-mode-hook (lambda () (origami-mode +1)))
 
   ;; symex --------------------------------------------------------------------
   (evil-define-key '(normal insert) symex-mode-map
@@ -1744,12 +1745,6 @@ before packages are loaded."
 
   ;; verb ---------------------------------------------------------------------
   (setq verb-auto-kill-response-buffers t)
-
-  ;; treesit ------------------------------------------------------------------
-  ;; TODO: install with nix instead
-  (when (treesit-available-p)
-    ;; https://github.com/casouri/tree-sitter-module/releases
-    (setq treesit-extra-load-path (list (f-expand "~/.local/lib/libtree-sitter"))))
 
   ;; rust ---------------------------------------------------------------------
   ;; `rust--format-call' needs to kill the *rustfmt* buffer when it's done, but for
@@ -1942,9 +1937,13 @@ TODO: messes with ivy-posframe background color?"
 
 
     ;; --- config ---
+    (add-to-list 'treesit-extra-load-path profile-path)
+    (add-to-list 'treesit-load-name-override-list '(yaml "yaml" "tree_sitter_yaml"))
+
     (let ((profile-bin-path (f-join profile-path "bin")))
       (add-to-list 'exec-path profile-bin-path)
       (setenv "PATH" (format "%s:%s" profile-bin-path (getenv "PATH"))))
+
 
     ;; eslint from nix's vscode-langservers-extracted is not working -- see *eslint::stderr*.
     ;; use lsp-install-server instead and leave this commented out to use the bin it installs
