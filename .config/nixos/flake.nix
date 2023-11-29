@@ -1,15 +1,8 @@
-# sudo nixos-rebuild switch --impure --flake ~/.config/nixos
 {
   description = "My NixOS configuration flake";
   inputs = {
-    # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
-    # nixpkgs.url = "path:/home/elliott/devel/nixpkgs";
-
-    # nix flake lock --override-input xremap-flake/xremap 'github:eeshugerman/xremap?ref=device-aware-config'
     xremap-flake.url = "github:xremap/nix-flake";
-
-    # https://nix-community.github.io/home-manager/index.html#sec-flakes-nixos-module
     home-manager.url = "github:nix-community/home-manager/release-23.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
