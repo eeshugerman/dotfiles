@@ -111,41 +111,27 @@
     description = "Elliott Shugerman";
     extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.zsh;
-    packages = let
-      # TODO: should this be flake input instead? or something?
-      nixosUnstable = fetchGit {
-        url = "https://github.com/nixos/nixpkgs";
-        # just before gnome 45 PR
-        rev = "489d27a23593088f2e2c1ce99ac5b98816996375";
-      };
-      pkgsUnstable =
-        (import nixosUnstable { config = config.nixpkgs.config; }).pkgs;
-      selectedPkgsUnstable = with pkgsUnstable;
-        [
-          # see https://github.com/NixOS/nixpkgs/issues/253295
-          gnomeExtensions.night-theme-switcher
-        ];
-      selectedPkgsStable = with pkgs; [
-        bitwarden
-        direnv
-        dmidecode
-        docker
-        chromium
-        emacs29-pgtk
-        git
-        gnome.gnome-tweaks
-        gnomeExtensions.ddterm # no release for v44, using build from github for now (which isn't working)
-        gnomeExtensions.pano
-        gnomeExtensions.xremap # needed in addition to the module
-        jetbrains-mono
-        powertop
-        ripgrep
-        unzip
-        vim
-        yadm
-        zsh
-      ];
-    in selectedPkgsUnstable ++ selectedPkgsStable;
+    packages = with pkgs; [
+      bitwarden
+      direnv
+      dmidecode
+      docker
+      chromium
+      emacs29-pgtk
+      git
+      gnome.gnome-tweaks
+      gnomeExtensions.ddterm # not working on 45 so far :(
+      gnomeExtensions.pano
+      gnomeExtensions.xremap # needed in addition to the module
+      gnomeExtensions.night-theme-switcher
+      jetbrains-mono
+      powertop
+      ripgrep
+      unzip
+      vim
+      yadm
+      zsh
+    ];
   };
 
   # commented-out because prompts for password after login anyway
