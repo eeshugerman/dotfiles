@@ -125,6 +125,7 @@
       gnomeExtensions.pano
       gnomeExtensions.xremap # needed in addition to the module
       jetbrains-mono
+      libsmbios # dell fan control
       powertop
       ripgrep
       unzip
@@ -143,6 +144,7 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.nvidia.acceptLicense = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
