@@ -20,7 +20,7 @@
   programs.firefox = {
     enable = true;
     package = pkgs.firefox-devedition.override {
-      cfg = { enableTridactylNative = true; };
+      cfg = { nativeMessagingHosts.packages = [ pkgs.tridactyl-native ]; };
     };
     profiles.elliott = {
       id = 0;

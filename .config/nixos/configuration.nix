@@ -100,8 +100,7 @@
     #media-session.enable = true;
   };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+  services.fwupd.enable = true;
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
@@ -119,11 +118,12 @@
       chromium
       emacs29-pgtk
       git
+      gnome-firmware
       gnome.gnome-tweaks
       gnomeExtensions.ddterm # not working on 45 so far :(
+      gnomeExtensions.night-theme-switcher
       gnomeExtensions.pano
       gnomeExtensions.xremap # needed in addition to the module
-      gnomeExtensions.night-theme-switcher
       jetbrains-mono
       powertop
       ripgrep

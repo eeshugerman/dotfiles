@@ -48,6 +48,7 @@ else
     alias cbpaste="xclip -out -selection clipboard"
     alias sudo="sudo " # https://askubuntu.com/a/22043
     alias my-nixos-rebuild="sudo nixos-rebuild switch --impure --flake ~/.config/nixos"
+    alias my-nix-gc="nix-collect-garbage --delete-older-than 15d"
 fi
 
 alias dconf-dump="dconf dump / | vim -R -c 'set ft=dosini'"
