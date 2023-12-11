@@ -120,6 +120,9 @@
       git
       gnome-firmware
       gnome.gnome-tweaks
+      # not working, but maybe just need to wait for this fix to be released?
+      # https://github.com/NixOS/nixpkgs/pull/272555
+      # https://github.com/NixOS/nixpkgs/pull/272657
       gnomeExtensions.ddterm # not working on 45 so far :(
       gnomeExtensions.night-theme-switcher
       gnomeExtensions.pano
@@ -132,6 +135,8 @@
       vim
       yadm
       zsh
+      zeroad
+      xorg.xeyes
     ];
   };
 
