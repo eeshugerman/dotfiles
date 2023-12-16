@@ -108,7 +108,7 @@
   users.users.elliott = {
     isNormalUser = true;
     description = "Elliott Shugerman";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker"];
     shell = pkgs.zsh;
     packages = with pkgs; [
       bitwarden
@@ -139,6 +139,8 @@
       xorg.xeyes
     ];
   };
+
+  virtualisation.docker.enable = true;
 
   # commented-out because prompts for password after login anyway
   # services.xserver.displayManager.autoLogin.enable = true;
