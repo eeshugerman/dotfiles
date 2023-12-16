@@ -126,7 +126,6 @@ This function should only modify configuration layer settings."
      dired-git-info
      diredfl
      eat
-     ;; coterm
      envrc
      fold-this
      flycheck-popup-tip
@@ -139,41 +138,16 @@ This function should only modify configuration layer settings."
      symex
      minimap
      mustache-mode
-     ;; mini-frame
-
-     ;; not available on melpa for some reason
-     (ivy-nixos-options
-      :location (recipe
-                 :fetcher github
-                 :repo "travisbhartwell/nix-emacs"))
-
-
-
-     (dconf-dotfile
-      :location (recipe
-                 :fetcher github
-                 :repo "eeshugerman/dconf-dotfile.el"))
-     ;; (tree-sitter-langs
-     ;;  :location (recipe :fetcher local)
-     ;;
-     ;; (undo-hl
-     ;;  :location (recipe
-     ;;             :fetcher github
-     ;;             :repo "casouri/undo-hl"))
      highlight-indent-guides
-
      nerd-icons ;; for doom-modeline -- should be a dep?
+     ;; mini-frame
+     ;; undo-hl
+     ;; coterm
 
-     (prisma-mode
-      :location (recipe
-                 :fetcher github
-                 :repo "pimeys/emacs-prisma-mode"))
-
-     ;; (dap-mode
-     ;;  :location (recipe
-     ;;             :fetcher github
-     ;;             :repo "jeff-phil/dap-mode-PR"
-     ;;             :branch "vscode-js-debug-feature"))
+     (ivy-nixos-options
+      :location (recipe :fetcher github :repo "travisbhartwell/nix-emacs"))
+     (dconf-dotfile
+      :location (recipe :fetcher github :repo "eeshugerman/dconf-dotfile.el"))
      (dap-mode
       :location (recipe
                  :fetcher github
@@ -184,13 +158,11 @@ This function should only modify configuration layer settings."
            '((sql-snowflake :location "~/devel/sql-snowflake.el")
              (sql-databricks :location "~/devel/sql-databricks.el")
              sql-trino
-             )
-         '((nushell-mode
-            :location (recipe
-                       :fetcher github
-                       :repo "mrkkrp/nushell-mode"))))
+             (prisma-mode
+              :location (recipe :fetcher github :repo "pimeys/emacs-prisma-mode")))
 
-     )
+         '((nushell-mode
+            :location (recipe :fetcher github :repo "mrkkrp/nushell-mode")))))
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
