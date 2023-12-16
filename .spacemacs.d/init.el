@@ -181,10 +181,14 @@ This function should only modify configuration layer settings."
                  :commit "755845ae053bbfdd3f7b3dca13efa4be480370b5"))
 
      ,@(if my/work-flag
-            '((sql-snowflake :location "~/devel/sql-snowflake.el")
-              (sql-databricks :location "~/devel/sql-databricks.el")
-              sql-trino)
-          '())
+           '((sql-snowflake :location "~/devel/sql-snowflake.el")
+             (sql-databricks :location "~/devel/sql-databricks.el")
+             sql-trino
+             )
+         '((nushell-mode
+            :location (recipe
+                       :fetcher github
+                       :repo "mrkkrp/nushell-mode"))))
 
      )
 
