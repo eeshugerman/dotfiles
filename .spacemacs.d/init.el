@@ -162,7 +162,8 @@ This function should only modify configuration layer settings."
               :location (recipe :fetcher github :repo "pimeys/emacs-prisma-mode")))
 
          '((nushell-mode
-            :location (recipe :fetcher github :repo "mrkkrp/nushell-mode")))))
+            :location (recipe :fetcher github :repo "mrkkrp/nushell-mode"))
+           janet-mode)))
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -1738,6 +1739,37 @@ before packages are loaded."
 
   ;; nushell ------------------------------------------------------------------
   (set-face-foreground 'nushell-pay-attention-face (doom-color 'base6))
+
+  ;; janet -----------------------------------------------------------------------
+  ;; -- basic comint mode for janet TODO: upstream to janet-mode
+  (defvar janet-interpreter-command "janet")
+  (defvar janet-interpreter-arguments '("-s"))
+  (defvar janet-buffer-name "*Janet*")
+
+  (define-derived-mode inferior-janet-mode comint-mode "Inferior Janet"
+    (setq-local comint-prompt-regexp janet-prompt-regexp)
+    (setq mode-line-process '(": %s")) ;; idk what this does
+    (set-syntax-table janet-mode-syntax-table)
+    (comint-fontify-input-mode)
+    (setq-local comint-prompt-read-only t)
+    )
+
+  (defun run-janet ()
+    "Run an inferior instance of `janet' inside Emacs."
+    (interactive)
+    (let* ((buffer (get-buffer-create janet-buffer-name))
+           (proc-alive (comint-check-proc buffer))
+           (process (get-buffer-process buffer)))
+      ;; if the process is dead then re-create the process and reset the
+      ;; mode.
+      (unless proc-alive
+        (with-current-buffer buffer
+          (apply 'make-comint-in-buffer "Janet" buffer
+                 janet-interpreter-command nil janet-interpreter-arguments)
+          (inferior-janet-mode)))
+      ;; Regardless, provided we have a valid buffer, we pop to it.
+      (when buffer
+        (pop-to-buffer buffer))))
 
   ;; woman ---------------------------------------------------------------------
   ;; TODO: make woman less weird about windows
