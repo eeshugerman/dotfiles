@@ -884,7 +884,6 @@ before packages are loaded."
 
   (use-package symex)
 
-  (use-package prisma-mode)
 
   ;; doesn't play nice with ts-fold
   ;; (use-package highlight-indent-guides
@@ -902,6 +901,7 @@ before packages are loaded."
   (use-package sql-snowflake :if my/work-flag)
   (use-package sql-databricks :if my/work-flag)
   (use-package sql-trino :if my/work-flag)
+  (use-package prisma-mode :if my/work-flag)
 
   ;; not working :(
   ;; (use-package undo-hl
@@ -1580,6 +1580,7 @@ before packages are loaded."
   ;; yaml ---------------------------------------------------------------------
   (add-to-list 'major-mode-remap-alist '(yaml-mode . yaml-ts-mode))
   (add-hook 'yaml-ts-mode-hook (lambda () (origami-mode +1)))
+  (add-hook 'yaml-mode-hook #'spacemacs/toggle-spelling-checking-off)
 
   ;; symex --------------------------------------------------------------------
   (evil-define-key '(normal insert) symex-mode-map
@@ -1734,7 +1735,9 @@ before packages are loaded."
 
   ;; text ---------------------------------------------------------------------
   (add-hook 'text-mode-hook #'spacemacs/toggle-spelling-checking-on)
-  (add-hook 'yaml-mode-hook #'spacemacs/toggle-spelling-checking-off)
+
+  ;; nushell ------------------------------------------------------------------
+  (set-face-foreground 'nushell-pay-attention-face (doom-color 'base6))
 
   ;; woman ---------------------------------------------------------------------
   ;; TODO: make woman less weird about windows
