@@ -158,12 +158,11 @@ This function should only modify configuration layer settings."
            '((sql-snowflake :location "~/devel/sql-snowflake.el")
              (sql-databricks :location "~/devel/sql-databricks.el")
              sql-trino
-             (prisma-mode
-              :location (recipe :fetcher github :repo "pimeys/emacs-prisma-mode")))
+             (prisma-mode :location (recipe :fetcher github :repo "pimeys/emacs-prisma-mode")))
 
-         '((nushell-mode
-            :location (recipe :fetcher github :repo "mrkkrp/nushell-mode"))
-           janet-mode)))
+         '((nushell-mode :location (recipe :fetcher github :repo "mrkkrp/nushell-mode"))
+           janet-mode
+           (inf-janet :location (recipe :fetcher github :repo "velkyel/inf-janet")))))
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -866,25 +865,17 @@ before packages are loaded."
 
   ;; init standalone modes ----------------------------------------------------
   (use-package diredfl :config (diredfl-global-mode 1))
-
-  ;; (use-package beacon :config (beacon-mode 1))
-
   (use-package gcmh
     :init (setq gcmh-verbose nil
                 gcmh-low-cons-threshold (expt 10 3)
                 gcmh-high-cons-threshold (expt 10 8)
                 gcmh-idle-delay 15)
     :config (gcmh-mode 1))
-
   (use-package envrc
     :config (envrc-global-mode))
-
   (use-package guix)
-
   (use-package solaire-mode :config (solaire-global-mode 1))
-
   (use-package symex)
-
 
   ;; doesn't play nice with ts-fold
   ;; (use-package highlight-indent-guides
@@ -895,38 +886,17 @@ before packages are loaded."
   ;;               highlight-indent-guides-auto-top-character-face-perc 80)
   ;;   :hook prog-mode
   ;;   )
-  ;; (use-package minimap)
 
-  (use-package dconf-dotfile)
+  (when my/work-flag
+    (use-package sql-snowflake :if my/work-flag)
+    (use-package sql-databricks :if my/work-flag)
+    (use-package sql-trino :if my/work-flag)
+    (use-package prisma-mode :if my/work-flag))
 
-  (use-package sql-snowflake :if my/work-flag)
-  (use-package sql-databricks :if my/work-flag)
-  (use-package sql-trino :if my/work-flag)
-  (use-package prisma-mode :if my/work-flag)
-
-  ;; not working :(
-  ;; (use-package undo-hl
-  ;;   :config
-  ;;   (add-to-list 'undo-hl-undo-commands evil-undo-function)
-  ;;   (add-to-list 'undo-hl-undo-commands evil-redo-function))
-
-  ;; still needs lots of work. doesn't work with pgtk.
-  ;; (use-package mini-frame
-  ;;   :config
-  ;;   (ivy-posframe-mode -1)
-  ;;   (which-key-posframe-mode -1)
-  ;;   (setq which-key-popup-type 'minibuffer  ;; doesn't work
-  ;;         mini-frame-show-parameters '((top . 10)
-  ;;                                      (width . 0.7)
-  ;;                                      (left . 0.5)))
-  ;;   (mini-frame-mode 1))
-
-  ;; spacing issues
-  ;; (use-package dired-git-info
-  ;;   :hook (dired-after-readin . dired-git-info-auto-enable))
-
-  ;; defer/autoload seems to be broken?
-  (use-package ivy-nixos-options)
+  (unless my/work-flag
+    (use-package ivy-nixos-options)
+    (use-package dconf-dotfile)
+    (use-package inf-janet))
 
   ;; misc/general --------------------------------------------------------------
   (server-start)
@@ -1741,35 +1711,22 @@ before packages are loaded."
   (set-face-foreground 'nushell-pay-attention-face (doom-color 'base6))
 
   ;; janet -----------------------------------------------------------------------
-  ;; -- basic comint mode for janet TODO: upstream to janet-mode
-  (defvar janet-interpreter-command "janet")
-  (defvar janet-interpreter-arguments '("-s"))
-  (defvar janet-buffer-name "*Janet*")
-
-  (define-derived-mode inferior-janet-mode comint-mode "Inferior Janet"
-    (setq-local comint-prompt-regexp janet-prompt-regexp)
-    (setq mode-line-process '(": %s")) ;; idk what this does
-    (set-syntax-table janet-mode-syntax-table)
-    (comint-fontify-input-mode)
-    (setq-local comint-prompt-read-only t)
-    )
-
-  (defun run-janet ()
-    "Run an inferior instance of `janet' inside Emacs."
+  (defun my/inf-janet-and-go ()
     (interactive)
-    (let* ((buffer (get-buffer-create janet-buffer-name))
-           (proc-alive (comint-check-proc buffer))
-           (process (get-buffer-process buffer)))
-      ;; if the process is dead then re-create the process and reset the
-      ;; mode.
-      (unless proc-alive
-        (with-current-buffer buffer
-          (apply 'make-comint-in-buffer "Janet" buffer
-                 janet-interpreter-command nil janet-interpreter-arguments)
-          (inferior-janet-mode)))
-      ;; Regardless, provided we have a valid buffer, we pop to it.
-      (when buffer
-        (pop-to-buffer buffer))))
+    (call-interactively 'inf-janet)
+    (switch-to-buffer-other-window inf-janet-buffer))
+
+  (spacemacs/declare-prefix-for-mode 'janet-mode "s" "eval")
+  (spacemacs/set-leader-keys-for-major-mode 'janet-mode
+    "si" #'inf-janet
+    "sI" #'my/inf-janet-and-go
+    "sb" #'inf-janet-eval-buffer
+    "se" #'inf-janet-eval-form-and-next
+    "sf" #'inf-janet-eval-defun
+    "sF" #'inf-janet-eval-defun-and-go
+    "sr" #'inf-janet-eval-region
+    "sR" #'inf-janet-eval-region-and-go
+    )
 
   ;; woman ---------------------------------------------------------------------
   ;; TODO: make woman less weird about windows
