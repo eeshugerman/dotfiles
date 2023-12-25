@@ -1711,6 +1711,10 @@ before packages are loaded."
   (set-face-foreground 'nushell-pay-attention-face (doom-color 'base6))
 
   ;; janet -----------------------------------------------------------------------
+
+  ;; don't auto-insert matching singlequote
+  (sp-local-pair 'janet-mode "'" nil :actions nil)
+
   (defun my/inf-janet-and-go ()
     (interactive)
     (call-interactively 'inf-janet)
@@ -1730,7 +1734,7 @@ before packages are loaded."
         (if (zerop (call-process-region (point-min) (point-max) jfmt-bin t t nil))
             (with-current-buffer code-buffer
               (replace-buffer-contents temp-buffer))
-          (error "jfmt failed, see *jfmt* buffer for details")))))
+          (error "Command jfmt failed, see *jfmt* buffer for details")))))
 
   (spacemacs/declare-prefix-for-mode 'janet-mode "s" "eval")
   (spacemacs/set-leader-keys-for-major-mode 'janet-mode
