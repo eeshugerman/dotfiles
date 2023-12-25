@@ -1716,6 +1716,22 @@ before packages are loaded."
     (call-interactively 'inf-janet)
     (switch-to-buffer-other-window inf-janet-buffer))
 
+  (defvar jfmt-command "jfmt")
+
+  (defun my/janet-format-buffer ()
+    (interactive)
+    ;; adapted from nix-format.el
+    (let ((jfmt-bin (executable-find jfmt-command))
+          (code-buffer (current-buffer))
+          (temp-buffer (get-buffer-create "*jfmt*")))
+      (with-current-buffer temp-buffer
+        (erase-buffer)
+        (insert-buffer-substring code-buffer)
+        (if (zerop (call-process-region (point-min) (point-max) jfmt-bin t t nil))
+            (with-current-buffer code-buffer
+              (replace-buffer-contents temp-buffer))
+          (error "jfmt failed, see *jfmt* buffer for details")))))
+
   (spacemacs/declare-prefix-for-mode 'janet-mode "s" "eval")
   (spacemacs/set-leader-keys-for-major-mode 'janet-mode
     "si" #'inf-janet
@@ -1726,7 +1742,8 @@ before packages are loaded."
     "sF" #'inf-janet-eval-defun-and-go
     "sr" #'inf-janet-eval-region
     "sR" #'inf-janet-eval-region-and-go
-    )
+    "==" #'my/janet-format-buffer)
+
 
   ;; woman ---------------------------------------------------------------------
   ;; TODO: make woman less weird about windows
