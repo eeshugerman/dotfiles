@@ -1714,6 +1714,7 @@ before packages are loaded."
 
   ;; don't auto-insert matching singlequote
   (sp-local-pair 'janet-mode "'" nil :actions nil)
+  (sp-local-pair 'inf-janet-mode "'" nil :actions nil)
 
   (defun my/inf-janet-and-go ()
     (interactive)
