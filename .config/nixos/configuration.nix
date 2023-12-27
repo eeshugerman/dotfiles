@@ -127,7 +127,6 @@
       gnomeExtensions.night-theme-switcher
       gnomeExtensions.pano
       gnomeExtensions.xremap # needed in addition to the module
-      janet
       jetbrains-mono
       libsmbios # dell fan control
       nushell

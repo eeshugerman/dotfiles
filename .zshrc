@@ -47,8 +47,9 @@ else
     alias cbcopy="xclip -in -selection clipboard"
     alias cbpaste="xclip -out -selection clipboard"
     alias sudo="sudo " # https://askubuntu.com/a/22043
-    alias my-nixos-rebuild="sudo nixos-rebuild switch --impure --flake ~/.config/nixos"
-    alias my-nixos-test="nixos-rebuild test --impure --flake ~/.config/nixos" # untested
+    alias nixos-rebuild-test="nixos-rebuild test --impure --flake ~/.config/nixos" # untested
+    alias nixos-rebuild-switch="sudo nixos-rebuild switch --impure --flake ~/.config/nixos"
+    alias nixos-print-diffs="nix profile diff-closures --profile /nix/var/nix/profiles/system | tail -100"
     alias my-nix-gc="nix-collect-garbage --delete-older-than 15d"
 fi
 
