@@ -1,3 +1,4 @@
+# -*- mode: gitconfig; -*-
 [user]
 {% if yadm.class == "WORK" %}
 	email = elliott.shugerman@immuta.com
@@ -28,3 +29,6 @@
 
 [merge]
 	conflictstyle = diff3
+
+[init]
+	defaultBranch = main
