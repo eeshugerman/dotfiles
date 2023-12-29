@@ -50,7 +50,7 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(lua
+   `(lua
      ;; erc ;; broken last i checked
      ;; gnome-shell ;; not in spacemacs repo, installed as local layer
      ansible
@@ -106,7 +106,11 @@ This function should only modify configuration layer settings."
      unicode-fonts
      vagrant
      version-control
-     yaml)
+     yaml
+     ;; TODO: move more stuff here
+     ,@(if my/work-flag
+           '()
+         '(janet)))
 
    ;; List of additional packages that will be installed without being wrapped
    ;; in a layer (generally the packages are installed only and should still be
@@ -160,9 +164,7 @@ This function should only modify configuration layer settings."
              sql-trino
              (prisma-mode :location (recipe :fetcher github :repo "pimeys/emacs-prisma-mode")))
 
-         '((nushell-mode :location (recipe :fetcher github :repo "mrkkrp/nushell-mode"))
-           janet-mode
-           (inf-janet :location (recipe :fetcher github :repo "velkyel/inf-janet")))))
+         '((nushell-mode :location (recipe :fetcher github :repo "mrkkrp/nushell-mode")))))
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -895,8 +897,7 @@ before packages are loaded."
 
   (unless my/work-flag
     (use-package ivy-nixos-options)
-    (use-package dconf-dotfile)
-    (use-package inf-janet))
+    (use-package dconf-dotfile))
 
   ;; misc/general --------------------------------------------------------------
   (server-start)
@@ -1709,46 +1710,6 @@ before packages are loaded."
 
   ;; nushell ------------------------------------------------------------------
   (set-face-foreground 'nushell-pay-attention-face (doom-color 'base6))
-
-  ;; janet -----------------------------------------------------------------------
-
-  ;; don't auto-insert matching singlequote
-  (sp-local-pair 'janet-mode "'" nil :actions nil)
-  (sp-local-pair 'inf-janet-mode "'" nil :actions nil)
-
-  (defun my/inf-janet-and-go ()
-    (interactive)
-    (call-interactively 'inf-janet)
-    (switch-to-buffer-other-window inf-janet-buffer))
-
-  (defvar jfmt-command "jfmt")
-
-  (defun my/janet-format-buffer ()
-    (interactive)
-    ;; adapted from nix-format.el
-    (let ((jfmt-bin (executable-find jfmt-command))
-          (code-buffer (current-buffer))
-          (temp-buffer (get-buffer-create "*jfmt*")))
-      (with-current-buffer temp-buffer
-        (erase-buffer)
-        (insert-buffer-substring code-buffer)
-        (if (zerop (call-process-region (point-min) (point-max) jfmt-bin t t nil))
-            (with-current-buffer code-buffer
-              (replace-buffer-contents temp-buffer))
-          (error "Command jfmt failed, see *jfmt* buffer for details")))))
-
-  (spacemacs/declare-prefix-for-mode 'janet-mode "s" "eval")
-  (spacemacs/set-leader-keys-for-major-mode 'janet-mode
-    "si" #'inf-janet
-    "sI" #'my/inf-janet-and-go
-    "sb" #'inf-janet-eval-buffer
-    "se" #'inf-janet-eval-form-and-next
-    "sf" #'inf-janet-eval-defun
-    "sF" #'inf-janet-eval-defun-and-go
-    "sr" #'inf-janet-eval-region
-    "sR" #'inf-janet-eval-region-and-go
-    "==" #'my/janet-format-buffer)
-
 
   ;; woman ---------------------------------------------------------------------
   ;; TODO: make woman less weird about windows
