@@ -7,7 +7,19 @@
     (with-current-buffer temp-buffer
       (erase-buffer)
       (insert-buffer-substring code-buffer)
-      (if (zerop (call-process-region (point-min) (point-max) janet-format-path t t nil))
-          (with-current-buffer code-buffer
-            (replace-buffer-contents temp-buffer))
-        (error "Command janet-format failed, see *janet-format* buffer for details")))))
+      (let ((janet-format-config-path
+             (f-join (projectile-acquire-root) ".janet-format.jdn")))
+        (if (zerop (call-process-region
+                    (point-min)
+                    (point-max)
+                    janet-format-path
+                    t
+                    t
+                    nil
+                    ;; TODO: only include if the file exists
+                    ;;   or maybe bind default-directory
+                    "-c" janet-format-config-path
+                    ))
+            (with-current-buffer code-buffer
+              (replace-buffer-contents temp-buffer))
+          (error "Command janet-format failed, see *janet-format* buffer for details"))))))
