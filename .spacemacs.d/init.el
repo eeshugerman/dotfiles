@@ -1032,7 +1032,8 @@ before packages are loaded."
 
   ;; comint --------------------------------------------------------------------
   (evil-define-key 'normal comint-mode-map
-    (kbd (concat dotspacemacs-leader-key " b d")) 'comint-send-eof ;; doesn't work :(
+    ;; doesn't work, try advising spacemacs/kill-this-buffer instead
+    (kbd (concat dotspacemacs-leader-key " b d")) #'comint-send-eof
     [return] 'comint-send-input)
 
   (evil-define-key 'insert comint-mode-map
@@ -1566,8 +1567,9 @@ before packages are loaded."
           ("C-k" . symex-descend-branch)
           ("M-j" . symex-goto-highest)
           ("M-k" . symex-goto-lowest)))
-  (add-to-list 'symex-lisp-modes 'lisp-data-mode)
-  (add-to-list 'symex-lisp-modes 'ielm-mode)
+
+  (dolist (mode '(lisp-data-mode ielm-mode janet-mode))
+    (add-to-list 'symex-lisp-modes mode))
   (symex-initialize)
 
   ;; erc ----------------------------------------------------------------------

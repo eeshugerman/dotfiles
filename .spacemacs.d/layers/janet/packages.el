@@ -15,7 +15,9 @@
     :init
     (spacemacs/declare-prefix-for-mode 'janet-mode "m=" "format")
     (spacemacs/set-leader-keys-for-major-mode 'janet-mode
-      "==" #'spacemacs/janet-format-format-buffer)))
+      "==" #'spacemacs/janet-format-format-buffer)
+    ;; TODO: enable for .jdn files
+    ))
 
 (defun janet/init-flycheck-janet ()
   (use-package flycheck-janet))
