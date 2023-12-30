@@ -978,6 +978,7 @@ before packages are loaded."
     (setq company-shell-modes '(eshell-mode)))
 
   ;; flycheck ---------------------------------------------------------------------
+  ;; TODO: move posframe-posframe stuff to posframe layer
   (remove-hook 'flycheck-mode-hook 'flycheck-pos-tip-mode)
   ;; (add-hook 'flycheck-mode-hook 'flycheck-popup-tip-mode)
   (add-hook 'flycheck-mode-hook 'flycheck-posframe-mode)

@@ -13,6 +13,7 @@
   (use-package janet-mode
     :defer t
     :init
+    (spacemacs/declare-prefix-for-mode 'janet-mode "m=" "format")
     (spacemacs/set-leader-keys-for-major-mode 'janet-mode
       "==" #'spacemacs/janet-format-format-buffer)))
 
@@ -24,7 +25,7 @@
     :defer t
     :init
     (spacemacs/register-repl 'inf-janet 'inf-janet "inf-janet")
-    (spacemacs/declare-prefix-for-mode 'janet-mode "s" "repl")
+    (spacemacs/declare-prefix-for-mode 'janet-mode "ms" "repl")
     (spacemacs/set-leader-keys-for-major-mode 'janet-mode
       "si" #'inf-janet
       "ss" #'inf-janet-switch-to-repl
@@ -39,5 +40,6 @@
   (spacemacs/enable-flycheck 'janet-mode))
 
 (defun janet/post-init-smartparens ()
-  (sp-local-pair 'janet-mode "'" nil :actions nil)
-  (sp-local-pair 'inf-janet-mode "'" nil :actions nil))
+  (with-eval-after-load 'smartparens
+    (sp-local-pair 'janet-mode "'" nil :actions nil)
+    (sp-local-pair 'inf-janet-mode "'" nil :actions nil)))
