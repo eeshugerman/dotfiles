@@ -129,7 +129,7 @@
       gnomeExtensions.xremap # needed in addition to the module
       jetbrains-mono
       nushell
-      powertop
+      # powertop maybe causing dock resume issues?
       ripgrep
       unzip
       vim
