@@ -128,7 +128,6 @@
       gnomeExtensions.pano
       gnomeExtensions.xremap # needed in addition to the module
       jetbrains-mono
-      libsmbios # dell fan control
       nushell
       powertop
       ripgrep
