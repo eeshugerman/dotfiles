@@ -769,6 +769,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-enable-on-type-formatting nil
    lsp-enable-symbol-highlighting t
 
+   lsp-file-watch-threshold 1500
+
    lsp-headerline-breadcrumb-enable t
    lsp-headerline-breadcrumb-segments '(symbols)
 
@@ -880,6 +882,7 @@ before packages are loaded."
   (use-package symex)
 
   ;; doesn't play nice with ts-fold
+  ;; TODO: try https://github.com/jdtsmith/indent-bars instead
   ;; (use-package highlight-indent-guides
   ;;   :init (setq ;; highlight-indent-guides-method 'bitmap
   ;;               highlight-indent-guides-method 'character
@@ -890,10 +893,11 @@ before packages are loaded."
   ;;   )
 
   (when my/work-flag
-    (use-package sql-snowflake :if my/work-flag)
-    (use-package sql-databricks :if my/work-flag)
-    (use-package sql-trino :if my/work-flag)
-    (use-package prisma-mode :if my/work-flag))
+    (use-package sql-snowflake)
+    (use-package sql-databricks)
+    (use-package sql-trino
+      :config (add-to-list 'sql-trino-options "--pager="))
+    (use-package prisma-mode))
 
   (unless my/work-flag
     (use-package ivy-nixos-options)
@@ -1712,7 +1716,11 @@ before packages are loaded."
   (add-hook 'text-mode-hook #'spacemacs/toggle-spelling-checking-on)
 
   ;; nushell ------------------------------------------------------------------
-  (set-face-foreground 'nushell-pay-attention-face (doom-color 'base6))
+  (with-eval-after-load 'nushell-mode
+    (set-face-foreground 'nushell-pay-attention-face (doom-color 'base6)))
+
+  ;; json ---------------------------------------------------------------------
+  (spacemacs/set-leader-keys-for-major-mode 'json-mode "= =" #'json-pretty-print-buffer)
 
   ;; woman ---------------------------------------------------------------------
   ;; TODO: make woman less weird about windows
@@ -1903,6 +1911,7 @@ TODO: messes with ivy-posframe background color?"
     ;; use lsp-install-server instead and leave this commented out to use the bin it installs
     ;; (setq lsp-eslint-server-command '("vscode-eslint-language-server" "--stdio"))
 
+    ;; angular
     (let* ((ng-extension-path (f-join profile-path "share/vscode/extensions/Angular.ng-template"))
            (ng-server-path (f-join ng-extension-path "server/bin/ngserver"))
            (ng-node-modules-path (f-join ng-extension-path "node_modules")))
@@ -1910,11 +1919,17 @@ TODO: messes with ivy-posframe background color?"
             (list "node" ng-server-path
                   "--ngProbeLocations" ng-node-modules-path
                   "--tsProbeLocations" ng-node-modules-path
-                  "--stdio")))))
+                  "--stdio")))
+    ;; java
+    ;; TODO: get this working. using auto install for now
+    ;; (setq lsp-java-server-install-dir (f-join profile-path "share/java"))
+    ))
 
 ;; TODO: annoying auth is needed on each call. what can we do about this?
 ;; seems it wouldn't happen if called in process somehow:
 ;; https://1password.community/discussion/138627/cli-keeps-prompting-for-authentication
 ;; or can turn off app integration and use `op signing', but then master password is required
+;;
+;; try https://github.com/xuchunyang/1password.el
 (defun my/1password-read (url)
   (string-trim (shell-command-to-string (format "op read '%s'" url))))

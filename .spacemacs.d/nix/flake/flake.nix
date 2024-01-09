@@ -23,6 +23,9 @@
 
             # pkgs.nerdfonts # didn't seem to work :/ also is slow
             ispell
+
+            # TODO: get this working. using auto install for now
+            # jdt-language-server
             nixfmt
             nodePackages.bash-language-server
             nodePackages.pyright

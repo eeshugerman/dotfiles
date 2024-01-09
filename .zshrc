@@ -46,16 +46,18 @@ else
     alias open="xdg-open"
     alias cbcopy="xclip -in -selection clipboard"
     alias cbpaste="xclip -out -selection clipboard"
+
     alias sudo="sudo " # https://askubuntu.com/a/22043
     alias nixos-rebuild-test="nixos-rebuild test --impure --flake ~/.config/nixos" # untested
     alias nixos-rebuild-switch="sudo nixos-rebuild switch --impure --flake ~/.config/nixos"
     alias nixos-print-diffs="nix profile diff-closures --profile /nix/var/nix/profiles/system | tail -100"
-    alias my-nix-gc="nix-collect-garbage --delete-older-than 15d"
+
+    alias dconf-dump="dconf dump / | vim -R -c 'set ft=dosini'"
+    alias dconf-edit="vim $HOME/.config/dconf-user.conf"
+    alias dconf-load="dconf load / < $HOME/.config/dconf-user.conf"
 fi
 
-alias dconf-dump="dconf dump / | vim -R -c 'set ft=dosini'"
-alias dconf-edit="vim $HOME/.config/dconf-user.conf"
-alias dconf-load="dconf load / < $HOME/.config/dconf-user.conf"
+alias my-nix-gc="nix-collect-garbage --delete-older-than 15d"
 
 
 function rsync-to-kodi {
