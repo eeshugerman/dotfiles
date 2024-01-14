@@ -38,8 +38,12 @@ keymap:
       Super-Shift-v: Super-Shift-v # unclobber (unused currently, but may switch pano)
       Super-Shift-t: Super-shift-t # unclobber (theme toggle)
 
-  - name: Super-f find in Firefox
+  - name: Firefox stuff
     application:
       only: ['Firefox', 'firefoxdeveloperedition', 'firefox']
     remap:
+      # Super-f find in Firefox
       Super-f: [ALT-KEY_E, ALT-KEY_F]
+      # NOTE: We've set super-r to GNOME Shell's "run" dialog in dconf
+      Super-r: C-r
+      # TODO: Super-<click> -> C-<click> (to open in new tab)

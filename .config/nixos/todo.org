@@ -8,7 +8,7 @@
   - [X] scroll wheel direction
   - [ ] emacs/emacsclient icons
   - [ ] extensions 
-    - [ ] ddterm (build from master for 44 compat)
+    - [X] ddterm
     - [ ] overview key nav fix https://gitlab.gnome.org/nre/overview-key-navigation-fix-5345
   - [ ] font
 - [-] firefox

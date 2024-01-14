@@ -39,7 +39,7 @@
       "sR" #'inf-janet-eval-region-and-go)
     :config
     ;; implementation provided by inf-janet is buggy
-    ;; - inserts extra readonly prompt when wrapping around input ring (super annoying!)
+    ;; - inserts extra (readonly) prompt when wrapping around input ring (super annoying!)
     ;; - only captures the sexp around point, not outermost sexp (maybe this is intended behvior?)
     (defun inf-janet-get-old-input ()
       (comint-get-old-input-default))))
