@@ -1731,6 +1731,10 @@ before packages are loaded."
   ;; compilation-mode -------------------------------------------------------------
   ;; TODO: don't be weird about windows
 
+  ;; janet -------------------------------------------------------------
+  ;; see local/custom layer for the rest
+  (advice-add 'spacemacs/janet-format-format-buffer :around #'envrc-propagate-environment)
+
   ;; ==========================================================================
 
   (when my/work-flag
