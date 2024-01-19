@@ -1142,21 +1142,22 @@ before packages are loaded."
 
   ;; mismatched background issue
   ;; from https://github.com/dandavison/magit-delta/issues/6#issuecomment-808824398
-  ;; todo: automate dark/light, merge conflict regions
 
   ;; for delta's github light (github is the default):
-  ;; (with-eval-after-load 'magit-delta
-  ;;   (set-face-attribute 'magit-diff-added-highlight nil :background "#d0ffd0")
-  ;;   (set-face-attribute 'magit-diff-added nil :background "#d0ffd0")
-  ;;   (set-face-attribute 'magit-diff-removed-highlight nil :background "#ffe0e0")
-  ;;   (set-face-attribute 'magit-diff-removed nil :background "#ffe0e0"))
+  (defun my/magit-delta-set-light ()
+    (with-eval-after-load 'magit-delta
+      (set-face-attribute 'magit-diff-added-highlight nil :background "#d0ffd0")
+      (set-face-attribute 'magit-diff-added nil :background "#d0ffd0")
+      (set-face-attribute 'magit-diff-removed-highlight nil :background "#ffe0e0")
+      (set-face-attribute 'magit-diff-removed nil :background "#ffe0e0")))
 
   ;; for delta's github dark:
-  (with-eval-after-load 'magit-delta
-    (set-face-attribute 'magit-diff-added-highlight nil :background "#002800")
-    (set-face-attribute 'magit-diff-added nil :background "#002800")
-    (set-face-attribute 'magit-diff-removed-highlight nil :background "#3f0001")
-    (set-face-attribute 'magit-diff-removed nil :background  "#3f0001"))
+  (defun my/magit-delta-set-dark ()
+    (with-eval-after-load 'magit-delta
+      (set-face-attribute 'magit-diff-added-highlight nil :background "#002800")
+      (set-face-attribute 'magit-diff-added nil :background "#002800")
+      (set-face-attribute 'magit-diff-removed-highlight nil :background "#3f0001")
+      (set-face-attribute 'magit-diff-removed nil :background  "#3f0001")))
 
   ;; wonder what this does ?
   (add-hook 'magit-delta-mode-hook
@@ -1251,8 +1252,12 @@ before packages are loaded."
   (defun my/load-theme (system-appearance)
     (mapc 'disable-theme custom-enabled-themes)
     (pcase system-appearance
-      ('dark (load-theme (first dotspacemacs-themes) t))
-      ('light (load-theme (second dotspacemacs-themes) t))))
+      ('dark (progn
+               (load-theme (first dotspacemacs-themes) t)
+               (my/magit-delta-set-dark)))
+      ('light (progn
+                (load-theme (second dotspacemacs-themes) t)
+                (my/magit-delta-set-light)))))
 
   ;; using emacs-plus integration for macos
   (when (boundp 'ns-system-appearance-change-functions)
