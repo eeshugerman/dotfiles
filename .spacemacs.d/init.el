@@ -737,6 +737,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-headerline-breadcrumb-enable t
    lsp-headerline-breadcrumb-segments '(symbols)
    lsp-idle-delay 0.2
+   lsp-inlay-hint-enable t
    lsp-signature-render-documentation nil
    lsp-ui-doc-alignment 'window
    lsp-ui-doc-delay 0.5 ; seconds
