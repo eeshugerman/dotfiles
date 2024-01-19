@@ -726,53 +726,43 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    lsp-clients-typescript-max-ts-server-memory 4096
    lsp-debounce-full-sync-notifications-interval 3.0
-   lsp-enable-dap-auto-configure nil ;; performance issues. we also do (dap-auto-configure-mode -1) below for good measure
-   lsp-eslint-enable t ;; note: not in on npm, use `lsp-install-server'
-   lsp-idle-delay 0.2
-
-   lsp-ui-doc-enable t ;; slow w/ large files?
-   lsp-ui-doc-include-signature t
-   lsp-ui-doc-header nil
-   lsp-ui-doc-delay 0.5 ; seconds
-   lsp-ui-doc-alignment 'window
-   lsp-ui-doc-show-with-cursor t
-   lsp-ui-doc-show-with-mouse nil
-   lsp-ui-doc-use-childframe t
-   lsp-ui-doc-max-width (if my/work-flag 90 75)
-
-   lsp-ui-sideline-enable nil
-   lsp-ui-sideline-diagnostic-max-line-length 90
-   lsp-ui-sideline-diagnostic-max-lines 10
-   lsp-ui-sideline-show-symbol nil
-   lsp-ui-sideline-show-hover nil
-   lsp-ui-sideline-show-diagnostics nil ;; use SPC e x instead
-   lsp-ui-sideline-show-code-actions nil
-   lsp-ui-sideline-update-mode 'line ;; more performant maybe?
-
-   lsp-ui-imenu-enable nil
-   lsp-ui-imenu-auto-refresh 'after-save
-
-   lsp-ui-peek-enable t
-   lsp-ui-peek-fontify 'always
-   lsp-ui-peek-show-directory t
-   lsp-ui-peek-list-width 60
-   lsp-ui-peek-always-show t
-
-   lsp-use-plists my/work-flag ;; TODO: set env var on linux
-
-   lsp-signature-render-documentation nil
    lsp-eldoc-enable-hover nil
-
-   lsp-eslint-warn-on-ignored-files t
-
+   lsp-enable-dap-auto-configure nil ;; performance issues. we also do (dap-auto-configure-mode -1) below for good measure
    lsp-enable-indentation nil
    lsp-enable-on-type-formatting nil
    lsp-enable-symbol-highlighting t
-
+   lsp-eslint-enable t ;; note: not in on npm, use `lsp-install-server'
+   lsp-eslint-warn-on-ignored-files t
    lsp-file-watch-threshold 1500
-
    lsp-headerline-breadcrumb-enable t
    lsp-headerline-breadcrumb-segments '(symbols)
+   lsp-idle-delay 0.2
+   lsp-signature-render-documentation nil
+   lsp-ui-doc-alignment 'window
+   lsp-ui-doc-delay 0.5 ; seconds
+   lsp-ui-doc-enable t ;; slow w/ large files?
+   lsp-ui-doc-header nil
+   lsp-ui-doc-include-signature t
+   lsp-ui-doc-max-width (if my/work-flag 90 75)
+   lsp-ui-doc-show-with-cursor t
+   lsp-ui-doc-show-with-mouse nil
+   lsp-ui-doc-use-childframe t
+   lsp-ui-imenu-auto-refresh 'after-save
+   lsp-ui-imenu-enable nil
+   lsp-ui-peek-always-show t
+   lsp-ui-peek-enable t
+   lsp-ui-peek-fontify 'always
+   lsp-ui-peek-list-width 60
+   lsp-ui-peek-show-directory t
+   lsp-ui-sideline-diagnostic-max-line-length 90
+   lsp-ui-sideline-diagnostic-max-lines 10
+   lsp-ui-sideline-enable nil
+   lsp-ui-sideline-show-code-actions nil
+   lsp-ui-sideline-show-diagnostics nil ;; use SPC e x instead
+   lsp-ui-sideline-show-hover nil
+   lsp-ui-sideline-show-symbol nil
+   lsp-ui-sideline-update-mode 'line ;; more performant maybe?
+   lsp-use-plists my/work-flag ;; TODO: set env var on linux
 
    nix-backend 'lsp
 
