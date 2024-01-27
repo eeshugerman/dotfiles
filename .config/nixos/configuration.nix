@@ -39,6 +39,16 @@
   }];
   boot.resumeDevice = "/dev/disk/by-label/swap";
 
+  services.logind = {
+    extraConfig = ''
+      HandleLidSwitch=suspend-then-hibernate
+      HandleLidSwitchExternalPower=suspend
+      HandlePowerKey=hibernate # doesn't seem to work? suspends instead
+      HandlePowerKeyLongPress=reboot
+    '';
+  };
+  systemd.sleep.extraConfig = "HibernateDelaySec=90m";
+
   boot.loader.systemd-boot.configurationLimit = 10;
 
   networking.hostName = "dell9560"; # Define your hostname.
