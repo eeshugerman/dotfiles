@@ -1060,6 +1060,9 @@ before packages are loaded."
   ;;           (lambda () (setq-local comint-input-ring-separator ";\n")))
 
   ;; shell ---
+
+  ;; TODO: try adding a `shell-dynamic-complete-functions' for shell aliases
+
   (setq shell-pop-autocd-to-working-dir nil
         shell-completion-execonly nil)
 
