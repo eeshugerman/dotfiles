@@ -40,10 +40,13 @@
   boot.resumeDevice = "/dev/disk/by-label/swap";
 
   services.logind = {
+    # NOTE: Unfortunately there's no simple way to skip Gnome screen lock on resume
+    # from hibernation (except by disablig the lock screen altogether), so password
+    # must be entered twice.
     extraConfig = ''
       HandleLidSwitch=suspend-then-hibernate
       HandleLidSwitchExternalPower=suspend
-      HandlePowerKey=hibernate # doesn't seem to work? suspends instead
+      # HandlePowerKey=hibernate # doesn't work, set in gnome settings/dconf instead
       HandlePowerKeyLongPress=reboot
     '';
   };
