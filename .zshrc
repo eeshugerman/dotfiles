@@ -48,7 +48,7 @@ else
     alias cbpaste="xclip -out -selection clipboard"
 
     alias sudo="sudo " # https://askubuntu.com/a/22043
-    alias nixos-rebuild-test="nixos-rebuild test --impure --flake ~/.config/nixos" # untested
+    alias nixos-rebuild-test="sudo nixos-rebuild test --impure --flake ~/.config/nixos"
     alias nixos-rebuild-switch="sudo nixos-rebuild switch --impure --flake ~/.config/nixos"
     alias nixos-print-diffs="nix profile diff-closures --profile /nix/var/nix/profiles/system | tail -100"
 

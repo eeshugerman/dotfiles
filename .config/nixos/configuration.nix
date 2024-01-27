@@ -26,13 +26,20 @@
   # Setup keyfile
   boot.initrd.secrets = { "/crypto_keyfile.bin" = null; };
 
-  # Enable swap on luks
-  boot.initrd.luks.devices."luks-26938550-263d-4e74-a805-00fc144bebc9" = {
-    device = "/dev/disk/by-uuid/26938550-263d-4e74-a805-00fc144bebc9";
-    keyFile = "/crypto_keyfile.bin";
-  };
+  # Configure encrypted swap for hibernation support
+  # NOTE: Also commented out swapDevices in /etc/hardware-configuration.nix
+  # TODO: Try a swapfile setup https://www.worldofbs.com/nixos-framework/#setting-up-hibernate
+  swapDevices = [{
+    device =  "/dev/disk/by-uuid/bb9f65cb-e2e6-4032-9c79-0f68dc4b12f6";
+    encrypted = {
+      label = "swap";
+      blkDev = "/dev/disk/by-uuid/26938550-263d-4e74-a805-00fc144bebc9";
+      enable = true;
+    };
+  }];
+  boot.resumeDevice = "/dev/disk/by-label/swap";
 
-  boot.loader.systemd-boot.configurationLimit = 5;
+  boot.loader.systemd-boot.configurationLimit = 10;
 
   networking.hostName = "dell9560"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
