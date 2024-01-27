@@ -27,10 +27,10 @@
   boot.initrd.secrets = { "/crypto_keyfile.bin" = null; };
 
   # Enable swap on luks
-  boot.initrd.luks.devices."luks-26938550-263d-4e74-a805-00fc144bebc9".device =
-    "/dev/disk/by-uuid/26938550-263d-4e74-a805-00fc144bebc9";
-  boot.initrd.luks.devices."luks-26938550-263d-4e74-a805-00fc144bebc9".keyFile =
-    "/crypto_keyfile.bin";
+  boot.initrd.luks.devices."luks-26938550-263d-4e74-a805-00fc144bebc9" = {
+    device = "/dev/disk/by-uuid/26938550-263d-4e74-a805-00fc144bebc9";
+    keyFile = "/crypto_keyfile.bin";
+  };
 
   boot.loader.systemd-boot.configurationLimit = 5;
 
