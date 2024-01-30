@@ -121,6 +121,7 @@
   };
 
   services.fwupd.enable = true;
+  services.mullvad-vpn.enable = true;
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
@@ -137,6 +138,7 @@
       docker
       chromium
       emacs29-pgtk
+      fragments
       git
       gnome-firmware
       gnome.gnome-tweaks
@@ -148,6 +150,7 @@
       gnomeExtensions.pano
       gnomeExtensions.xremap # needed in addition to the module
       jetbrains-mono
+      mullvad-vpn
       nushell
       # powertop maybe causing dock resume issues?
       ripgrep
