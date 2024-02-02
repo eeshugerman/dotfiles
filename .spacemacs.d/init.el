@@ -887,7 +887,7 @@ before packages are loaded."
     (use-package sql-snowflake)
     (use-package sql-databricks)
     (use-package sql-trino
-      :config (add-to-list 'sql-trino-options "--pager="))
+      :config (add-to-list 'sql-trino-options "--pager=cat"))
     (use-package prisma-mode))
 
   (unless my/work-flag

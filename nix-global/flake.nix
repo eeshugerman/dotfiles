@@ -28,6 +28,7 @@
               databricks-sql-cli
               # snowsql # fails to build :(
               trino-cli
+              ngrok
             ];
 
           # the below is from bodata/nix/global-deps.nix, not sure if we want it
