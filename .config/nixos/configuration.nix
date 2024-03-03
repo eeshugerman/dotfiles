@@ -55,7 +55,6 @@
   boot.loader.systemd-boot.configurationLimit = 10;
 
   networking.hostName = "dell9560"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -63,6 +62,10 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+
+  # use iwd instead of wpa_supplicant
+  networking.wireless.iwd.enable = true;
+  networking.networkmanager.wifi.backend = "iwd";
 
   networking.extraHosts = ''
     192.168.1.1 router.home
