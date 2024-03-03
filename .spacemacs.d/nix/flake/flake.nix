@@ -15,7 +15,6 @@
             # - clang ls
             # - pyright
             # - ripgrep
-            # - libvterm
             # - libgccjit
             # - fonts: all-the-icons, others?
             # - gls (mac only)

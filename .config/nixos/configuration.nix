@@ -137,6 +137,7 @@
       dmidecode
       docker
       chromium
+      # TODO: add vterm so package.el doesn't need to (ask to) compile it?
       emacs29-pgtk
       fragments
       git
