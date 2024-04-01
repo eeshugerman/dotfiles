@@ -1247,7 +1247,7 @@ before packages are loaded."
         (message "including .gitignore"))))
 
   ;; themeing -----------------------------------------------------------------
-  (defvar-local my/border-width 10)
+  (defconst my/border-width 10)
 
   ;; also called by gnome extension via emacsclient
   (defun my/load-theme (system-appearance)
