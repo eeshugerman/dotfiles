@@ -1,4 +1,4 @@
-# TODO: bootstrap is required and upgrading is janky. try https://github.com/lf-/flakey-profile
+# TODO: this sucks: bootstrap is required, upgrading is janky, gc breaks it. try https://github.com/lf-/flakey-profile
 # NOTE: need env var workarounds because https://github.com/NixOS/nixpkgs/issues/42900
 # NOTE: this replaces bodata/nix/global-deps.nix
 # TODO: move more stuff here from homebrew
