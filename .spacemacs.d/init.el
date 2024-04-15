@@ -85,7 +85,6 @@ This function should only modify configuration layer settings."
      nixos
      org
      posframe
-     prettier
      purescript
      python
      ruby
@@ -124,6 +123,7 @@ This function should only modify configuration layer settings."
    ;; for :location format, see https://github.com/melpa/melpa/#recipe-format
    ;; may need to delete package dir in ~/.emacs.d/elpa to replace
    `(
+     apheleia
      ox-reveal
      ox-pandoc
      beacon
@@ -353,16 +353,16 @@ It should only modify the values of Spacemacs settings."
                          doom-solarized-dark
                          doom-solarized-light
 
-                         ; extra lights
+                         ;; extra lights
                          doom-one-light
                          doom-opera-light
                          doom-tomorrow-day
                          doom-flatwhite
 
-                         ; extra medium
+                         ;; extra medium
                          doom-nova
 
-                         ; extra darks
+                         ;; extra darks
                          doom-henna
                          doom-city-lights
                          doom-ephemeral
@@ -680,7 +680,7 @@ See the header of this file for more information."
   ;; TODO: try getting rid of this (as the file header suggests). It causes
   ;; occasional problems.
   (spacemacs/load-spacemacs-env)
-)
+  )
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
@@ -834,7 +834,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
 dump."
-)
+  )
 
 
 (defun dotspacemacs/user-config ()
@@ -936,7 +936,7 @@ before packages are loaded."
   (dolist (hook '(hack-local-variables-hook
                   special-mode-hook
                   shell-mode-hook))
-          (add-hook hook (my/suppress-messages-hook #'spacemacs/toggle-truncate-lines-on)))
+    (add-hook hook (my/suppress-messages-hook #'spacemacs/toggle-truncate-lines-on)))
 
   (add-to-list 'auto-mode-alist
                ;; TODO: define custom mode extending markdown-mode with ",c" bound to save and kill
@@ -1188,12 +1188,12 @@ before packages are loaded."
 
   (let* ((switch-buffer-configs
           (seq-map (lambda (func)
-                    (plist-get ivy-rich-display-transformers-list func))
-                  '(ivy-switch-buffer
-                    ivy-switch-buffer-other-window
-                    counsel-switch-buffer
-                    counsel-switch-buffer-other-window
-                    persp-switch-to-buffer)))
+                     (plist-get ivy-rich-display-transformers-list func))
+                   '(ivy-switch-buffer
+                     ivy-switch-buffer-other-window
+                     counsel-switch-buffer
+                     counsel-switch-buffer-other-window
+                     persp-switch-to-buffer)))
          (my-columns-config
           '((all-the-icons-ivy-rich-buffer-icon)
             (ivy-rich-candidate
@@ -1330,9 +1330,9 @@ before packages are loaded."
   (defun my/toggle-relative-path-in-modeline ()
     (interactive)
     (setq-local doom-modeline-buffer-file-name-style
-          (if doom-modeline-buffer-file-name-style
-              nil
-            'relative-from-project)))
+                (if doom-modeline-buffer-file-name-style
+                    nil
+                  'relative-from-project)))
   (spacemacs/set-leader-keys "of" #'my/toggle-relative-path-in-modeline)
 
   (set-face-attribute 'doom-modeline-persp-name nil :inherit 'unspecified)
@@ -1426,11 +1426,8 @@ before packages are loaded."
   ;; for testing https://github.com/emacs-lsp/dap-mode/pull/736 :
   ;; (add-hook 'typescript-mode-hook (lambda () (require 'dap-js-debug)))
 
-  ;; prettier --------------------------------------------------------------------
-  (setq typescript-fmt-tool 'prettier
-        prettier-js-show-errors t
-        prettier-js-command "npx"
-        prettier-js-args '("prettier"))
+  ;; apheleia ---------------------------------------------------------------------
+  (apheleia-global-mode +1)
 
   ;; eslint -----------------------------------------------------------------------
 
@@ -1711,8 +1708,9 @@ before packages are loaded."
     "q" #'lsp-ui-doc-unfocus-frame)
 
   (put 'lsp-treemacs-errors-list 'disabled "Performance issues.")
-  (dap-auto-configure-mode -1) ;; performance issues
-                               ;; maybe unnecessary on top of (setq lsp-enable-dap-auto-configure nil)
+  ;; performance issues
+  ;; maybe unnecessary on top of (setq lsp-enable-dap-auto-configure nil)
+  (dap-auto-configure-mode -1)
 
   ;; ruby ---------------------------------------------------------------------
   (spacemacs/set-leader-keys-for-major-mode 'ruby-mode "= =" #'rubocopfmt)
@@ -1737,9 +1735,6 @@ before packages are loaded."
   ;; nushell ------------------------------------------------------------------
   (with-eval-after-load 'nushell-mode
     (set-face-foreground 'nushell-pay-attention-face (doom-color 'base6)))
-
-  ;; json ---------------------------------------------------------------------
-  (spacemacs/set-leader-keys-for-major-mode 'json-mode "= =" #'json-pretty-print-buffer)
 
   ;; woman ---------------------------------------------------------------------
   ;; TODO: make woman less weird about windows
@@ -1841,7 +1836,7 @@ TODO: messes with ivy-posframe background color?"
 (defun my/toggle-prosey ()
   (interactive)
   (if my/prosey
-    (my/toggle-prosey-off)
+      (my/toggle-prosey-off)
     (my/toggle-prosey-on)))
 
 (defun my/create-new-project (dir)
