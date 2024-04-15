@@ -39,9 +39,16 @@ unsetopt beep
 KEYTIMEOUT=1  # 10ms
 
 if [ "$(uname)" = "Darwin" ]; then
+	  export HOMEBREW_NO_AUTO_UPDATE=1
     alias cbcopy="pbcopy"
     alias cbpaste="pbpaste"
-	  alias upgrade-emacs="brew update && brew uninstall emacs-plus@29 && brew install emacs-plus@29 --with-poll --with-native-comp"
+    function upgrade-emacs {
+        brew update \
+		    && brew uninstall emacs-plus@29 \
+        && brew install emacs-plus@29 --with-poll --with-native-comp \
+        && sudo rm -f /Applications/Emacs.app \
+		    && sudo osascript -e 'tell application "Finder" to make alias file to posix file "/usr/local/opt/emacs-plus@29/Emacs.app" at POSIX file "/Applications" with properties {name:"Emacs.app"}'
+    }
 else
     alias open="xdg-open"
     alias cbcopy="xclip -in -selection clipboard"
@@ -50,7 +57,6 @@ else
     alias sudo="sudo " # https://askubuntu.com/a/22043
     alias nixos-rebuild-test="sudo nixos-rebuild test --impure --flake ~/.config/nixos"
     alias nixos-rebuild-switch="sudo nixos-rebuild switch --impure --flake ~/.config/nixos"
-    # alias nixos-print-diffs="nix profile diff-closures --profile /nix/var/nix/profiles/system | tail -100"
     function nixos-print-diffs {
         nix profile diff-closures --profile /nix/var/nix/profiles/system | tail "-${1:-100}"
     }
