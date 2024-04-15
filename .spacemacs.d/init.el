@@ -75,7 +75,6 @@ This function should only modify configuration layer settings."
      ivy
      java
      javascript
-     julia
      kubernetes
      markdown
      meson
@@ -87,7 +86,6 @@ This function should only modify configuration layer settings."
      posframe
      purescript
      python
-     ruby
      rust
      scheme
      shell
@@ -1714,10 +1712,6 @@ before packages are loaded."
   ;; performance issues
   ;; maybe unnecessary on top of (setq lsp-enable-dap-auto-configure nil)
   (dap-auto-configure-mode -1)
-
-  ;; ruby ---------------------------------------------------------------------
-  (spacemacs/set-leader-keys-for-major-mode 'ruby-mode "= =" #'rubocopfmt)
-  (setq rubocopfmt-use-bundler-when-possible t)
 
   ;; verb ---------------------------------------------------------------------
   (setq verb-auto-kill-response-buffers t)
