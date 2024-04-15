@@ -473,10 +473,7 @@ It should only modify the values of Spacemacs settings."
    ;; `top-center', `bottom-center', `top-left-corner', `top-right-corner',
    ;; `top-right-corner', `bottom-left-corner' or `bottom-right-corner'
    ;; (default 'bottom)
-   ;;
-   ;; TODO: try using (posframe . center) instead of custom config (which is
-   ;;   mostly in local posframe layer)
-   dotspacemacs-which-key-position 'bottom
+   dotspacemacs-which-key-position '(posframe . center)
 
    ;; Control where `switch-to-buffer' displays the buffer. If nil,
    ;; `switch-to-buffer' displays the buffer in the current window even if
