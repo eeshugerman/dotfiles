@@ -74,7 +74,7 @@ This function should only modify configuration layer settings."
      ipython-notebook
      ivy
      java
-     javascript
+     javascript ; TODO: maybe remove this; typescript-mode works for js
      kubernetes
      markdown
      meson
@@ -1574,7 +1574,7 @@ before packages are loaded."
 
   ;; yaml ---------------------------------------------------------------------
   (add-to-list 'major-mode-remap-alist '(yaml-mode . yaml-ts-mode))
-  (add-hook 'yaml-ts-mode-hook (lambda () (origami-mode +1)))
+  (add-hook 'yaml-ts-mode-hook (lambda () (origami-mode +1))) ;; doesn't work terribly well
   (add-hook 'yaml-mode-hook #'spacemacs/toggle-spelling-checking-off)
 
   ;; symex --------------------------------------------------------------------
@@ -1922,9 +1922,8 @@ TODO: messes with ivy-posframe background color?"
       (setenv "PATH" (format "%s:%s" profile-bin-path (getenv "PATH"))))
 
 
-    ;; eslint from nix's vscode-langservers-extracted is not working -- see *eslint::stderr*.
-    ;; use lsp-install-server instead and leave this commented out to use the bin it installs
-    ;; (setq lsp-eslint-server-command '("vscode-eslint-language-server" "--stdio"))
+    ;; eslint
+    (setq lsp-eslint-server-command '("vscode-eslint-language-server" "--stdio"))
 
     ;; angular
     (let* ((ng-extension-path (f-join profile-path "share/vscode/extensions/Angular.ng-template"))
@@ -1935,10 +1934,14 @@ TODO: messes with ivy-posframe background color?"
                   "--ngProbeLocations" ng-node-modules-path
                   "--tsProbeLocations" ng-node-modules-path
                   "--stdio")))
+
     ;; java
-    ;; TODO: get this working. using auto install for now
-    ;; (setq lsp-java-server-install-dir (f-join profile-path "share/java"))
-    ))
+    (setq lsp-java-server-install-dir (f-join profile-path "share/java"))
+    ;; override `lsp-java--ls-command' to use the jar wrapper from nix
+    (advice-add 'lsp-java--ls-command
+                :filter-return (lambda (val)
+                                 `(,(f-join profile-path "bin" "jdt-language-server")
+                                   "-data" ,(lsp-file-local-name lsp-java-workspace-dir))))))
 
 ;; TODO: annoying auth is needed on each call. what can we do about this?
 ;; seems it wouldn't happen if called in process somehow:
