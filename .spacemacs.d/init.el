@@ -1169,6 +1169,9 @@ before packages are loaded."
                                       (magit-diff-removed-highlight . default)
                                       (magit-diff-added . default)
                                       (magit-diff-added-highlight . default))))))
+  ;; end delta stuff
+
+  (setq magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 18))
 
 
   ;; ivy/ivy-rich --------------------------------------------------------------
