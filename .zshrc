@@ -70,7 +70,7 @@ alias my-nix-gc="nix-collect-garbage --delete-older-than 15d"
 
 
 function rsync-to-kodi {
-    rsync --recursive --verbose --progress $1 kodi:/storage/tvshows
+    rsync --recursive --verbose --progress $1 "kodi:${2:-/storage/downloads}"
 }
 
 function rsync-backup {

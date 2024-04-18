@@ -16,7 +16,10 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  # TODO: Maybe take another stab at managing profiles with plain yadm so home manager is not needed
+  # TODO: Maybe take another stab at managing profiles (mainly prefs.js) with
+  # plain yadm so home manager is not needed
+  # NOTE: Oof Firefox is building from source, probably due to this override
+  # https://discourse.nixos.org/t/how-to-ensure-all-packages-are-available-in-cache-nixos-org-on-nix-flake-update/37209/3
   programs.firefox = {
     enable = true;
     package = pkgs.firefox-devedition.override {
@@ -30,11 +33,14 @@
         "browser.compactmode.show" = true;
         "browser.toolbars.bookmarks.visibility" = "never";
 
+        # allow unsigned extensions in dev edition
+        "xpinstall.signatures.required" = false;
+
         # https://bugzilla.mozilla.org/show_bug.cgi?id=1752862
         # These only work with home manager, not the vanilla firefox nixos module,
         # because the latter uses policies which only works for certain prefs.
         "apz.gtk.pangesture.delta_mode" = 2;
-        "apz.gtk.pangesture.pixel_delta_mode_multiplier" = 20;
+        "apz.gtk.pangesture.pixel_delta_mode_multiplier" = 15;
       };
     };
     # workaround for dev edition profile weirdness
