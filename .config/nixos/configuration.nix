@@ -30,7 +30,7 @@
   # NOTE: Also commented out swapDevices in /etc/hardware-configuration.nix
   # TODO: Try a swapfile setup https://www.worldofbs.com/nixos-framework/#setting-up-hibernate
   swapDevices = [{
-    device =  "/dev/disk/by-uuid/bb9f65cb-e2e6-4032-9c79-0f68dc4b12f6";
+    device = "/dev/disk/by-uuid/bb9f65cb-e2e6-4032-9c79-0f68dc4b12f6";
     encrypted = {
       label = "swap";
       blkDev = "/dev/disk/by-uuid/26938550-263d-4e74-a805-00fc144bebc9";
@@ -129,7 +129,7 @@
   users.users.elliott = {
     isNormalUser = true;
     description = "Elliott Shugerman";
-    extraGroups = [ "networkmanager" "wheel" "docker"];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     shell = pkgs.zsh;
     packages = with pkgs; [
       bitwarden
