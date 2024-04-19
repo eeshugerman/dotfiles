@@ -22,10 +22,9 @@
             home-manager.useUserPackages = true;
             home-manager.users.elliott = import ./home.nix;
           }
-          # TODO: get hybrid graphics working. there's `nixos-hardware.nixosModules.dell-xps-15-9560`
-          # but it uses janky/old tech (optirun/bumblebee). see https://nixos.wiki/wiki/Nvidia for
-          # PRIME setup
-          nixos-hardware.nixosModules.dell-xps-15-9560-intel
+          # uses intel gpu unless nvidia specified with nvidia-offload command
+          # TODO: maybe try sync mode or reverse sync mode -- see https://nixos.wiki/wiki/Nvidia
+          nixos-hardware.nixosModules.dell-xps-15-9560-nvidia
         ];
       };
     };
