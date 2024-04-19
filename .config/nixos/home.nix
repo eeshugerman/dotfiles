@@ -23,7 +23,11 @@
   programs.firefox = {
     enable = true;
     package = pkgs.firefox-devedition.override {
-      cfg = { nativeMessagingHosts.packages = [ pkgs.tridactyl-native ]; };
+      # deprecation warning
+      cfg = {
+        # deprecation warning but the new way doesn't work?
+        enableTridactylNative = true;
+      };
     };
     profiles.elliott = {
       id = 0;
