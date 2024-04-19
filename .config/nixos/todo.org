@@ -6,7 +6,7 @@
   - [ ] shell is bash?
 - [-] gnome
   - [X] scroll wheel direction
-  - [ ] emacs/emacsclient icons
+  - [X] emacs/emacsclient icons
   - [ ] extensions 
     - [X] ddterm
     - [ ] overview key nav fix https://gitlab.gnome.org/nre/overview-key-navigation-fix-5345
