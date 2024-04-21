@@ -146,7 +146,7 @@
       # not working, but maybe just need to wait for this fix to be released?
       # https://github.com/NixOS/nixpkgs/pull/272555
       # https://github.com/NixOS/nixpkgs/pull/272657
-      gnomeExtensions.ddterm # not working on 45 so far :(
+      gnomeExtensions.ddterm
       gnomeExtensions.night-theme-switcher
       gnomeExtensions.pano
       gnomeExtensions.xremap # needed in addition to the module
@@ -165,6 +165,10 @@
   };
 
   virtualisation.docker.enable = true;
+  virtualisation.virtualbox.host.enable = true;
+  # https://github.com/NixOS/nixpkgs/issues/76108#issuecomment-1977580798
+  virtualisation.virtualbox.host.enableHardening = false;
+  users.extraGroups.vboxusers.members = [ "elliott" ];
 
   # commented-out because prompts for password after login anyway
   # services.xserver.displayManager.autoLogin.enable = true;
