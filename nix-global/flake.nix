@@ -23,7 +23,7 @@
           paths = with pkgs.${system};
             [
               direnv
-              # bash # try adding this if nix-direnv throws syntax errors
+              bash # nix-direnv wants a modern bash
               nix-direnv
               databricks-sql-cli
               # snowsql # fails to build :(
