@@ -728,6 +728,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    javascript-repl 'nodejs
    js2-include-node-externs t
 
+   lsp-auto-execute-action nil
    lsp-clients-typescript-max-ts-server-memory 4096
    lsp-debounce-full-sync-notifications-interval 3.0
    lsp-eldoc-enable-hover nil
@@ -1938,3 +1939,5 @@ TODO: messes with ivy-posframe background color?"
 ;; try https://github.com/xuchunyang/1password.el
 (defun my/1password-read (url)
   (string-trim (shell-command-to-string (format "op read '%s'" url))))
+
+;; TODO: override `y-or-n-p' with `y-or-n-p-with-timeout' in `spacemacs/check-large-file'
