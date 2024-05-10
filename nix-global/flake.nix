@@ -1,16 +1,15 @@
 # TODO: this sucks: bootstrap is required, upgrading is janky, gc breaks it. try https://github.com/lf-/flakey-profile
+# TODO: move more stuff here from homebrew
 # NOTE: need env var workarounds because https://github.com/NixOS/nixpkgs/issues/42900
 # NOTE: this replaces bodata/nix/global-deps.nix
-# TODO: move more stuff here from homebrew
 
 # to upgrade:
 # $ rm -rf ~/.local/state/nix/profiles/profile*
 # $ NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 NIXPKGS_ALLOW_BROKEN=1 NIXPKGS_ALLOW_UNFREE=1 nix profile install --impure ~/nix-global
 {
-  description = "packages installed into default/global profile, for use on non-NixOS systems";
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/23.11";
-  };
+  description =
+    "packages installed into default/global profile, for use on non-NixOS systems";
+  inputs = { nixpkgs.url = "github:NixOS/nixpkgs/23.11"; };
   outputs = { self, nixpkgs }:
     let
       supportedSystems = [ "x86_64-darwin" ];
@@ -20,19 +19,15 @@
       packages = forAllSystems (system: {
         default = pkgs.${system}.buildEnv {
           name = "global-env";
-          paths = with pkgs.${system};
-            [
-              direnv
-              bash # nix-direnv wants a modern bash
-              nix-direnv
-              databricks-sql-cli
-              # snowsql # fails to build :(
-              trino-cli
-              ngrok
-            ];
-
-          # the below is from bodata/nix/global-deps.nix, not sure if we want it
-          # pathsToLink = [ "/share" "/bin" ];
+          paths = with pkgs.${system}; [
+            direnv
+            bash # nix-direnv needs a modern bash
+            nix-direnv
+            databricks-sql-cli
+            # snowsql # fails to build :(
+            trino-cli
+            ngrok
+          ];
         };
 
       });
