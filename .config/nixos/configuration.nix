@@ -14,7 +14,7 @@
     withGnome = true;
     serviceMode = "user";
     userName = "elliott";
-    deviceName = "AT Translated Set 2 keyboard,Logitech ERGO K860";
+    deviceNames = [ "AT Translated Set 2 keyboard" "Logitech ERGO K860" ];
     watch = true;
     yamlConfig = builtins.readFile /home/elliott/.config/xremap.yml;
   };
@@ -143,9 +143,6 @@
       git
       gnome-firmware
       gnome.gnome-tweaks
-      # not working, but maybe just need to wait for this fix to be released?
-      # https://github.com/NixOS/nixpkgs/pull/272555
-      # https://github.com/NixOS/nixpkgs/pull/272657
       gnomeExtensions.ddterm
       gnomeExtensions.night-theme-switcher
       gnomeExtensions.pano
