@@ -67,7 +67,6 @@ This function should only modify configuration layer settings."
      go
      graphviz
      groovy
-     haskell
      helpful
      html
      ibuffer
@@ -107,7 +106,8 @@ This function should only modify configuration layer settings."
      ;; TODO: move more stuff here
      ,@(if my/work-flag
            '()
-         '(janet)))
+         '(janet
+           haskell)))
 
    ;; List of additional packages that will be installed without being wrapped
    ;; in a layer (generally the packages are installed only and should still be
@@ -714,6 +714,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    git-enable-magit-todos-plugin nil ;; can this be configured to show todos in the diff from master only?
 
    groovy-backend 'lsp
+   ;; TODO: use nix
    groovy-lsp-jar-path "~/util/groovy-language-server/build/libs/groovy-language-server-all.jar"
 
    ivy-enable-icons t ;; also sets `ivy-enable-advanced-buffer-information'
@@ -795,10 +796,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    shell-default-height 30
    shell-default-position 'bottom
    shell-default-shell 'shell
-   shell-pop-restore-window-configuration nil ;; not really sure what this does
 
    spacemacs-layouts-restrict-spc-tab t
-   spacemacs-layouts-restricted-functions '(ivy-switch-buffer ;; doesn't work. also, shouldn't be necessary
+   spacemacs-layouts-restricted-functions '(ivy-switch-buffer ;; shouldn't be necessary ?
                                             spacemacs/window-split-double-columns
                                             spacemacs/window-split-triple-columns
                                             spacemacs/window-split-grid)
@@ -817,7 +817,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    treemacs-deferred-git-apply-delay 0.25
    treemacs-use-follow-mode nil
    ;; https://github.com/Alexander-Miller/cfrs/issues/4 is fixed but this is still buggy
-   treemacs-read-string-input (if (not my/macos-flag) 'from-minibuffer 'from-child-frame)
+   treemacs-read-string-input 'from-minibuffer
 
    unicode-fonts-enable-ligatures t
    unicode-fonts-less-feedback t
@@ -979,7 +979,7 @@ before packages are loaded."
     (setq company-shell-modes '(eshell-mode)))
 
   ;; flycheck ---------------------------------------------------------------------
-  ;; TODO: move posframe-posframe stuff to posframe layer
+  ;; TODO: move flycheck-posframe stuff to posframe layer
   (remove-hook 'flycheck-mode-hook 'flycheck-pos-tip-mode)
   ;; (add-hook 'flycheck-mode-hook 'flycheck-popup-tip-mode)
   (add-hook 'flycheck-mode-hook 'flycheck-posframe-mode)
@@ -1007,11 +1007,6 @@ before packages are loaded."
 
     (add-hook 'flycheck-posframe-mode-hook #'fix-flycheck-posframe-not-hide-immediately))
 
-  ;; contributes to slowness when switching branches according to cpu profiler
-  (when my/work-flag
-    (defun flycheck-haskell-configure ()))
-
-
   ;; dired -----------------------------------------------------------------------
   (defun my/dired-up-directory ()
     (interactive)
@@ -1032,9 +1027,12 @@ before packages are loaded."
 
 
   ;; comint --------------------------------------------------------------------
+
+  ;; doesn't work, try advising spacemacs/kill-this-buffer instead
+  (spacemacs/set-leader-keys-for-major-mode 'comint-mode
+    "bd" #'comint-send-eof)
+
   (evil-define-key 'normal comint-mode-map
-    ;; doesn't work, try advising spacemacs/kill-this-buffer instead
-    (kbd (concat dotspacemacs-leader-key " b d")) #'comint-send-eof
     [return] 'comint-send-input)
 
   (evil-define-key 'insert comint-mode-map
@@ -1126,8 +1124,7 @@ before packages are loaded."
 
 
   ;; [ma]git ----------------------------------------------------------------------
-  ;; TODO: don't do full column, just use current window
-  (setq magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
+  (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
 
   ;; -- delta
   ;; slow, so leave off and toggle on as needed https://github.com/dandavison/magit-delta/issues/9#issuecomment-1610136282
@@ -1391,14 +1388,9 @@ before packages are loaded."
                   docker-image-mode))
     (add-to-list 'evil-evilified-state-modes mode))
 
-  ;; default is just #'kill-window
-  ;; todo: do the same for more magit modes?
+  ;; default for special-mode derivatives is 'kill-window
   (evil-define-key nil helpful-mode-map "q" #'kill-buffer-and-window)
   (evil-define-key nil help-mode-map "q" #'kill-buffer-and-window)
-  (evil-define-key '(normal motion) magit-mode-map "q" #'kill-buffer-and-window)
-
-  ;; experimenting...
-  (evil-define-key nil special-mode-map "q" #'kill-buffer-and-window)
 
   ;; make C-k work in ivy/insert (and elsewhere, probably)
   (evil-define-key 'insert 'global (kbd "C-k") nil)
@@ -1438,11 +1430,6 @@ before packages are loaded."
   (apheleia-global-mode +1)
 
   ;; eslint -----------------------------------------------------------------------
-
-  ;; NOTE: use `lsp-install-server' for eslint, but also eslint itself must be installed
-  ;; in the npm local workspace or globally. If using the local install, the lsp workspace
-  ;; root match (eg `bodata/service/`, not `bodata/`).
-
   ;; reduce modeline clutter
   (add-hook 'lsp-before-initialize-hook
             (lambda () (defun lsp-eslint-status-handler (_ _) t)))
@@ -1667,12 +1654,7 @@ before packages are loaded."
     (cl-pushnew item (alist-get 'typescript-mode ts-fold-range-alist)))
 
   ;; purescript ----------------------------------------------------------------
-  ;; piggyback on `spago repl` to make ,si (`purs repl`) work
-  ;; why is `psci/arguments' void at startup?
-  ;; (add-to-list 'psci/arguments ".spago/psci-support/**/*.purs")
   (setq purescript-indent-offset 2)
-
-  (spacemacs/toggle-debug-on-error-off)
 
   ;; minimap ------------------------------------------------------------------
   ;; TODO: try out https://github.com/zk-phi/sublimity#sublimity-map-minimap-experimental
@@ -1707,7 +1689,6 @@ before packages are loaded."
   ;; `rust--format-call' needs to kill the *rustfmt* buffer when it's done, but for
   ;; some reason it does that with `kill-buffer-and-window', killing the buffer to
   ;; be formatted as well. We don't want that.
-
   (advice-add 'rust--format-call
               :around (lambda (func &rest args)
                         (cl-letf (((symbol-function 'kill-buffer-and-window) #'kill-buffer))
@@ -1736,7 +1717,9 @@ before packages are loaded."
   ;; ==========================================================================
 
   (when my/work-flag
-    (load (file-truename "~/.spacemacs.d/day-job.el") nil nil t)))
+    (load (file-truename "~/.spacemacs.d/day-job.el") nil nil t))
+
+  (spacemacs/toggle-debug-on-error-off))
 
 ;; ==========================================================================
 
@@ -1870,6 +1853,7 @@ TODO: messes with ivy-posframe background color?"
   (interactive "aFunction symbol: ")
   (advice-mapc (lambda (advice _props) (advice-remove sym advice)) sym))
 
+;; WIP
 (defun my/sync-project-layout-buffers ()
   (interactive)
   (let ((persp-names
