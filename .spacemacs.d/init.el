@@ -1633,7 +1633,6 @@ before packages are loaded."
   ;; https://github.com/Fuco1/smartparens/issues/1036
   (defun my/minibuffer-fix-sp ()
     (setq-local comment-start ";")
-    (sp-local-pair 'minibuffer-pairs "'" nil :actions nil)
     (sp-local-pair 'minibuffer-pairs "`" nil :actions nil)
     (sp-update-local-pairs 'minibuffer-pairs))
   (add-hook 'eval-expression-minibuffer-setup-hook #'my/minibuffer-fix-sp)
