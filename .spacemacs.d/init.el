@@ -20,6 +20,54 @@
 (defun my/suppress-messages-hook (func)
   (lambda () (my/with-no-messages (funcall func))))
 
+(defun my/install-external-deps ()
+  (interactive)
+  (let* ((spacemacs-d-path (f-expand "~/.spacemacs.d"))
+         (nix-path (f-join spacemacs-d-path "nix"))
+         (flake-path (f-join nix-path "flake"))
+         (profile-path (f-join nix-path "profile"))
+         (out-buffer "*nix profile install*"))
+
+    ;; --- install ---
+    ;; avoid priority/conflict errors. is there a better way?
+    (when (file-exists-p profile-path) (delete-file profile-path t))
+    (async-shell-command
+     (format "set -x; nix -vv profile install --profile %s %s" profile-path flake-path)
+     out-buffer)
+    (pop-to-buffer out-buffer)
+    (evil-normal-state)
+
+
+    ;; --- config ---
+    (add-to-list 'treesit-extra-load-path profile-path)
+    (add-to-list 'treesit-load-name-override-list '(yaml "yaml" "tree_sitter_yaml"))
+
+    (let ((profile-bin-path (f-join profile-path "bin")))
+      (add-to-list 'exec-path profile-bin-path)
+      (setenv "PATH" (format "%s:%s" profile-bin-path (getenv "PATH"))))
+
+
+    ;; eslint
+    (setq lsp-eslint-server-command '("vscode-eslint-language-server" "--stdio"))
+
+    ;; angular
+    (let* ((ng-extension-path (f-join profile-path "share/vscode/extensions/Angular.ng-template"))
+           (ng-server-path (f-join ng-extension-path "server/bin/ngserver"))
+           (ng-node-modules-path (f-join ng-extension-path "node_modules")))
+      (setq lsp-clients-angular-language-server-command
+            (list "node" ng-server-path
+                  "--ngProbeLocations" ng-node-modules-path
+                  "--tsProbeLocations" ng-node-modules-path
+                  "--stdio")))
+
+    ;; java
+    (setq lsp-java-server-install-dir (f-join profile-path "share/java"))
+    ;; override `lsp-java--ls-command' to use the jar wrapper from nix
+    (advice-add 'lsp-java--ls-command
+                :filter-return (lambda (val)
+                                 `(,(f-join profile-path "bin" "jdt-language-server")
+                                   "-data" ,(lsp-file-local-name lsp-java-workspace-dir))))))
+
 (defun dotspacemacs/layers ()
   "Layer configuration:
 This function should only modify configuration layer settings."
@@ -168,10 +216,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '( ;; nonfatal error on startup if the themes aren't listed here. why?
-                                    doom-flatwhite-theme
-                                    doom-henna-theme
-                                    )
+   dotspacemacs-excluded-packages '()
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -355,13 +400,11 @@ It should only modify the values of Spacemacs settings."
                          doom-one-light
                          doom-opera-light
                          doom-tomorrow-day
-                         doom-flatwhite
 
                          ;; extra medium
                          doom-nova
 
                          ;; extra darks
-                         doom-henna
                          doom-city-lights
                          doom-ephemeral
                          doom-material
@@ -840,7 +883,6 @@ This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
 dump."
   )
-
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -1330,7 +1372,8 @@ before packages are loaded."
         doom-modeline-irc t
         doom-modeline-persp-name nil
         ;; want this, but slows scrolling. todo: cake and eat it to?
-        doom-modeline-buffer-state-icon nil)
+        ;; doom-modeline-buffer-state-icon nil ;; testing without
+        )
 
   (defun my/toggle-relative-path-in-modeline ()
     (interactive)
@@ -1670,7 +1713,7 @@ before packages are loaded."
   (add-hook 'minimap-mode-hook (lambda () (set-window-fringes (minimap-get-window) 1 1)))
 
 
-  ;; lsp ---------------------------------------------------------------------
+  ;; lsp/dap ---------------------------------------------------------------------
   ;; TODO: upstream these
   (spacemacs/set-leader-keys-for-minor-mode 'lsp-mode
     "hf" #'lsp-ui-doc-focus-frame)
@@ -1715,12 +1758,10 @@ before packages are loaded."
   (advice-add 'spacemacs/janet-format-format-buffer :around #'envrc-propagate-environment)
 
   ;; ==========================================================================
-
   (when my/work-flag
     (load (file-truename "~/.spacemacs.d/day-job.el") nil nil t))
-
   (spacemacs/toggle-debug-on-error-off))
-
+;; end dotspacemacs/user-config
 ;; ==========================================================================
 
 ;; misc commands --------------------------------------------------------------
@@ -1730,27 +1771,9 @@ before packages are loaded."
   (setq buffer-display-table (make-display-table))
   (aset buffer-display-table ?\^M []))
 
-(defun my/magit-kill-all ()
-  (interactive)
-  (kill-matching-buffers "^magit" nil t))
-
-(defun my/echo-file-path ()
-  (interactive)
-  (spacemacs/echo (spacemacs--projectile-file-path)))
-
 (defun my/browse-info ()
   (interactive)
   (info (buffer-file-name)))
-
-(defun my/toggle-frame-decorated ()
-  "Useful because decoration breaks Rectangle stuff on OSX.
-TODO: messes with ivy-posframe background color?"
-  (interactive)
-  (set-frame-parameter nil 'undecorated (not (frame-parameter nil 'undecorated)))
-  (toggle-frame-maximized)
-  (toggle-frame-maximized)
-  (posframe-delete-all) ;; some kind of bug
-  )
 
 (defun my/ansi-color/apply-on-buffer ()
   (interactive)
@@ -1771,33 +1794,27 @@ TODO: messes with ivy-posframe background color?"
     (while (search-forward "\\n" (line-end-position) t)
       (replace-match "\n"))))
 
-;; TODO: implement as mode? deriving writeroom-mode?
+;; TODO: implement as mode?
 (defvar my/prosey nil)
 
 (defun my/toggle-prosey-on ()
   (interactive)
   (toggle-word-wrap +1)
   (visual-line-mode +1)
-  ;; (hl-line-mode -1)
-  (spacemacs/toggle-line-numbers-off) ;; doesn't always work?
+  (spacemacs/toggle-line-numbers-off)
   (spacemacs/toggle-relative-line-numbers-off)
   (spacemacs/toggle-truncate-lines-off)
   (spacemacs/toggle-spelling-checking-on)
-  ;; (unless writeroom-mode
-  ;;   (spacemacs/toggle-centered-buffer))
   (setq my/prosey t))
 
 (defun my/toggle-prosey-off ()
   (interactive)
   (toggle-word-wrap -1)
   (visual-line-mode -1)
-  ;; (hl-line-mode +1)
   (spacemacs/toggle-line-numbers-on)
   (spacemacs/toggle-relative-line-numbers-on)
   (spacemacs/toggle-truncate-lines-on)
   (spacemacs/toggle-spelling-checking-off)
-  ;; (when writeroom-mode
-  ;;   (speacemacs/toggle-centered-buffer))
   (setq my/prosey nil))
 
 (defun my/toggle-prosey ()
@@ -1812,8 +1829,7 @@ TODO: messes with ivy-posframe background color?"
     (make-empty-file (f-join path "README.md") t)
     (let ((default-directory path))
       (shell-command "git init"))
-    (projectile-add-known-project path)
-    ))
+    (projectile-add-known-project path)))
 
 (defun my/clone-new-project (url)
   (interactive "surl? ")
@@ -1826,10 +1842,8 @@ TODO: messes with ivy-posframe background color?"
     (projectile-add-known-project (f-join default-directory repo-name)))
   (message "git clone complete"))
 
-;; (add-hook 'text-mode-hook 'my/toggle-prosey-on)
-;; (add-hook 'markdown-mode 'my/toggle-prosey-on)
-;; (add-hook 'org-mode 'my/toggle-prosey-on)
 
+;; don't really need this now that we're using --with-poll on macos
 (defun my/fix-too-many-open-files ()
   (interactive)
   (maphash
@@ -1866,59 +1880,10 @@ TODO: messes with ivy-posframe background color?"
          (message "adding buffer %s to layout %s" (buffer-name (current-buffer)) project-name)
          (persp-add-buffer (current-buffer) (persp-get-by-name project-name)))))))
 
-(defun my/install-external-deps ()
-  (interactive)
-  (let* ((spacemacs-d-path (f-expand "~/.spacemacs.d"))
-         (nix-path (f-join spacemacs-d-path "nix"))
-         (flake-path (f-join nix-path "flake"))
-         (profile-path (f-join nix-path "profile"))
-         (out-buffer "*nix profile install*"))
-
-    ;; --- install ---
-    ;; avoid priority/conflict errors. is there a better way?
-    (when (file-exists-p profile-path) (delete-file profile-path t))
-    (async-shell-command
-     (format "set -x; nix -vv profile install --profile %s %s" profile-path flake-path)
-     out-buffer)
-    (pop-to-buffer out-buffer)
-    (evil-normal-state)
-
-
-    ;; --- config ---
-    (add-to-list 'treesit-extra-load-path profile-path)
-    (add-to-list 'treesit-load-name-override-list '(yaml "yaml" "tree_sitter_yaml"))
-
-    (let ((profile-bin-path (f-join profile-path "bin")))
-      (add-to-list 'exec-path profile-bin-path)
-      (setenv "PATH" (format "%s:%s" profile-bin-path (getenv "PATH"))))
-
-
-    ;; eslint
-    (setq lsp-eslint-server-command '("vscode-eslint-language-server" "--stdio"))
-
-    ;; angular
-    (let* ((ng-extension-path (f-join profile-path "share/vscode/extensions/Angular.ng-template"))
-           (ng-server-path (f-join ng-extension-path "server/bin/ngserver"))
-           (ng-node-modules-path (f-join ng-extension-path "node_modules")))
-      (setq lsp-clients-angular-language-server-command
-            (list "node" ng-server-path
-                  "--ngProbeLocations" ng-node-modules-path
-                  "--tsProbeLocations" ng-node-modules-path
-                  "--stdio")))
-
-    ;; java
-    (setq lsp-java-server-install-dir (f-join profile-path "share/java"))
-    ;; override `lsp-java--ls-command' to use the jar wrapper from nix
-    (advice-add 'lsp-java--ls-command
-                :filter-return (lambda (val)
-                                 `(,(f-join profile-path "bin" "jdt-language-server")
-                                   "-data" ,(lsp-file-local-name lsp-java-workspace-dir))))))
-
 ;; TODO: annoying auth is needed on each call. what can we do about this?
 ;; seems it wouldn't happen if called in process somehow:
 ;; https://1password.community/discussion/138627/cli-keeps-prompting-for-authentication
-;; or can turn off app integration and use `op signing', but then master password is required
-;;
+;; or can turn off app integration and use `op signing', but then master password is required.
 ;; try https://github.com/xuchunyang/1password.el
 (defun my/1password-read (url)
   (string-trim (shell-command-to-string (format "op read '%s'" url))))
