@@ -61,6 +61,7 @@
                   "--stdio")))
 
     ;; java
+    ;; TODO: broke with nix 24.05 update
     (setq lsp-java-server-install-dir (f-join profile-path "share/java"))
     ;; override `lsp-java--ls-command' to use the jar wrapper from nix
     (advice-add 'lsp-java--ls-command
