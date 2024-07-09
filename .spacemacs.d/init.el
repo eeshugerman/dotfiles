@@ -39,8 +39,6 @@
 
 
     ;; --- config ---
-    (add-to-list 'treesit-extra-load-path profile-path)
-    (add-to-list 'treesit-load-name-override-list '(yaml "yaml" "tree_sitter_yaml"))
 
     (let ((profile-bin-path (f-join profile-path "bin")))
       (add-to-list 'exec-path profile-bin-path)
@@ -989,6 +987,19 @@ before packages are loaded."
   (add-to-list 'auto-mode-alist
                ;; TODO: define custom mode extending markdown-mode with ",c" bound to save and kill
                `(,(rx "tmp_github.com_" (repeat 8 alphanumeric) ".txt" string-end) . markdown-mode))
+
+  ;; treesit  ----------------------------------------------------------------
+  (setq treesit-language-source-alist
+        '((yaml "https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0")
+          (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile" "v0.2.0")))
+
+  (dolist (pair treesit-language-source-alist)
+    (treesit-install-language-grammar (car pair)))
+
+  (add-to-list 'major-mode-remap-alist '(dockerfile-mode . dockerfile-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(yaml-mode . yaml-ts-mode))
+
+
   ;; emacs lisp ----------------------------------------------------------------
   (spacemacs/set-leader-keys-for-major-mode 'emacs-lisp-mode
     "gd" #'spacemacs/jump-to-definition
@@ -1592,9 +1603,8 @@ before packages are loaded."
   (setq docker-pop-to-buffer-action '(display-buffer-same-window))
 
   ;; yaml ---------------------------------------------------------------------
-  (add-to-list 'major-mode-remap-alist '(yaml-mode . yaml-ts-mode))
   (add-hook 'yaml-ts-mode-hook (lambda () (origami-mode +1))) ;; doesn't work terribly well
-  (add-hook 'yaml-mode-hook #'spacemacs/toggle-spelling-checking-off)
+  (add-hook 'yaml-ts-mode-hook #'spacemacs/toggle-spelling-checking-off)
 
   ;; symex --------------------------------------------------------------------
   (evil-define-key '(normal insert) symex-mode-map

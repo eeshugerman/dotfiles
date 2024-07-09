@@ -37,10 +37,8 @@
             python312 # for treemacs-use-git-mode 'extended or 'deferred
             rust-analyzer
             shfmt
-            tree-sitter-grammars.tree-sitter-yaml
             vscode-extensions.angular.ng-template
-            (tree-sitter.withPlugins (p: [ p.tree-sitter-yaml ]))
-
+            tree-sitter # not sure if we need this
           ]) ++ (with pkgs-unstable; [
             nodePackages.typescript # lsp-mode wants this (in addition to the language server)
             nodePackages.typescript-language-server
