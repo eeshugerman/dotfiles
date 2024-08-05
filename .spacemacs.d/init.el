@@ -120,7 +120,7 @@ This function should only modify configuration layer settings."
      ipython-notebook
      ivy
      java
-     javascript ; TODO: maybe remove this; typescript-mode works for js
+     ;; javascript ; TODO: maybe remove this; typescript-mode works for js
      kubernetes
      markdown
      meson
@@ -172,6 +172,7 @@ This function should only modify configuration layer settings."
      ox-reveal
      ox-pandoc
      beacon
+     caps-lock
      dired-git-info
      diredfl
      eat
@@ -755,7 +756,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    git-enable-magit-delta-plugin t
    git-enable-magit-todos-plugin nil ;; can this be configured to show todos in the diff from master only?
 
-   groovy-backend 'lsp
+   ;; groovy-backend 'lsp
    ;; TODO: use nix
    groovy-lsp-jar-path "~/util/groovy-language-server/build/libs/groovy-language-server-all.jar"
 
@@ -779,7 +780,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-enable-indentation nil
    lsp-enable-on-type-formatting nil
    lsp-enable-symbol-highlighting t
-   lsp-eslint-enable t ;; note: not in on npm, use `lsp-install-server'
+   lsp-eslint-enable t
    lsp-eslint-warn-on-ignored-files t
    lsp-file-watch-threshold 1500
    lsp-headerline-breadcrumb-enable t
@@ -1468,8 +1469,10 @@ before packages are loaded."
 
   ;; typescript mode seems to work better than js2, at least w/r/t performance
   (add-to-list 'auto-mode-alist `(,(rx ".js" string-end) . typescript-mode))
+  (add-to-list 'auto-mode-alist `(,(rx ".mjs" string-end) . typescript-mode))
 
   (spacemacs/set-leader-keys-for-major-mode 'typescript-mode
+    ;; TODO: ts-node repl?
     (kbd "si") #'nodejs-repl)
 
   (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")

@@ -28,7 +28,7 @@
             ispell
             jdt-language-server
             nixd
-            nixfmt
+            nixfmt-classic
             nodePackages.bash-language-server
             nodePackages.pyright
             nodePackages.sql-formatter
