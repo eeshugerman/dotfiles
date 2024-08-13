@@ -782,9 +782,10 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-enable-symbol-highlighting t
    lsp-eslint-enable t
    lsp-eslint-warn-on-ignored-files t
-   lsp-file-watch-threshold 1500
+   lsp-file-watch-threshold 3000
    lsp-headerline-breadcrumb-enable t
    lsp-headerline-breadcrumb-segments '(symbols)
+   lsp-headerline-breadcrumb-icons-enable nil ;; icons can make the headerline height wobble when point moves
    lsp-idle-delay 0.2
    lsp-inlay-hint-enable t
    lsp-modeline-code-actions-enable nil
@@ -1621,8 +1622,8 @@ before packages are loaded."
           ("M-j" . symex-goto-highest)
           ("M-k" . symex-goto-lowest)))
 
-  (dolist (mode '(lisp-data-mode ielm-mode janet-mode))
-    (add-to-list 'symex-lisp-modes mode))
+  ;; (dolist (mode '(lisp-data-mode ielm-mode janet-mode))
+  ;;   (add-to-list 'symex-lisp-modes mode))
   (symex-initialize)
 
   ;; erc ----------------------------------------------------------------------
