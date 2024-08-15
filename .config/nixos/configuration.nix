@@ -10,6 +10,8 @@
     /etc/nixos/hardware-configuration.nix
   ];
 
+  services.flatpak.enable = true;
+
   services.xremap = {
     withGnome = true;
     serviceMode = "user";
