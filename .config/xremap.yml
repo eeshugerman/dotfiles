@@ -6,6 +6,12 @@ modmap:
       ALT_L: SUPER_L
       SUPER_L: ALT_L
 
+  - name: Swap capslock and escape
+    device:
+      only: 'AT Translated Set 2 keyboard'
+    remap:
+      CapsLock: Esc
+
 # NOTE: If application filters aren't working, make sure xremap was built
 # with `--features gnome` and Shell extension is enabled.
 keymap:
