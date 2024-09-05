@@ -990,6 +990,16 @@ before packages are loaded."
                ;; TODO: define custom mode extending markdown-mode with ",c" bound to save and kill
                `(,(rx "tmp_github.com_" (repeat 8 alphanumeric) ".txt" string-end) . markdown-mode))
 
+
+  ;; default to t after three seconds for "open file literally?" prompt
+  (advice-add 'spacemacs/check-large-file
+              :around (lambda (func &rest args)
+                        (cl-letf (((symbol-function 'y-or-n-p-orig) (symbol-function 'y-or-n-p))
+                                  ((symbol-function 'y-or-n-p) (lambda (prompt)
+                                                                 (with-timeout (3 t)
+                                                                   (y-or-n-p-orig prompt)))) )
+                          (apply func args))))
+
   ;; treesit  ----------------------------------------------------------------
   (setq treesit-language-source-alist
         '((yaml "https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0")
@@ -1902,5 +1912,3 @@ before packages are loaded."
 ;; try https://github.com/xuchunyang/1password.el
 (defun my/1password-read (url)
   (string-trim (shell-command-to-string (format "op read '%s'" url))))
-
-;; TODO: override `y-or-n-p' with `y-or-n-p-with-timeout' in `spacemacs/check-large-file'
