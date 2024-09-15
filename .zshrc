@@ -57,9 +57,7 @@ else
     alias sudo="sudo " # https://askubuntu.com/a/22043
     alias nixos-rebuild-test="sudo nixos-rebuild test --impure --flake ~/.config/nixos"
     alias nixos-rebuild-switch="sudo nixos-rebuild switch --impure --flake ~/.config/nixos"
-    function nixos-print-diffs {
-        nix profile diff-closures --profile /nix/var/nix/profiles/system | tail "-${1:-100}"
-    }
+    alias nixos-print-diffs="nix store diff-closures \$(ls -t1d /nix/var/nix/profiles/system-*-link | head -2)"
 
     alias dconf-dump="dconf dump / | vim -R -c 'set ft=dosini'"
     alias dconf-edit="vim $HOME/.config/dconf-user.conf"
