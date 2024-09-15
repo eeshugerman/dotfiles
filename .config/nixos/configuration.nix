@@ -16,7 +16,7 @@
     withGnome = true;
     serviceMode = "user";
     userName = "elliott";
-    deviceNames = [ "AT Translated Set 2 keyboard" "Logitech ERGO K860" ];
+    deviceNames = [ "AT Translated Set 2 keyboard" "Glove80 Keyboard" ];
     watch = true;
     yamlConfig = builtins.readFile /home/elliott/.config/xremap.yml;
   };
