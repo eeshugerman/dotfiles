@@ -1490,9 +1490,6 @@ before packages are loaded."
     ;; TODO: ts-node repl?
     (kbd "si") #'nodejs-repl)
 
-  (setenv "TSSERVER_LOG_FILE" "/tmp/tsserver.log")
-  (setenv "TSC_NONPOLLING_WATCHER" "true")
-
   ;; (setq dap-js-debug-program `("node" ,(expand-file-name "~/Downloads/dist/src/dapDebugServer.js")))
   ;; (add-hook 'typescript-mode-hook (lambda () (require 'dap-js)))
 
