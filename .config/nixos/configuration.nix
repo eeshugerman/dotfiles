@@ -160,6 +160,7 @@
       zsh
       zeroad
       xorg.xeyes
+      gcc
     ];
   };
 

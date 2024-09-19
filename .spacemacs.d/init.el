@@ -1010,13 +1010,20 @@ before packages are loaded."
   ;; treesit  ----------------------------------------------------------------
   (setq treesit-language-source-alist
         '((yaml "https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0")
-          (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile" "v0.2.0")))
+          (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile" "v0.2.0")
+          (nix "https://github.com/nix-community/tree-sitter-nix")))
 
   (dolist (pair treesit-language-source-alist)
     (treesit-install-language-grammar (car pair)))
 
   (add-to-list 'major-mode-remap-alist '(dockerfile-mode . dockerfile-ts-mode))
   (add-to-list 'major-mode-remap-alist '(yaml-mode . yaml-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(nix-mode . nix-ts-mode))
+
+  ;; nix ----------------------------------------------------------------------
+  ;; it appears spacemacs doesn't respect major-mode-remap-alist :(
+  (add-hook 'nix-mode-hook (lambda () (lsp-mode +1)))
+
 
 
   ;; emacs lisp ----------------------------------------------------------------
