@@ -1061,7 +1061,6 @@ before packages are loaded."
   ;; flycheck ---------------------------------------------------------------------
   ;; TODO: move flycheck-posframe stuff to posframe layer
   (remove-hook 'flycheck-mode-hook 'flycheck-pos-tip-mode)
-  ;; (add-hook 'flycheck-mode-hook 'flycheck-popup-tip-mode)
   (add-hook 'flycheck-mode-hook 'flycheck-posframe-mode)
 
   (setq flycheck-checker-error-threshold 3000
@@ -1086,6 +1085,18 @@ before packages are loaded."
              (remove-hook 'post-command-hook #'flycheck-posframe-monitor-post-command t))))
 
     (add-hook 'flycheck-posframe-mode-hook #'fix-flycheck-posframe-not-hide-immediately))
+
+  ;; make it easy to disable because it can get in the way of completions
+  (progn
+    (defun my/toggle-flycheck-posframe ()
+      (interactive)
+      (if flycheck-posframe-mode
+          (progn
+            (flycheck-posframe-mode -1)
+            (setq flycheck-display-errors-function 'flycheck-display-error-messages))
+        (flycheck-posframe-mode 1)))
+
+    (spacemacs/set-leader-keys "oe" #'my/toggle-flycheck-posframe))
 
   ;; dired -----------------------------------------------------------------------
   (defun my/dired-up-directory ()
@@ -1503,6 +1514,11 @@ before packages are loaded."
   ;; for testing https://github.com/emacs-lsp/dap-mode/pull/736 :
   ;; (add-hook 'typescript-mode-hook (lambda () (require 'dap-js-debug)))
 
+  ;; TODO: upstream these to lsp-mode
+  (with-eval-after-load 'lsp-mode
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.angular\\'")
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.nx\\'"))
+
   ;; apheleia ---------------------------------------------------------------------
   (apheleia-global-mode +1)
 
@@ -1640,8 +1656,8 @@ before packages are loaded."
           ("M-j" . symex-goto-highest)
           ("M-k" . symex-goto-lowest)))
 
-  ;; (dolist (mode '(lisp-data-mode ielm-mode janet-mode))
-  ;;   (add-to-list 'symex-lisp-modes mode))
+  (dolist (mode '(lisp-data-mode ielm-mode janet-mode))
+    (add-to-list 'symex-elisp-modes mode))
   (symex-initialize)
 
   ;; erc ----------------------------------------------------------------------
