@@ -1372,7 +1372,7 @@ before packages are loaded."
   (doom-themes-org-config)
   (doom-themes-visual-bell-config)
   (setq doom-themes-treemacs-theme "doom-colors")
-  (load-library "lsp-treemacs-themes")  ;; https://github.com/emacs-lsp/lsp-treemacs/issues/89
+  (load-library "lsp-treemacs-themes") ;; https://github.com/emacs-lsp/lsp-treemacs/issues/89
   (doom-themes-treemacs-config)
 
   ;; borders, etc ---
@@ -1397,7 +1397,7 @@ before packages are loaded."
       (set-face-background 'fringe default-background)
       (set-face-attribute 'show-paren-match nil :underline t))
     (set-face-foreground 'all-the-icons-ivy-rich-doc-face (doom-color 'base7))
-    (if my/macos-flag  ;; fix current-line jiggle w/ doom themes
+    (if my/macos-flag ;; fix current-line jiggle w/ doom themes
         (set-face-attribute 'line-number-current-line nil :weight 'normal))
     (window-divider-mode 1)
     (doom-modeline-invalidate-huds))
@@ -1493,8 +1493,8 @@ before packages are loaded."
     (kbd "C-j") #'vterm-send-down)
   (evil-define-key 'emacs vterm-mode-map (kbd "C-,") #'evil-normal-state)
 
-  (setq vterm-max-scrollback 100000  ; maximum size supported
-        vterm-min-window-width 65535 ; no suppress-hard-newline :(
+  (setq vterm-max-scrollback 100000     ; maximum size supported
+        vterm-min-window-width 65535    ; no suppress-hard-newline :(
         vterm-always-compile-module t
         vterm-clear-scrollback-when-clearing t)
 
@@ -1546,7 +1546,7 @@ before packages are loaded."
 
   (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") #'org-babel-execute-src-block)
 
-  (add-hook 'org-mode-hook #'spacemacs/toggle-line-numbers-off)  ;; doesn't work
+  (add-hook 'org-mode-hook #'spacemacs/toggle-line-numbers-off) ;; doesn't work
   (add-hook 'org-mode-hook #'spacemacs/toggle-auto-fill-mode-on)
   (add-hook 'org-mode-hook (lambda () (setq show-trailing-whitespace nil)))
 
@@ -1755,7 +1755,7 @@ before packages are loaded."
         minimap-minimum-width 10
         minimap-dedicated-window t
         minimap-hide-scroll-bar t
-        minimap-always-recenter nil  ;; idk
+        minimap-always-recenter nil ;; idk
         minimap-recenter-type 'middle)
 
   ;; hide fringe/glyph junk. not really sure why this works
