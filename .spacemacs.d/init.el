@@ -97,43 +97,29 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   `(lua
-     ;; erc ;; broken last i checked
-     ;; gnome-shell ;; not in spacemacs repo, installed as local layer
-     ansible
-     auto-completion
+   `(auto-completion
      c-c++
      csv
      dap
      debug
-     dhall
      docker
      emacs-lisp
-     epub
      git
      go
      graphviz
-     groovy
      helpful
      html
      ibuffer
      ipython-notebook
      ivy
      java
-     ;; javascript ; TODO: maybe remove this; typescript-mode works for js
-     kubernetes
+     lua
      markdown
-     meson
      multiple-cursors
      nav-flash
-     nginx
-     nixos
      org
      posframe
-     purescript
      python
-     rust
-     scheme
      shell
      shell-scripts
      slack
@@ -141,20 +127,33 @@ This function should only modify configuration layer settings."
      spell-checking
      sql
      syntax-checking
-     systemd
-     terraform
      tree-sitter
      treemacs
      typescript
      unicode-fonts
-     vagrant
      version-control
      yaml
-     ;; TODO: move more stuff here
-     ,@(if my/work-flag
-           '()
-         '(janet
-           haskell)))
+     ,@(when my/work-flag
+         '(groovy
+           kubernetes
+           terraform))
+     ,@(unless my/work-flag
+         '(ansible
+           dhall
+           epub
+           haskell
+           janet
+           meson
+           nginx
+           nixos
+           purescript
+           rust
+           scheme
+           vagrant))
+     ,@(when my/macos-flag
+         '())
+     ,@(unless my/macos-flag
+         '(systemd)))
 
    ;; List of additional packages that will be installed without being wrapped
    ;; in a layer (generally the packages are installed only and should still be
@@ -168,28 +167,23 @@ This function should only modify configuration layer settings."
    ;; for :location format, see https://github.com/melpa/melpa/#recipe-format
    ;; may need to delete package dir in ~/.emacs.d/elpa to replace
    `(
-     apheleia
-     ox-reveal
-     ox-pandoc
-     beacon
+     apheleia ;; auto formatter
      caps-lock
-     dired-git-info
-     diredfl
-     eat
+     diredfl ;; dired font-lock
+     eat ;; elisp terminal emulator
      envrc
-     fold-this
-     flycheck-popup-tip
      flycheck-posframe
+     fold-this
      gcmh
-     guix
+     highlight-indent-guides
      just-mode
-     pacfiles-mode
+     minimap
+     mustache-mode ;; for the templating lang
+     nerd-icons ;; for doom-modeline -- should be a dep?
+     ox-pandoc ;; org pandoc exporter
+     ox-reveal ;; org slidedeck exporter
      solaire-mode
      symex
-     minimap
-     mustache-mode
-     highlight-indent-guides
-     nerd-icons ;; for doom-modeline -- should be a dep?
      ;; mini-frame
      ;; undo-hl
      ;; coterm
@@ -204,13 +198,15 @@ This function should only modify configuration layer settings."
                  :repo "emacs-lsp/dap-mode"
                  :commit "755845ae053bbfdd3f7b3dca13efa4be480370b5"))
 
-     ,@(if my/work-flag
-           '((sql-snowflake :location "~/devel/sql-snowflake.el")
-             (sql-databricks :location "~/devel/sql-databricks.el")
-             sql-trino
-             (prisma-mode :location (recipe :fetcher github :repo "pimeys/emacs-prisma-mode")))
+     ,@(when my/work-flag
+         '((sql-snowflake :location "~/devel/sql-snowflake.el")
+           (sql-databricks :location "~/devel/sql-databricks.el")
+           sql-trino
+           (prisma-mode :location (recipe :fetcher github :repo "pimeys/emacs-prisma-mode"))))
+     ,@(unless my/work-flag
+         '(guix
+           (nushell-mode :location (recipe :fetcher github :repo "mrkkrp/nushell-mode")))))
 
-         '((nushell-mode :location (recipe :fetcher github :repo "mrkkrp/nushell-mode")))))
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -929,15 +925,15 @@ before packages are loaded."
   (use-package symex)
 
   ;; doesn't play nice with ts-fold
-  ;; TODO: try https://github.com/jdtsmith/indent-bars instead
-  ;; (use-package highlight-indent-guides
-  ;;   :init (setq ;; highlight-indent-guides-method 'bitmap
-  ;;               highlight-indent-guides-method 'character
-  ;;               highlight-indent-guides-responsive 'top
-  ;;               highlight-indent-guides-auto-character-face-perc 40
-  ;;               highlight-indent-guides-auto-top-character-face-perc 80)
-  ;;   :hook prog-mode
-  ;;   )
+  ;; TODO: try https://github.com/jdtsmith/indent-bars
+  (use-package highlight-indent-guides
+    :init (setq ;; highlight-indent-guides-method 'bitmap
+           highlight-indent-guides-method 'character
+           highlight-indent-guides-responsive 'top
+           highlight-indent-guides-auto-character-face-perc 40
+           highlight-indent-guides-auto-top-character-face-perc 80)
+    :hook prog-mode
+    )
 
   (when my/work-flag
     (use-package sql-snowflake)
@@ -1659,50 +1655,6 @@ before packages are loaded."
   (dolist (mode '(lisp-data-mode ielm-mode janet-mode))
     (add-to-list 'symex-elisp-modes mode))
   (symex-initialize)
-
-  ;; erc ----------------------------------------------------------------------
-  (setq erc-autojoin-timing 'connect
-        erc-enable-notifications t
-        erc-fill-function 'erc-fill-static
-        erc-fill-static-center 22
-        erc-hide-list '("JOIN" "PART" "QUIT")
-        erc-lurker-hide-list '("JOIN" "PART" "QUIT")
-        erc-lurker-threshold-time 43200
-        erc-prompt-for-nickserv-password nil
-        erc-server-reconnect-attempts 5
-        erc-server-reconnect-timeout 3
-        erc-status-sidebar-width 25
-        erc-track-exclude-server-buffer t
-        erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
-                                  "324" "329" "332" "333" "353" "477")
-        erc-track-position-in-mode-line nil
-        erc-track-shorten-function nil
-        erc-track-showcount t
-        erc-server-list
-        (if my/work-flag
-            '()
-          '(("irc.libera.chat"
-             :nick "ees"
-             :port "6697"
-             :ssl t)
-            ("irc.gitter.im"
-             :nick "eeshugerman"
-             :port "6697"
-             :ssl t)))
-
-        erc-autojoin-channels-alist
-        (if my/work-flag
-            '()
-          '(("libera.chat" . ("#chickadee"
-                              "#emacs"
-                              "#guile"
-                              "#guix"
-                              "#haskell"
-                              "#tridactyl"
-                              "##politics"))
-            ("gitter.im" . ("#syl20bnr/spacemacs")))))
-
-  (add-hook 'erc-track-minor-mode-hook #'erc-status-sidebar-open)
 
   ;; highlight-indentation ----------------------------------------------------
   ;; this is off by default
