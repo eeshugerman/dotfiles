@@ -82,6 +82,8 @@ export GPG_TTY=$(tty)
 if [[ "$INSIDE_EMACS" ]]; then
     # use evil instead of zsh's vi emulation
     bindkey -e
+    # https://elpa.nongnu.org/nongnu-devel/doc/eat.html#Shell-Integration
+    [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && source "$EAT_SHELL_INTEGRATION_DIR/zsh"
 fi
 
 

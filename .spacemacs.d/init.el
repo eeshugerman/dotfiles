@@ -910,7 +910,7 @@ before packages are loaded."
     "Face for punctuations."
     :group 'tree-sitter-hl-faces)
 
-  ;; init standalone modes ----------------------------------------------------
+  ;; init/configure standalone packages ----------------------------------------------------
   (use-package diredfl :config (diredfl-global-mode 1))
   (use-package gcmh
     :init (setq gcmh-verbose nil
@@ -924,7 +924,6 @@ before packages are loaded."
   (use-package solaire-mode :config (solaire-global-mode 1))
   (use-package symex)
 
-  ;; doesn't play nice with ts-fold
   ;; TODO: try https://github.com/jdtsmith/indent-bars
   (use-package highlight-indent-guides
     :init (setq ;; highlight-indent-guides-method 'bitmap
@@ -932,8 +931,7 @@ before packages are loaded."
            highlight-indent-guides-responsive 'top
            highlight-indent-guides-auto-character-face-perc 40
            highlight-indent-guides-auto-top-character-face-perc 80)
-    :hook prog-mode
-    )
+    :hook prog-mode)
 
   (when my/work-flag
     (use-package sql-snowflake)
@@ -1757,6 +1755,21 @@ before packages are loaded."
   ;; janet -------------------------------------------------------------
   ;; see local/custom layer for the rest
   (advice-add 'spacemacs/janet-format-format-buffer :around #'envrc-propagate-environment)
+
+  ;; eat -------------------------------------------------------------------
+  (use-package eat
+    :custom
+    (eat-enable-auto-line-mode t)
+    (eat-enable-directory-tracking t)
+    (eat-enable-auto-line-mode t))
+
+  (spacemacs/set-leader-keys "ot" #'eat-project)
+
+  (evil-define-key '(normal insert) eat-mode-map
+    (kbd "C-j") #'eat-line-next-input
+    (kbd "C-k") #'eat-line-previous-input
+    [return] #'eat-line-send-input)
+
 
   ;; ==========================================================================
   (when my/work-flag
