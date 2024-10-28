@@ -193,11 +193,6 @@ This function should only modify configuration layer settings."
       :location (recipe :fetcher github :repo "travisbhartwell/nix-emacs"))
      (dconf-dotfile
       :location (recipe :fetcher github :repo "eeshugerman/dconf-dotfile.el"))
-     (dap-mode
-      :location (recipe
-                 :fetcher github
-                 :repo "emacs-lsp/dap-mode"
-                 :commit "755845ae053bbfdd3f7b3dca13efa4be480370b5"))
      (explain-pause-mode
       :location (recipe :fetcher github :repo "lastquestion/explain-pause-mode"))
 
