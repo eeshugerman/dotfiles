@@ -919,6 +919,8 @@ before packages are loaded."
   (use-package envrc
     :config (envrc-global-mode))
   (use-package guix)
+  (use-package explain-pause-mode
+    :config (explain-pause-mode 1))
   (use-package solaire-mode :config (solaire-global-mode 1))
   (use-package symex)
 
