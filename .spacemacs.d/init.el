@@ -918,11 +918,12 @@ before packages are loaded."
     :config (gcmh-mode 1))
   (use-package envrc
     :config (envrc-global-mode))
-  (use-package guix)
   (use-package explain-pause-mode
     :config (explain-pause-mode 1))
   (use-package solaire-mode :config (solaire-global-mode 1))
   (use-package symex)
+  (unless my/work-flag
+    (use-package guix))
 
   ;; TODO: try https://github.com/jdtsmith/indent-bars
   (use-package highlight-indent-guides
