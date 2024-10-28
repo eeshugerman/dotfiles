@@ -172,6 +172,7 @@ This function should only modify configuration layer settings."
      diredfl ;; dired font-lock
      eat ;; elisp terminal emulator
      envrc
+     explain-pause-mode
      flycheck-posframe
      fold-this
      gcmh
@@ -197,6 +198,8 @@ This function should only modify configuration layer settings."
                  :fetcher github
                  :repo "emacs-lsp/dap-mode"
                  :commit "755845ae053bbfdd3f7b3dca13efa4be480370b5"))
+     (explain-pause-mode
+      :location (recipe :fetcher github :repo "lastquestion/explain-pause-mode"))
 
      ,@(when my/work-flag
          '((sql-snowflake :location "~/devel/sql-snowflake.el")
