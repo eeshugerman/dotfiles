@@ -877,7 +877,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    writeroom-maximize-window nil
    writeroom-mode-line t
-   writeroom-global-effects nil))
+   writeroom-global-effects nil)
+
+  (setopt spacemacs-keep-legacy-current-buffer-delete-bindings nil))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
