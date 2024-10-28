@@ -64,7 +64,7 @@ else
     alias dconf-load="dconf load / < $HOME/.config/dconf-user.conf"
 fi
 
-alias my-nix-gc="nix-collect-garbage --delete-older-than 15d"
+alias my-nix-gc="nix-collect-garbage --delete-older-than 5d"
 
 
 function rsync-to-kodi {
@@ -98,3 +98,9 @@ if [ "$(uname)" = "Darwin" ]; then
     # it adds ~/.nix-profile to PATH (plus does other stuff, presumably)
     source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
 fi
+
+function git-cleanup {
+    git fetch --prune --prune-tags
+    git maintenance run --task gc # docs say to not run this at same time as loose-objects
+    git maintenance run --task loose-objects --task incremental-repack --task pack-refs
+}
