@@ -28,6 +28,7 @@
             # snowsql # fails to build :(
             trino-cli
             ngrok
+            sloccount
           ];
         };
 
