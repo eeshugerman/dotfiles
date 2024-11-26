@@ -26,7 +26,7 @@
             # pkgs.nerdfonts # didn't seem to work :/ also is slow
 
             ispell
-            jdt-language-server
+            # jdt-language-server # currently using lsp auto install
             nixd
             nixfmt-classic
             nodePackages.bash-language-server
