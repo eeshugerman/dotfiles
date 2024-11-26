@@ -122,7 +122,6 @@ This function should only modify configuration layer settings."
      python
      shell
      shell-scripts
-     slack
      spacemacs-layouts
      spell-checking
      sql
@@ -1580,26 +1579,6 @@ before packages are loaded."
 
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
-
-  ;; slack ----------------------------------------------------------------------
-  (require 'slack)
-  (set-face-background 'slack-message-mention-face (doom-color 'base3))
-  (set-face-background 'slack-message-mention-me-face (doom-color 'base3))
-  (set-face-foreground 'slack-message-mention-me-face (doom-color 'magenta))
-  (set-face-foreground 'slack-mrkdwn-code-face (doom-color 'violet))
-  (set-face-background 'slack-mrkdwn-code-face (doom-color 'base5))
-  (set-face-foreground 'slack-mrkdwn-code-block-face (doom-color 'violet))
-  (set-face-background 'slack-mrkdwn-code-block-face (doom-color 'base5))
-
-  (setq slack-render-image-p nil
-        slack-prefer-current-team t
-        slack-thread-also-send-to-room nil)
-
-  (set-face-attribute 'slack-message-output-header nil
-                      :underline nil
-                      :weight 'bold
-                      :height 1.0
-                      :foreground (doom-color 'highlight))
 
   ;; shell-scripts -------------------------------------------------------------
   (if my/macos-flag
