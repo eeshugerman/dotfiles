@@ -181,6 +181,7 @@ This function should only modify configuration layer settings."
      minimap
      mustache-mode ;; for the templating lang
      nerd-icons ;; for doom-modeline -- should be a dep?
+     nix-ts-mode
      ox-pandoc ;; org pandoc exporter
      ox-reveal ;; org slidedeck exporter
      solaire-mode
@@ -1019,6 +1020,7 @@ before packages are loaded."
 
   ;; nix ----------------------------------------------------------------------
   ;; it appears spacemacs doesn't respect major-mode-remap-alist :(
+  (add-to-list 'auto-mode-alist `(,(rx ".nix" string-end) . nix-mode))
   (add-hook 'nix-mode-hook (lambda () (lsp-mode +1)))
 
 
