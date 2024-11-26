@@ -950,10 +950,15 @@ before packages are loaded."
   ;; misc/general --------------------------------------------------------------
   (server-start)
 
+  (defun my/clear-shell-buffer ()
+    (interactive)
+    (cond ((derived-mode-p 'comint-mode) (comint-clear-buffer))
+          ((eq major-mode 'eat-mode) (eat-reset))))
+
   (spacemacs/set-leader-keys
     ":"  'eval-expression
     "ow" 'eww
-    "oc" 'comint-clear-buffer
+    "oc" 'my/clear-shell-buffer
     "og" 'revert-buffer
     "ou" 'my/unescape-newlines)
 
