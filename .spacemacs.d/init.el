@@ -175,7 +175,6 @@ This function should only modify configuration layer settings."
      flycheck-posframe
      fold-this
      gcmh
-     highlight-indent-guides
      just-mode
      minimap
      mustache-mode ;; for the templating lang
@@ -924,17 +923,9 @@ before packages are loaded."
     :config (explain-pause-mode 1))
   (use-package solaire-mode :config (solaire-global-mode 1))
   (use-package symex)
+
   (unless my/work-flag
     (use-package guix))
-
-  ;; TODO: try https://github.com/jdtsmith/indent-bars
-  (use-package highlight-indent-guides
-    :init (setq ;; highlight-indent-guides-method 'bitmap
-           highlight-indent-guides-method 'character
-           highlight-indent-guides-responsive 'top
-           highlight-indent-guides-auto-character-face-perc 40
-           highlight-indent-guides-auto-top-character-face-perc 80)
-    :hook prog-mode)
 
   (when my/work-flag
     (use-package sql-snowflake)
