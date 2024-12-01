@@ -68,7 +68,7 @@ alias my-nix-gc="nix-collect-garbage --delete-older-than 5d"
 
 
 function rsync-to-kodi {
-    rsync --recursive --verbose --progress $1 "kodi:${2:-/storage/downloads}"
+    rsync --recursive --verbose --progress $1 "kodi:${2:-/media/kodi-media-usb/misc}"
 }
 
 function rsync-backup {
