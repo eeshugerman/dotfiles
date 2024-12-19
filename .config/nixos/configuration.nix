@@ -105,8 +105,6 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  # Enable sound with pipewire.
-  sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -144,7 +142,7 @@
       fragments
       git
       gnome-firmware
-      gnome.gnome-tweaks
+      gnome-tweaks
       gnomeExtensions.ddterm
       gnomeExtensions.night-theme-switcher
       gnomeExtensions.pano
@@ -184,11 +182,7 @@
 
   ### from https://nixos.wiki/wiki/Nvidia
   # Enable OpenGL
-  hardware.opengl = {
-    enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-  };
+  hardware.graphics = { enable = true; };
 
   # Load nvidia driver for Xorg and Wayland
   services.xserver.videoDrivers = [ "nvidia" ];
