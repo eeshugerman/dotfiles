@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, pkgsUnstable, ... }:
 
 {
   imports = [
@@ -131,13 +131,14 @@
     description = "Elliott Shugerman";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     shell = pkgs.zsh;
-    packages = with pkgs; [
+    packages = (with pkgs; [
       bitwarden
       direnv
       dmidecode
       docker
       chromium
       # TODO: add vterm so package.el doesn't need to (ask to) compile it?
+      # TODO: emacs 30
       emacs29-pgtk
       fragments
       git
@@ -160,7 +161,8 @@
       zeroad
       xorg.xeyes
       gcc
-    ];
+      # qbittorrent
+    ]) ++ (with pkgsUnstable; [ eddie ]);
   };
 
   virtualisation.docker.enable = true;
@@ -179,7 +181,6 @@
   # https://github.com/NixOS/nixpkgs/issues/180175
   systemd.services.NetworkManager-wait-online.enable = false;
 
-  # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.nvidia.acceptLicense = true;
 
@@ -252,10 +253,12 @@
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [
     9222 # chrome remote debugging
-    51413 # transmission
+    51413 # router/transmission
+    13626 # airvpn/transmission
   ];
   networking.firewall.allowedUDPPorts = [
-    51413 # transmission
+    51413 # router/transmission
+    13626 # airvpn/transmission
   ];
 
   # This value determines the NixOS release from which the default
