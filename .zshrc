@@ -49,6 +49,7 @@ if [ "$(uname)" = "Darwin" ]; then
         && sudo rm -f /Applications/Emacs.app \
 		    && sudo osascript -e 'tell application "Finder" to make alias file to posix file "/usr/local/opt/emacs-plus@29/Emacs.app" at POSIX file "/Applications" with properties {name:"Emacs.app"}'
     }
+    alias nix-gc="nix-collect-garbage --delete-older-than 5d"
 else
     alias open="xdg-open"
     alias cbcopy="xclip -in -selection clipboard"
@@ -58,13 +59,13 @@ else
     alias nixos-rebuild-test="sudo nixos-rebuild test --impure --flake ~/.config/nixos"
     alias nixos-rebuild-switch="sudo nixos-rebuild switch --impure --flake ~/.config/nixos"
     alias nixos-print-diffs="nix store diff-closures \$(ls -t1d /nix/var/nix/profiles/system-*-link | head -2 | tac)"
+    alias nixos-gc="nix-collect-garbage --delete-older-than 5d && sudo nix-collect-garbage --delete-older-than 5d"
 
     alias dconf-dump="dconf dump / | vim -R -c 'set ft=dosini'"
     alias dconf-edit="vim $HOME/.config/dconf-user.conf"
     alias dconf-load="dconf load / < $HOME/.config/dconf-user.conf"
 fi
 
-alias my-nix-gc="nix-collect-garbage --delete-older-than 5d"
 
 
 function rsync-to-kodi {
