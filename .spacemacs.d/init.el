@@ -1264,7 +1264,7 @@ before packages are loaded."
   ;; ivy/ivy-rich --------------------------------------------------------------
 
   (evil-define-key 'normal ivy-minibuffer-map
-    [return] #'exit-minibuffer
+    [return] #'exit-minibuffer ;; is this the same as #'ivy-done?
     [escape] #'minibuffer-keyboard-quit)
 
   (evil-define-key nil ivy-minibuffer-map
