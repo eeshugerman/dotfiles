@@ -161,7 +161,7 @@
       zeroad
       xorg.xeyes
       gcc
-      # qbittorrent
+      qbittorrent
     ]) ++ (with pkgsUnstable; [ eddie ]);
   };
 
@@ -250,16 +250,18 @@
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
-  # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [
-    9222 # chrome remote debugging
-    51413 # router/transmission
-    13626 # airvpn/transmission
-  ];
-  networking.firewall.allowedUDPPorts = [
-    51413 # router/transmission
-    13626 # airvpn/transmission
-  ];
+  # use nftables for firewall instead of iptables
+  networking.nftables.enable = true;
+
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ ];
+    allowedUDPPorts = [ ];
+    interfaces."Eddie" = {
+      allowedTCPPorts = [ 13626 ];
+      allowedUDPPorts = [ 13626 ];
+    };
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
