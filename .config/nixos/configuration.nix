@@ -137,8 +137,8 @@
       dmidecode
       docker
       chromium
-      # TODO: add vterm so package.el doesn't need to (ask to) compile it?
-      # TODO: emacs 30
+      # TODO: manage packages and external deps with nix
+      # https://github.com/noctuid/dotfiles/blob/94c6f3e8a/nix/overlays/emacs.nix
       emacs30-pgtk
       fragments
       git

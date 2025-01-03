@@ -767,7 +767,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    lsp-auto-execute-action nil
    lsp-clients-typescript-max-ts-server-memory 4096
-   lsp-copilot-enabled nil
+   lsp-copilot-enabled nil ;; still prompts to install server :(
    lsp-eldoc-enable-hover nil
    lsp-enable-dap-auto-configure nil ;; performance issues. we also do (dap-auto-configure-mode -1) below for good measure
    lsp-enable-indentation nil
