@@ -139,7 +139,7 @@
       chromium
       # TODO: add vterm so package.el doesn't need to (ask to) compile it?
       # TODO: emacs 30
-      emacs29-pgtk
+      emacs30-pgtk
       fragments
       git
       gnome-firmware
