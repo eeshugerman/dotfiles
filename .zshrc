@@ -42,12 +42,16 @@ if [ "$(uname)" = "Darwin" ]; then
 	  export HOMEBREW_NO_AUTO_UPDATE=1
     alias cbcopy="pbcopy"
     alias cbpaste="pbpaste"
+	# TODO: switch to nix https://github.com/noctuid/dotfiles/blob/94c6f3e8a/nix/overlays/emacs.nix
     function upgrade-emacs {
         brew update \
-        && brew uninstall emacs-plus@30 \
-        && HOMEBREW_EMACS_PLUS_REVISION=fc17e8727d48c32f2610c6fe7c17147bff7be52b brew install emacs-plus@30 --with-native-comp \
-        && sudo rm -f /Applications/Emacs.app \
-        && sudo osascript -e 'tell application "Finder" to make alias file to posix file "/usr/local/opt/emacs-plus@30/Emacs.app" at POSIX file "/Applications" with properties {name:"Emacs.app"}'
+            && brew uninstall emacs-plus@30 \
+            && HOMEBREW_EMACS_PLUS_REVISION=fc17e8727d48c32f2610c6fe7c17147bff7be52b brew install emacs-plus@30 --with-native-comp \
+            && sudo rm -f /Applications/Emacs.app \
+            && sudo osascript -e 'tell application "Finder" to make alias file to posix file "/usr/local/opt/emacs-plus@30/Emacs.app" at POSIX file "/Applications" with properties {name:"Emacs.app"}'
+
+        # https://github.com/d12frosted/homebrew-emacs-plus/issues/742#issuecomment-2449092291
+        sudo codesign --force --deep --sign - /usr/local/opt/emacs-plus@30/Emacs.app
     }
     alias nix-gc="nix-collect-garbage --delete-older-than 5d"
 else

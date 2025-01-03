@@ -3,6 +3,7 @@
 ;; It must be stored in your home directory.
 
 (defconst my/macos-flag (eq system-type 'darwin))
+;; TODO: not working when emacs is launched from macos doc
 (defconst my/work-flag (thread-first "yadm config --get local.class"
                                      shell-command-to-string
                                      string-trim
@@ -766,7 +767,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    lsp-auto-execute-action nil
    lsp-clients-typescript-max-ts-server-memory 4096
-   lsp-debounce-full-sync-notifications-interval 3.0
    lsp-eldoc-enable-hover nil
    lsp-enable-dap-auto-configure nil ;; performance issues. we also do (dap-auto-configure-mode -1) below for good measure
    lsp-enable-indentation nil
@@ -778,7 +778,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-headerline-breadcrumb-enable t
    lsp-headerline-breadcrumb-segments '(symbols)
    lsp-headerline-breadcrumb-icons-enable nil ;; icons can make the headerline height wobble when point moves
-   lsp-idle-delay 0.2
    lsp-inlay-hint-enable t
    lsp-modeline-code-actions-enable nil
    lsp-signature-render-documentation nil
@@ -971,7 +970,9 @@ before packages are loaded."
   (when my/macos-flag
     ;; can be slow, resulting in periodic pauses
     ;; maybe not just just a macos thing
-    (savehist-mode -1))
+    (savehist-mode -1)
+    ;; seems to help with maximizing and moving between monitors
+    (setq frame-resize-pixelwise t))
 
   (dolist (hook '(hack-local-variables-hook
                   special-mode-hook
