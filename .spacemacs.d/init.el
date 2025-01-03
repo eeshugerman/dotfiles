@@ -1483,7 +1483,7 @@ before packages are loaded."
 
   (setq vterm-max-scrollback 100000     ; maximum size supported
         vterm-min-window-width 65535    ; no suppress-hard-newline :(
-        vterm-always-compile-module t
+        vterm-always-compile-module t   ; doesn't work? still prompts at first install
         vterm-clear-scrollback-when-clearing t)
 
   ;; javascript/typescript ---------------------------------------------------
