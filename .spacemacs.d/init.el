@@ -965,7 +965,7 @@ before packages are loaded."
     (customize-set-variable 'custom-file custom-file-path))
   (load custom-file)
 
-  (remove-hook 'after-make-frame-functions 'persp-init-new-frame)
+  (remove-hook 'after-make-frame-functions 'persp-init-new-frame) ;; not working?
   (remove-hook 'diff-mode-hook 'whitespace-mode)
 
   (when my/macos-flag
