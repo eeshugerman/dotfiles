@@ -1472,6 +1472,15 @@ before packages are loaded."
   ;; make C-k work in ivy/insert (and elsewhere, probably)
   (evil-define-key 'insert 'global (kbd "C-k") nil)
 
+  (defun my/sync-registers-system-to-emacs ()
+    (interactive)
+    (evil-set-register ?\" (evil-get-register ?\+)))
+
+  (defun my/sync-registers-emacs-to-system ()
+    (interactive)
+    (evil-set-register ?\+ (evil-get-register ?\")))
+
+
   ;; vterm ---------------------------------------------------------------------
   (evil-define-key 'emacs vterm-mode-map
     (kbd "C-k") #'evil-previous-line
