@@ -1206,6 +1206,8 @@ before packages are loaded."
   ;; slow, so leave off and toggle on as needed https://github.com/dandavison/magit-delta/issues/9#issuecomment-1610136282
   (remove-hook 'magit-mode-hook 'magit-delta-mode)
 
+  (spacemacs/set-leader-keys "gB" 'magit-switch-to-repository-buffer)
+
   (defun my/toggle-magit-delta ()
     (interactive)
     (call-interactively 'magit-delta-mode)
