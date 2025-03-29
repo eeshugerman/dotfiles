@@ -996,7 +996,7 @@ before packages are loaded."
 
   ;; treesit  ----------------------------------------------------------------
   (setq treesit-language-source-alist
-        '((yaml "https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0")
+        '((yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.0")
           (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile" "v0.2.0")
           (nix "https://github.com/nix-community/tree-sitter-nix")))
 
