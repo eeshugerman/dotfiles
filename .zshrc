@@ -46,7 +46,7 @@ if [ "$(uname)" = "Darwin" ]; then
     function upgrade-emacs {
         brew update \
             && brew uninstall emacs-plus@30 \
-            && HOMEBREW_EMACS_PLUS_REVISION=fc17e8727d48c32f2610c6fe7c17147bff7be52b brew install emacs-plus@30 --with-native-comp \
+            && install emacs-plus@30 \
             && sudo rm -f /Applications/Emacs.app \
             && sudo osascript -e 'tell application "Finder" to make alias file to posix file "/usr/local/opt/emacs-plus@30/Emacs.app" at POSIX file "/Applications" with properties {name:"Emacs.app"}'
 
