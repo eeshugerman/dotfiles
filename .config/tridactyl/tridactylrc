@@ -1,5 +1,7 @@
 sanitise tridactyllocal tridactylsync
 
+" defaults: https://github.com/tridactyl/tridactyl/blob/f9e3e558/src/lib/config.ts#L225
+
 bind J tabnext
 bind K tabprev
 
@@ -7,6 +9,7 @@ bind D tabclosealltoright
 bind C composite tabclosealltoright ; fillcmdline open
 bind gd tabduplicate
 bind gD tabdetach
+bind gb fillcmdline bmarks
 
 bind --mode=ex <C-j> ex.next_completion
 bind --mode=ex <C-k> ex.prev_completion
