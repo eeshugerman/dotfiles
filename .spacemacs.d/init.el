@@ -1432,6 +1432,9 @@ before packages are loaded."
   ;; evil in ivy/minibuffer
   (setq evil-want-minibuffer t)
 
+  ;; https://emacs.stackexchange.com/a/66679
+  (setq evil-kill-on-visual-paste nil)
+
   ;; ex stuff ---
   ;; what about evil-ex-map? what does it do?
   (dolist (my-keymap (list evil-ex-completion-map evil-ex-search-keymap))
