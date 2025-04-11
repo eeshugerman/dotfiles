@@ -140,6 +140,7 @@
       # TODO: manage packages and external deps with nix
       # https://github.com/noctuid/dotfiles/blob/94c6f3e8a/nix/overlays/emacs.nix
       emacs30-pgtk
+      foliate
       fragments
       git
       gnome-firmware
