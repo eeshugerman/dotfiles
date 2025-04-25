@@ -886,12 +886,11 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
+  (setq truncate-partial-width-windows nil) ;; respect `truncate-lines'
+  (setq-default truncate-lines t)
   (spacemacs/toggle-debug-on-error-on)
 
   (my/install-external-deps)
-
-  (with-current-buffer spacemacs-buffer-name
-    (spacemacs/toggle-truncate-lines-on))
 
 
   ;; temp ---------------------------------------------------------------------
