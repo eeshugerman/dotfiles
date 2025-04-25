@@ -911,8 +911,8 @@ before packages are loaded."
     :config (gcmh-mode 1))
   (use-package envrc
     :config (envrc-global-mode))
-  (use-package explain-pause-mode
-    :config (explain-pause-mode 1))
+  ;; (use-package explain-pause-mode
+  ;;   :config (explain-pause-mode 1))
   (use-package solaire-mode :config (solaire-global-mode 1))
   (use-package symex)
 
@@ -1256,6 +1256,9 @@ before packages are loaded."
 
   ;; ivy/ivy-rich --------------------------------------------------------------
 
+  ;; debounce? experimenting
+  (setopt ivy-dynamic-exhibit-delay-ms 250)
+
   (evil-define-key 'normal ivy-minibuffer-map
     [return] #'exit-minibuffer ;; is this the same as #'ivy-done?
     [escape] #'minibuffer-keyboard-quit)
@@ -1521,6 +1524,10 @@ before packages are loaded."
     (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.angular\\'")
     (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.nx\\'"))
 
+
+  ;; experimenting
+  (setq lsp-javascript-completions-complete-function-calls nil)
+
   ;; apheleia ---------------------------------------------------------------------
   (apheleia-global-mode +1)
 
@@ -1757,6 +1764,8 @@ before packages are loaded."
     (kbd "C-j") #'eat-line-next-input
     (kbd "C-k") #'eat-line-previous-input
     [return] #'eat-line-send-input)
+
+  (add-hook 'eat-mode-hook (lambda () (toggle-truncate-lines +1)))
 
 
   ;; ==========================================================================
