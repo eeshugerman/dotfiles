@@ -12,11 +12,11 @@ yadm submodule update --recursive --init
 
 
 if [ $(uname) = "Darwin" ]; then
-    brew install mackup gpg	karabiner-elements rectangle
-    mackup restore
-    launchctl unload "$HOME/Library/LaunchAgents/*"
-    launchctl load "$HOME/Library/LaunchAgents/*"
-    launchctl start "$HOME/Library/LaunchAgents/*"
+    # brew install rectangle
+    brew install gpg  # need this for `yadm decrypt`
+    # launchctl unload "$HOME/Library/LaunchAgents/*"
+    # launchctl load "$HOME/Library/LaunchAgents/*"
+    # launchctl start "$HOME/Library/LaunchAgents/*"
 else
     dconf load / < "$HOME/.config/dconf-user.conf"
 fi

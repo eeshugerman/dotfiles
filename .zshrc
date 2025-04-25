@@ -39,10 +39,11 @@ unsetopt beep
 KEYTIMEOUT=1  # 10ms
 
 if [ "$(uname)" = "Darwin" ]; then
-	  export HOMEBREW_NO_AUTO_UPDATE=1
     alias cbcopy="pbcopy"
     alias cbpaste="pbpaste"
-	# TODO: switch to nix https://github.com/noctuid/dotfiles/blob/94c6f3e8a/nix/overlays/emacs.nix
+    alias nix-gc="nix-collect-garbage --delete-older-than 5d"
+
+	  # TODO: switch to nix https://github.com/noctuid/dotfiles/blob/94c6f3e8a/nix/overlays/emacs.nix
     function upgrade-emacs {
         brew update \
             && brew uninstall emacs-plus@30 \
@@ -53,7 +54,6 @@ if [ "$(uname)" = "Darwin" ]; then
         # https://github.com/d12frosted/homebrew-emacs-plus/issues/742#issuecomment-2449092291
         sudo codesign --force --deep --sign - /usr/local/opt/emacs-plus@30/Emacs.app
     }
-    alias nix-gc="nix-collect-garbage --delete-older-than 5d"
 else
     alias open="xdg-open"
     alias cbcopy="xclip -in -selection clipboard"
@@ -102,6 +102,7 @@ if [ "$(uname)" = "Darwin" ]; then
     # i think this is added by the multi-user nix installer
     # it adds ~/.nix-profile to PATH (plus does other stuff, presumably)
     source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+    eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
 function git-cleanup {

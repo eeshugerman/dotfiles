@@ -33,7 +33,7 @@
     ;; avoid priority/conflict errors. is there a better way?
     (when (file-exists-p profile-path) (delete-file profile-path t))
     (async-shell-command
-     (format "set -x; nix -vv profile install --profile %s %s" profile-path flake-path)
+     (format "set -x; nix -v profile install --profile %s %s" profile-path flake-path)
      out-buffer)
     (pop-to-buffer out-buffer)
     (evil-normal-state)
@@ -716,10 +716,7 @@ This function defines the environment variables for your Emacs session. By
 default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
-
-  ;; TODO: try getting rid of this (as the file header suggests). It causes
-  ;; occasional problems.
-  (spacemacs/load-spacemacs-env)
+  ;; (spacemacs/load-spacemacs-env)
   )
 
 (defun dotspacemacs/user-init ()
@@ -728,9 +725,6 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-
-  (if my/macos-flag
-      (setq insert-directory-program "/usr/local/bin/gls"))
 
   (setq-default
    ;; misc -- TODO: organize these
@@ -763,7 +757,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    javascript-import-tool (if my/work-flag 'import-js nil)
    javascript-repl 'nodejs
-   js2-include-node-externs t
 
    lsp-auto-execute-action nil
    lsp-clients-typescript-max-ts-server-memory 4096
@@ -806,7 +799,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-ui-sideline-show-hover nil
    lsp-ui-sideline-show-symbol nil
    lsp-ui-sideline-update-mode 'line ;; more performant maybe?
-   lsp-use-plists my/work-flag ;; TODO: set env var on linux
 
    nix-backend 'lsp
 
@@ -1256,7 +1248,7 @@ before packages are loaded."
   ;; ivy/ivy-rich --------------------------------------------------------------
 
   ;; debounce? experimenting
-  (setopt ivy-dynamic-exhibit-delay-ms 250)
+  ;; (setopt ivy-dynamic-exhibit-delay-ms 250)
 
   (evil-define-key 'normal ivy-minibuffer-map
     [return] #'exit-minibuffer ;; is this the same as #'ivy-done?
@@ -1549,8 +1541,6 @@ before packages are loaded."
     (org-babel-do-load-languages 'org-babel-load-languages '((scheme . t)))
     (setq org-confirm-babel-evaluate nil
           org-format-latex-options (plist-put org-format-latex-options :scale 1.2)))
-
-  (org-agenda-files (directory-files-recursively "~/org" "\.org$" nil))
 
   (evil-define-key 'normal 'org-mode-map (kbd "<S-return>") #'org-babel-execute-src-block)
 
@@ -1848,6 +1838,7 @@ before packages are loaded."
         (repo-name  (s-replace ".git" "" (car (last (split-string url "/"))))))
     (message "cloning...")
     ;; TODO: make it async
+    ;; TODO: check return code
     (shell-command (format "git clone %s" url))
     (projectile-add-known-project (f-join default-directory repo-name)))
   (message "git clone complete"))

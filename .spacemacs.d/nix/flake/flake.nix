@@ -25,6 +25,7 @@
           paths = (with pkgs; [
             # pkgs.nerdfonts # didn't seem to work :/ also is slow
 
+            coreutils-prefixed
             ispell
             # jdt-language-server # currently using lsp auto install
             nixd
@@ -35,6 +36,7 @@
             nodePackages.vscode-langservers-extracted # provides html, css, json, eslint
             nodePackages.yaml-language-server
             python312 # for treemacs-use-git-mode 'extended or 'deferred
+            ripgrep
             rust-analyzer
             shfmt
             vscode-extensions.angular.ng-template

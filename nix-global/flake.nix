@@ -6,14 +6,14 @@
 
 # to upgrade:
 # $ rm -rf ~/.local/state/nix/profiles/profile*
-# $ NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 NIXPKGS_ALLOW_BROKEN=1 NIXPKGS_ALLOW_UNFREE=1 nix profile install --impure ~/nix-global
+# $ NIXPKGS_ALLOW_UNFREE=1 nix profile install --impure ~/nix-global
 {
   description =
     "packages installed into default/global profile, for use on non-NixOS systems";
-  inputs = { nixpkgs.url = "github:NixOS/nixpkgs/23.11"; };
+  inputs = { nixpkgs.url = "github:NixOS/nixpkgs/24.11"; };
   outputs = { self, nixpkgs }:
     let
-      supportedSystems = [ "x86_64-darwin" ];
+      supportedSystems = [ "x86_64-darwin" "aarch64-darwin" ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       pkgs = forAllSystems (system: nixpkgs.legacyPackages.${system});
     in {
@@ -24,11 +24,14 @@
             direnv
             bash # nix-direnv needs a modern bash
             nix-direnv
-            databricks-sql-cli
+            # databricks-sql-cli
             # snowsql # fails to build :(
             trino-cli
             ngrok
             sloccount
+            gnupg
+            aws-vault
+            htop
           ];
         };
 
