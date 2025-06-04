@@ -2,10 +2,7 @@
 # - treesitter modules
 # - clang ls
 # - pyright
-# - ripgrep
-# - libgccjit
-# - fonts: all-the-icons, others?
-# - gls (mac only)
+# - fonts: all-the-icons, nerd icons. or just stick with the `install-fonts` commands
 # - vscode-js-debug -- currently using (dap-js-setup)
 
 {
@@ -40,7 +37,6 @@
             rust-analyzer
             shfmt
             vscode-extensions.angular.ng-template
-            tree-sitter # not sure if we need this
           ]) ++ (with pkgs-unstable; [
             nodePackages.typescript # lsp-mode wants this (in addition to the language server)
             nodePackages.typescript-language-server
