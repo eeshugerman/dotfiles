@@ -32,3 +32,6 @@
 
 [init]
 	defaultBranch = main
+
+[url "ssh://git@github.com/immuta"]
+	insteadOf = https://github.com/immuta
