@@ -32,6 +32,7 @@
             gnupg
             aws-vault
             htop
+            teleport_16
           ];
         };
 
