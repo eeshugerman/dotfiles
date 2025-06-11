@@ -15,7 +15,7 @@ bind --mode=ex <C-j> ex.next_completion
 bind --mode=ex <C-k> ex.prev_completion
 
 " extend PATH for mac
-set editorcmd PATH=/usr/local/bin:$PATH emacsclient +%l:%c '%f'
+set editorcmd PATH=/opt/homebrew/bin:$PATH emacsclient +%l:%c '%f'
 
 set hintchars wertyuioasdfjkl;zxcnm
 
