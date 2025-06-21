@@ -7,7 +7,7 @@
 
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
   };
@@ -28,7 +28,6 @@
             nixd
             nixfmt-classic
             nodePackages.bash-language-server
-            nodePackages.pyright
             nodePackages.sql-formatter
             nodePackages.vscode-langservers-extracted # provides html, css, json, eslint
             nodePackages.yaml-language-server

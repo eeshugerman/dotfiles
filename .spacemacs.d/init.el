@@ -808,7 +808,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    python-fill-docstring-style 'django
    python-format-on-save nil
    python-formatter 'black
-   python-lsp-server 'pyright
    python-poetry-activate t
    python-sort-imports-on-save nil
    python-tab-width 4
