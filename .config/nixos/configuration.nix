@@ -147,6 +147,7 @@
       gnome-firmware
       gnome-tweaks
       gnomeExtensions.ddterm
+      gnomeExtensions.grand-theft-focus
       gnomeExtensions.night-theme-switcher
       gnomeExtensions.pano
       gnomeExtensions.xremap # needed in addition to the module
