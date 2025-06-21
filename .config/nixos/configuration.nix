@@ -129,7 +129,7 @@
   users.users.elliott = {
     isNormalUser = true;
     description = "Elliott Shugerman";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "adbusers" ];
     shell = pkgs.zsh;
     packages = (with pkgs; [
       bitwarden
@@ -247,6 +247,8 @@
   programs.zsh.enable = true;
 
   programs.steam.enable = true;
+
+  programs.adb.enable = true;
 
   # List services that you want to enable:
 
