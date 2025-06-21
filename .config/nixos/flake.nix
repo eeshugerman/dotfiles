@@ -1,10 +1,10 @@
 {
   description = "My NixOS configuration flake";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-    home-manager.url = "github:nix-community/home-manager/release-24.11";
+    home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     xremap-flake.url = "github:xremap/nix-flake";
   };
@@ -31,9 +31,9 @@
           pkgsUnstable = (import inputs.nixpkgs-unstable {
             inherit system;
             config = {
-              # for eddie. set here, not in configuration.nix, so that it applies to unstable
-              permittedInsecurePackages =
-                [ "dotnet-sdk-6.0.428" "dotnet-runtime-6.0.36" ];
+              # Set here for the unstable channel. For release channels, see `nixpkgs.config` in
+              # configuration.nix.
+              permittedInsecurePackages = [ ];
             };
           });
         };

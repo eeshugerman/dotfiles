@@ -105,7 +105,7 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -137,6 +137,7 @@
       dmidecode
       docker
       chromium
+      eddie
       # TODO: manage packages and external deps with nix
       # https://github.com/noctuid/dotfiles/blob/94c6f3e8a/nix/overlays/emacs.nix
       emacs30-pgtk
@@ -163,7 +164,7 @@
       xorg.xeyes
       gcc
       qbittorrent
-    ]) ++ (with pkgsUnstable; [ eddie ]);
+    ]) ++ (with pkgsUnstable; [ ]);
   };
 
   virtualisation.docker.enable = true;
@@ -184,6 +185,9 @@
 
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.nvidia.acceptLicense = true;
+  # See flake.nix to set this for the unstable channel.
+  nixpkgs.config.permittedInsecurePackages =
+    [ "dotnet-sdk-6.0.428" "dotnet-runtime-6.0.36" ];
 
   ### from https://nixos.wiki/wiki/Nvidia
   # Enable OpenGL

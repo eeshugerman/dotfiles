@@ -18,16 +18,10 @@
 
   # TODO: Maybe take another stab at managing profiles (mainly prefs.js) with
   # plain yadm so home manager is not needed
-  # NOTE: Oof Firefox is building from source, probably due to this override
-  # https://discourse.nixos.org/t/how-to-ensure-all-packages-are-available-in-cache-nixos-org-on-nix-flake-update/37209/3
   programs.firefox = {
     enable = true;
     package = pkgs.firefox-devedition.override {
-      # deprecation warning
-      cfg = {
-        # deprecation warning but the new way doesn't work?
-        enableTridactylNative = true;
-      };
+      nativeMessagingHosts = [ pkgs.tridactyl-native ];
     };
     profiles.elliott = {
       id = 0;
