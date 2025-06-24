@@ -1148,6 +1148,9 @@ before packages are loaded."
   ;;           (lambda () (setq-local comint-terminfo-terminal "dumb-emacs-ansi")))
 
 
+  ;; TODO: try https://github.com/CeleritasCelery/emacs-native-shell-complete
+
+
   ;; transient --------------------------------------------------------------------
   (with-eval-after-load 'transient
     (define-key transient-map (kbd "<escape>") 'transient-quit-one))
