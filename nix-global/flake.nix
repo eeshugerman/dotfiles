@@ -18,7 +18,11 @@
         import nixpkgs {
           inherit system;
           config.allowUnfreePredicate = pkg:
-            builtins.elem (nixpkgs.lib.getName pkg) [ "ngrok" ];
+            builtins.elem (nixpkgs.lib.getName pkg) [
+              "ngrok"
+              "databricks-sql-cli"
+              "snowsql"
+            ];
         });
     in {
       packages = forAllSystems (system: {
@@ -28,8 +32,8 @@
             direnv
             bash # nix-direnv needs a modern bash
             nix-direnv
-            # databricks-sql-cli
-            # snowsql # fails to build :(
+            databricks-sql-cli
+            # snowsql # arm64-apple-darwin not supported :(
             trino-cli
             ngrok
             sloccount
