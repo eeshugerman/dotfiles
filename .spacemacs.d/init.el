@@ -2,8 +2,45 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
+;; adapted from https://gist.github.com/ffevotte/9345586
+;; see also: https://github.com/purcell/exec-path-from-shell
+(defun source-shell-script (filename)
+  "Update environment variables from a shell source file."
+  (interactive "fSource file: ")
+
+  (message "Sourcing environment from `%s'..." filename)
+  (with-temp-buffer
+
+    (shell-command (format "diff -u <(true; export) <(source %s; export)" filename) '(4))
+
+    ;; skip header
+    (dotimes (_ 3)
+      (delete-line))
+
+    (let ((envvar-re "\\([^=]+\\)='?\\(.*\\)'?$"))
+      ;; Remove environment variables
+      (while (search-forward-regexp (concat "^-" envvar-re) nil t)
+        (let ((var (match-string 1)))
+          (message "%s" (prin1-to-string `(setenv ,var nil)))
+          (setenv var nil)))
+
+      ;; Update environment variables
+      (goto-char (point-min))
+      (while (search-forward-regexp (concat "^+" envvar-re) nil t)
+        (let ((var (match-string 1))
+              (value (match-string 2)))
+          (message "%s" (prin1-to-string `(setenv ,var ,value)))
+          (setenv var value)))))
+  (message "Sourcing environment from `%s'... done." filename))
+
+
 (defconst my/macos-flag (eq system-type 'darwin))
-;; TODO: not working when emacs is launched from macos doc
+
+(when my/macos-flag
+  ;; this is added to zshrc by the nix installer
+  ;; we need to source it here so that nix and nix-installed stuff (like yadm) are available
+  (source-shell-script "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"))
+
 (defconst my/work-flag (thread-first "yadm config --get local.class"
                                      shell-command-to-string
                                      string-trim
