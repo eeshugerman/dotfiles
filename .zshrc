@@ -117,3 +117,7 @@ function git-cleanup {
     git maintenance run --task gc # docs say to not run this at same time as loose-objects
     git maintenance run --task loose-objects --task incremental-repack --task pack-refs
 }
+
+function yadm-search-all {
+    rg --hidden --iglob ~/.emacs.d $1 $(yadm ls-files ~) 2> >(grep --invert-match '^rg: .* No such file or directory (os error 2)$' >&2)
+}
