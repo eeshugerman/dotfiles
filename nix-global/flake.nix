@@ -29,12 +29,14 @@
         default = pkgs.${system}.buildEnv {
           name = "global-env";
           paths = with pkgs.${system}; [
+            # ghostty build is broken https://github.com/NixOS/nixpkgs/issues/388984
             # snowsql # arm64-apple-darwin not supported :(
             aws-vault
             bash # nix-direnv needs a modern bash
             databricks-sql-cli
             direnv
             gnupg
+            helix
             htop
             ngrok
             nix-direnv
