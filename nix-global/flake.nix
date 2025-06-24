@@ -10,7 +10,7 @@
 {
   description =
     "packages installed into default/global profile, for use on non-NixOS systems";
-  inputs = { nixpkgs.url = "github:NixOS/nixpkgs/24.11"; };
+  inputs = { nixpkgs.url = "github:NixOS/nixpkgs/25.05"; };
   outputs = { self, nixpkgs }:
     let
       supportedSystems = [ "x86_64-darwin" "aarch64-darwin" ];
