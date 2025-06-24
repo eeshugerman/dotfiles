@@ -96,13 +96,20 @@ eval "$(direnv hook zsh)"
 
 # misc macos stuff
 if [ "$(uname)" = "Darwin" ]; then
-    export HOMEBREW_NO_AUTO_UPDATE=1
     alias fix-org-data-sync="launchctl unload -w Library/LaunchAgents/me.org-data-git-sync.plist && launchctl load -w Library/LaunchAgents/me.org-data-git-sync.plist"
     alias fudns='sudo dscacheutil -flushcache; sleep 2; sudo killall -HUP mDNSResponder;'
     # i think this is added by the multi-user nix installer
     # it adds ~/.nix-profile to PATH (plus does other stuff, presumably)
     source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+    export HOMEBREW_NO_AUTO_UPDATE=1
     eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+
+if [ "$(yadm config --get local.class)" = "WORK" ]; then
+    export PATH="$PATH:/Applications/SnowSQL.app/Contents/MacOS"
+    # https://github.com/immuta/bodata#getting-started-continued
+    # sudo ifconfig lo0 alias 10.0.2.2 # prompts for password when shell starts
 fi
 
 function git-cleanup {
