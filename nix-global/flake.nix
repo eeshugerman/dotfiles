@@ -43,6 +43,7 @@
             sloccount
             teleport_16
             trino-cli
+            yadm
           ];
         };
 
