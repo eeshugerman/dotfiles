@@ -5,8 +5,7 @@
 # NOTE: this replaces bodata/nix/global-deps.nix
 
 # to upgrade:
-# $ rm -rf ~/.local/state/nix/profiles/profile*
-# $ NIXPKGS_ALLOW_UNFREE=1 nix profile install --impure ~/nix-global
+# $ rm -rf ~/.local/state/nix/profiles/profile* && nix profile install --impure ~/nix-global
 {
   description =
     "packages installed into default/global profile, for use on non-NixOS systems";
@@ -15,7 +14,12 @@
     let
       supportedSystems = [ "x86_64-darwin" "aarch64-darwin" ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-      pkgs = forAllSystems (system: nixpkgs.legacyPackages.${system});
+      pkgs = forAllSystems (system:
+        import nixpkgs {
+          inherit system;
+          config.allowUnfreePredicate = pkg:
+            builtins.elem (nixpkgs.lib.getName pkg) [ "ngrok" ];
+        });
     in {
       packages = forAllSystems (system: {
         default = pkgs.${system}.buildEnv {
