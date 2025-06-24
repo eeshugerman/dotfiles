@@ -29,18 +29,18 @@
         default = pkgs.${system}.buildEnv {
           name = "global-env";
           paths = with pkgs.${system}; [
-            direnv
-            bash # nix-direnv needs a modern bash
-            nix-direnv
-            databricks-sql-cli
             # snowsql # arm64-apple-darwin not supported :(
-            trino-cli
-            ngrok
-            sloccount
-            gnupg
             aws-vault
+            bash # nix-direnv needs a modern bash
+            databricks-sql-cli
+            direnv
+            gnupg
             htop
+            ngrok
+            nix-direnv
+            sloccount
             teleport_16
+            trino-cli
           ];
         };
 
