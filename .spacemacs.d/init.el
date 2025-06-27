@@ -33,13 +33,20 @@
           (setenv var value)))))
   (message "Sourcing environment from `%s'... done." filename))
 
+;; https://emacs.stackexchange.com/a/71898
+(defun set-exec-path-from-shell-PATH ()
+  (interactive)
+  (let ((path-from-shell (shell-command-to-string "$SHELL --login -c 'echo -n $PATH'")))
+    (setenv "PATH" path-from-shell)
+    (setq exec-path (split-string path-from-shell path-separator))))
+
 
 (defconst my/macos-flag (eq system-type 'darwin))
 
 (when my/macos-flag
-  ;; this is added to zshrc by the nix installer
-  ;; we need to source it here so that nix and nix-installed stuff (like yadm) are available
-  (source-shell-script "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"))
+  (toggle-debug-on-error)
+  (source-shell-script (expand-file-name "~/.zshrc"))
+  (set-exec-path-from-shell-PATH))
 
 (defconst my/work-flag (thread-first "yadm config --get local.class"
                                      shell-command-to-string
