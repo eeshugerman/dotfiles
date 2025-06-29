@@ -10,6 +10,7 @@ bind C composite tabclosealltoright ; fillcmdline open
 bind gd tabduplicate
 bind gD tabdetach
 bind gb fillcmdline bmarks
+set completions.Bmark.autoselect false " make -t (for new tab) work
 
 bind --mode=ex <C-j> ex.next_completion
 bind --mode=ex <C-k> ex.prev_completion
