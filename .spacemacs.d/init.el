@@ -1215,10 +1215,10 @@ before packages are loaded."
 
 
   ;; python ------------------------------------------------------------------------
-  (add-hook 'python-mode-hook #'spacemacs/toggle-fill-column-indicator-on)
+  (add-hook 'python-mode-hook #'spacemacs/toggle-display-fill-column-indicator-on)
 
   ;; ein ---
-  (add-hook 'ein:notebook-mode-hook #'spacemacs/toggle-fill-column-indicator-off)
+  (add-hook 'ein:notebook-mode-hook #'spacemacs/toggle-display-fill-column-indicator-off)
   (setq ein:output-area-inlined-images t)
 
 
