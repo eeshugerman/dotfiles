@@ -151,12 +151,6 @@
       mullvad-vpn
       nushell
       # powertop maybe causing dock resume issues?
-      helvum # pipewire gui
-      reaper
-      reaper-sws-extension
-      reaper-reapack-extension
-      vital # how to use as vst? https://nixos.wiki/wiki/Audio_production
-      tunefish
       ripgrep
       unzip
       vim
@@ -167,6 +161,20 @@
       xorg.xeyes
       gcc
       qbittorrent
+
+      ## music/audio stuff ##
+      # TODO: move to a self-contained profile or module or something?
+      chow-kick
+      geonkick
+      helvum # pipewire gui
+      reaper
+      reaper-reapack-extension
+      reaper-sws-extension
+      tunefish
+      vital
+      x42-avldrums
+      gxplugins-lv2
+      guitarix
     ]) ++ (with pkgsUnstable; [ ]);
   };
 
