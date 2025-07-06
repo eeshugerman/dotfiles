@@ -155,6 +155,8 @@
       reaper
       reaper-sws-extension
       reaper-reapack-extension
+      vital # how to use as vst? https://nixos.wiki/wiki/Audio_production
+      tunefish
       ripgrep
       unzip
       vim
