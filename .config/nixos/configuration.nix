@@ -65,9 +65,9 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
-  # use iwd instead of wpa_supplicant
-  networking.wireless.iwd.enable = true;
-  networking.networkmanager.wifi.backend = "iwd";
+  # # use iwd instead of wpa_supplicant
+  # networking.wireless.iwd.enable = true;
+  # networking.networkmanager.wifi.backend = "iwd";
 
   networking.extraHosts = ''
     192.168.1.1 router.home
