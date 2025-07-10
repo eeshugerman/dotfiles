@@ -23,6 +23,7 @@
             # pkgs.nerdfonts # didn't seem to work :/ also is slow
 
             coreutils-prefixed
+            delta # diff syntax highlighter
             ispell
             # jdt-language-server # currently using lsp auto install
             nixd
