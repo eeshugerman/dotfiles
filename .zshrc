@@ -100,6 +100,7 @@ if [ "$(uname)" = "Darwin" ]; then
     alias fudns='sudo dscacheutil -flushcache; sleep 2; sudo killall -HUP mDNSResponder;'
     # i think this is added by the multi-user nix installer
     # it adds ~/.nix-profile to PATH (plus does other stuff, presumably)
+    # TODO: we're now using the determinate systems installer -- does it add this same line to zshrc?
     source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
     export HOMEBREW_NO_AUTO_UPDATE=1
     eval "$(/opt/homebrew/bin/brew shellenv)"
