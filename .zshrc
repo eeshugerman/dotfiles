@@ -125,7 +125,7 @@ function yadm-search {
         rg --hidden \
            --iglob ~/.emacs.d \
            --ignore-case \
-           $1 $(yadm list ~) \
+           $1 $(yadm list) \
            2> >(grep --invert-match '^rg: .* No such file or directory (os error 2)$' >&2)
     )
 }
