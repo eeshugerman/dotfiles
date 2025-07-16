@@ -1619,6 +1619,16 @@ before packages are loaded."
     (magit-status "/yadm::"))
   (spacemacs/set-leader-keys "oy" #'my/magit-yadm)
 
+
+  ;; not working because magit-git-environment isn't "propogated" to the status buffer
+  (defun my/magit-yadm-v2 ()
+    (interactive)
+    (let ((magit-git-environment
+           (append magit-git-environment
+                   (list (format "GIT_DIR=%s" (expand-file-name "~/.local/share/yadm/repo.git"))
+                         (format "GIT_WORK_TREE" (expand-file-name "~"))))))
+      (magit-status)))
+
   ;; c/c++ ----------------------------------------------------------------------
   (setq c-basic-offset 4)
 
