@@ -762,6 +762,7 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
+  ;; TODO: try switching this to setopt
   (setq-default
    ;; misc -- TODO: organize these
    c-c++-lsp-enable-semantic-highlight t
