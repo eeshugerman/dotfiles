@@ -113,6 +113,8 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    # TODO: mess with buffer settings for lower latency
+    # https://www.reddit.com/r/NixOS/comments/1hbhyw2/comment/m1i1q8i/
     jack.enable = true;
   };
 
