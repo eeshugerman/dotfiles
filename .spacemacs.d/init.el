@@ -1879,11 +1879,35 @@ before packages are loaded."
 
 (defun my/create-new-project (dir)
   (interactive "sdirectory name? ")
-  (let ((path (f-join "~/devel" dir)))
-    (make-empty-file (f-join path "README.md") t)
-    (let ((default-directory path))
-      (shell-command "git init"))
-    (projectile-add-known-project path)))
+  (let ((project-path (f-join "~/devel" dir)))
+    (make-empty-file (f-join project-path "README.md") t)
+    (let ((flake-path (f-join project-path "flake.nix"))
+          (flake-contents "{
+  inputs = { flake-utils.url = \"github:numtide/flake-utils\"; };
+
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let pkgs = nixpkgs.legacyPackages.${system};
+      in {
+        # https://nixos.org/manual/nixpkgs/stable/#sec-pkgs-mkShell
+        devShell = pkgs.mkShell {
+          packages = with pkgs; [ /* packages here */ ];
+        };
+      });
+}")
+          (envrc-path (f-join project-path ".envrc"))
+          (gitignore-path (f-join project-path ".gitignore")))
+      (append-to-file flake-contents nil flake-path)
+      (append-to-file "use flake\n" nil envrc-path)
+      (append-to-file ".direnv/\n" nil gitignore-path))
+    (let ()
+      )
+    (let ((default-directory project-path))
+      (shell-command "direnv allow")
+      (shell-command "git init")
+      (shell-command "git add .")
+      (shell-command "nix flake lock"))
+    (projectile-add-known-project project-path)))
 
 (defun my/clone-new-project (url)
   (interactive "surl? ")
