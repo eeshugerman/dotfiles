@@ -1231,10 +1231,6 @@ before packages are loaded."
 
 
   ;; [ma]git ----------------------------------------------------------------------
-  ;; TODO: why is ~/.nix-profile appendended, not prepended, to the path?
-  ;; https://github.com/DeterminateSystems/nix-installer/issues/327
-  (setq magit-git-executable "/Users/elliott.shugerman/.nix-profile/bin/git")
-
   (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
 
   ;; -- delta
