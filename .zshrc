@@ -92,7 +92,6 @@ if [[ "$INSIDE_EMACS" ]]; then
 fi
 
 
-eval "$(direnv hook zsh)"
 
 # misc macos stuff
 if [ "$(uname)" = "Darwin" ]; then
@@ -104,6 +103,12 @@ if [ "$(uname)" = "Darwin" ]; then
     source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
     export HOMEBREW_NO_AUTO_UPDATE=1
     eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+eval "$(direnv hook zsh)"
+
+if type mise &> /dev/null; then
+   eval "$(mise activate zsh)"
 fi
 
 

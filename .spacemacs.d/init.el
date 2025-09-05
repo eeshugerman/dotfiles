@@ -161,6 +161,7 @@ This function should only modify configuration layer settings."
      spell-checking
      sql
      syntax-checking
+     toml
      tree-sitter
      treemacs
      typescript

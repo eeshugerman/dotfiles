@@ -1,18 +1,19 @@
 # TODO: this sucks: bootstrap is required, upgrading is janky, gc breaks it. try https://github.com/lf-/flakey-profile
 # TODO: move more stuff here from homebrew
 # TODO: set flags in pkgs config (within this flake) instead of env vars
-# NOTE: need env var workarounds because https://github.com/NixOS/nixpkgs/issues/42900
-# NOTE: this replaces bodata/nix/global-deps.nix
 
-# to upgrade:
+# to rebuild (eg after upgrade or changing packages):
 # $ rm -rf ~/.local/state/nix/profiles/profile* && nix profile install --impure ~/nix-global
 {
   description =
     "packages installed into default/global profile, for use on non-NixOS systems";
-  inputs = { nixpkgs.url = "github:NixOS/nixpkgs/25.05"; };
-  outputs = { self, nixpkgs }:
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/25.05";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+  };
+  outputs = { self, nixpkgs, nixpkgs-unstable }:
     let
-      supportedSystems = [ "x86_64-darwin" "aarch64-darwin" ];
+      supportedSystems = [ "aarch64-darwin" ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       pkgs = forAllSystems (system:
         import nixpkgs {
@@ -24,14 +25,16 @@
               "snowsql"
             ];
         });
+      pkgs-unstable =
+        forAllSystems (system: nixpkgs-unstable.legacyPackages.${system});
     in {
       packages = forAllSystems (system: {
         default = pkgs.${system}.buildEnv {
           name = "global-env";
-          paths = with pkgs.${system}; [
-            # ghostty build is broken https://github.com/NixOS/nixpkgs/issues/388984
+          paths = (with pkgs.${system}; [
+            # ghostty # build is broken https://github.com/NixOS/nixpkgs/issues/388984
             # snowsql # arm64-apple-darwin not supported :(
-            aws-vault
+            aws-vault # TODO: probably don't need this anymore since it's in bodata/mise/config.toml
             bash # nix-direnv needs a modern bash
             databricks-sql-cli
             direnv
@@ -44,7 +47,10 @@
             teleport_16
             trino-cli
             yadm
-          ];
+          ]) ++ (with pkgs-unstable.${system};
+            [
+              mise # need a recent mise for gpg verification to work
+            ]);
         };
 
       });
