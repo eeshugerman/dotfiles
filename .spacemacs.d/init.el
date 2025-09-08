@@ -1449,6 +1449,11 @@ before packages are loaded."
   (set-face-attribute 'doom-modeline-persp-name nil :inherit 'unspecified)
   (defun doom-modeline-segment--major-mode () nil)
 
+  ;; https://github.com/nashamri/spacemacs-theme/issues/210#issuecomment-3193643883
+  (face-spec-set 'lsp-face-highlight-read '((t (:inherit link :bold t))))
+  (face-spec-set 'lsp-face-highlight-textual '((t (:inherit link :bold t))))
+  (face-spec-set 'lsp-face-highlight-write '((t (:inherit link :bold t))))
+
   ;; evil ------------------------------------------------------------------------
   ;; vi ---
   (setq evil-want-Y-yank-to-eol t)
