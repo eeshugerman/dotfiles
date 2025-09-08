@@ -1019,7 +1019,8 @@ before packages are loaded."
   (setq treesit-language-source-alist
         '((yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.0")
           (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile" "v0.2.0")
-          (nix "https://github.com/nix-community/tree-sitter-nix")))
+          (nix "https://github.com/nix-community/tree-sitter-nix")
+          (json "https://github.com/tree-sitter/tree-sitter-json" "v0.24.8")))
 
   (dolist (pair treesit-language-source-alist)
     (treesit-install-language-grammar (car pair)))

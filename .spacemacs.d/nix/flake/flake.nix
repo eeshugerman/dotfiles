@@ -32,6 +32,7 @@
             nodePackages.sql-formatter
             nodePackages.vscode-langservers-extracted # provides html, css, json, eslint
             nodePackages.yaml-language-server
+            postgres-lsp
             python312 # for treemacs-use-git-mode 'extended or 'deferred
             ripgrep
             rust-analyzer
