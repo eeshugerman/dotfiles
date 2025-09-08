@@ -236,7 +236,8 @@ This function should only modify configuration layer settings."
          '((sql-snowflake :location "~/devel/sql-snowflake.el")
            (sql-databricks :location "~/devel/sql-databricks.el")
            sql-trino
-           (prisma-mode :location (recipe :fetcher github :repo "pimeys/emacs-prisma-mode"))))
+           (prisma-mode :location (recipe :fetcher github :repo "pimeys/emacs-prisma-mode"))
+           mise))
      ,@(unless my/work-flag
          '(guix
            (nushell-mode :location (recipe :fetcher github :repo "mrkkrp/nushell-mode")))))
@@ -930,8 +931,6 @@ before packages are loaded."
                 gcmh-high-cons-threshold (expt 10 8)
                 gcmh-idle-delay 15)
     :config (gcmh-mode 1))
-  (use-package envrc
-    :config (envrc-global-mode))
   ;; (use-package explain-pause-mode
   ;;   :config (explain-pause-mode 1))
   (use-package solaire-mode :config (solaire-global-mode 1))
@@ -941,6 +940,8 @@ before packages are loaded."
     (use-package guix))
 
   (when my/work-flag
+    (use-package mise
+      :config (global-mise-mode))
     (use-package sql-snowflake)
     (use-package sql-databricks)
     (use-package sql-trino
@@ -948,6 +949,8 @@ before packages are loaded."
     (use-package prisma-mode))
 
   (unless my/work-flag
+    (use-package envrc
+      :config (envrc-global-mode))
     (use-package ivy-nixos-options)
     (use-package dconf-dotfile))
 
