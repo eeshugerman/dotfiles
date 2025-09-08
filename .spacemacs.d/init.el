@@ -922,14 +922,6 @@ before packages are loaded."
 
   (my/install-external-deps)
 
-
-  ;; temp ---------------------------------------------------------------------
-  ;; fixes js org blocks -- why??
-  (defface tree-sitter-hl-face:punctuation
-    '((default :inherit unspecified))
-    "Face for punctuations."
-    :group 'tree-sitter-hl-faces)
-
   ;; init/configure standalone packages ----------------------------------------------------
   (use-package diredfl :config (diredfl-global-mode 1))
   (use-package gcmh
