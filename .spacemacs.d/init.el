@@ -1514,6 +1514,7 @@ before packages are loaded."
   ;; make C-k work in ivy/insert (and elsewhere, probably)
   (evil-define-key 'insert 'global (kbd "C-k") nil)
 
+  ;; TODO: try xclipboard layer https://www.spacemacs.org/layers/+tools/xclipboard/README.html
   (defun my/sync-registers-system-to-emacs ()
     (interactive)
     (evil-set-register ?\" (evil-get-register ?\+)))
