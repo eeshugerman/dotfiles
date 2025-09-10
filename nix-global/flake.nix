@@ -44,6 +44,7 @@
             htop
             ngrok
             nix-direnv
+            postgresql # for psql
             sloccount
             teleport_16
             trino-cli
