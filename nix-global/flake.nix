@@ -38,6 +38,7 @@
             bash # nix-direnv needs a modern bash
             databricks-sql-cli
             direnv
+            git # macos' built-in git is quite old
             gnupg
             helix
             htop
