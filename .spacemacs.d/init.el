@@ -65,6 +65,7 @@
 
 (defun my/install-external-deps ()
   (interactive)
+  (message "Installing nix profile (external deps)...")
   (let* ((spacemacs-d-path (f-expand "~/.spacemacs.d"))
          (nix-path (f-join spacemacs-d-path "nix"))
          (flake-path (f-join nix-path "flake"))
@@ -74,7 +75,7 @@
     ;; --- install ---
     ;; avoid priority/conflict errors. is there a better way?
     (when (file-exists-p profile-path) (delete-file profile-path t))
-    (async-shell-command
+    (shell-command
      (format "set -x; nix -v profile install --profile %s %s" profile-path flake-path)
      out-buffer)
     (pop-to-buffer out-buffer)
@@ -99,8 +100,8 @@
             (list "node" ng-server-path
                   "--ngProbeLocations" ng-node-modules-path
                   "--tsProbeLocations" ng-node-modules-path
-                  "--stdio")))
-    ))
+                  "--stdio"))))
+  (message "Installing nix profile (external deps)... done"))
 
 (defun dotspacemacs/layers ()
   "Layer configuration:
