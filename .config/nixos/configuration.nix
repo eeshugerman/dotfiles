@@ -14,7 +14,6 @@
 
   services.xremap = {
     withGnome = true;
-    serviceMode = "user";
     userName = "elliott";
     deviceNames = [
       "AT Translated Set 2 keyboard"
