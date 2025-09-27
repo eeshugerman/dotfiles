@@ -147,6 +147,7 @@
       git
       gnome-firmware
       gnome-tweaks
+      gnomeExtensions.caffeine
       gnomeExtensions.ddterm
       gnomeExtensions.grand-theft-focus
       gnomeExtensions.night-theme-switcher
@@ -155,6 +156,8 @@
       jetbrains-mono # a font
       mullvad-vpn
       nushell
+      sly # gnome image editor
+      drawing # gnome paint
       # powertop maybe causing dock resume issues?
       ripgrep
       unzip
@@ -166,6 +169,7 @@
       xorg.xeyes
       gcc
       qbittorrent
+      p7zip
 
       ## music/audio stuff ##
       # TODO: move to a self-contained profile or module or something?
