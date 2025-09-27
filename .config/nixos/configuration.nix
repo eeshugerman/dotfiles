@@ -16,7 +16,11 @@
     withGnome = true;
     serviceMode = "user";
     userName = "elliott";
-    deviceNames = [ "AT Translated Set 2 keyboard" "Glove80 Keyboard" ];
+    deviceNames = [
+      "AT Translated Set 2 keyboard"
+      # "Glove80 Keyboard" # used to work
+      "MoErgo Glove80 Left Keyboard" # works for both left to right
+    ];
     watch = true;
     yamlConfig = builtins.readFile /home/elliott/.config/xremap.yml;
   };
