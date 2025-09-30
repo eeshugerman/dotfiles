@@ -8,7 +8,7 @@
   description =
     "packages installed into default/global profile, for use on non-NixOS systems";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
   };
   outputs = { self, nixpkgs, nixpkgs-unstable }:
