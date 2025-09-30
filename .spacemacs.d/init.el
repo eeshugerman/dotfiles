@@ -1966,3 +1966,24 @@ before packages are loaded."
 ;; try https://github.com/xuchunyang/1password.el
 (defun my/1password-read (url)
   (string-trim (shell-command-to-string (format "op read '%s'" url))))
+
+
+(when my/work-flag
+  ;; ~ 1 out of 500 or 1000 call-process calls to nix-provided binaries are
+  ;; failing with permission-denied. wtf. crowdstrike maybe?
+  (defun my/retry-permission-denied-advice (orig-fun &rest args)
+    "An :around advice to retry `orig-fun' on error."
+    (let ((retries 3)
+          (done nil)
+          (result nil))
+      (while (not done)
+        (condition-case err
+            (setq result (apply orig-fun args)
+                  done t)
+          (permission-denied
+           (setq retries (- retries 1))
+           (warn "Caught `permission-denied'. %d retries left." retries)
+           (when (= retries 0)
+             (signal 'permission-denied (cdr err))))))
+      result))
+  (advice-add #'call-process :around #'my/retry-permission-denied-advice))
