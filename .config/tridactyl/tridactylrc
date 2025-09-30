@@ -1,4 +1,4 @@
-sanitise tridactyllocal tridactylsync
+sanitise tridactyllocal tridactylsync " NOTE: causes errors to be thrown in console when sourced
 
 " defaults: https://github.com/tridactyl/tridactyl/blob/f9e3e558/src/lib/config.ts#L225
 
@@ -41,5 +41,7 @@ setnull searchurls.twitter
 " bind <Return> nohlsearch
 
 colors --url https://raw.githubusercontent.com/eeshugerman/shydactyl-variations/master/dist/shydactyl-all-icons.css shydactyl-all-icons
+
+blacklistadd https://immuta.atlassian.net/
 
 js console.log('config source complete!')
