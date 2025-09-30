@@ -809,7 +809,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    lsp-enable-symbol-highlighting t
    lsp-eslint-enable t
    lsp-eslint-warn-on-ignored-files t
-   lsp-file-watch-threshold 3000
+   lsp-file-watch-threshold 5000
    lsp-headerline-breadcrumb-enable t
    lsp-headerline-breadcrumb-segments '(symbols)
    lsp-headerline-breadcrumb-icons-enable nil ;; icons can make the headerline height wobble when point moves
