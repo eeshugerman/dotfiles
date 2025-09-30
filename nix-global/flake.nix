@@ -49,6 +49,9 @@
             teleport_16
             trino-cli
             yadm
+            # TODO: Switch to https://github.com/nix-community/emacs-overlay, pull out into
+            # dedicated repo that can be included here and in nixos config. combine with spacemacs
+            # flake, add treesitter grammars.
             emacs
           ]) ++ (with pkgs-unstable.${system};
             [

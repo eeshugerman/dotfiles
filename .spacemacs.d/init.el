@@ -2002,7 +2002,7 @@ before packages are loaded."
                   done t)
           (permission-denied
            (setq retries (- retries 1))
-           (warn "Caught `permission-denied'. %d retries left." retries)
+           (warn "Caught `permission-denied' calling '%s'. %d retries left." (car args) retries)
            (when (= retries 0)
              (signal 'permission-denied (cdr err))))))
       result))
