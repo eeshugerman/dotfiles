@@ -221,7 +221,7 @@ This function should only modify configuration layer settings."
      ox-pandoc ;; org pandoc exporter
      ox-reveal ;; org slidedeck exporter
      solaire-mode
-     symex
+     ;; (symex :location (recipe :fetcher github :repo "drym-org/symex.el"))
      ;; mini-frame
      ;; undo-hl
      ;; coterm
@@ -935,7 +935,7 @@ before packages are loaded."
   ;; (use-package explain-pause-mode
   ;;   :config (explain-pause-mode 1))
   (use-package solaire-mode :config (solaire-global-mode 1))
-  (use-package symex)
+  ;; (use-package symex)
 
   (unless my/work-flag
     (use-package guix))
@@ -1677,20 +1677,20 @@ before packages are loaded."
   (add-hook 'yaml-ts-mode-hook #'spacemacs/toggle-spelling-checking-off)
 
   ;; symex --------------------------------------------------------------------
-  (evil-define-key '(normal insert) symex-mode-map
-    (kbd "S-<escape>") #'symex-mode-interface)
+  ;; (evil-define-key '(normal insert) symex-mode-map
+  ;;   (kbd "S-<escape>") #'symex-mode-interface)
 
-  (setq symex--user-evil-keyspec
-        '(("j" . symex-go-up)
-          ("k" . symex-go-down)
-          ("C-j" . symex-climb-branch)
-          ("C-k" . symex-descend-branch)
-          ("M-j" . symex-goto-highest)
-          ("M-k" . symex-goto-lowest)))
+  ;; (setq symex--user-evil-keyspec
+  ;;       '(("j" . symex-go-up)
+  ;;         ("k" . symex-go-down)
+  ;;         ("C-j" . symex-climb-branch)
+  ;;         ("C-k" . symex-descend-branch)
+  ;;         ("M-j" . symex-goto-highest)
+  ;;         ("M-k" . symex-goto-lowest)))
 
-  (dolist (mode '(lisp-data-mode ielm-mode janet-mode))
-    (add-to-list 'symex-elisp-modes mode))
-  (symex-initialize)
+  ;; (dolist (mode '(lisp-data-mode ielm-mode janet-mode))
+  ;;   (add-to-list 'symex-elisp-modes mode))
+  ;; (symex-initialize)
 
   ;; highlight-indentation ----------------------------------------------------
   ;; this is off by default
