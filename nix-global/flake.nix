@@ -51,7 +51,7 @@
             yadm
             # TODO: Switch to https://github.com/nix-community/emacs-overlay, pull out into
             # dedicated repo that can be included here and in nixos config. combine with spacemacs
-            # flake, add treesitter grammars.
+            # flake, add vterm, treesit grammars.
             emacs
           ]) ++ (with pkgs-unstable.${system};
             [
