@@ -221,7 +221,24 @@ This function should only modify configuration layer settings."
      ox-pandoc ;; org pandoc exporter
      ox-reveal ;; org slidedeck exporter
      solaire-mode
-     ;; (symex :location (recipe :fetcher github :repo "drym-org/symex.el"))
+     (symex-core
+      :location (recipe :fetcher github
+                        :repo "drym-org/symex.el"
+                        :files ("symex-core/symex*.el")))
+
+     (symex
+      :location (recipe :fetcher github
+                        :repo "drym-org/symex.el"
+                        :files ("symex/symex*.el" "symex/doc/*.texi" "symex/doc/figures")))
+
+     (symex-ide
+      :location (recipe :fetcher github
+                        :repo "drym-org/symex.el"
+                        :files ("symex-ide/symex*.el")))
+     (symex-evil
+      :location (recipe :fetcher github
+                        :repo "drym-org/symex.el"
+                        :files ("symex-evil/symex*.el")))
      ;; mini-frame
      ;; undo-hl
      ;; coterm
@@ -935,7 +952,7 @@ before packages are loaded."
   ;; (use-package explain-pause-mode
   ;;   :config (explain-pause-mode 1))
   (use-package solaire-mode :config (solaire-global-mode 1))
-  ;; (use-package symex)
+
 
   (unless my/work-flag
     (use-package guix))
@@ -1677,20 +1694,23 @@ before packages are loaded."
   (add-hook 'yaml-ts-mode-hook #'spacemacs/toggle-spelling-checking-off)
 
   ;; symex --------------------------------------------------------------------
-  ;; (evil-define-key '(normal insert) symex-mode-map
-  ;;   (kbd "S-<escape>") #'symex-mode-interface)
+  (use-package symex)
+  (use-package symex
+    :after (symex-core)
+    :config (symex-mode 1))
+  (use-package symex-ide
+    :after (symex)
+    :config (symex-ide-mode 1))
+  (use-package symex-evil
+    :after (symex evil)
+    :config (symex-evil-mode 1))
 
-  ;; (setq symex--user-evil-keyspec
-  ;;       '(("j" . symex-go-up)
-  ;;         ("k" . symex-go-down)
-  ;;         ("C-j" . symex-climb-branch)
-  ;;         ("C-k" . symex-descend-branch)
-  ;;         ("M-j" . symex-goto-highest)
-  ;;         ("M-k" . symex-goto-lowest)))
+  (evil-define-key '(normal insert) symex-editing-mode-map
+    (kbd "S-<escape>") #'symex-mode-interface)
 
-  ;; (dolist (mode '(lisp-data-mode ielm-mode janet-mode))
-  ;;   (add-to-list 'symex-elisp-modes mode))
-  ;; (symex-initialize)
+  (dolist (mode '(lisp-data-mode ielm-mode janet-mode))
+    (add-to-list 'symex-lisp-modes mode))
+  (symex-initialize)
 
   ;; highlight-indentation ----------------------------------------------------
   ;; this is off by default
