@@ -24,7 +24,6 @@
 
             coreutils-prefixed
             delta # diff syntax highlighter
-            git # macos' built-in git is quite old. also see [1].
             ispell
             # jdt-language-server # currently using lsp auto install
             nixd
@@ -42,11 +41,7 @@
           ]) ++ (with pkgs-unstable; [
             nodePackages.typescript # lsp-mode wants this (in addition to the language server)
             nodePackages.typescript-language-server
-            mise # need a recent mise for gpg verification to work. also, see [1].
           ]);
         };
       });
 }
-
-# 1. In nix-global but it seems Emacs on MacOS has issues calling executables from there (sporadic
-#    "doing vfork: permission denied" errors) unless it has full disk access.
