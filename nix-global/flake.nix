@@ -42,6 +42,7 @@
             gnupg
             helix
             htop
+            ncdu
             ngrok
             nix-direnv
             postgresql # for psql
