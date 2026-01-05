@@ -221,24 +221,7 @@ This function should only modify configuration layer settings."
      ox-pandoc ;; org pandoc exporter
      ox-reveal ;; org slidedeck exporter
      solaire-mode
-     (symex-core
-      :location (recipe :fetcher github
-                        :repo "drym-org/symex.el"
-                        :files ("symex-core/symex*.el")))
 
-     (symex
-      :location (recipe :fetcher github
-                        :repo "drym-org/symex.el"
-                        :files ("symex/symex*.el" "symex/doc/*.texi" "symex/doc/figures")))
-
-     (symex-ide
-      :location (recipe :fetcher github
-                        :repo "drym-org/symex.el"
-                        :files ("symex-ide/symex*.el")))
-     (symex-evil
-      :location (recipe :fetcher github
-                        :repo "drym-org/symex.el"
-                        :files ("symex-evil/symex*.el")))
      ;; mini-frame
      ;; undo-hl
      ;; coterm
@@ -1692,25 +1675,6 @@ before packages are loaded."
   ;; yaml ---------------------------------------------------------------------
   (add-hook 'yaml-ts-mode-hook (lambda () (origami-mode +1))) ;; doesn't work terribly well
   (add-hook 'yaml-ts-mode-hook #'spacemacs/toggle-spelling-checking-off)
-
-  ;; symex --------------------------------------------------------------------
-  (use-package symex)
-  (use-package symex
-    :after (symex-core)
-    :config (symex-mode 1))
-  (use-package symex-ide
-    :after (symex)
-    :config (symex-ide-mode 1))
-  (use-package symex-evil
-    :after (symex evil)
-    :config (symex-evil-mode 1))
-
-  (evil-define-key '(normal insert) symex-editing-mode-map
-    (kbd "S-<escape>") #'symex-mode-interface)
-
-  (dolist (mode '(lisp-data-mode ielm-mode janet-mode))
-    (add-to-list 'symex-lisp-modes mode))
-  (symex-initialize)
 
   ;; highlight-indentation ----------------------------------------------------
   ;; this is off by default
