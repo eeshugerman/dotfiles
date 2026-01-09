@@ -55,7 +55,6 @@
       HandlePowerKeyLongPress=reboot
     '';
   };
-  systemd.sleep.extraConfig = "HibernateDelaySec=90m";
 
   boot.loader.systemd-boot.configurationLimit = 10;
 
@@ -153,6 +152,7 @@
       gnomeExtensions.night-theme-switcher
       gnomeExtensions.pano
       gnomeExtensions.xremap # needed in addition to the module
+      gnomeExtensions.auto-power-profile # untested
       jetbrains-mono # a font
       mullvad-vpn
       nushell
