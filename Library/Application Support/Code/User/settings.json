@@ -1,6 +1,16 @@
 {
-    "workbench.colorTheme": "Default Light Modern",
-    "github.copilot.nextEditSuggestions.enabled": true,
-    "gitlens.ai.model": "vscode",
-    "gitlens.ai.vscode.model": "copilot:gpt-4.1"
+  "workbench.colorTheme": "Default Light Modern",
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "gitlens.ai.enabled": false,
+  "vim.leader": "<space>",
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["v", "v"],
+      "after": ["V"]
+    },
+    {
+      "before": ["<leader>", "'"],
+      "commands": ["terminal.focus"]
+    }
+  ]
 }
