@@ -112,8 +112,8 @@ fi
 eval "$(direnv hook zsh)"
 
 if type mise &> /dev/null; then
-   eval "$(mise activate zsh)"
-   export MISE_ENV=development
+    export MISE_ENV=development
+    eval "$(mise activate zsh)"
 fi
 
 
@@ -139,3 +139,7 @@ function yadm-search {
            2> >(grep --invert-match '^rg: .* No such file or directory (os error 2)$' >&2)
     )
 }
+
+if [[ -f "$HOME/.zshrc-day-job" ]]; then
+    source "$HOME/.zshrc-day-job"
+fi

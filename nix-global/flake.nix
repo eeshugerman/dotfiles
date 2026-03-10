@@ -4,6 +4,7 @@
 
 # to rebuild (eg after upgrade or changing packages):
 # $ rm -rf ~/.local/state/nix/profiles/profile* && nix profile install --impure ~/nix-global
+
 {
   description =
     "packages installed into default/global profile, for use on non-NixOS systems";
@@ -46,8 +47,9 @@
             ngrok
             nix-direnv
             postgresql # for psql
+            ripgrep
             sloccount
-            teleport_16
+            teleport_17
             trino-cli
             yadm
             # TODO: Switch to https://github.com/nix-community/emacs-overlay, pull out into
