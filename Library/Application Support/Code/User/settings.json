@@ -6,11 +6,29 @@
   "vim.normalModeKeyBindingsNonRecursive": [
     {
       "before": ["v", "v"],
-      "after": ["V"]
+      "after": ["V"],
     },
     {
       "before": ["<leader>", "'"],
-      "commands": ["terminal.focus"]
-    }
-  ]
+      "commands": ["terminal.focus"],
+    },
+    {
+      "before": ["<leader>", ";", ";"],
+      "commands": ["editor.action.commentLine"],
+    },
+    {
+      "before": ["<leader>", "f", "s"],
+      "commands": ["workbench.action.files.save"],
+    },
+    {
+      "before": ["<leader>", "b", "b"],
+      "commands": ["workbench.action.quickOpen"],
+    },
+  ],
+  "vim.visualModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<leader>", ";", ";"],
+      "commands": ["editor.action.commentLine"],
+    },
+  ],
 }
