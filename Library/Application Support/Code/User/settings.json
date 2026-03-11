@@ -1,20 +1,23 @@
 {
+  "files.autoSave": "onFocusChange",
   "workbench.colorTheme": "Default Light Modern",
   "github.copilot.nextEditSuggestions.enabled": true,
   "gitlens.ai.enabled": false,
   "vim.leader": "<space>",
   "vim.normalModeKeyBindingsNonRecursive": [
+    // basic editing
     {
       "before": ["v", "v"],
       "after": ["V"],
     },
     {
-      "before": ["<leader>", "'"],
-      "commands": ["terminal.focus"],
-    },
-    {
       "before": ["<leader>", ";", ";"],
       "commands": ["editor.action.commentLine"],
+    },
+
+    {
+      "before": ["<leader>", "'"],
+      "commands": ["terminal.focus"],
     },
     {
       "before": ["<leader>", "f", "s"],
@@ -24,11 +27,69 @@
       "before": ["<leader>", "b", "b"],
       "commands": ["workbench.action.quickOpen"],
     },
+    {
+      "before": ["<leader>", "<tab>"],
+      "commands": ["workbench.action.nextEditor"],
+    },
+    {
+      "before": ["<leader>", "<shift+tab>"],
+      "commands": ["workbench.action.previousEditor"],
+    },
+    {
+      "before": ["<leader>", "v"],
+      "commands": ["editor.action.smartSelect.expand"],
+    },
+    {
+      "before": ["<leader>", "h"],
+      "commands": ["editor.action.showHover"],
+    },
+    {
+      "before": ["<leader>", "f", "y", "y"],
+      "commands": ["copyFilePath"],
+    },
+    {
+      "before": [",", "r", "r"],
+      "commands": ["editor.action.rename"],
+    },
+
+    // window management
+    {
+      "before": ["<leader>", "w", "/"],
+      "commands": ["workbench.action.splitEditor"],
+    },
+    {
+      "before": ["<leader>", "w", "-"],
+      "commands": ["workbench.action.splitEditorDown"],
+    },
+    {
+      "before": ["<leader>", "w", "l"],
+      "commands": ["workbench.action.focusRightGroup"],
+    },
+    {
+      "before": ["<leader>", "w", "h"],
+      "commands": ["workbench.action.focusLeftGroup"],
+    },
+    {
+      "before": ["<leader>", "w", "j"],
+      "commands": ["workbench.action.focusBelowGroup"],
+    },
+    {
+      "before": ["<leader>", "w", "k"],
+      "commands": ["workbench.action.focusAboveGroup"],
+    },
+    {
+      "before": ["<leader>", "w", "d"],
+      "commands": ["workbench.action.closeActiveEditor"],
+    },
   ],
   "vim.visualModeKeyBindingsNonRecursive": [
     {
       "before": ["<leader>", ";", ";"],
       "commands": ["editor.action.commentLine"],
+    },
+    {
+      "before": ["<leader>", "v"],
+      "commands": ["editor.action.smartSelect.expand"],
     },
   ],
 }

@@ -107,6 +107,8 @@ if [ "$(uname)" = "Darwin" ]; then
     source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
     # TODO: why is nix-daemon.sh (sourced above) not prepending to PATH? fine, force it
     export PATH="$HOME/.nix-profile/bin:$PATH"
+
+    defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
 fi
 
 eval "$(direnv hook zsh)"
