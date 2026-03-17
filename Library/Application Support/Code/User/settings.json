@@ -1,9 +1,12 @@
 {
   "files.autoSave": "onFocusChange",
   "workbench.colorTheme": "Default Light Modern",
-  "github.copilot.nextEditSuggestions.enabled": true,
+  "github.copilot.nextEditSuggestions.enabled": false,
+  "github.copilot.enable": { "*": false }, // mostly don't want the completions but don't know how to turn just that off (see above)
   "gitlens.ai.enabled": false,
   "vim.leader": "<space>",
+  "vim.foldfix": true,
+  "window.autoDetectColorScheme": true,
   "vim.normalModeKeyBindingsNonRecursive": [
     // basic editing
     {
@@ -47,9 +50,14 @@
       "before": ["<leader>", "f", "y", "y"],
       "commands": ["copyFilePath"],
     },
+    // lsp
     {
       "before": [",", "r", "r"],
       "commands": ["editor.action.rename"],
+    },
+    {
+      "before": [",", "g", "r"],
+      "commands": ["editor.action.goToReferences"],
     },
 
     // window management
@@ -78,7 +86,7 @@
       "commands": ["workbench.action.focusAboveGroup"],
     },
     {
-      "before": ["<leader>", "w", "d"],
+      "before": ["<leader>", "b", "d"],
       "commands": ["workbench.action.closeActiveEditor"],
     },
   ],
