@@ -781,7 +781,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
    dap-debug-restart-keep-session nil
 
-   git-enable-magit-delta-plugin t
    git-enable-magit-todos-plugin nil ;; can this be configured to show todos in the diff from master only?
 
    ;; groovy-backend 'lsp
@@ -1229,59 +1228,23 @@ before packages are loaded."
 
 
   ;; [ma]git ----------------------------------------------------------------------
+
   (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
-
-  ;; -- delta
-  ;; slow, so leave off and toggle on as needed https://github.com/dandavison/magit-delta/issues/9#issuecomment-1610136282
-  (remove-hook 'magit-mode-hook 'magit-delta-mode)
-
-  (spacemacs/set-leader-keys "gB" 'magit-switch-to-repository-buffer)
-
-  (defun my/toggle-magit-delta ()
-    (interactive)
-    (call-interactively 'magit-delta-mode)
-    (magit-refresh))
-
-  (setq magit-delta-hide-plus-minus-markers t)
-  (with-eval-after-load 'magit-delta
-    ;; syntax highlight removals, not just additions
-    (add-to-list 'magit-delta-delta-args "--minus-style='syntax auto'")
-    ;; don't refine hunks
-    (add-to-list 'magit-delta-delta-args "--minus-emph-style=minus-style")
-    (add-to-list 'magit-delta-delta-args "--plus-emph-style=plus-style"))
-
-  ;; mismatched background issue
-  ;; from https://github.com/dandavison/magit-delta/issues/6#issuecomment-808824398
-
-  ;; for delta's github light (github is the default):
-  (defun my/magit-delta-set-light ()
-    (with-eval-after-load 'magit-delta
-      (set-face-attribute 'magit-diff-added-highlight nil :background "#d0ffd0")
-      (set-face-attribute 'magit-diff-added nil :background "#d0ffd0")
-      (set-face-attribute 'magit-diff-removed-highlight nil :background "#ffe0e0")
-      (set-face-attribute 'magit-diff-removed nil :background "#ffe0e0")))
-
-  ;; for delta's github dark:
-  (defun my/magit-delta-set-dark ()
-    (with-eval-after-load 'magit-delta
-      (set-face-attribute 'magit-diff-added-highlight nil :background "#002800")
-      (set-face-attribute 'magit-diff-added nil :background "#002800")
-      (set-face-attribute 'magit-diff-removed-highlight nil :background "#3f0001")
-      (set-face-attribute 'magit-diff-removed nil :background  "#3f0001")))
-
-  ;; wonder what this does ?
-  (add-hook 'magit-delta-mode-hook
-            (lambda ()
-              (setq face-remapping-alist
-                    (seq-difference face-remapping-alist
-                                    '((magit-diff-removed . default)
-                                      (magit-diff-removed-highlight . default)
-                                      (magit-diff-added . default)
-                                      (magit-diff-added-highlight . default))))))
-  ;; end delta stuff
-
   (setq magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 18))
 
+  ;; syntax highlihting in diffs
+  ;; https://github.com/magit/magit/issues/2942#issuecomment-4069825556
+  (defun magit-diff-fontify-with-diff-mode ()
+    (save-excursion
+      (let ((min (point-min))
+            (max (point-max)))
+        (save-restriction
+          (widen)
+          (setq-local buffer-read-only nil)
+          (setq-local diff-font-lock-syntax 'hunk-also)
+          (goto-char min)
+          (diff--font-lock-syntax max)))))
+  (add-hook 'magit-diff-wash-diffs-hook #'magit-diff-fontify-with-diff-mode)
 
   ;; ivy/ivy-rich --------------------------------------------------------------
 
@@ -1368,12 +1331,8 @@ before packages are loaded."
   (defun my/load-theme (system-appearance)
     (mapc 'disable-theme custom-enabled-themes)
     (pcase system-appearance
-      ('dark (progn
-               (load-theme (first dotspacemacs-themes) t)
-               (my/magit-delta-set-dark)))
-      ('light (progn
-                (load-theme (second dotspacemacs-themes) t)
-                (my/magit-delta-set-light)))))
+      ('dark (load-theme (first dotspacemacs-themes) t))
+      ('light (load-theme (second dotspacemacs-themes) t))))
 
   ;; using emacs-plus integration for macos
   (when (boundp 'ns-system-appearance-change-functions)
