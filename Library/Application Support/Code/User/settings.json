@@ -1,13 +1,18 @@
 {
   "files.autoSave": "onFocusChange",
-  "workbench.colorTheme": "Default Light Modern",
+  "workbench.colorTheme": "Light Modern",
   "github.copilot.nextEditSuggestions.enabled": false,
   "github.copilot.enable": { "*": false }, // mostly don't want the completions but don't know how to turn just that off (see above)
   "gitlens.ai.enabled": false,
   "vim.leader": "<space>",
   "vim.foldfix": true,
   "window.autoDetectColorScheme": true,
+  "terminal.integrated.scrollback": 10000,
   "vim.normalModeKeyBindingsNonRecursive": [
+    { 
+    "before": ["<leader>", " "],
+    "commands": ["workbench.action.showCommands"]
+    },
     // basic editing
     {
       "before": ["v", "v"],
@@ -28,7 +33,11 @@
     },
     {
       "before": ["<leader>", "b", "b"],
-      "commands": ["workbench.action.quickOpen"],
+      "commands": ["workbench.action.showAllEditorsByMostRecentlyUsed"],
+    },
+    { 
+      "before": ["<leader>", "p", "f"],
+      "commands": ["workbench.action.quickOpen"]
     },
     {
       "before": ["<leader>", "<tab>"],
@@ -50,6 +59,11 @@
       "before": ["<leader>", "f", "y", "y"],
       "commands": ["copyFilePath"],
     },
+    {
+      "before": ["<leader>", "t", "l"],
+      "commands": ["editor.action.toggleWordWrap"],
+    },
+
     // lsp
     {
       "before": [",", "r", "r"],
@@ -89,6 +103,15 @@
       "before": ["<leader>", "b", "d"],
       "commands": ["workbench.action.closeActiveEditor"],
     },
+    {
+      "before": ["<leader>", "g", "o"],
+      "commands": ["gitlens.openFileOnRemote"]
+    },
+    {
+      "before": ["<leader>", "/"],
+      "commands": ["workbench.view.search"]
+    }
+
   ],
   "vim.visualModeKeyBindingsNonRecursive": [
     {
@@ -100,4 +123,30 @@
       "commands": ["editor.action.smartSelect.expand"],
     },
   ],
+  "[typescript]": {
+  
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "claudeCode.preferredLocation": "panel",
+  "gitlens.ai.model": "vscode",
+  "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+  "chat.disableAIFeatures": true,
+  "explorer.confirmDelete": false,
+  "git.blame.editorDecoration.enabled": true,
+  "editor.accessibilitySupport": "off",
+  "chat.useHooks": true,
+  "chat.hookFilesLocations": {
+    "~/.copilot/hooks": true
+  },
+  "githubPullRequests.terminalLinksHandler": "github",
+  "json.schemaDownload.trustedDomains": {
+    "https://developer.microsoft.com/json-schemas/": true,
+    "https://json-schema.org/": true,
+    "https://json.schemastore.org/": true,
+    "https://raw.githubusercontent.com/devcontainers/spec/": true,
+    "https://raw.githubusercontent.com/microsoft/vscode/": true,
+    "https://schemastore.azurewebsites.net/": true,
+    "https://unpkg.com/knip%406/schema.json": true,
+    "https://www.schemastore.org/": true
+  }
 }
