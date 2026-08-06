@@ -210,6 +210,7 @@ This function should only modify configuration layer settings."
      eat ;; elisp terminal emulator
      envrc
      explain-pause-mode
+     ;; expreg
      flycheck-posframe
      fold-this
      gcmh
@@ -877,6 +878,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    tree-sitter-fold-enable t
    tree-sitter-fold-indicators-enable nil ;; would rather disable in dir-locals but have not had luck with that
    tree-sitter-hl-enable-query-region-extension t
+   tree-sitter-syntax-highlight-enable nil
 
    treemacs-sorting 'alphabetic-asc
    treemacs-use-filewatch-mode t
@@ -1245,6 +1247,11 @@ before packages are loaded."
           (goto-char min)
           (diff--font-lock-syntax max)))))
   (add-hook 'magit-diff-wash-diffs-hook #'magit-diff-fontify-with-diff-mode)
+
+  ;; TODO: test out https://github.com/magit/magit/commit/c7b0342dc71fdc32c49a68168018b386746b3e5c instead
+  ;; doesn't play nice with tree-sitter-hl
+  ;; laggy
+  ;; (setopt magit-diff-fontify-hunk nil)
 
   ;; ivy/ivy-rich --------------------------------------------------------------
 
