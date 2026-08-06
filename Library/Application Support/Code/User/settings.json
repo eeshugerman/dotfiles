@@ -1,8 +1,6 @@
 {
   "files.autoSave": "onFocusChange",
   "workbench.colorTheme": "Light Modern",
-  "github.copilot.nextEditSuggestions.enabled": false,
-  "github.copilot.enable": { "*": false }, // mostly don't want the completions but don't know how to turn just that off (see above)
   "gitlens.ai.enabled": false,
   "vim.leader": "<space>",
   "vim.foldfix": true,
@@ -123,22 +121,6 @@
       "commands": ["editor.action.smartSelect.expand"],
     },
   ],
-  "[typescript]": {
-  
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "claudeCode.preferredLocation": "panel",
-  "gitlens.ai.model": "vscode",
-  "gitlens.ai.vscode.model": "copilot:gpt-4.1",
-  "chat.disableAIFeatures": true,
-  "explorer.confirmDelete": false,
-  "git.blame.editorDecoration.enabled": true,
-  "editor.accessibilitySupport": "off",
-  "chat.useHooks": true,
-  "chat.hookFilesLocations": {
-    "~/.copilot/hooks": true
-  },
-  "githubPullRequests.terminalLinksHandler": "github",
   "json.schemaDownload.trustedDomains": {
     "https://developer.microsoft.com/json-schemas/": true,
     "https://json-schema.org/": true,
