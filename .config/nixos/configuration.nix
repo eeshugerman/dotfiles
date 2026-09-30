@@ -1,4 +1,4 @@
-# Edit this configuration file to define what should be installed on
+# Edit ths configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
@@ -13,6 +13,7 @@
   services.flatpak.enable = true;
 
   services.xremap = {
+    enable = true;
     withGnome = true;
     userName = "elliott";
     deviceNames = [
@@ -48,12 +49,12 @@
     # NOTE: Unfortunately there's no simple way to skip Gnome screen lock on resume
     # from hibernation (except by disablig the lock screen altogether), so password
     # must be entered twice.
-    extraConfig = ''
-      HandleLidSwitch=suspend-then-hibernate
-      HandleLidSwitchExternalPower=suspend
-      # HandlePowerKey=hibernate # doesn't work, set in gnome settings/dconf instead
-      HandlePowerKeyLongPress=reboot
-    '';
+    settings.Login = {
+      HandleLidSwitch = "suspend-then-hibernate";
+      HandleLidSwitchExternalPower = "suspend";
+      # HandlePowerKey = "hibernate"; # doesn't work, set in gnome settings/dconf instead
+      HandlePowerKeyLongPress = "reboot";
+    };
   };
 
   boot.loader.systemd-boot.configurationLimit = 10;
@@ -95,8 +96,8 @@
   services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -129,10 +130,10 @@
   users.users.elliott = {
     isNormalUser = true;
     description = "Elliott Shugerman";
-    extraGroups = [ "networkmanager" "wheel" "docker" "adbusers" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     shell = pkgs.zsh;
     packages = (with pkgs; [
-      bitwarden
+      bitwarden-desktop
       direnv
       dmidecode
       docker
@@ -166,7 +167,6 @@
       yadm
       zsh
       zeroad
-      xorg.xeyes
       gcc
       qbittorrent
       p7zip
@@ -175,7 +175,6 @@
       # TODO: move to a self-contained profile or module or something?
       chow-kick
       geonkick
-      helvum # pipewire gui
       reaper
       reaper-reapack-extension
       reaper-sws-extension
@@ -192,13 +191,6 @@
   # https://github.com/NixOS/nixpkgs/issues/76108#issuecomment-1977580798
   virtualisation.virtualbox.host.enableHardening = false;
   users.extraGroups.vboxusers.members = [ "elliott" ];
-
-  # commented-out because prompts for password after login anyway
-  # services.xserver.displayManager.autoLogin.enable = true;
-  # services.xserver.displayManager.autoLogin.user = "elliott";
-  # # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
-  # systemd.services."getty@tty1".enable = false;
-  # systemd.services."autovt@tty1".enable = false;
 
   # https://github.com/NixOS/nixpkgs/issues/180175
   systemd.services.NetworkManager-wait-online.enable = false;
@@ -271,8 +263,6 @@
   programs.zsh.enable = true;
 
   programs.steam.enable = true;
-
-  programs.adb.enable = true;
 
   # List services that you want to enable:
 

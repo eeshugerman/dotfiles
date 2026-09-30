@@ -23,6 +23,8 @@
     package = pkgs.firefox-devedition.override {
       nativeMessagingHosts = [ pkgs.tridactyl-native ];
     };
+    # default has changed to respect $XDG_CONFIG_HOME; stick with legacy path for now
+    configPath = ".mozilla/firefox";
     profiles.elliott = {
       id = 0;
       name = "elliott";
