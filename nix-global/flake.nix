@@ -24,6 +24,7 @@
               "ngrok"
               "databricks-sql-cli"
               "snowsql"
+              "claude-code"
             ];
         });
       pkgs-unstable =
@@ -37,6 +38,7 @@
             # snowsql # arm64-apple-darwin not supported :(
             aws-vault # TODO: probably don't need this anymore since it's in bodata/mise/config.toml
             bash # nix-direnv needs a modern bash
+            claude-code
             databricks-sql-cli
             direnv
             git # macos' built-in git is quite old
@@ -47,6 +49,7 @@
             ngrok
             nix-direnv
             postgresql # for psql
+            rclone
             ripgrep
             sloccount
             teleport_17
