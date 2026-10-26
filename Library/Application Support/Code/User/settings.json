@@ -130,5 +130,18 @@
     "https://schemastore.azurewebsites.net/": true,
     "https://unpkg.com/knip%406/schema.json": true,
     "https://www.schemastore.org/": true
-  }
+  },
+  "chat.useHooks": true,
+  "chat.hookFilesLocations": {
+    "~/.copilot/hooks": true
+  },
+  "oxc.enable.oxfmt": true,
+  "oxc.enable.oxlint": true,
+  "terminal.integrated.enableMultiLinePasteWarning": "never",
+  "claudeCode.preferredLocation": "panel",
+  "claudeCode.hideOnboarding": true,
+  "vs-kubernetes": {
+    "vs-kubernetes.crd-code-completion": "disabled",
+    "vs-kubernetes.suppress-helm-not-found-alerts": true
+  },
 }
