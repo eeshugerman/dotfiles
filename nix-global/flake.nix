@@ -61,7 +61,7 @@
             emacs
           ]) ++ (with pkgs-unstable.${system};
             [
-              mise # need a recent mise for gpg verification to work
+              # nothing for now
             ]);
         };
 
